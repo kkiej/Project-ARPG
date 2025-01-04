@@ -9,24 +9,27 @@ namespace LZ
     public class PlayerInputManager : MonoBehaviour
     {
         public static PlayerInputManager instance;
+
+        public PlayerManager player;
         // Think about goals in steps
         // 1. Find a way to read the values of a joy stick
         // 2. move character based on those values
         
         private PlayerControls playerControls;
+        
+        [Header("CAMERA MOVEMENT INPUT")]
+        [SerializeField] private Vector2 cameraInput;
+        public float cameraHorizontalInput;
+        public float cameraVerticalInput;
 
         [Header("PLAYER MOVEMENT INPUT")]
-        [SerializeField]
-        private Vector2 movementInput;
+        [SerializeField] private Vector2 movementInput;
         public float horizontalInput;
         public float verticalInput;
         public float moveAmount;
-        
-        [Header("CAMERA MOVEMENT INPUT")]
-        [SerializeField]
-        private Vector2 cameraInput;
-        public float cameraHorizontalInput;
-        public float cameraVerticalInput;
+
+        [Header("PLAYER ACTION INPUT")]
+        [SerializeField] private bool dodgeInput;
 
         private void Awake()
         {
@@ -52,13 +55,13 @@ namespace LZ
 
         private void OnSceneChange(Scene oldScene, Scene newScene)
         {
-            // if we are loading into our world scene, enable our players controls
+            // 如果我们正在加载到我们的世界场景中，启用我们的玩家控制。
             if (newScene.buildIndex == WorldSaveGameManager.instance.GetWorldSceneIndex())
             {
                 instance.enabled = true;
             }
-            // otherwise we must be at the main menu, disable our players controls
-            // this is so our player cant move around if we enter things like a character creation menu ect.
+            // 否则我们一定在主菜单，禁用我们的玩家控制
+            // 这样我们的玩家就不能在进入比如角色创建菜单等时四处移动。
             else
             {
                 instance.enabled = false;
@@ -73,6 +76,7 @@ namespace LZ
 
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
+                playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
             }
             
             playerControls.Enable();
@@ -80,11 +84,11 @@ namespace LZ
 
         private void OnDestroy()
         {
-            // if we destroy this object, unsubscribe from this event
+            // 如果我们销毁这个对象，就取消订阅这个事件。
             SceneManager.activeSceneChanged -= OnSceneChange;
         }
 
-        // if we minimize or lower the window, stop adjusting inputs
+        // 如果我们最小化或降低窗口，停止调整输入。
         private void OnApplicationFocus(bool hasFocus)
         {
             if (enabled)
@@ -102,10 +106,17 @@ namespace LZ
 
         private void Update()
         {
-            HandlePlayerMovementInput();
-            HandleCameraMovementInput();
+            HandleAllInputs();
         }
 
+        private void HandleAllInputs()
+        {
+            HandlePlayerMovementInput();
+            HandleCameraMovementInput();
+            HandleDodgeInput();
+        }
+
+        // movement
         private void HandlePlayerMovementInput()
         {
             verticalInput = movementInput.y;
@@ -123,12 +134,38 @@ namespace LZ
             {
                 moveAmount = 1f;
             }
+            
+            // 为什么我们在水平方向传递0？因为我们只想要非侧移运动
+            // 当我们侧移或锁定目标时，我们会使用水平方向
+
+            if (player == null)
+            {
+                return;
+            }
+            // 如果我们没有锁定目标，只使用moveAmount
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+            
+            // 如果我们被锁定，也要传递水平方向的movement
         }
 
         private void HandleCameraMovementInput()
         {
             cameraVerticalInput = cameraInput.y;
             cameraHorizontalInput = cameraInput.x;
+        }
+
+        
+        // actions
+        private void HandleDodgeInput()
+        {
+            if (dodgeInput)
+            {
+                dodgeInput = false;
+                
+                // 未来注意：如果菜单或用户界面窗口打开，则返回（不做任何操作）
+                
+                player.playerLocomotionManager.AttemptToPerformDodge();
+            }
         }
     }
 }

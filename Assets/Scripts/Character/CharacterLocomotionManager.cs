@@ -7,7 +7,12 @@ namespace LZ
     {
         protected virtual void Awake()
         {
-            return;
+            
+        }
+
+        protected virtual void Update()
+        {
+            
         }
     }
 }
