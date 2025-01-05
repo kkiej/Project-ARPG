@@ -1,4 +1,3 @@
-using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,6 +10,8 @@ namespace LZ
         [Header("NETWORK JOIN")] [SerializeField]
         private bool startGameAsClient;
 
+        [HideInInspector] public PlayerUIHudManager playerUIHudManager;
+
         private void Awake()
         {
             if (instance == null)
@@ -21,6 +22,8 @@ namespace LZ
             {
                 Destroy(gameObject);
             }
+
+            playerUIHudManager = GetComponentInChildren<PlayerUIHudManager>();
         }
 
         private void Start()

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace LZ
 {
@@ -16,10 +17,13 @@ namespace LZ
         
         [SerializeField] private float walkingSpeed = 2f;
         [SerializeField] private float runningSpeed = 5f;
+        [SerializeField] private float sprintingSpeed = 6.5f;
         [SerializeField] private float rotationSpeed = 15f;
+        [SerializeField] private int sprintingStaminaCost = 2;
 
         [Header("Dodge")]
         private Vector3 rollDirection;
+        [SerializeField] private float dodgeStaminaCost = 25;
         
         protected override void Awake()
         {
@@ -45,8 +49,9 @@ namespace LZ
                 moveAmount = player.characterNetworkManager.moveAmount.Value;
                 
                 // 如果没锁定，传递movement
-                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
-                
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount,
+                    player.playerNetworkManager.isSprinting.Value);
+
                 // 如果锁定了，传递水平方向和垂直方向的movement
             }
         }
@@ -80,13 +85,20 @@ namespace LZ
             moveDirection.Normalize();
             moveDirection.y = 0;
 
-            if (PlayerInputManager.instance.moveAmount > 0.5f)
+            if (player.playerNetworkManager.isSprinting.Value)
             {
-                player.characterController.Move(moveDirection * (runningSpeed * Time.deltaTime));
+                player.characterController.Move(moveDirection * (sprintingSpeed * Time.deltaTime));
             }
-            else if (PlayerInputManager.instance.moveAmount <= 0.5f)
+            else
             {
-                player.characterController.Move(moveDirection * (walkingSpeed * Time.deltaTime));
+                if (PlayerInputManager.instance.moveAmount > 0.5f)
+                {
+                    player.characterController.Move(moveDirection * (runningSpeed * Time.deltaTime));
+                }
+                else if (PlayerInputManager.instance.moveAmount <= 0.5f)
+                {
+                    player.characterController.Move(moveDirection * (walkingSpeed * Time.deltaTime));
+                }
             }
         }
 
@@ -113,12 +125,43 @@ namespace LZ
             transform.rotation = targetRotation;
         }
 
-        public void AttemptToPerformDodge()
+        public void HandleSprinting()
         {
             if (player.isPerformingAction)
             {
+                player.playerNetworkManager.isSprinting.Value = false;
+            }
+            
+            // 如果我们没有体力了，将冲刺设置为假（关闭）
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
                 return;
             }
+
+            if (moveAmount >= 0.5f)
+            {
+                player.playerNetworkManager.isSprinting.Value = true;
+            }
+            // 如果我们是静止的或者移动速度很慢，将冲刺设置为假（关闭）
+            else
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
+            }
+
+            if (player.playerNetworkManager.isSprinting.Value)
+            {
+                player.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
+            }
+        }
+
+        public void AttemptToPerformDodge()
+        {
+            if (player.isPerformingAction)
+                return;
+
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+                return;
             
             // 如果我们在运动中尝试躲避，我们将播放翻滚动画
             if (moveAmount > 0)
@@ -138,6 +181,8 @@ namespace LZ
             {
                 player.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
             }
+
+            player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
         }
     }
 }

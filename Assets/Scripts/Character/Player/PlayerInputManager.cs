@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -30,6 +27,7 @@ namespace LZ
 
         [Header("PLAYER ACTION INPUT")]
         [SerializeField] private bool dodgeInput;
+        [SerializeField] private bool sprintInput;
 
         private void Awake()
         {
@@ -77,6 +75,11 @@ namespace LZ
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
+                
+                // 长按输入，将bool设置成true
+                playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
+                // 释放输入，将bool设置成false
+                playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
             }
             
             playerControls.Enable();
@@ -114,6 +117,7 @@ namespace LZ
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodgeInput();
+            HandleSprinting();
         }
 
         // movement
@@ -143,8 +147,9 @@ namespace LZ
                 return;
             }
             // 如果我们没有锁定目标，只使用moveAmount
-            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
-            
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount,
+                player.playerNetworkManager.isSprinting.Value);
+
             // 如果我们被锁定，也要传递水平方向的movement
         }
 
@@ -165,6 +170,18 @@ namespace LZ
                 // 未来注意：如果菜单或用户界面窗口打开，则返回（不做任何操作）
                 
                 player.playerLocomotionManager.AttemptToPerformDodge();
+            }
+        }
+
+        private void HandleSprinting()
+        {
+            if (sprintInput)
+            {
+                player.playerLocomotionManager.HandleSprinting();
+            }
+            else
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
             }
         }
     }
