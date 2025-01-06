@@ -14,13 +14,19 @@ namespace LZ
         [Header("Movement Settings")]
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
-        
         [SerializeField] private float walkingSpeed = 2f;
         [SerializeField] private float runningSpeed = 5f;
         [SerializeField] private float sprintingSpeed = 6.5f;
         [SerializeField] private float rotationSpeed = 15f;
         [SerializeField] private int sprintingStaminaCost = 2;
 
+        [Header("Jump")]
+        [SerializeField] private float jumpStaminaCost = 25;
+        [SerializeField] private float jumpHeight = 4f;
+        [SerializeField] private float jumpForwardSpeed = 5f;
+        [SerializeField] private float freeFallSpeed = 2f;
+        private Vector3 jumpDirection;
+        
         [Header("Dodge")]
         private Vector3 rollDirection;
         [SerializeField] private float dodgeStaminaCost = 25;
@@ -60,7 +66,8 @@ namespace LZ
         {
             HandleGroundedMovement();
             HandleRotation();
-            // Aerial movement
+            HandleJumpingMovement();
+            HandleFreeFallMovement();
         }
 
         private void GetMovementValues()
@@ -99,6 +106,28 @@ namespace LZ
                 {
                     player.characterController.Move(moveDirection * (walkingSpeed * Time.deltaTime));
                 }
+            }
+        }
+
+        private void HandleJumpingMovement()
+        {
+            if (player.isJumping)
+            {
+                player.characterController.Move(jumpDirection * (jumpForwardSpeed * Time.deltaTime));
+            }
+        }
+
+        private void HandleFreeFallMovement()
+        {
+            if (!player.isGrounded)
+            {
+                Vector3 freeFallDirection;
+
+                freeFallDirection = PlayerCamera.instance.transform.forward * PlayerInputManager.instance.verticalInput;
+                freeFallDirection += PlayerCamera.instance.transform.right * PlayerInputManager.instance.horizontalInput;
+                freeFallDirection.y = 0;
+
+                player.characterController.Move(freeFallDirection * (freeFallSpeed * Time.deltaTime));
             }
         }
 
@@ -183,6 +212,62 @@ namespace LZ
             }
 
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
+        }
+        
+        public void AttemptToPerformJump()
+        {
+            // 如果我们正在播放通用动作，我们不想要跳跃（添加战斗时会修改）
+            if (player.isPerformingAction)
+                return;
+
+            // 如果没有体力，不允许跳跃
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+                return;
+
+            // 如果我们在跳跃中，我们不想要重复跳跃直到当前跳跃动作完成
+            if (player.isJumping)
+                return;
+
+            // 如果我们不在地面上，不允许跳跃
+            if (!player.isGrounded)
+                return;
+            
+            // To Do : 如果双持武器，播放双持条约动画，否则播放单手动画
+            player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_01", false);
+
+            player.isJumping = true;
+
+            player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
+
+            jumpDirection = PlayerCamera.instance.cameraObject.transform.forward *
+                            PlayerInputManager.instance.verticalInput;
+            jumpDirection += PlayerCamera.instance.cameraObject.transform.right *
+                             PlayerInputManager.instance.horizontalInput;
+            jumpDirection.y = 0;
+
+            if (jumpDirection != Vector3.zero)
+            {
+                // 如果我们正在冲刺，跳跃方向是全距离
+                if (player.playerNetworkManager.isSprinting.Value)
+                {
+                    jumpDirection *= 1;
+                }
+                // 如果我们正在奔跑，跳跃变成一半
+                else if (PlayerInputManager.instance.moveAmount > 0.5)
+                {
+                    jumpDirection *= 0.5f;
+                }
+                // 如果是在慢走，跳跃变成四分之一
+                else if (PlayerInputManager.instance.moveAmount <= 0.5)
+                {
+                    jumpDirection *= 0.25f;
+                }
+            }
+        }
+
+        public void ApplyJumpingVelocity()
+        {
+            yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityForce);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace LZ
         [Header("PLAYER ACTION INPUT")]
         [SerializeField] private bool dodgeInput;
         [SerializeField] private bool sprintInput;
+        [SerializeField] private bool jumpInput;
 
         private void Awake()
         {
@@ -75,6 +76,7 @@ namespace LZ
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
+                playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
                 
                 // 长按输入，将bool设置成true
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
@@ -117,7 +119,8 @@ namespace LZ
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodgeInput();
-            HandleSprinting();
+            HandleSprintInput();
+            HandleJumpInput();
         }
 
         // movement
@@ -158,7 +161,6 @@ namespace LZ
             cameraVerticalInput = cameraInput.y;
             cameraHorizontalInput = cameraInput.x;
         }
-
         
         // actions
         private void HandleDodgeInput()
@@ -173,7 +175,7 @@ namespace LZ
             }
         }
 
-        private void HandleSprinting()
+        private void HandleSprintInput()
         {
             if (sprintInput)
             {
@@ -182,6 +184,19 @@ namespace LZ
             else
             {
                 player.playerNetworkManager.isSprinting.Value = false;
+            }
+        }
+
+        private void HandleJumpInput()
+        {
+            if (jumpInput)
+            {
+                jumpInput = false;
+                
+                // 如果我们有打开的UI窗口，那么不做任何事直接返回
+                
+                // 尝试执行跳跃动作
+                player.playerLocomotionManager.AttemptToPerformJump();
             }
         }
     }

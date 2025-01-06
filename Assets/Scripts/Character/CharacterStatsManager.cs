@@ -16,6 +16,22 @@ namespace LZ
         {
             character = GetComponent<CharacterManager>();
         }
+
+        protected virtual void Start()
+        {
+            
+        }
+        
+        public int CalculateHealthBasedOnVitalityLevel(int vitality)
+        {
+            float health = 0;
+
+            // 创建一个方程来定义你希望如何计算你的体力（耐力）
+            
+            health = vitality * 15;
+
+            return Mathf.RoundToInt(health);
+        }
         
         public int CalculateStaminaBasedOnEnduranceLevel(int endurance)
         {

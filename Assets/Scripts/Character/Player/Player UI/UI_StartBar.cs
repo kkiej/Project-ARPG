@@ -6,12 +6,18 @@ namespace LZ
     public class UI_StartBar : MonoBehaviour
     {
         private Slider slider;
-        // 根据状态调整条形大小的变量（状态越高，屏幕上的条形越长）
+        private RectTransform rectTransform;
+
+        [Header("Bar Options")]
+        [SerializeField] protected bool scaleBarLengthWithStats = true;
+        [SerializeField] protected float widthScaleMultiplier = 1;
+        
         // 次要条形可能用于修饰效果（黄色条形显示动作/伤害从当前状态中扣除的量）
 
         protected virtual void Awake()
         {
             slider = GetComponent<Slider>();
+            rectTransform = GetComponent<RectTransform>();
         }
 
         public virtual void SetStat(int newValue)
@@ -23,6 +29,14 @@ namespace LZ
         {
             slider.maxValue = maxValue;
             slider.value = maxValue;
+
+            if (scaleBarLengthWithStats)
+            {
+                rectTransform.sizeDelta = new Vector2(maxValue * widthScaleMultiplier, rectTransform.sizeDelta.y);
+                
+                // 根据layout group的设置重置bar的位置
+                PlayerUIManager.instance.playerUIHudManager.RefreshHUD();
+            }
         }
     }
 }

@@ -12,6 +12,8 @@ namespace LZ
 
         [Header("Flags")]
         public bool isPerformingAction;
+        public bool isJumping;
+        public bool isGrounded = true;
         public bool applyRootMotion;
         public bool canRotate = true;
         public bool canMove = true;
@@ -27,13 +29,15 @@ namespace LZ
 
         protected virtual void Update()
         {
-            // if this character is being controlled from our side, then assign its network position to the position of our transform
+            animator.SetBool("isGrounded", isGrounded);
+            
+            // 如果这个角色是由我们控制的，那么将其网络位置赋值为我们变换的位置
             if (IsOwner)
             {
                 characterNetworkManager.networkPosition.Value = transform.position;
                 characterNetworkManager.networkRotation.Value = transform.rotation;
             }
-            // if this character is being controlled from else where, then assign its position here locally by the position of its network transform
+            // 如果这个角色是由其他地方控制的，那么将其位置通过网络变换的位置在本地赋值
             else
             {
                 transform.position = Vector3.SmoothDamp(transform.position,

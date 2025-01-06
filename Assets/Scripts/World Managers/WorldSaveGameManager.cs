@@ -130,7 +130,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_01;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -143,7 +143,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_02;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -156,7 +156,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_03;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -169,7 +169,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_04;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -182,7 +182,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_05;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -195,7 +195,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_06;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -208,7 +208,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_07;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -221,7 +221,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_08;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -234,7 +234,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_09;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -247,7 +247,7 @@ namespace LZ
                 // 如果这个档案槽位还没有被占用，使用这个槽位创建一个新的档案
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_10;
                 currentCharacterData = new CharacterSaveData();
-                StartCoroutine(LoadWorldScene());
+                NewGame();
                 return;
             }
             
@@ -255,6 +255,12 @@ namespace LZ
             TitleScreenManager.instance.DisplayNoFreeCharacterSlotsPopUp();
         }
 
+        private void NewGame()
+        {
+            SaveGame();
+            StartCoroutine(LoadWorldScene());
+        }
+        
         public void LoadGame()
         {
             // 加载一个先前的文件，文件名取决于我们正在使用的槽位
