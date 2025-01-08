@@ -39,7 +39,7 @@ namespace LZ
             else
             {
                 // 如果我们没在跳跃，并且我们的下落速度没有被设置
-                if (!character.isJumping && !fallingVelocityHasBeenSet)
+                if (!character.characterNetworkManager.isJumping.Value && !fallingVelocityHasBeenSet)
                 {
                     fallingVelocityHasBeenSet = true;
                     yVelocity.y = fallStartYVelocity;

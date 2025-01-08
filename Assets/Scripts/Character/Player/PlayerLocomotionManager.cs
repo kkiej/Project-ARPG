@@ -111,7 +111,7 @@ namespace LZ
 
         private void HandleJumpingMovement()
         {
-            if (player.isJumping)
+            if (player.playerNetworkManager.isJumping.Value)
             {
                 player.characterController.Move(jumpDirection * (jumpForwardSpeed * Time.deltaTime));
             }
@@ -225,7 +225,7 @@ namespace LZ
                 return;
 
             // 如果我们在跳跃中，我们不想要重复跳跃直到当前跳跃动作完成
-            if (player.isJumping)
+            if (player.playerNetworkManager.isJumping.Value)
                 return;
 
             // 如果我们不在地面上，不允许跳跃
@@ -235,7 +235,7 @@ namespace LZ
             // To Do : 如果双持武器，播放双持条约动画，否则播放单手动画
             player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_01", false);
 
-            player.isJumping = true;
+            player.playerNetworkManager.isJumping.Value = true;
 
             player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
 

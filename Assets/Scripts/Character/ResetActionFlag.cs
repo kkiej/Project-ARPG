@@ -19,7 +19,11 @@ namespace LZ
             character.applyRootMotion = false;
             character.canRotate = true;
             character.canMove = true;
-            character.isJumping = false;
+
+            if (character.IsOwner)
+            {
+                character.characterNetworkManager.isJumping.Value = false;
+            }
         }
 
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

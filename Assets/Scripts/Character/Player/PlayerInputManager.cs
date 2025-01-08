@@ -29,6 +29,7 @@ namespace LZ
         [SerializeField] private bool dodgeInput;
         [SerializeField] private bool sprintInput;
         [SerializeField] private bool jumpInput;
+        [SerializeField] private bool RB_Input;
 
         private void Awake()
         {
@@ -50,6 +51,10 @@ namespace LZ
             SceneManager.activeSceneChanged += OnSceneChange;
             
             instance.enabled = false;
+            if (playerControls != null)
+            {
+                playerControls.Disable();
+            }
         }
 
         private void OnSceneChange(Scene oldScene, Scene newScene)
@@ -58,12 +63,20 @@ namespace LZ
             if (newScene.buildIndex == WorldSaveGameManager.instance.GetWorldSceneIndex())
             {
                 instance.enabled = true;
+                if (playerControls != null)
+                {
+                    playerControls.Enable();
+                }
             }
             // 否则我们一定在主菜单，禁用我们的玩家控制
             // 这样我们的玩家就不能在进入比如角色创建菜单等时四处移动。
             else
             {
                 instance.enabled = false;
+                if (playerControls != null)
+                {
+                    playerControls.Disable();
+                }
             }
         }
 
@@ -77,6 +90,7 @@ namespace LZ
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
                 playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
+                playerControls.PlayerActions.RB.performed += i => RB_Input = true;
                 
                 // 长按输入，将bool设置成true
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
@@ -121,6 +135,7 @@ namespace LZ
             HandleDodgeInput();
             HandleSprintInput();
             HandleJumpInput();
+            HandleRBInput();
         }
 
         // movement
@@ -197,6 +212,24 @@ namespace LZ
                 
                 // 尝试执行跳跃动作
                 player.playerLocomotionManager.AttemptToPerformJump();
+            }
+        }
+
+        private void HandleRBInput()
+        {
+            if (RB_Input)
+            {
+                RB_Input = false;
+                
+                // TODO: 如果我们有UI窗口开着，那么什么也不做，直接返回
+                
+                player.playerNetworkManager.SetCharacterActionHand(true);
+                
+                // TODO: 如果我们双持武器，使用双持动作
+
+                player.playerCombatManager.PerformWeaponBasedAction(
+                    player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action,
+                    player.playerInventoryManager.currentRightHandWeapon);
             }
         }
     }
