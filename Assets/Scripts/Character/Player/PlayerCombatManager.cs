@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace LZ
 {
@@ -23,10 +24,32 @@ namespace LZ
                 weaponAction.AttemptToPerformAction(player, weaponPerformingAction);
             
                 // 通知服务器我们执行了动作，因此我们也从服务器端执行它
-                
+                player.playerNetworkManager.NotifyTheServerOfWeaponActionServerRpc(
+                    NetworkManager.Singleton.LocalClientId, weaponAction.actionID, weaponPerformingAction.itemID);
             }
-            
-            
+        }
+
+        public virtual void DrainStaminaBasedOnAttack()
+        {
+            if (!player.IsOwner)
+                return;
+
+            if (currentWeaponBeingUsed == null)
+                return;
+
+            float staminaDeducted = 0;
+
+            switch (currentAttackType)
+            {
+                case AttackType.LightAttack01:
+                    staminaDeducted = currentWeaponBeingUsed.baseStaminaCost *
+                                      currentWeaponBeingUsed.light_Attack_01_Modifier;
+                    break;
+                default:
+                    break;
+            }
+
+            player.playerNetworkManager.currentStamina.Value -= Mathf.RoundToInt(staminaDeducted);
         }
     }
 }

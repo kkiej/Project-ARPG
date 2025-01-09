@@ -100,7 +100,16 @@ namespace LZ
 
         private void PerformWeaponBasedAction(int actionID, int weaponID)
         {
-            
+            WeaponItemAction weaponAction = WorldActionManager.instance.GetWeaponItemActionByID(actionID);
+
+            if (weaponAction != null)
+            {
+                weaponAction.AttemptToPerformAction(player, WorldItemDatabase.instance.GetWeaponByID(weaponID));
+            }
+            else
+            {
+                Debug.LogError("Action is null, cannot be performed.");
+            }
         }
     }
 }
