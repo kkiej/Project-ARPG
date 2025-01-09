@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 namespace LZ
 {
@@ -65,6 +66,7 @@ namespace LZ
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
             
             // if this is the player object owned by this client
             if (IsOwner)
@@ -102,6 +104,25 @@ namespace LZ
             if (IsOwner && !IsServer)
             {
                 LoadGameDataFromCurrentCharacterData(ref WorldSaveGameManager.instance.currentCharacterData);
+            }
+        }
+
+        private void OnClientConnectedCallback(ulong clientID)
+        {
+            // 维护游戏中活跃玩家的列表
+            WorldGameSessionManager.instance.AddPlayerToActivePlayersList(this);
+            
+            // 如果我们是服务器，我们是主机，所以我们不需要加载玩家来同步他们
+            // 如果你加入一个已经在进行的游戏而你不在场，你需要加载其他玩家的装备来同步
+            if (!IsServer && IsOwner)
+            {
+                foreach (var player in WorldGameSessionManager.instance.players)
+                {
+                    if (player != this)
+                    {
+                        player.LoadOtherPlayerCharacterWhenJoiningServer();
+                    }
+                }
             }
         }
 
@@ -166,6 +187,17 @@ namespace LZ
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
             PlayerUIManager.instance.playerUIHudManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
             PlayerUIManager.instance.playerUIHudManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+        }
+
+        public void LoadOtherPlayerCharacterWhenJoiningServer()
+        {
+            // 同步武器
+            playerNetworkManager.OnCurrentRightHandWeaponIDChange(0,
+                playerNetworkManager.currentRightHandWeaponID.Value);
+            playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0,
+                playerNetworkManager.currentLeftHandWeaponID.Value);
+            
+            // 护甲
         }
         
         // 后面删除调试

@@ -49,11 +49,18 @@ namespace LZ
             // 检查“无敌状态”
 
             CalculateDamage(character);
+            
             // 检查伤害来自哪个方向
             // 播放伤害动画
+            PlayDirectionalBasedDamageAnimation(character);
+            
             // 检查是否有叠加效果（中毒、流血等）
+            
             // 播放伤害音效
+            PlayDamageSFX(character);
+            
             // 播放伤害视觉效果（血液）
+            PlayDamageVFX(character);
 
             // 如果角色是AI，检查如果造成伤害的角色存在则寻找新目标
         }
@@ -85,6 +92,69 @@ namespace LZ
             character.characterNetworkManager.currentHealth.Value -= finalDamageDealt;
             
             // 计算平衡伤害决定角色是否会被眩晕
+        }
+
+        private void PlayDamageVFX(CharacterManager character)
+        {
+            // 如果是火焰等其它伤害，就播放其它特效
+            character.characterEffectsManager.PlayBloodSplatterVFX(contactPoint);
+        }
+
+        private void PlayDamageSFX(CharacterManager character)
+        {
+            AudioClip physicalDamageSFX =
+                WorldSoundFXManager.instance.ChooseRandomSFXFromArray(WorldSoundFXManager.instance.physicalDamageSFX);
+            
+            character.characterSoundFXManager.PlaySoundFX(physicalDamageSFX);
+            
+            // 如果火焰伤害大于0，播放燃烧音效
+            // 如果闪电伤害大于0，播放电击音效
+        }
+
+        private void PlayDirectionalBasedDamageAnimation(CharacterManager character)
+        {
+            if (!character.IsOwner)
+                return;
+            
+            // TODO: 计算平衡是否被打破（架势条）
+            poiseIsBroken = true;
+            
+            if (angleHitFrom >= 145 && angleHitFrom <= 180)
+            {
+                damageAnimation =
+                    character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager
+                        .forward_Medium_Damage);
+            }
+            else if (angleHitFrom <= -145 && angleHitFrom >= - 180)
+            {
+                damageAnimation =
+                    character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager
+                        .forward_Medium_Damage);
+            }
+            else if (angleHitFrom >= -45 && angleHitFrom <= 45)
+            {
+                damageAnimation =
+                    character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager
+                        .backward_Medium_Damage);
+            }
+            else if (angleHitFrom >= -144 && angleHitFrom <= -45)
+            {
+                damageAnimation =
+                    character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager
+                        .left_Medium_Damage);
+            }
+            else if (angleHitFrom >= 45 && angleHitFrom <= 144)
+            {
+                damageAnimation =
+                    character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager
+                        .right_Medium_Damage);
+            }
+
+            if (poiseIsBroken)
+            {
+                character.characterAnimatorManager.lastDamageAnimationPlayed = damageAnimation;
+                character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, true);
+            }
         }
     }
 }

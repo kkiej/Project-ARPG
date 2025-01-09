@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace LZ
 {
@@ -10,12 +12,73 @@ namespace LZ
         private int horizontal;
         private int vertical;
 
+        [Header("Damage Animations")]
+        public string lastDamageAnimationPlayed;
+        
+        [SerializeField] private string hit_Forward_Medium_01 = "Hit_Forward_Medium_01";
+        [SerializeField] private string hit_Forward_Medium_02 = "Hit_Forward_Medium_02";
+        
+        [SerializeField] private string hit_Backward_Medium_01 = "Hit_Backward_Medium_01";
+        [SerializeField] private string hit_Backward_Medium_02 = "Hit_Backward_Medium_02";
+        
+        [SerializeField] private string hit_Left_Medium_01 = "Hit_Left_Medium_01";
+        [SerializeField] private string hit_Left_Medium_02 = "Hit_Left_Medium_02";
+        
+        [SerializeField] private string hit_Right_Medium_01 = "Hit_Right_Medium_01";
+        [SerializeField] private string hit_Right_Medium_02 = "Hit_Right_Medium_02";
+
+        public List<string> forward_Medium_Damage = new List<string>();
+        public List<string> backward_Medium_Damage = new List<string>();
+        public List<string> left_Medium_Damage = new List<string>();
+        public List<string> right_Medium_Damage = new List<string>();
+
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
 
             horizontal = Animator.StringToHash("Horizontal");
             vertical = Animator.StringToHash("Vertical");
+        }
+
+        protected virtual void Start()
+        {
+            forward_Medium_Damage.Add(hit_Forward_Medium_01);
+            forward_Medium_Damage.Add(hit_Forward_Medium_02);
+            
+            backward_Medium_Damage.Add(hit_Backward_Medium_01);
+            backward_Medium_Damage.Add(hit_Backward_Medium_02);
+            
+            left_Medium_Damage.Add(hit_Left_Medium_01);
+            left_Medium_Damage.Add(hit_Left_Medium_02);
+            
+            right_Medium_Damage.Add(hit_Right_Medium_01);
+            right_Medium_Damage.Add(hit_Right_Medium_02);
+        }
+
+        public string GetRandomAnimationFromList(List<string> animationList)
+        {
+            List<string> finalList = new List<string>();
+
+            foreach (var item in animationList)
+            {
+                finalList.Add(item);
+            }
+            
+            // 检查我们是否已经播放过这个伤害动画，避免重复
+            finalList.Remove(lastDamageAnimationPlayed);
+
+            // 删除列表中的空值
+            for (int i = finalList.Count - 1; i > -1; i--)
+            {
+                if (finalList[i] == null)
+                {
+                    finalList.RemoveAt(i);
+                }
+            }
+
+            int randomValue = Random.Range(0, finalList.Count);
+
+            return finalList[randomValue];
         }
 
         public void UpdateAnimatorMovementParameters(float horizontalMovement, float verticalMovement, bool isSprinting)
@@ -34,6 +97,7 @@ namespace LZ
         public virtual void PlayTargetActionAnimation(string targetAnimation, bool isPerformingAction,
             bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
         {
+            Debug.Log("Playing Animation: " + targetAnimation);
             character.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(targetAnimation, 0.2f);
             // 可以用来阻止角色尝试新的动作

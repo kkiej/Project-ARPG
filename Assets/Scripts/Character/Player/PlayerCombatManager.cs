@@ -43,12 +43,13 @@ namespace LZ
             {
                 case AttackType.LightAttack01:
                     staminaDeducted = currentWeaponBeingUsed.baseStaminaCost *
-                                      currentWeaponBeingUsed.light_Attack_01_Modifier;
+                                      currentWeaponBeingUsed.lightAttackStaminaCostMultiplier;
                     break;
                 default:
                     break;
             }
 
+            Debug.Log("Stamina Deducted: " + staminaDeducted);
             player.playerNetworkManager.currentStamina.Value -= Mathf.RoundToInt(staminaDeducted);
         }
     }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LZ
@@ -8,6 +5,9 @@ namespace LZ
     public class WorldSoundFXManager : MonoBehaviour
     {
         public static WorldSoundFXManager instance;
+
+        [Header("Damage Sounds")]
+        public AudioClip[] physicalDamageSFX;
 
         [Header("Action Sounds")]
         public AudioClip rollSFX;
@@ -27,6 +27,13 @@ namespace LZ
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
+        }
+
+        public AudioClip ChooseRandomSFXFromArray(AudioClip[] array)
+        {
+            int index = Random.Range(0, array.Length);
+
+            return array[index];
         }
     }
 }
