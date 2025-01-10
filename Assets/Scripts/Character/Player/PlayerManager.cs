@@ -91,6 +91,11 @@ namespace LZ
             // 状态
             playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
             
+            // 锁定
+            playerNetworkManager.isLockedOn.OnValueChanged += playerNetworkManager.OnIsLockedOnChanged;
+            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged +=
+                playerNetworkManager.OnLockOnTargetIDChange;
+            
             // 装备
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged +=
                 playerNetworkManager.OnCurrentRightHandWeaponIDChange;
@@ -144,6 +149,7 @@ namespace LZ
 
             if (IsOwner)
             {
+                isDead.Value = false;
                 playerNetworkManager.currentHealth.Value = playerNetworkManager.maxHealth.Value;
                 playerNetworkManager.currentStamina.Value = playerNetworkManager.maxStamina.Value;
                 // 恢复注视点
@@ -198,6 +204,12 @@ namespace LZ
                 playerNetworkManager.currentLeftHandWeaponID.Value);
             
             // 护甲
+            
+            // 锁定
+            if (playerNetworkManager.isLockedOn.Value)
+            {
+                playerNetworkManager.OnLockOnTargetIDChange(0, playerNetworkManager.currentTargetNetworkObjectID.Value);
+            }
         }
         
         // 后面删除调试

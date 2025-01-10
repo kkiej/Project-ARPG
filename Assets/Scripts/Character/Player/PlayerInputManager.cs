@@ -8,9 +8,6 @@ namespace LZ
         public static PlayerInputManager instance;
 
         public PlayerManager player;
-        // Think about goals in steps
-        // 1. Find a way to read the values of a joy stick
-        // 2. move character based on those values
         
         private PlayerControls playerControls;
         
@@ -18,6 +15,11 @@ namespace LZ
         [SerializeField] private Vector2 cameraInput;
         public float cameraHorizontalInput;
         public float cameraVerticalInput;
+
+        [Header("LOCK ON INPUT")]
+        [SerializeField] private bool lockOn_Input;
+        [SerializeField] private bool lockOn_Left_Input;
+        [SerializeField] private bool lockOn_Right_Input;
 
         [Header("PLAYER MOVEMENT INPUT")]
         [SerializeField] private Vector2 movementInput;
@@ -92,6 +94,11 @@ namespace LZ
                 playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
                 
+                // 锁定
+                playerControls.PlayerActions.LockOn.performed += i => lockOn_Input = true;
+                playerControls.PlayerActions.SeekLeftLockOnTarget.performed += i => lockOn_Left_Input = true;
+                playerControls.PlayerActions.SeekRightLockOnTarget.performed += i => lockOn_Right_Input = true;
+                
                 // 长按输入，将bool设置成true
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
                 // 释放输入，将bool设置成false
@@ -130,12 +137,68 @@ namespace LZ
 
         private void HandleAllInputs()
         {
+            HandleLockOnInput();
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodgeInput();
             HandleSprintInput();
             HandleJumpInput();
             HandleRBInput();
+        }
+
+        private void HandleLockOnInput()
+        {
+            if (player.playerNetworkManager.isLockedOn.Value)
+            {
+                if (player.playerCombatManager.currentTarget == null)
+                    return;
+
+                if (player.playerCombatManager.currentTarget.isDead.Value)
+                {
+                    player.playerNetworkManager.isLockedOn.Value = false;
+                }
+            }
+            
+            if (lockOn_Input && player.playerNetworkManager.isLockedOn.Value)
+            {
+                lockOn_Input = false;
+                PlayerCamera.instance.ClearLockOnTargets();
+                player.playerNetworkManager.isLockedOn.Value = false;
+                return;
+            }
+            
+            if (lockOn_Input && !player.playerNetworkManager.isLockedOn.Value)
+            {
+                lockOn_Input = false;
+                
+                // 如果我们在用远程武器瞄准就返回（瞄准时不允许锁定）
+                
+                PlayerCamera.instance.HandleLocatingLockOnTargets();
+
+                if (PlayerCamera.instance.nearestLockOnTarget != null)
+                {
+                    player.playerCombatManager.SetTarget(PlayerCamera.instance.nearestLockOnTarget);
+                    player.playerNetworkManager.isLockedOn.Value = true;
+                }
+            }
+        }
+
+        private void HandleLockOnSwitchTargetInput()
+        {
+            if (lockOn_Left_Input)
+            {
+                lockOn_Left_Input = false;
+
+                if (player.playerNetworkManager.isLockedOn.Value)
+                {
+                    PlayerCamera.instance.HandleLocatingLockOnTargets();
+
+                    if (PlayerCamera.instance.leftLockOnTarget != null)
+                    {
+                        player.playerCombatManager.SetTarget(PlayerCamera.instance.leftLockOnTarget);
+                    }
+                }
+            }
         }
 
         // movement

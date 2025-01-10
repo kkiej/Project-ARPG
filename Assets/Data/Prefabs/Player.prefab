@@ -52,7 +52,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8257928079569425312, guid: af1b75ccf31613e42a105dc7cc5e2301, type: 3}
+  - {fileID: 2100000, guid: 17712419ad0189f48a5da993ce568a5a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1174,7 +1174,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3456496839874017592}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4432793145423877087
 GameObject:
@@ -1284,6 +1284,10 @@ MonoBehaviour:
   verticalMovement:
     m_InternalValue: 0
   moveAmount:
+    m_InternalValue: 0
+  currentTargetNetworkObjectID:
+    m_InternalValue: 0
+  isLockedOn:
     m_InternalValue: 0
   isSprinting:
     m_InternalValue: 0
@@ -1400,6 +1404,7 @@ MonoBehaviour:
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}
   characterCombatManager: {fileID: 0}
+  characterSoundFXManager: {fileID: 0}
   isPerformingAction: 0
   isGrounded: 1
   applyRootMotion: 0
@@ -1426,7 +1431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ab03045e4854dd184d1eb72e63cc52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentTarget: {fileID: 0}
   currentAttackType: 0
+  lockOnTransform: {fileID: 3268591790919751491}
   currentWeaponBeingUsed: {fileID: 0}
 --- !u!114 &-5474465599812946486
 MonoBehaviour:
@@ -1487,7 +1494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 297f7f04a09549d282caa2322d73087b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentRightHandWeapon: {fileID: 11400000, guid: 83ead1e8beaad4249b60841232846000,
+  currentRightHandWeapon: {fileID: 11400000, guid: 3b078b648a2791842a349a233ee58681,
     type: 2}
   currentLeftHandWeapon: {fileID: 11400000, guid: 83ead1e8beaad4249b60841232846000,
     type: 2}
@@ -1531,6 +1538,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78529eea569e4684be3d7d84e163db6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastDamageAnimationPlayed: 
+  hit_Forward_Medium_01: Hit_Forward_Medium_01
+  hit_Forward_Medium_02: Hit_Forward_Medium_02
+  hit_Backward_Medium_01: Hit_Backward_Medium_01
+  hit_Backward_Medium_02: Hit_Backward_Medium_02
+  hit_Left_Medium_01: Hit_Left_Medium_01
+  hit_Left_Medium_02: Hit_Left_Medium_02
+  hit_Right_Medium_01: Hit_Right_Medium_01
+  hit_Right_Medium_02: Hit_Right_Medium_02
+  forward_Medium_Damage: []
+  backward_Medium_Damage: []
+  left_Medium_Damage: []
+  right_Medium_Damage: []
 --- !u!114 &6426818130450017650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1555,6 +1575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18482f3199014fb0923aef231c6c81e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bloodSplatterVFX: {fileID: 0}
   effectToTest: {fileID: 0}
   processEffect: 0
 --- !u!143 &-5654157579870011388
@@ -2331,6 +2352,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7646645476181054842}
+  - {fileID: 3268591790919751491}
   - {fileID: 4497358731843712191}
   m_Father: {fileID: 1420993157526782851}
   m_RootOrder: 0
@@ -2797,6 +2819,37 @@ Transform:
   - {fileID: 5459136724089337519}
   - {fileID: 8432646960889173813}
   m_Father: {fileID: 3949552753020668261}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9217511172955794938
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3268591790919751491}
+  m_Layer: 7
+  m_Name: Lock On Target
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3268591790919751491
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9217511172955794938}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.1790373, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3456496839874017592}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9222302020317390006

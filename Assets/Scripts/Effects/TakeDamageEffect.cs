@@ -115,6 +115,9 @@ namespace LZ
         {
             if (!character.IsOwner)
                 return;
+
+            if (character.isDead.Value)
+                return;
             
             // TODO: 计算平衡是否被打破（架势条）
             poiseIsBroken = true;

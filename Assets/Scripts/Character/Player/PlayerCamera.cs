@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
@@ -10,9 +11,8 @@ namespace LZ
         [SerializeField] private Transform cameraPivotTransform;
 
         // Change these to tweak camera performance
-        [Header("Camera Settings")] private float
-            cameraSmoothSpeed =
-                1f; // the bigger this number, the longer for the camera to reach its position during movement
+        [Header("Camera Settings")]
+        private float cameraSmoothSpeed = 1f; // the bigger this number, the longer for the camera to reach its position during movement
         [SerializeField] private float leftAndRightRotationSpeed = 220;
         [SerializeField] private float upAndDownRotationSpeed = 220;
         [SerializeField] private float minimumPivot = -30;
@@ -20,13 +20,24 @@ namespace LZ
         [SerializeField] private float cameraCollisionRadius = 0.2f;
         [SerializeField] private LayerMask collideWithLayers;
 
-        [Header("Camera Values")] private Vector3 cameraVelocity;
-        private Vector3
-            cameraObjectPosition; // used for camera collisions (moves the camera object to this position upon colliding)
+        [Header("Camera Values")]
+        private Vector3 cameraVelocity;
+        private Vector3 cameraObjectPosition; // used for camera collisions (moves the camera object to this position upon colliding)
         [SerializeField] private float leftAndRightLookAngle;
         [SerializeField] private float upAndDownLookAngle;
         private float cameraZPosition;
         private float targetCameraZPosition;
+
+        [Header("Lock On")]
+        [SerializeField] private float lockOnRadius = 20;
+        [SerializeField] private float minimumViewableAngle = -50;
+        [SerializeField] private float maximumViewableAngle = 50;
+        [SerializeField] private float lockOnTargetFollowSpeed = 0.2f;
+        private List<CharacterManager> availableTargets = new List<CharacterManager>();
+        public CharacterManager nearestLockOnTarget;
+        public CharacterManager leftLockOnTarget;
+        public CharacterManager rightLockOnTarget;
+        
 
         private void Awake()
         {
@@ -65,29 +76,53 @@ namespace LZ
 
         private void HandleRotations()
         {
-            // if locked on , force rotation towards target
-            // else rotate regularly
+            if (player.playerNetworkManager.isLockedOn.Value)
+            {
+                Vector3 rotationDirection =
+                    player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position -
+                    transform.position;
+                rotationDirection.Normalize();
+                rotationDirection.y = 0;
+                Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lockOnTargetFollowSpeed);
 
-            // Normal rotations
-            leftAndRightLookAngle += (PlayerInputManager.instance.cameraHorizontalInput * leftAndRightRotationSpeed) *
-                                     Time.deltaTime;
-            upAndDownLookAngle -= (PlayerInputManager.instance.cameraVerticalInput * upAndDownRotationSpeed) *
-                                  Time.deltaTime;
-            upAndDownLookAngle = Mathf.Clamp(upAndDownLookAngle, minimumPivot, maximumPivot);
+                rotationDirection =
+                    player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position -
+                    cameraPivotTransform.position;
+                rotationDirection.Normalize();
 
-            Vector3 cameraRotation = Vector3.zero;
-            Quaternion targetRotation;
+                targetRotation = Quaternion.LookRotation(rotationDirection);
+                cameraPivotTransform.rotation = Quaternion.Slerp(cameraPivotTransform.rotation,
+                    targetRotation, lockOnTargetFollowSpeed);
+                
+                // 将旋转保存为相机视角，解锁时不会偏离太远
+                leftAndRightLookAngle = transform.eulerAngles.y;
+                upAndDownLookAngle = transform.eulerAngles.x;
+            }
+            else
+            {
+                // 根据右操纵杆的水平移动来左右旋转相机
+                leftAndRightLookAngle += (PlayerInputManager.instance.cameraHorizontalInput * leftAndRightRotationSpeed) *
+                                         Time.deltaTime;
+                // 根据右操纵杆的垂直移动来上下旋转相机
+                upAndDownLookAngle -= (PlayerInputManager.instance.cameraVerticalInput * upAndDownRotationSpeed) *
+                                      Time.deltaTime;
+                upAndDownLookAngle = Mathf.Clamp(upAndDownLookAngle, minimumPivot, maximumPivot);
 
-            // Rotate this gameObject left and right
-            cameraRotation.y = leftAndRightLookAngle;
-            targetRotation = Quaternion.Euler(cameraRotation);
-            transform.rotation = targetRotation;
+                Vector3 cameraRotation = Vector3.zero;
+                Quaternion targetRotation;
 
-            // Rotate pivot gameObject up and down
-            cameraRotation = Vector3.zero;
-            cameraRotation.x = upAndDownLookAngle;
-            targetRotation = Quaternion.Euler(cameraRotation);
-            cameraPivotTransform.localRotation = targetRotation;
+                // Rotate this gameObject left and right
+                cameraRotation.y = leftAndRightLookAngle;
+                targetRotation = Quaternion.Euler(cameraRotation);
+                transform.rotation = targetRotation;
+
+                // Rotate pivot gameObject up and down
+                cameraRotation = Vector3.zero;
+                cameraRotation.x = upAndDownLookAngle;
+                targetRotation = Quaternion.Euler(cameraRotation);
+                cameraPivotTransform.localRotation = targetRotation;
+            }
         }
 
         private void HandleCollisions()
@@ -117,6 +152,115 @@ namespace LZ
             // we then apply our final position using a lerp over a time of 0.2f
             cameraObjectPosition.z = Mathf.Lerp(cameraObject.transform.localPosition.z, targetCameraZPosition, 0.2f);
             cameraObject.transform.localPosition = cameraObjectPosition;
+        }
+
+        public void HandleLocatingLockOnTargets()
+        {
+            float shortestDistance = Mathf.Infinity; // 用于确定离我们最近的对象
+            float shortestDistanceOfRightTarget = Mathf.Infinity; // 用于确定当前对象右侧单一轴向距离最近的目标（当前对象右侧最近的对象）
+            float shortestDistanceOfLeftTarget = -Mathf.Infinity; // 用于确定当前对象左侧单一轴向距离最近的目标（当前对象右侧最近的对象）
+            
+            // TODO:使用LayerMask
+            Collider[] colliders = Physics.OverlapSphere(player.transform.position, lockOnRadius,
+                WorldUtilityManager.instance.GetCharacterLayers());
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                CharacterManager lockOnTarget = colliders[i].GetComponent<CharacterManager>();
+
+                if (lockOnTarget != null)
+                {
+                    // 检查他们是否在我们的可视范围内
+                    Vector3 lockOnTargetsDirection = lockOnTarget.transform.position - player.transform.position;
+                    float distanceFromTarget =
+                        Vector3.Distance(player.transform.position, lockOnTarget.transform.position);
+                    float viewableAngle = Vector3.Angle(lockOnTargetsDirection, cameraObject.transform.forward);
+                    
+                    // 如果对象死亡，检查下一个潜在对象
+                    if (lockOnTarget.isDead.Value)
+                        continue;
+                    
+                    // 如果对象是自己，检查下一个
+                    if (lockOnTarget.transform.root == player.transform.root)
+                        continue;
+                    
+                    // 最后如果对象在视野之外或者被环境遮挡，检查下一个
+                    if (viewableAngle > minimumViewableAngle && viewableAngle < maximumViewableAngle)
+                    {
+                        RaycastHit hit;
+                        
+                        // TODO: 添加只有环境的LayerMask
+                        if (Physics.Linecast(player.playerCombatManager.lockOnTransform.position,
+                                lockOnTarget.characterCombatManager.lockOnTransform.position, out hit,
+                                WorldUtilityManager.instance.GetEnvironLayers()))
+                        {
+                            // 我们击中某物，但是看不见
+                            continue;
+                        }
+                        else
+                        {
+                            //Debug.Log("We made it.");
+                            // 否则，将他们添加到潜在列表
+                            availableTargets.Add(lockOnTarget);
+                        }
+                    }
+                }
+            }
+            
+            // 排序我们的潜在对象，看看我们先锁哪一个
+            for (int i = 0; i < availableTargets.Count; i++)
+            {
+                if (availableTargets[i] != null)
+                {
+                    float distanceFromTarget =
+                        Vector3.Distance(player.transform.position, availableTargets[i].transform.position);
+
+                    if (distanceFromTarget < shortestDistance)
+                    {
+                        shortestDistance = distanceFromTarget;
+                        nearestLockOnTarget = availableTargets[i];
+                    }
+                    
+                    // 如果我们在搜索目标时已经锁定了目标，那么搜索左右的目标
+                    if (player.playerNetworkManager.isLockedOn.Value)
+                    {
+                        Vector3 relativeEnemyPosition =
+                            player.transform.InverseTransformPoint(availableTargets[i].transform.position);
+
+                        var distanceFromLeftTarget = relativeEnemyPosition.x;
+                        var distanceFromRightTarget = relativeEnemyPosition.x;
+
+                        if (availableTargets[i] == player.playerCombatManager.currentTarget)
+                            continue;
+                        
+                        // 检查左边的目标
+                        if (relativeEnemyPosition.x <= 0.00f && distanceFromLeftTarget > shortestDistanceOfLeftTarget)
+                        {
+                            shortestDistanceOfLeftTarget = distanceFromLeftTarget;
+                            leftLockOnTarget = availableTargets[i];
+                        }
+                        // 检查右边的目标
+                        else if (relativeEnemyPosition.x >= 0.00f && distanceFromRightTarget < shortestDistanceOfRightTarget)
+                        {
+                            shortestDistanceOfRightTarget = distanceFromRightTarget;
+                            rightLockOnTarget = availableTargets[i];
+                        }
+                    }
+                }
+                else
+                {
+                    ClearLockOnTargets();
+                    player.playerNetworkManager.isLockedOn.Value = false;
+                }
+            }
+        }
+
+        public void ClearLockOnTargets()
+        {
+            nearestLockOnTarget = null;
+            leftLockOnTarget = null;
+            rightLockOnTarget = null;
+            availableTargets.Clear();
         }
     }
 }
