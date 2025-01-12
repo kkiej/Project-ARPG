@@ -39,6 +39,8 @@ namespace LZ
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isJumping =
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isChargingAttack =
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Resources")]
         public NetworkVariable<int> currentHealth =
@@ -93,6 +95,11 @@ namespace LZ
             {
                 character.characterCombatManager.currentTarget = null;
             }
+        }
+
+        public void OnIsChargingAttackChanged(bool oldStatus, bool newStatus)
+        {
+            character.animator.SetBool("isChargingAttack", isChargingAttack.Value);
         }
         
         // 服务器RPC是一个从客户端调用到服务器（在我们的情况下是主机）的函数

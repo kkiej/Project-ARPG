@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace LZ
 {
-    [CreateAssetMenu(menuName = "Character Actions/Weapon Actions/Light Attack Action")]
-    public class LightAttackWeaponItemAction : WeaponItemAction
+    [CreateAssetMenu(menuName = "Character Actions/Weapon Actions/Heavy Attack Action")]
+    public class HeavyAttackWeaponItemAction : WeaponItemAction
     {
-        [SerializeField] private string light_Attack_01 = "Main_Light_Attack_01";
-        [SerializeField] private string light_Attack_02 = "Main_Light_Attack_02";
+        [SerializeField] private string heavy_Attack_01 = "Main_Heavy_Attack_01";
+        [SerializeField] private string heavy_Attack_02 = "Main_Heavy_Attack_02";
         
         public override void AttemptToPerformAction(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
         {
@@ -21,10 +22,10 @@ namespace LZ
             if (!playerPerformingAction.isGrounded)
                 return;
             
-            PerformLightAttack(playerPerformingAction, weaponPerformingAction);
+            PerformHeavyAttack(playerPerformingAction, weaponPerformingAction);
         }
 
-        private void PerformLightAttack(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
+        private void PerformHeavyAttack(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
         {
             // 如果我们正在攻击，并且我们可以连击，播放连击
             if (playerPerformingAction.playerCombatManager.canComboWithMainHandWeapon &&
@@ -33,22 +34,22 @@ namespace LZ
                 playerPerformingAction.playerCombatManager.canComboWithMainHandWeapon = false;
                 
                 // 基于上一个播放的攻击来决定播放哪个攻击动画
-                if (playerPerformingAction.characterCombatManager.lastAttackAnimationPerformed == light_Attack_01)
+                if (playerPerformingAction.characterCombatManager.lastAttackAnimationPerformed == heavy_Attack_01)
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.LightAttack02,
-                        light_Attack_02, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.HeavyAttack02,
+                        heavy_Attack_02, true);
                 }
                 else
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.LightAttack01,
-                        light_Attack_01, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.HeavyAttack01,
+                        heavy_Attack_01, true);
                 }
             }
             // 否则，只播放常规攻击
             else if (!playerPerformingAction.isPerformingAction)
             {
-                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.LightAttack01,
-                    light_Attack_01, true);
+                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.HeavyAttack01,
+                    heavy_Attack_01, true);
             }
         }
     }

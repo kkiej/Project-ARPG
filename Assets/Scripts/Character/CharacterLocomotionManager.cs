@@ -15,7 +15,10 @@ namespace LZ
         [SerializeField] protected float groundedYVelocity = -20; // 我们的角色在着地时粘附于地面的力
         [SerializeField] protected float fallStartYVelocity = -5; // 当角色失去地面接触时开始下落的力（随着下落时间的增加而增大）
         protected bool fallingVelocityHasBeenSet;
-        protected float inAirTimer = 0;
+        [SerializeField] protected float inAirTimer = 0;
+
+        [Header("Flags")]
+        public bool isRolling = false;
         
         protected virtual void Awake()
         {

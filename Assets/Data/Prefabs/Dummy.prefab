@@ -1321,7 +1321,7 @@ GameObject:
   - component: {fileID: 7795345182330258596}
   - component: {fileID: 5899868901223486559}
   - component: {fileID: 5000020557783873548}
-  - component: {fileID: 5224951703108555636}
+  - component: {fileID: -9105031834061874265}
   - component: {fileID: 67751129486863158}
   m_Layer: 6
   m_Name: Dummy
@@ -1416,6 +1416,8 @@ MonoBehaviour:
     m_InternalValue: 0
   isJumping:
     m_InternalValue: 0
+  isChargingAttack:
+    m_InternalValue: 0
   currentHealth:
     m_InternalValue: 0
   maxHealth:
@@ -1449,6 +1451,7 @@ MonoBehaviour:
   characterAnimatorManager: {fileID: 0}
   characterCombatManager: {fileID: 0}
   characterSoundFXManager: {fileID: 0}
+  characterLocomotionManager: {fileID: 0}
   isPerformingAction: 0
   isGrounded: 1
   applyRootMotion: 0
@@ -1466,6 +1469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8785786c391548e49d52d91f925592a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastAttackAnimationPerformed: 
   currentTarget: {fileID: 0}
   currentAttackType: 0
   lockOnTransform: {fileID: 6464811149838266187}
@@ -1503,6 +1507,8 @@ MonoBehaviour:
   yVelocity: {x: 0, y: 0, z: 0}
   groundedYVelocity: -20
   fallStartYVelocity: -5
+  inAirTimer: 0
+  isRolling: 0
 --- !u!114 &1615410691195373144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1595,7 +1601,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.94, z: 0}
---- !u!54 &5224951703108555636
+--- !u!54 &-9105031834061874265
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

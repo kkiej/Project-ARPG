@@ -9,6 +9,10 @@ namespace LZ
         
         public WeaponItem currentWeaponBeingUsed;
 
+        [Header("Flags")]
+        public bool canComboWithMainHandWeapon;
+        //public bool canComboWithOffHandWeapon;
+
         protected override void Awake()
         {
             base.Awake();
@@ -51,6 +55,16 @@ namespace LZ
 
             Debug.Log("Stamina Deducted: " + staminaDeducted);
             player.playerNetworkManager.currentStamina.Value -= Mathf.RoundToInt(staminaDeducted);
+        }
+
+        public override void SetTarget(CharacterManager newTarget)
+        {
+            base.SetTarget(newTarget);
+
+            if (player.IsOwner)
+            {
+                PlayerCamera.instance.SetLockCameraHeight();
+            }
         }
     }
 }

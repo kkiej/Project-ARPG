@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace LZ
@@ -33,6 +35,10 @@ namespace LZ
         [SerializeField] private float minimumViewableAngle = -50;
         [SerializeField] private float maximumViewableAngle = 50;
         [SerializeField] private float lockOnTargetFollowSpeed = 0.2f;
+        [SerializeField] private float setCameraHeightSpeed = 1;
+        [SerializeField] private float unlockedCameraHeight = 1.65f;
+        [SerializeField] private float lockedCameraHeight = 2.0f;
+        private Coroutine cameraLockOnHeightCoroutine;
         private List<CharacterManager> availableTargets = new List<CharacterManager>();
         public CharacterManager nearestLockOnTarget;
         public CharacterManager leftLockOnTarget;
@@ -255,12 +261,93 @@ namespace LZ
             }
         }
 
+        public void SetLockCameraHeight()
+        {
+            if (cameraLockOnHeightCoroutine != null)
+                StopCoroutine(cameraLockOnHeightCoroutine);
+
+            cameraLockOnHeightCoroutine = StartCoroutine(SetCameraHeight());
+        }
+
         public void ClearLockOnTargets()
         {
             nearestLockOnTarget = null;
             leftLockOnTarget = null;
             rightLockOnTarget = null;
             availableTargets.Clear();
+        }
+
+        public IEnumerator WaitThenFindNewTarget()
+        {
+            while (player.isPerformingAction)
+            {
+                yield return null;
+            }
+            
+            ClearLockOnTargets();
+            HandleLocatingLockOnTargets();
+
+            if (nearestLockOnTarget != null)
+            {
+                player.playerCombatManager.SetTarget(nearestLockOnTarget);
+                player.playerNetworkManager.isLockedOn.Value = true;
+            }
+
+            yield return null;
+        }
+
+        private IEnumerator SetCameraHeight()
+        {
+            float duration = 1;
+            float timer = 0;
+
+            Vector3 velocity = Vector3.zero;
+            Vector3 newLockedCameraHeight =
+                new Vector3(cameraPivotTransform.transform.localPosition.x, lockedCameraHeight);
+            Vector3 newUnlockedCameraHeight =
+                new Vector3(cameraPivotTransform.transform.localPosition.x, unlockedCameraHeight);
+
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+
+                if (player != null)
+                {
+                    if (player.playerCombatManager.currentTarget != null)
+                    {
+                        cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(
+                            cameraPivotTransform.transform.localPosition, newLockedCameraHeight, ref velocity,
+                            setCameraHeightSpeed);
+
+                        cameraPivotTransform.transform.localRotation = Quaternion.Slerp(
+                            cameraPivotTransform.transform.localRotation, Quaternion.Euler(0, 0, 0),
+                            lockOnTargetFollowSpeed);
+                    }
+                    else
+                    {
+                        cameraPivotTransform.transform.localPosition = Vector3.SmoothDamp(
+                            cameraPivotTransform.transform.localPosition, newUnlockedCameraHeight, ref velocity,
+                            setCameraHeightSpeed);
+                    }
+                }
+
+                yield return null;
+            }
+
+            if (player != null)
+            {
+                if (player.playerCombatManager.currentTarget != null)
+                {
+                    cameraPivotTransform.transform.localPosition = newLockedCameraHeight;
+                    cameraPivotTransform.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                }
+                else
+                {
+                    cameraPivotTransform.transform.localPosition = newUnlockedCameraHeight;
+                }
+            }
+
+            yield return null;
         }
     }
 }

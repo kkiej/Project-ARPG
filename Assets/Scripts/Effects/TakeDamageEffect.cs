@@ -88,6 +88,7 @@ namespace LZ
             {
                 finalDamageDealt = 1;
             }
+            Debug.Log("Final Damage Given: " + finalDamageDealt);
 
             character.characterNetworkManager.currentHealth.Value -= finalDamageDealt;
             

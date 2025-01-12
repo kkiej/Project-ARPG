@@ -7,10 +7,6 @@ namespace LZ
 {
     public class PlayerManager : CharacterManager
     {
-        [Header("DEBUG MENU")]
-        [SerializeField] private bool respawnCharacter;
-        [SerializeField] private bool switchRightWeapon;
-        
         [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerNetworkManager playerNetworkManager;
@@ -48,8 +44,6 @@ namespace LZ
             
             // 耐力再生
             playerStatsManager.RegenerationStamina();
-            
-            DebugMenu();
         }
 
         protected override void LateUpdate()
@@ -104,12 +98,57 @@ namespace LZ
             playerNetworkManager.currentWeaponBeingUsed.OnValueChanged +=
                 playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
             
+            // Flags
+            playerNetworkManager.isChargingAttack.OnValueChanged += playerNetworkManager.OnIsChargingAttackChanged;
+            
             // 连接时，如果我们是这个角色的所有者，但我们不是服务器，重新加载我们的角色数据到这个新实例化的角色
             // 如果我们是服务器，我们不会运行这个，因为作为主机，他们已经加载好了，不需要重新加载他们的数据
             if (IsOwner && !IsServer)
             {
                 LoadGameDataFromCurrentCharacterData(ref WorldSaveGameManager.instance.currentCharacterData);
             }
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnectedCallback;
+            
+            // if this is the player object owned by this client
+            if (IsOwner)
+            {
+                // 当与生命值或体力相关的属性发生变化时，更新其总量
+                playerNetworkManager.vitality.OnValueChanged -= playerNetworkManager.SetNewMaxHealthValue;
+                playerNetworkManager.endurance.OnValueChanged -= playerNetworkManager.SetNewMaxStaminaValue;
+                
+                // 当一个状态（生命或体力）改变时更新UI状态条
+                playerNetworkManager.currentHealth.OnValueChanged -=
+                    PlayerUIManager.instance.playerUIHudManager.SetNewHealthValue;
+                playerNetworkManager.currentStamina.OnValueChanged -=
+                    PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
+                playerNetworkManager.currentStamina.OnValueChanged -=
+                    playerStatsManager.ResetStaminaRegenTimer;
+            }
+
+            // 状态
+            playerNetworkManager.currentHealth.OnValueChanged -= playerNetworkManager.CheckHP;
+            
+            // 锁定
+            playerNetworkManager.isLockedOn.OnValueChanged -= playerNetworkManager.OnIsLockedOnChanged;
+            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged -=
+                playerNetworkManager.OnLockOnTargetIDChange;
+            
+            // 装备
+            playerNetworkManager.currentRightHandWeaponID.OnValueChanged -=
+                playerNetworkManager.OnCurrentRightHandWeaponIDChange;
+            playerNetworkManager.currentLeftHandWeaponID.OnValueChanged -=
+                playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
+            playerNetworkManager.currentWeaponBeingUsed.OnValueChanged -=
+                playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
+            
+            // Flags
+            playerNetworkManager.isChargingAttack.OnValueChanged -= playerNetworkManager.OnIsChargingAttackChanged;
         }
 
         private void OnClientConnectedCallback(ulong clientID)
@@ -209,22 +248,6 @@ namespace LZ
             if (playerNetworkManager.isLockedOn.Value)
             {
                 playerNetworkManager.OnLockOnTargetIDChange(0, playerNetworkManager.currentTargetNetworkObjectID.Value);
-            }
-        }
-        
-        // 后面删除调试
-        private void DebugMenu()
-        {
-            if (respawnCharacter)
-            {
-                respawnCharacter = false;
-                ReviveCharacter();
-            }
-
-            if (switchRightWeapon)
-            {
-                switchRightWeapon = false;
-                playerEquipmentManager.SwitchRightWeapon();
             }
         }
     }

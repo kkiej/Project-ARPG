@@ -64,6 +64,11 @@ namespace LZ
             WeaponItem newWeapon = Instantiate(WorldItemDatabase.instance.GetWeaponByID(newID));
             player.playerInventoryManager.currentRightHandWeapon = newWeapon;
             player.playerEquipmentManager.LoadRightWeapon();
+
+            if (player.IsOwner)
+            {
+                PlayerUIManager.instance.playerUIHudManager.SetRightWeaponQuickSlotIcon(newID);
+            }
         }
         
         public void OnCurrentLeftHandWeaponIDChange(int oldID, int newID)
@@ -71,6 +76,11 @@ namespace LZ
             WeaponItem newWeapon = Instantiate(WorldItemDatabase.instance.GetWeaponByID(newID));
             player.playerInventoryManager.currentLeftHandWeapon = newWeapon;
             player.playerEquipmentManager.LoadLeftWeapon();
+            
+            if (player.IsOwner)
+            {
+                PlayerUIManager.instance.playerUIHudManager.SetLeftWeaponQuickSlotIcon(newID);
+            }
         }
 
         public void OnCurrentWeaponBeingUsedIDChange(int oldID, int newID)

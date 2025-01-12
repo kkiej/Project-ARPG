@@ -16,7 +16,7 @@ namespace LZ
                     weaponPerformingAction.itemID;
             }
             
-            Debug.Log("The Action Has Fired");
+            //Debug.Log("The Action Has Fired");
         }
     }
 }

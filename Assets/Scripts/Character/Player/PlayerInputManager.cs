@@ -20,6 +20,7 @@ namespace LZ
         [SerializeField] private bool lockOn_Input;
         [SerializeField] private bool lockOn_Left_Input;
         [SerializeField] private bool lockOn_Right_Input;
+        private Coroutine lockOnCoroutine;
 
         [Header("PLAYER MOVEMENT INPUT")]
         [SerializeField] private Vector2 movementInput;
@@ -31,7 +32,15 @@ namespace LZ
         [SerializeField] private bool dodgeInput;
         [SerializeField] private bool sprintInput;
         [SerializeField] private bool jumpInput;
+        [SerializeField] private bool switch_Right_Weapon_Input;
+        [SerializeField] private bool switch_Left_Weapon_Input;
+        
+        [Header("BUMPER INPUTS")]
         [SerializeField] private bool RB_Input;
+
+        [Header("TRIGGER INPUTS")]
+        [SerializeField] private bool RT_Input;
+        [SerializeField] private bool Hold_RT_Input;
 
         private void Awake()
         {
@@ -90,9 +99,20 @@ namespace LZ
 
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
+                
+                // 动作
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
                 playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
+                playerControls.PlayerActions.SwitchRightWeapon.performed += i => switch_Right_Weapon_Input = true;
+                playerControls.PlayerActions.SwitchLeftWeapon.performed += i => switch_Left_Weapon_Input = true;
+                
+                // Bumpers
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
+                
+                // Triggers
+                playerControls.PlayerActions.RT.performed += i => RT_Input = true;
+                playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
+                playerControls.PlayerActions.HoldRT.canceled += i => Hold_RT_Input = false;
                 
                 // 锁定
                 playerControls.PlayerActions.LockOn.performed += i => lockOn_Input = true;
@@ -138,12 +158,17 @@ namespace LZ
         private void HandleAllInputs()
         {
             HandleLockOnInput();
+            HandleLockOnSwitchTargetInput();
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodgeInput();
             HandleSprintInput();
             HandleJumpInput();
             HandleRBInput();
+            HandleRTInput();
+            HandleChargeRTInput();
+            HandleSwitchRightWeaponInput();
+            HandleSwitchLeftWeaponInput();
         }
 
         private void HandleLockOnInput()
@@ -157,6 +182,11 @@ namespace LZ
                 {
                     player.playerNetworkManager.isLockedOn.Value = false;
                 }
+
+                if (lockOnCoroutine != null)
+                    StopCoroutine(lockOnCoroutine);
+
+                lockOnCoroutine = StartCoroutine(PlayerCamera.instance.WaitThenFindNewTarget());
             }
             
             if (lockOn_Input && player.playerNetworkManager.isLockedOn.Value)
@@ -199,6 +229,21 @@ namespace LZ
                     }
                 }
             }
+            
+            if (lockOn_Right_Input)
+            {
+                lockOn_Right_Input = false;
+
+                if (player.playerNetworkManager.isLockedOn.Value)
+                {
+                    PlayerCamera.instance.HandleLocatingLockOnTargets();
+
+                    if (PlayerCamera.instance.rightLockOnTarget != null)
+                    {
+                        player.playerCombatManager.SetTarget(PlayerCamera.instance.rightLockOnTarget);
+                    }
+                }
+            }
         }
 
         // movement
@@ -224,14 +269,20 @@ namespace LZ
             // 当我们侧移或锁定目标时，我们会使用水平方向
 
             if (player == null)
-            {
                 return;
-            }
+            
             // 如果我们没有锁定目标，只使用moveAmount
-            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount,
-                player.playerNetworkManager.isSprinting.Value);
-
+            if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
+            {
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount,
+                    player.playerNetworkManager.isSprinting.Value);
+            }
             // 如果我们被锁定，也要传递水平方向的movement
+            else
+            {
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput,
+                    player.playerNetworkManager.isSprinting.Value);
+            }
         }
 
         private void HandleCameraMovementInput()
@@ -293,6 +344,54 @@ namespace LZ
                 player.playerCombatManager.PerformWeaponBasedAction(
                     player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action,
                     player.playerInventoryManager.currentRightHandWeapon);
+            }
+        }
+
+        private void HandleRTInput()
+        {
+            if (RT_Input)
+            {
+                RT_Input = false;
+                
+                // TODO: 如果我们有UI窗口开着，那么什么也不做，直接返回
+                
+                player.playerNetworkManager.SetCharacterActionHand(true);
+                
+                // TODO: 如果我们双持武器，使用双持动作
+
+                player.playerCombatManager.PerformWeaponBasedAction(
+                    player.playerInventoryManager.currentRightHandWeapon.oh_RT_Action,
+                    player.playerInventoryManager.currentRightHandWeapon);
+            }
+        }
+
+        private void HandleChargeRTInput()
+        {
+            // 我们只想检查是不是需要蓄力攻击
+            if (player.isPerformingAction)
+            {
+                if (player.playerNetworkManager.isUsingRightHand.Value)
+                {
+                    player.playerNetworkManager.isChargingAttack.Value = Hold_RT_Input;
+                }
+            }
+        }
+
+        private void HandleSwitchRightWeaponInput()
+        {
+            if (switch_Right_Weapon_Input)
+            {
+                switch_Right_Weapon_Input = false;
+                player.playerEquipmentManager.SwitchRightWeapon();
+            }
+        }
+        
+        private void HandleSwitchLeftWeaponInput()
+        {
+            if (switch_Left_Weapon_Input)
+            {
+                switch_Left_Weapon_Input = false;
+                player.playerEquipmentManager.SwitchLeftWeapon();
             }
         }
     }

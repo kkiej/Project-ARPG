@@ -60,7 +60,7 @@ namespace LZ
             if (!player.IsOwner)
                 return;
 
-            player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Right_Weapon_01", false, true, true);
+            player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Right_Weapon_01", false, false, true, true);
             
             // 艾尔登法环武器切换
             // 1. 检查我们是否有除了主武器以外的其他武器，如果有，永远不要切换到空手，而是在武器1和2之间切换
@@ -154,7 +154,83 @@ namespace LZ
         // 左手武器
         public void SwitchLeftWeapon()
         {
+            if (!player.IsOwner)
+                return;
+
+            player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Left_Weapon_01", false, false, true, true);
             
+            // 艾尔登法环武器切换
+            // 1. 检查我们是否有除了主武器以外的其他武器，如果有，永远不要切换到空手，而是在武器1和2之间切换
+            // 2. 如果没有其他武器，切换到空手，然后跳过另一个空的槽位并切换回来。在返回主武器之前，不要处理两个空槽位。
+
+            WeaponItem selectedWeapon = null;
+            
+            // 如果我们正在双持武器，则禁用双持
+            
+            // 检查我们的武器索引（我们有3个槽位，所以有3个可能的数字）
+            // 将索引加一以切换到下一个可能的武器
+            player.playerInventoryManager.leftHandWeaponIndex += 1;
+
+            // 如果索引超出边界，就回到位置1（0）
+            if (player.playerInventoryManager.leftHandWeaponIndex < 0 || player.playerInventoryManager.leftHandWeaponIndex > 2)
+            {
+                player.playerInventoryManager.leftHandWeaponIndex = 0;
+                
+                // 我们检查是否持有不止一件武器
+                float weaponCount = 0;
+                WeaponItem firstWeapon = null;
+                int firstWeaponPosition = 0;
+
+                for (int i = 0; i < player.playerInventoryManager.weaponsInLeftHandSlots.Length; i++)
+                {
+                    if (player.playerInventoryManager.weaponsInLeftHandSlots[i].itemID != WorldItemDatabase.instance.unarmedWeapon.itemID)
+                    {
+                        weaponCount += 1;
+
+                        if (firstWeapon == null)
+                        {
+                            firstWeapon = player.playerInventoryManager.weaponsInLeftHandSlots[i];
+                            firstWeaponPosition = i;
+                        }
+                    }
+                }
+
+                if (weaponCount <= 1)
+                {
+                    player.playerInventoryManager.leftHandWeaponIndex = -1;
+                    selectedWeapon = WorldItemDatabase.instance.unarmedWeapon;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = selectedWeapon.itemID;
+                }
+                else
+                {
+                    player.playerInventoryManager.leftHandWeaponIndex = firstWeaponPosition;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = firstWeapon.itemID;
+                }
+
+                return;
+            }
+
+            foreach (WeaponItem weapon in player.playerInventoryManager.weaponsInLeftHandSlots)
+            {
+                // 检查看看这是不是“非武装”武器
+                // 如果下一个可能的武器不是空手
+                if (player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID != WorldItemDatabase.instance.unarmedWeapon.itemID)
+                {
+                    selectedWeapon =
+                        player.playerInventoryManager.weaponsInLeftHandSlots[
+                            player.playerInventoryManager.leftHandWeaponIndex];
+                    // 分配网络武器ID，方便它为所有连接的客户端切换
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value =
+                        player.playerInventoryManager.weaponsInLeftHandSlots[
+                            player.playerInventoryManager.leftHandWeaponIndex].itemID;
+                    return;
+                }
+            }
+
+            if (selectedWeapon == null && player.playerInventoryManager.leftHandWeaponIndex <= 2)
+            {
+                SwitchLeftWeapon();
+            }
         }
         
         public void LoadLeftWeapon()
