@@ -270,6 +270,15 @@ namespace LZ
 
             if (player == null)
                 return;
+
+            if (moveAmount != 0)
+            {
+                player.playerNetworkManager.isMoving.Value = true;
+            }
+            else
+            {
+                player.playerNetworkManager.isMoving.Value = false;
+            }
             
             // 如果我们没有锁定目标，只使用moveAmount
             if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)

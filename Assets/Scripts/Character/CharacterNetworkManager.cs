@@ -21,6 +21,8 @@ namespace LZ
         public float networkRotationSmoothTime = 0.1f;
 
         [Header("Animator")]
+        public NetworkVariable<bool> isMoving =
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> horizontalMovement =
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> verticalMovement =
@@ -100,6 +102,11 @@ namespace LZ
         public void OnIsChargingAttackChanged(bool oldStatus, bool newStatus)
         {
             character.animator.SetBool("isChargingAttack", isChargingAttack.Value);
+        }
+
+        public void OnIsMovingChanged(bool oldStatus, bool newStatus)
+        {
+            character.animator.SetBool("isMoving", isMoving.Value);
         }
         
         // 服务器RPC是一个从客户端调用到服务器（在我们的情况下是主机）的函数

@@ -21,6 +21,9 @@ namespace LZ
         [HideInInspector] public CharacterSoundFXManager characterSoundFXManager;
         [HideInInspector] public CharacterLocomotionManager characterLocomotionManager;
 
+        [Header("Character Group")]
+        public CharacterGroup characterGroup;
+
         [Header("Flags")]
         public bool isPerformingAction;
         public bool isGrounded = true;
@@ -71,9 +74,28 @@ namespace LZ
             }
         }
 
+        protected virtual void FixedUpdate()
+        {
+            
+        }
+
         protected virtual void LateUpdate()
         {
             
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            characterNetworkManager.isMoving.OnValueChanged += characterNetworkManager.OnIsMovingChanged;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            
+            characterNetworkManager.isMoving.OnValueChanged -= characterNetworkManager.OnIsMovingChanged;
         }
 
         public virtual IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
