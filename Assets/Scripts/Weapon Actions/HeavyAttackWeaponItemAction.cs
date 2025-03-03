@@ -19,7 +19,7 @@ namespace LZ
             if (playerPerformingAction.playerNetworkManager.currentStamina.Value <= 0)
                 return;
 
-            if (!playerPerformingAction.isGrounded)
+            if (!playerPerformingAction.playerLocomotionManager.isGrounded)
                 return;
             
             PerformHeavyAttack(playerPerformingAction, weaponPerformingAction);

@@ -87,7 +87,7 @@ namespace LZ
 
         private void HandleGroundedMovement()
         {
-            if (!player.canMove)
+            if (!player.playerLocomotionManager.canMove)
                 return;
             
             GetMovementValues();
@@ -126,7 +126,7 @@ namespace LZ
 
         private void HandleFreeFallMovement()
         {
-            if (!player.isGrounded)
+            if (!player.playerLocomotionManager.isGrounded)
             {
                 Vector3 freeFallDirection;
 
@@ -143,7 +143,7 @@ namespace LZ
             if (player.isDead.Value)
                 return;
             
-            if (!player.canRotate)
+            if (!player.playerLocomotionManager.canRotate)
                 return;
 
             if (player.playerNetworkManager.isLockedOn.Value)
@@ -277,7 +277,7 @@ namespace LZ
                 return;
 
             // 如果我们不在地面上，不允许跳跃
-            if (!player.isGrounded)
+            if (!player.playerLocomotionManager.isGrounded)
                 return;
             
             // To Do : 如果双持武器，播放双持条约动画，否则播放单手动画

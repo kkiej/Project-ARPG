@@ -26,10 +26,6 @@ namespace LZ
 
         [Header("Flags")]
         public bool isPerformingAction;
-        public bool isGrounded = true;
-        public bool applyRootMotion;
-        public bool canRotate = true;
-        public bool canMove = true;
         
         protected virtual void Awake()
         {
@@ -52,7 +48,7 @@ namespace LZ
 
         protected virtual void Update()
         {
-            animator.SetBool("isGrounded", isGrounded);
+            animator.SetBool("isGrounded", characterLocomotionManager.isGrounded);
             
             // 如果这个角色是由我们控制的，那么将其网络位置赋值为我们变换的位置
             if (IsOwner)
@@ -88,6 +84,7 @@ namespace LZ
         {
             base.OnNetworkSpawn();
 
+            animator.SetBool("isMoving", characterNetworkManager.isMoving.Value);
             characterNetworkManager.isMoving.OnValueChanged += characterNetworkManager.OnIsMovingChanged;
         }
 

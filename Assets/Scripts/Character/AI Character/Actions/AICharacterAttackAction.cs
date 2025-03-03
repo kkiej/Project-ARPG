@@ -2,6 +2,7 @@
 
 namespace LZ
 {
+    [CreateAssetMenu(menuName = "A.I/Actions/Attack")]
     public class AICharacterAttackAction : ScriptableObject
     {
         [Header("Attack")]

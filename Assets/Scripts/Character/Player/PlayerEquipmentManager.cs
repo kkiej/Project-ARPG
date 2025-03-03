@@ -254,11 +254,17 @@ namespace LZ
             if (player.playerNetworkManager.isUsingRightHand.Value)
             {
                 rightWeaponManager.meleeDamageCollider.EnableDamageCollider();
+                player.characterSoundFXManager.PlaySoundFX(
+                    WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerInventoryManager
+                        .currentRightHandWeapon.whooshes));
             }
             // 打开左手武器伤害碰撞体
             else if (player.playerNetworkManager.isUsingLeftHand.Value)
             {
                 leftWeaponManager.meleeDamageCollider.EnableDamageCollider();
+                player.characterSoundFXManager.PlaySoundFX(
+                    WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerInventoryManager
+                        .currentLeftHandWeapon.whooshes));
             }
             
             // 播放音效

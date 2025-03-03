@@ -11,12 +11,12 @@ namespace LZ
     {
         public static WorldAIManager instance;
 
-        [Header("DEBUG")]
-        [SerializeField] private bool despawnCharacters;
-        [SerializeField] private bool respawnCharacters;
+        //[Header("DEBUG")]
+        //[SerializeField] private bool despawnCharacters;
+        //[SerializeField] private bool respawnCharacters;
 
         [Header("Characters")]
-        [SerializeField] private GameObject[] aiCharacters;
+        [SerializeField] List<AICharacterSpawner> aiCharacterSpawners;
         [SerializeField] private List<GameObject> spawnedInCharacters;
 
         private void Awake()
@@ -31,15 +31,15 @@ namespace LZ
             }
         }
 
-        private void Start()
+        /*private void Start()
         {
             if (NetworkManager.Singleton.IsServer)
             {
                 StartCoroutine(WaitForSceneToLoadThenSpawnCharacters());
             }
-        }
+        }*/
 
-        private void Update()
+        /*private void Update()
         {
             if (respawnCharacters)
             {
@@ -52,9 +52,9 @@ namespace LZ
                 despawnCharacters = false;
                 DespawnAllCharacters();
             }
-        }
+        }*/
 
-        private IEnumerator WaitForSceneToLoadThenSpawnCharacters()
+        /*private IEnumerator WaitForSceneToLoadThenSpawnCharacters()
         {
             while (!SceneManager.GetActiveScene().isLoaded)
             {
@@ -62,15 +62,14 @@ namespace LZ
             }
             
             SpawnAllCharacters();
-        }
+        }*/
 
-        private void SpawnAllCharacters()
+        public void SpawnCharacter(AICharacterSpawner aiCharacterSpawner)
         {
-            foreach (var character in aiCharacters)
+            if (NetworkManager.Singleton.IsServer)
             {
-                GameObject instantiatedCharacter = Instantiate(character);
-                instantiatedCharacter.GetComponent<NetworkObject>().Spawn();
-                spawnedInCharacters.Add(instantiatedCharacter);
+                aiCharacterSpawners.Add(aiCharacterSpawner);
+                aiCharacterSpawner.AttemptToSpawnCharacter();
             }
         }
 

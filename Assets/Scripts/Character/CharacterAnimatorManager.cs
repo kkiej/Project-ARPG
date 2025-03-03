@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace LZ
 {
@@ -11,6 +9,9 @@ namespace LZ
         private CharacterManager character;
         private int horizontal;
         private int vertical;
+        
+        [Header("Flags")]
+        public bool applyRootMotion;
 
         [Header("Damage Animations")]
         public string lastDamageAnimationPlayed;
@@ -141,15 +142,15 @@ namespace LZ
             bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
         {
             //Debug.Log("Playing Animation: " + targetAnimation);
-            character.applyRootMotion = applyRootMotion;
+            this.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(targetAnimation, 0.2f);
             // 可以用来阻止角色尝试新的动作
             // 例如，如果你受到伤害，并开始执行受击动画
             // 如果你被眩晕，这个标志会变为真
             // 然后我们可以在尝试新动作之前检查这个标志
             character.isPerformingAction = isPerformingAction;
-            character.canRotate = canRotate;
-            character.canMove = canMove;
+            character.characterLocomotionManager.canRotate = canRotate;
+            character.characterLocomotionManager.canMove = canMove;
             
             // 告诉服务器/主机我们播放了一个动画，并为在场的每个人播放这个动画
             character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId,
@@ -166,11 +167,11 @@ namespace LZ
             // 通知网络我们的“正在攻击”标志是激活状态（用于反击伤害等）
             character.characterCombatManager.currentAttackType = attackType;
             character.characterCombatManager.lastAttackAnimationPerformed = targetAnimation;
-            character.applyRootMotion = applyRootMotion;
+            this.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(targetAnimation, 0.2f);
             character.isPerformingAction = isPerformingAction;
-            character.canRotate = canRotate;
-            character.canMove = canMove;
+            character.characterLocomotionManager.canRotate = canRotate;
+            character.characterLocomotionManager.canMove = canMove;
             
             // 告诉服务器/主机我们播放了一个动画，并为在场的每个人播放这个动画
             character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId,

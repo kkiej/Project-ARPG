@@ -19,6 +19,9 @@ namespace LZ
 
         [Header("Flags")]
         public bool isRolling = false;
+        public bool canRotate = true;
+        public bool canMove = true;
+        public bool isGrounded = true;
         
         protected virtual void Awake()
         {
@@ -29,7 +32,7 @@ namespace LZ
         {
             HandleGroundCheck();
 
-            if (character.isGrounded)
+            if (character.characterLocomotionManager.isGrounded)
             {
                 // 如果我们没有尝试跳跃或向上移动
                 if (yVelocity.y <= 0)
@@ -59,13 +62,22 @@ namespace LZ
 
         protected void HandleGroundCheck()
         {
-            character.isGrounded =
-                Physics.CheckSphere(character.transform.position, groundCheckSphereRadius, groundLayer);
+            isGrounded = Physics.CheckSphere(character.transform.position, groundCheckSphereRadius, groundLayer);
         }
 
         protected void OnDrawGizmosSelected()
         {
             Gizmos.DrawSphere(character.transform.position, groundCheckSphereRadius);
+        }
+
+        public void EnableCanRotate()
+        {
+            canRotate = true;
+        }
+        
+        public void DisableCanRotate()
+        {
+            canRotate = false;
         }
     }
 }

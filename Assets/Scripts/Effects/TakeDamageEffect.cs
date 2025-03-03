@@ -107,6 +107,7 @@ namespace LZ
                 WorldSoundFXManager.instance.ChooseRandomSFXFromArray(WorldSoundFXManager.instance.physicalDamageSFX);
             
             character.characterSoundFXManager.PlaySoundFX(physicalDamageSFX);
+            character.characterSoundFXManager.PlayDamageGrunt();
             
             // 如果火焰伤害大于0，播放燃烧音效
             // 如果闪电伤害大于0，播放电击音效

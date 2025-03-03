@@ -30,15 +30,22 @@ namespace LZ
             aiCharacter.aiCharacterLocomotionManager.RotateTowardsAgent(aiCharacter);
 
             // 如果我们在目标的战斗范围内，切换状态到战斗姿态状态
+            // 方法1
+            //if (aiCharacter.aiCharacterCombatManager.distanceFromTarget <= aiCharacter.combatStance.maximumEngagementDistance)
+            //    return SwitchState(aiCharacter, aiCharacter.combatStance);
+            
+            // 方法2
+            if (aiCharacter.aiCharacterCombatManager.distanceFromTarget <= aiCharacter.navMeshAgent.stoppingDistance)
+                return SwitchState(aiCharacter, aiCharacter.combatStance);
 
             // 如果目标无法到达，并且他们离得很远，返回家
 
             // 追击目标
-            // OPTION 01
+            // 方法1
             //aiCharacter.navMeshAgent.SetDestination(aiCharacter.aiCharacterCombatManager.currentTarget.transform
             //    .position);
             
-            // OPTION 02
+            // 方法2
             NavMeshPath path = new NavMeshPath();
             aiCharacter.navMeshAgent.CalculatePath(
                 aiCharacter.aiCharacterCombatManager.currentTarget.transform.position, path);
