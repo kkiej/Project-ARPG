@@ -24,6 +24,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: f2c40b951cee11943a1f6d5ec1b42f2c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _FoamTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Foam_sat:
         m_Texture: {fileID: 2800000, guid: ab507ff7ff37d954da98b07bf0bb152e, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -57,6 +61,7 @@ Material:
     - _AlphaCutoff: 0.5
     - _CausticsIntensity: 2
     - _CausticsTilling: 11
+    - _Float1: 9.32
     - _FoamBlend: -0.37
     - _FoamFrequency: 27.94
     - _FoamRange: 1
@@ -67,7 +72,7 @@ Material:
     - _NormalScale: 0.493
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _RefractionPower1: 0.231
+    - _RefractionPower1: 1
     - _Smoothness: 0.737
     - _SpecularPower: 60
     - _UVMovement_Reflection: 0

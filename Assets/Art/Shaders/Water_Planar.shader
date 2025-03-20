@@ -6,8 +6,6 @@ Shader "Custom/Scene/Water"
 	{
 		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
 		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
-		[ASEBegin]_WaterDepth("WaterDepth", Range( 0 , 5)) = 1
-		[ASEEnd]_FoamTex("Foam Tex", 2D) = "white" {}
 
 
 		[HideInInspector]_QueueOffset("_QueueOffset", Float) = 0
@@ -168,7 +166,6 @@ Shader "Custom/Scene/Water"
 			#define ASE_FOG 1
 			#define _SURFACE_TYPE_TRANSPARENT 1
 			#define ASE_SRP_VERSION 120107
-			#define REQUIRE_DEPTH_TEXTURE 1
 
 
 			#pragma multi_compile _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
@@ -196,8 +193,7 @@ Shader "Custom/Scene/Water"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Input.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceData.hlsl"
 
-			#define ASE_NEEDS_FRAG_WORLD_POSITION
-
+			
 
 			struct VertexInput
 			{
@@ -219,14 +215,13 @@ Shader "Custom/Scene/Water"
 				#ifdef ASE_FOG
 					float fogFactor : TEXCOORD2;
 				#endif
-				float4 ase_texcoord3 : TEXCOORD3;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
 			CBUFFER_START(UnityPerMaterial)
-			float _WaterDepth;
-			#ifdef ASE_TESSELLATION
+						#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
 				float _TessMin;
@@ -236,29 +231,9 @@ Shader "Custom/Scene/Water"
 			#endif
 			CBUFFER_END
 
-			sampler2D _FoamTex;
-			uniform float4 _CameraDepthTexture_TexelSize;
-
-
-			float2 UnStereo( float2 UV )
-			{
-				#if UNITY_SINGLE_PASS_STEREO
-				float4 scaleOffset = unity_StereoScaleOffset[ unity_StereoEyeIndex ];
-				UV.xy = (UV.xy - scaleOffset.zw) / scaleOffset.xy;
-				#endif
-				return UV;
-			}
-			
-			float3 InvertDepthDirURP75_g14( float3 In )
-			{
-				float3 result = In;
-				#if !defined(ASE_SRP_VERSION) || ASE_SRP_VERSION <= 70301 || ASE_SRP_VERSION == 70503 || ASE_SRP_VERSION == 70600 || ASE_SRP_VERSION == 70700 || ASE_SRP_VERSION == 70701 || ASE_SRP_VERSION >= 80301
-				result *= float3(1,1,-1);
-				#endif
-				return result;
-			}
 			
 
+			
 			VertexOutput VertexFunction ( VertexInput v  )
 			{
 				VertexOutput o = (VertexOutput)0;
@@ -266,9 +241,6 @@ Shader "Custom/Scene/Water"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				float4 ase_clipPos = TransformObjectToHClip((v.vertex).xyz);
-				float4 screenPos = ComputeScreenPos(ase_clipPos);
-				o.ase_texcoord3 = screenPos;
 				
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
@@ -408,36 +380,13 @@ Shader "Custom/Scene/Water"
 					#endif
 				#endif
 
-				float2 appendResult1105 = (float2(WorldPosition.x , WorldPosition.z));
-				float2 UV1235 = ( appendResult1105 * 0.02 );
-				
-				float4 screenPos = IN.ase_texcoord3;
-				float4 ase_screenPosNorm = screenPos / screenPos.w;
-				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 UV22_g15 = ase_screenPosNorm.xy;
-				float2 localUnStereo22_g15 = UnStereo( UV22_g15 );
-				float2 break64_g14 = localUnStereo22_g15;
-				float clampDepth69_g14 = SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy );
-				#ifdef UNITY_REVERSED_Z
-				float staticSwitch38_g14 = ( 1.0 - clampDepth69_g14 );
-				#else
-				float staticSwitch38_g14 = clampDepth69_g14;
-				#endif
-				float3 appendResult39_g14 = (float3(break64_g14.x , break64_g14.y , staticSwitch38_g14));
-				float4 appendResult42_g14 = (float4((appendResult39_g14*2.0 + -1.0) , 1.0));
-				float4 temp_output_43_0_g14 = mul( unity_CameraInvProjection, appendResult42_g14 );
-				float3 temp_output_46_0_g14 = ( (temp_output_43_0_g14).xyz / (temp_output_43_0_g14).w );
-				float3 In75_g14 = temp_output_46_0_g14;
-				float3 localInvertDepthDirURP75_g14 = InvertDepthDirURP75_g14( In75_g14 );
-				float4 appendResult49_g14 = (float4(localInvertDepthDirURP75_g14 , 1.0));
-				float4 PositionFormDepth3 = mul( unity_CameraToWorld, appendResult49_g14 );
-				float temp_output_6_0 = ( WorldPosition.y - (PositionFormDepth3).y );
-				float WaterDepth9 = saturate( ( temp_output_6_0 / _WaterDepth ) );
+				float2 appendResult1252 = (float2(cos( 3.14 ) , sin( 3.14 )));
+				float2 normalizeResult1253 = normalize( appendResult1252 );
 				
 				float3 BakedAlbedo = 0;
 				float3 BakedEmission = 0;
-				float3 Color = tex2D( _FoamTex, UV1235 ).rgb;
-				float Alpha = WaterDepth9;
+				float3 Color = float3( normalizeResult1253 ,  0.0 );
+				float Alpha = 1;
 				float AlphaClipThreshold = 0.5;
 				float AlphaClipThresholdShadow = 0.5;
 
@@ -484,7 +433,6 @@ Shader "Custom/Scene/Water"
 			#define ASE_FOG 1
 			#define _SURFACE_TYPE_TRANSPARENT 1
 			#define ASE_SRP_VERSION 120107
-			#define REQUIRE_DEPTH_TEXTURE 1
 
 
 			#pragma vertex vert
@@ -495,8 +443,7 @@ Shader "Custom/Scene/Water"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
-			#define ASE_NEEDS_FRAG_WORLD_POSITION
-
+			
 
 			struct VertexInput
 			{
@@ -515,14 +462,13 @@ Shader "Custom/Scene/Water"
 				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
 				float4 shadowCoord : TEXCOORD1;
 				#endif
-				float4 ase_texcoord2 : TEXCOORD2;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
 			CBUFFER_START(UnityPerMaterial)
-			float _WaterDepth;
-			#ifdef ASE_TESSELLATION
+						#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
 				float _TessMin;
@@ -532,28 +478,9 @@ Shader "Custom/Scene/Water"
 			#endif
 			CBUFFER_END
 
-			uniform float4 _CameraDepthTexture_TexelSize;
-
-
-			float2 UnStereo( float2 UV )
-			{
-				#if UNITY_SINGLE_PASS_STEREO
-				float4 scaleOffset = unity_StereoScaleOffset[ unity_StereoEyeIndex ];
-				UV.xy = (UV.xy - scaleOffset.zw) / scaleOffset.xy;
-				#endif
-				return UV;
-			}
-			
-			float3 InvertDepthDirURP75_g14( float3 In )
-			{
-				float3 result = In;
-				#if !defined(ASE_SRP_VERSION) || ASE_SRP_VERSION <= 70301 || ASE_SRP_VERSION == 70503 || ASE_SRP_VERSION == 70600 || ASE_SRP_VERSION == 70700 || ASE_SRP_VERSION == 70701 || ASE_SRP_VERSION >= 80301
-				result *= float3(1,1,-1);
-				#endif
-				return result;
-			}
 			
 
+			
 			VertexOutput VertexFunction( VertexInput v  )
 			{
 				VertexOutput o = (VertexOutput)0;
@@ -561,9 +488,6 @@ Shader "Custom/Scene/Water"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				float4 ase_clipPos = TransformObjectToHClip((v.vertex).xyz);
-				float4 screenPos = ComputeScreenPos(ase_clipPos);
-				o.ase_texcoord2 = screenPos;
 				
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
@@ -697,31 +621,9 @@ Shader "Custom/Scene/Water"
 					#endif
 				#endif
 
-				float4 screenPos = IN.ase_texcoord2;
-				float4 ase_screenPosNorm = screenPos / screenPos.w;
-				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 UV22_g15 = ase_screenPosNorm.xy;
-				float2 localUnStereo22_g15 = UnStereo( UV22_g15 );
-				float2 break64_g14 = localUnStereo22_g15;
-				float clampDepth69_g14 = SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy );
-				#ifdef UNITY_REVERSED_Z
-				float staticSwitch38_g14 = ( 1.0 - clampDepth69_g14 );
-				#else
-				float staticSwitch38_g14 = clampDepth69_g14;
-				#endif
-				float3 appendResult39_g14 = (float3(break64_g14.x , break64_g14.y , staticSwitch38_g14));
-				float4 appendResult42_g14 = (float4((appendResult39_g14*2.0 + -1.0) , 1.0));
-				float4 temp_output_43_0_g14 = mul( unity_CameraInvProjection, appendResult42_g14 );
-				float3 temp_output_46_0_g14 = ( (temp_output_43_0_g14).xyz / (temp_output_43_0_g14).w );
-				float3 In75_g14 = temp_output_46_0_g14;
-				float3 localInvertDepthDirURP75_g14 = InvertDepthDirURP75_g14( In75_g14 );
-				float4 appendResult49_g14 = (float4(localInvertDepthDirURP75_g14 , 1.0));
-				float4 PositionFormDepth3 = mul( unity_CameraToWorld, appendResult49_g14 );
-				float temp_output_6_0 = ( WorldPosition.y - (PositionFormDepth3).y );
-				float WaterDepth9 = saturate( ( temp_output_6_0 / _WaterDepth ) );
 				
 
-				float Alpha = WaterDepth9;
+				float Alpha = 1;
 				float AlphaClipThreshold = 0.5;
 
 				#ifdef _ALPHATEST_ON
@@ -752,7 +654,6 @@ Shader "Custom/Scene/Water"
 			#define ASE_FOG 1
 			#define _SURFACE_TYPE_TRANSPARENT 1
 			#define ASE_SRP_VERSION 120107
-			#define REQUIRE_DEPTH_TEXTURE 1
 
 
 			#pragma vertex vert
@@ -783,15 +684,13 @@ Shader "Custom/Scene/Water"
 			struct VertexOutput
 			{
 				float4 clipPos : SV_POSITION;
-				float4 ase_texcoord : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
 			CBUFFER_START(UnityPerMaterial)
-			float _WaterDepth;
-			#ifdef ASE_TESSELLATION
+						#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
 				float _TessMin;
@@ -801,28 +700,9 @@ Shader "Custom/Scene/Water"
 			#endif
 			CBUFFER_END
 
-			uniform float4 _CameraDepthTexture_TexelSize;
-
-
-			float2 UnStereo( float2 UV )
-			{
-				#if UNITY_SINGLE_PASS_STEREO
-				float4 scaleOffset = unity_StereoScaleOffset[ unity_StereoEyeIndex ];
-				UV.xy = (UV.xy - scaleOffset.zw) / scaleOffset.xy;
-				#endif
-				return UV;
-			}
-			
-			float3 InvertDepthDirURP75_g14( float3 In )
-			{
-				float3 result = In;
-				#if !defined(ASE_SRP_VERSION) || ASE_SRP_VERSION <= 70301 || ASE_SRP_VERSION == 70503 || ASE_SRP_VERSION == 70600 || ASE_SRP_VERSION == 70700 || ASE_SRP_VERSION == 70701 || ASE_SRP_VERSION >= 80301
-				result *= float3(1,1,-1);
-				#endif
-				return result;
-			}
 			
 
+			
 			int _ObjectId;
 			int _PassValue;
 
@@ -841,15 +721,7 @@ Shader "Custom/Scene/Water"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
-				o.ase_texcoord.xyz = ase_worldPos;
-				float4 ase_clipPos = TransformObjectToHClip((v.vertex).xyz);
-				float4 screenPos = ComputeScreenPos(ase_clipPos);
-				o.ase_texcoord1 = screenPos;
 				
-				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord.w = 0;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
@@ -956,32 +828,9 @@ Shader "Custom/Scene/Water"
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 
-				float3 ase_worldPos = IN.ase_texcoord.xyz;
-				float4 screenPos = IN.ase_texcoord1;
-				float4 ase_screenPosNorm = screenPos / screenPos.w;
-				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 UV22_g15 = ase_screenPosNorm.xy;
-				float2 localUnStereo22_g15 = UnStereo( UV22_g15 );
-				float2 break64_g14 = localUnStereo22_g15;
-				float clampDepth69_g14 = SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy );
-				#ifdef UNITY_REVERSED_Z
-				float staticSwitch38_g14 = ( 1.0 - clampDepth69_g14 );
-				#else
-				float staticSwitch38_g14 = clampDepth69_g14;
-				#endif
-				float3 appendResult39_g14 = (float3(break64_g14.x , break64_g14.y , staticSwitch38_g14));
-				float4 appendResult42_g14 = (float4((appendResult39_g14*2.0 + -1.0) , 1.0));
-				float4 temp_output_43_0_g14 = mul( unity_CameraInvProjection, appendResult42_g14 );
-				float3 temp_output_46_0_g14 = ( (temp_output_43_0_g14).xyz / (temp_output_43_0_g14).w );
-				float3 In75_g14 = temp_output_46_0_g14;
-				float3 localInvertDepthDirURP75_g14 = InvertDepthDirURP75_g14( In75_g14 );
-				float4 appendResult49_g14 = (float4(localInvertDepthDirURP75_g14 , 1.0));
-				float4 PositionFormDepth3 = mul( unity_CameraToWorld, appendResult49_g14 );
-				float temp_output_6_0 = ( ase_worldPos.y - (PositionFormDepth3).y );
-				float WaterDepth9 = saturate( ( temp_output_6_0 / _WaterDepth ) );
 				
 
-				surfaceDescription.Alpha = WaterDepth9;
+				surfaceDescription.Alpha = 1;
 				surfaceDescription.AlphaClipThreshold = 0.5;
 
 				#if _ALPHATEST_ON
@@ -1012,7 +861,6 @@ Shader "Custom/Scene/Water"
 			#define ASE_FOG 1
 			#define _SURFACE_TYPE_TRANSPARENT 1
 			#define ASE_SRP_VERSION 120107
-			#define REQUIRE_DEPTH_TEXTURE 1
 
 
 			#pragma vertex vert
@@ -1043,15 +891,13 @@ Shader "Custom/Scene/Water"
 			struct VertexOutput
 			{
 				float4 clipPos : SV_POSITION;
-				float4 ase_texcoord : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
 			CBUFFER_START(UnityPerMaterial)
-			float _WaterDepth;
-			#ifdef ASE_TESSELLATION
+						#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
 				float _TessMin;
@@ -1061,28 +907,9 @@ Shader "Custom/Scene/Water"
 			#endif
 			CBUFFER_END
 
-			uniform float4 _CameraDepthTexture_TexelSize;
-
-
-			float2 UnStereo( float2 UV )
-			{
-				#if UNITY_SINGLE_PASS_STEREO
-				float4 scaleOffset = unity_StereoScaleOffset[ unity_StereoEyeIndex ];
-				UV.xy = (UV.xy - scaleOffset.zw) / scaleOffset.xy;
-				#endif
-				return UV;
-			}
-			
-			float3 InvertDepthDirURP75_g14( float3 In )
-			{
-				float3 result = In;
-				#if !defined(ASE_SRP_VERSION) || ASE_SRP_VERSION <= 70301 || ASE_SRP_VERSION == 70503 || ASE_SRP_VERSION == 70600 || ASE_SRP_VERSION == 70700 || ASE_SRP_VERSION == 70701 || ASE_SRP_VERSION >= 80301
-				result *= float3(1,1,-1);
-				#endif
-				return result;
-			}
 			
 
+			
 			float4 _SelectionID;
 
 
@@ -1101,15 +928,7 @@ Shader "Custom/Scene/Water"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
-				o.ase_texcoord.xyz = ase_worldPos;
-				float4 ase_clipPos = TransformObjectToHClip((v.vertex).xyz);
-				float4 screenPos = ComputeScreenPos(ase_clipPos);
-				o.ase_texcoord1 = screenPos;
 				
-				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord.w = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -1211,32 +1030,9 @@ Shader "Custom/Scene/Water"
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 
-				float3 ase_worldPos = IN.ase_texcoord.xyz;
-				float4 screenPos = IN.ase_texcoord1;
-				float4 ase_screenPosNorm = screenPos / screenPos.w;
-				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 UV22_g15 = ase_screenPosNorm.xy;
-				float2 localUnStereo22_g15 = UnStereo( UV22_g15 );
-				float2 break64_g14 = localUnStereo22_g15;
-				float clampDepth69_g14 = SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy );
-				#ifdef UNITY_REVERSED_Z
-				float staticSwitch38_g14 = ( 1.0 - clampDepth69_g14 );
-				#else
-				float staticSwitch38_g14 = clampDepth69_g14;
-				#endif
-				float3 appendResult39_g14 = (float3(break64_g14.x , break64_g14.y , staticSwitch38_g14));
-				float4 appendResult42_g14 = (float4((appendResult39_g14*2.0 + -1.0) , 1.0));
-				float4 temp_output_43_0_g14 = mul( unity_CameraInvProjection, appendResult42_g14 );
-				float3 temp_output_46_0_g14 = ( (temp_output_43_0_g14).xyz / (temp_output_43_0_g14).w );
-				float3 In75_g14 = temp_output_46_0_g14;
-				float3 localInvertDepthDirURP75_g14 = InvertDepthDirURP75_g14( In75_g14 );
-				float4 appendResult49_g14 = (float4(localInvertDepthDirURP75_g14 , 1.0));
-				float4 PositionFormDepth3 = mul( unity_CameraToWorld, appendResult49_g14 );
-				float temp_output_6_0 = ( ase_worldPos.y - (PositionFormDepth3).y );
-				float WaterDepth9 = saturate( ( temp_output_6_0 / _WaterDepth ) );
 				
 
-				surfaceDescription.Alpha = WaterDepth9;
+				surfaceDescription.Alpha = 1;
 				surfaceDescription.AlphaClipThreshold = 0.5;
 
 				#if _ALPHATEST_ON
@@ -1274,7 +1070,6 @@ Shader "Custom/Scene/Water"
 			#define ASE_FOG 1
 			#define _SURFACE_TYPE_TRANSPARENT 1
 			#define ASE_SRP_VERSION 120107
-			#define REQUIRE_DEPTH_TEXTURE 1
 
 
 			#pragma vertex vert
@@ -1308,15 +1103,13 @@ Shader "Custom/Scene/Water"
 			{
 				float4 clipPos : SV_POSITION;
 				float3 normalWS : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
-				float4 ase_texcoord2 : TEXCOORD2;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
 			CBUFFER_START(UnityPerMaterial)
-			float _WaterDepth;
-			#ifdef ASE_TESSELLATION
+						#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
 				float _TessMin;
@@ -1326,28 +1119,9 @@ Shader "Custom/Scene/Water"
 			#endif
 			CBUFFER_END
 
-			uniform float4 _CameraDepthTexture_TexelSize;
-
-
-			float2 UnStereo( float2 UV )
-			{
-				#if UNITY_SINGLE_PASS_STEREO
-				float4 scaleOffset = unity_StereoScaleOffset[ unity_StereoEyeIndex ];
-				UV.xy = (UV.xy - scaleOffset.zw) / scaleOffset.xy;
-				#endif
-				return UV;
-			}
-			
-			float3 InvertDepthDirURP75_g14( float3 In )
-			{
-				float3 result = In;
-				#if !defined(ASE_SRP_VERSION) || ASE_SRP_VERSION <= 70301 || ASE_SRP_VERSION == 70503 || ASE_SRP_VERSION == 70600 || ASE_SRP_VERSION == 70700 || ASE_SRP_VERSION == 70701 || ASE_SRP_VERSION >= 80301
-				result *= float3(1,1,-1);
-				#endif
-				return result;
-			}
 			
 
+			
 			struct SurfaceDescription
 			{
 				float Alpha;
@@ -1363,15 +1137,7 @@ Shader "Custom/Scene/Water"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
-				o.ase_texcoord1.xyz = ase_worldPos;
-				float4 ase_clipPos = TransformObjectToHClip((v.vertex).xyz);
-				float4 screenPos = ComputeScreenPos(ase_clipPos);
-				o.ase_texcoord2 = screenPos;
 				
-				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord1.w = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -1480,32 +1246,9 @@ Shader "Custom/Scene/Water"
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 
-				float3 ase_worldPos = IN.ase_texcoord1.xyz;
-				float4 screenPos = IN.ase_texcoord2;
-				float4 ase_screenPosNorm = screenPos / screenPos.w;
-				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 UV22_g15 = ase_screenPosNorm.xy;
-				float2 localUnStereo22_g15 = UnStereo( UV22_g15 );
-				float2 break64_g14 = localUnStereo22_g15;
-				float clampDepth69_g14 = SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy );
-				#ifdef UNITY_REVERSED_Z
-				float staticSwitch38_g14 = ( 1.0 - clampDepth69_g14 );
-				#else
-				float staticSwitch38_g14 = clampDepth69_g14;
-				#endif
-				float3 appendResult39_g14 = (float3(break64_g14.x , break64_g14.y , staticSwitch38_g14));
-				float4 appendResult42_g14 = (float4((appendResult39_g14*2.0 + -1.0) , 1.0));
-				float4 temp_output_43_0_g14 = mul( unity_CameraInvProjection, appendResult42_g14 );
-				float3 temp_output_46_0_g14 = ( (temp_output_43_0_g14).xyz / (temp_output_43_0_g14).w );
-				float3 In75_g14 = temp_output_46_0_g14;
-				float3 localInvertDepthDirURP75_g14 = InvertDepthDirURP75_g14( In75_g14 );
-				float4 appendResult49_g14 = (float4(localInvertDepthDirURP75_g14 , 1.0));
-				float4 PositionFormDepth3 = mul( unity_CameraToWorld, appendResult49_g14 );
-				float temp_output_6_0 = ( ase_worldPos.y - (PositionFormDepth3).y );
-				float WaterDepth9 = saturate( ( temp_output_6_0 / _WaterDepth ) );
 				
 
-				surfaceDescription.Alpha = WaterDepth9;
+				surfaceDescription.Alpha = 1;
 				surfaceDescription.AlphaClipThreshold = 0.5;
 
 				#if _ALPHATEST_ON
@@ -1541,7 +1284,6 @@ Shader "Custom/Scene/Water"
 			#define ASE_FOG 1
 			#define _SURFACE_TYPE_TRANSPARENT 1
 			#define ASE_SRP_VERSION 120107
-			#define REQUIRE_DEPTH_TEXTURE 1
 
 
 			#pragma exclude_renderers glcore gles gles3 
@@ -1578,15 +1320,13 @@ Shader "Custom/Scene/Water"
 			{
 				float4 clipPos : SV_POSITION;
 				float3 normalWS : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
-				float4 ase_texcoord2 : TEXCOORD2;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
 			CBUFFER_START(UnityPerMaterial)
-			float _WaterDepth;
-			#ifdef ASE_TESSELLATION
+						#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
 				float _TessMin;
@@ -1595,28 +1335,9 @@ Shader "Custom/Scene/Water"
 				float _TessMaxDisp;
 			#endif
 			CBUFFER_END
-			uniform float4 _CameraDepthTexture_TexelSize;
-
-
-			float2 UnStereo( float2 UV )
-			{
-				#if UNITY_SINGLE_PASS_STEREO
-				float4 scaleOffset = unity_StereoScaleOffset[ unity_StereoEyeIndex ];
-				UV.xy = (UV.xy - scaleOffset.zw) / scaleOffset.xy;
-				#endif
-				return UV;
-			}
-			
-			float3 InvertDepthDirURP75_g14( float3 In )
-			{
-				float3 result = In;
-				#if !defined(ASE_SRP_VERSION) || ASE_SRP_VERSION <= 70301 || ASE_SRP_VERSION == 70503 || ASE_SRP_VERSION == 70600 || ASE_SRP_VERSION == 70700 || ASE_SRP_VERSION == 70701 || ASE_SRP_VERSION >= 80301
-				result *= float3(1,1,-1);
-				#endif
-				return result;
-			}
 			
 
+			
 			struct SurfaceDescription
 			{
 				float Alpha;
@@ -1632,15 +1353,7 @@ Shader "Custom/Scene/Water"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
-				o.ase_texcoord1.xyz = ase_worldPos;
-				float4 ase_clipPos = TransformObjectToHClip((v.vertex).xyz);
-				float4 screenPos = ComputeScreenPos(ase_clipPos);
-				o.ase_texcoord2 = screenPos;
 				
-				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord1.w = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -1749,32 +1462,9 @@ Shader "Custom/Scene/Water"
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 
-				float3 ase_worldPos = IN.ase_texcoord1.xyz;
-				float4 screenPos = IN.ase_texcoord2;
-				float4 ase_screenPosNorm = screenPos / screenPos.w;
-				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 UV22_g15 = ase_screenPosNorm.xy;
-				float2 localUnStereo22_g15 = UnStereo( UV22_g15 );
-				float2 break64_g14 = localUnStereo22_g15;
-				float clampDepth69_g14 = SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy );
-				#ifdef UNITY_REVERSED_Z
-				float staticSwitch38_g14 = ( 1.0 - clampDepth69_g14 );
-				#else
-				float staticSwitch38_g14 = clampDepth69_g14;
-				#endif
-				float3 appendResult39_g14 = (float3(break64_g14.x , break64_g14.y , staticSwitch38_g14));
-				float4 appendResult42_g14 = (float4((appendResult39_g14*2.0 + -1.0) , 1.0));
-				float4 temp_output_43_0_g14 = mul( unity_CameraInvProjection, appendResult42_g14 );
-				float3 temp_output_46_0_g14 = ( (temp_output_43_0_g14).xyz / (temp_output_43_0_g14).w );
-				float3 In75_g14 = temp_output_46_0_g14;
-				float3 localInvertDepthDirURP75_g14 = InvertDepthDirURP75_g14( In75_g14 );
-				float4 appendResult49_g14 = (float4(localInvertDepthDirURP75_g14 , 1.0));
-				float4 PositionFormDepth3 = mul( unity_CameraToWorld, appendResult49_g14 );
-				float temp_output_6_0 = ( ase_worldPos.y - (PositionFormDepth3).y );
-				float WaterDepth9 = saturate( ( temp_output_6_0 / _WaterDepth ) );
 				
 
-				surfaceDescription.Alpha = WaterDepth9;
+				surfaceDescription.Alpha = 1;
 				surfaceDescription.AlphaClipThreshold = 0.5;
 
 				#if _ALPHATEST_ON
@@ -1809,7 +1499,7 @@ Node;AmplifyShaderEditor.CommentaryNode;79;-2011.151,4205.629;Inherit;False;1885
 Node;AmplifyShaderEditor.CommentaryNode;8;-1708.835,930.2194;Inherit;False;1870.931;415.9865;Comment;12;1166;3;1077;1167;1165;1163;9;1160;1159;5;6;4;高度深度;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;55;-4913.324,2123.687;Inherit;False;1635.816;827.8829;Comment;9;1230;1088;698;46;252;93;54;47;685;扰乱波纹法线;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;846;-2425.406,5079.281;Inherit;False;2681.324;691.5361;Comment;22;826;827;828;829;830;831;832;833;834;835;837;838;839;840;841;842;843;844;845;863;1168;1161;焦散;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;1058;-2686.174,1464.393;Inherit;False;3327.338;1375.018;Refraction;37;1067;1145;1144;1143;1142;1141;1140;1139;1138;1137;1136;1135;1134;1133;1132;1131;1130;1129;1128;1127;1126;1125;1124;1123;1122;1121;1120;1119;1118;1117;1116;1115;1114;1113;1112;1111;1110;Refraction;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;1058;-2686.174,1464.393;Inherit;False;3327.338;1375.018;Refraction;41;1067;1145;1144;1143;1142;1141;1140;1139;1138;1137;1136;1135;1134;1133;1132;1131;1130;1129;1128;1127;1126;1125;1124;1123;1122;1121;1120;1119;1118;1117;1116;1115;1114;1113;1112;1111;1110;1237;1241;1242;1244;Refraction;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;1057;-4557.413,4015.881;Inherit;False;1052.073;348.8972;Comment;5;1052;1053;1054;1055;1056;NdotL;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;998;-5741.884,4965.147;Inherit;False;2937.418;871.2874;Comment;24;1195;1193;1192;1191;1190;1189;1188;1187;1186;1185;1184;1183;1182;1181;1180;1179;1178;1177;1176;1175;1174;1173;1196;1197;高光;1,1,1,1;0;0
 Node;AmplifyShaderEditor.GetLocalVarNode;806;3726.818,3998.711;Inherit;False;793;TransmittAreaMask;1;0;OBJECT;;False;1;FLOAT;0
@@ -1876,10 +1566,8 @@ Node;AmplifyShaderEditor.OneMinusNode;1115;-2290.79,2361.422;Inherit;False;1;0;F
 Node;AmplifyShaderEditor.SimpleDivideOpNode;1114;-2295.569,2008.267;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;10;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ScreenDepthNode;1113;-2522.79,2441.422;Inherit;False;0;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ProjectionParams;1112;-2602.177,2580.195;Inherit;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.GetLocalVarNode;1111;-2608.743,2154.248;Inherit;False;47;normalTS;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RangedFloatNode;1110;-2602.767,2003.267;Inherit;False;Property;_RefractionPower1;Refraction Power;8;0;Create;True;0;0;0;False;0;False;0.1;1.81;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.WorldPosInputsNode;1119;-2019.03,1510.568;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.GrabScreenPosition;1118;-2145.096,1871.455;Inherit;False;0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.LerpOp;1144;-94.04576,1967.134;Inherit;False;3;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.WorldSpaceCameraPos;1122;-2069.487,1690.34;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.OrthoParams;1135;-1248.787,2697.421;Inherit;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -1904,7 +1592,6 @@ Node;AmplifyShaderEditor.SimpleAddOpNode;1126;-1855.852,1986.319;Inherit;False;2
 Node;AmplifyShaderEditor.ScreenPosInputsNode;1125;-1787.149,1732.633;Float;False;1;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;1124;-1748.041,1591.328;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.LerpOp;1123;-1895.789,2601.421;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TransformDirectionNode;1117;-2376.602,2156.018;Inherit;False;Tangent;View;False;Fast;False;1;0;FLOAT3;0,0,0;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.SimpleMinOpNode;832;-648.0591,5330.737;Inherit;False;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;831;27.91951,5528.163;Float;False;Caustics;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SimpleDivideOpNode;803;-1019.95,3208.239;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
@@ -1933,7 +1620,7 @@ Node;AmplifyShaderEditor.ScreenColorNode;1145;139.0358,1966.42;Inherit;False;Glo
 Node;AmplifyShaderEditor.Vector2Node;843;-1914.273,5424.38;Inherit;False;Property;_CausticsSpeed;Caustics Speed;11;0;Create;True;0;0;0;False;0;False;-0.1,-0.05;-0.2,-0.1;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.SamplerNode;844;-1091.942,5141.123;Inherit;True;Property;_CausticsTex;Caustics Tex;10;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1067;369.5909,1962.257;Inherit;False;Refraction;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SamplerNode;56;-1067.453,4460.692;Inherit;True;Global;_ReflectionTex;_ReflectionTex;7;0;Create;True;0;0;0;False;0;False;-1;None;;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;56;-1067.453,4460.692;Inherit;True;Global;_ReflectionTex;_ReflectionTex;7;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RegisterLocalVarNode;67;-421.4305,4435.19;Inherit;False;ReflectColor;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.OneMinusNode;979;-1765.601,3697.759;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SwizzleNode;978;-1939.601,3692.759;Inherit;False;FLOAT;1;1;2;3;1;0;FLOAT2;0,0;False;1;FLOAT;0
@@ -1969,7 +1656,6 @@ Node;AmplifyShaderEditor.ViewDirInputsCoordNode;1173;-5541.284,5290.561;Inherit;
 Node;AmplifyShaderEditor.WorldSpaceLightDirHlpNode;1196;-5591.306,5102.343;Inherit;False;False;1;0;FLOAT;0;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.GetLocalVarNode;1195;-5176.526,5299.062;Inherit;False;698;NormalWS;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;47;-3722.269,2383.021;Inherit;False;normalTS;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.BlendNormalsNode;54;-3981.216,2471.129;Inherit;False;0;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SamplerNode;93;-4350.208,2562.381;Inherit;True;Property;_TextureSample0;Texture Sample 0;3;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;True;bump;Auto;True;Instance;46;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1193;-3087.144,5271.313;Inherit;False;Specular;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SwizzleNode;4;-904.7222,1193.905;Inherit;False;FLOAT;1;1;2;3;1;0;FLOAT4;0,0,0,0;False;1;FLOAT;0
@@ -1991,7 +1677,6 @@ Node;AmplifyShaderEditor.GetLocalVarNode;833;-490.2997,5570.816;Inherit;False;78
 Node;AmplifyShaderEditor.GetLocalVarNode;1161;-583.0367,5684.594;Inherit;False;1166;ColorLerp;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.OneMinusNode;1168;-391.3174,5688.471;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;252;-4673.146,2427.399;Inherit;False;Property;_NormalScale;Normal Scale;4;0;Create;True;0;0;0;False;0;False;0.2;0.207;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SamplerNode;46;-4341.283,2261.51;Inherit;True;Property;_NormalMap;NormalMap;3;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;True;bump;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SwizzleNode;1204;-1675.121,4298.421;Inherit;False;FLOAT2;0;1;2;3;1;0;FLOAT4;0,0,0,0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.ScreenPosInputsNode;57;-1917.519,4300.831;Float;False;0;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RegisterLocalVarNode;976;-1482.596,4298.458;Inherit;False;ScreenMask;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0
@@ -2025,10 +1710,27 @@ Node;AmplifyShaderEditor.RegisterLocalVarNode;1235;-4191.002,1073.614;Inherit;Fa
 Node;AmplifyShaderEditor.GetLocalVarNode;1236;-4220.002,1193.614;Inherit;False;1235;UV;1;0;OBJECT;;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1233;3156.345,3202.167;Inherit;False;1235;UV;1;0;OBJECT;;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.SamplerNode;1232;3521.111,3175.479;Inherit;True;Property;_FoamTex;Foam Tex;16;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1237;-2303.615,1885.423;Inherit;False;2;2;0;FLOAT;0.2;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1111;-2608.743,2154.248;Inherit;False;47;normalTS;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.BlendNormalsNode;54;-3981.216,2471.129;Inherit;False;0;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SamplerNode;46;-4341.283,2261.51;Inherit;True;Property;_NormalMap;NormalMap;3;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;True;bump;Auto;True;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.DynamicAppendNode;1238;1257.935,2739.008;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;1240;809.3895,2689.276;Inherit;False;FLOAT3;1;0;FLOAT3;0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.TransformDirectionNode;1117;-2376.602,2156.018;Inherit;False;Tangent;View;False;Fast;False;1;0;FLOAT3;0,0,0;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.GrabScreenPosition;1118;-2145.096,1871.455;Inherit;False;0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.DynamicAppendNode;1241;-1842.786,2194.25;Inherit;True;FLOAT4;4;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.ScreenPosInputsNode;1242;-2099.786,2211.25;Float;False;0;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.FunctionNode;1244;-1800.906,2088.842;Inherit;False;Reconstruct World Position From Depth;-1;;16;e7094bcbcc80eb140b2a3dbe6a861de8;0;0;1;FLOAT4;0
+Node;AmplifyShaderEditor.PosVertexDataNode;1247;3703.066,3478.923;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.DepthFade;1245;4029.066,3486.923;Inherit;False;True;False;True;2;1;FLOAT3;0,0,0;False;0;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1248;3753.066,3656.923;Inherit;False;Property;_Float1;Float 1;17;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.CosOpNode;1250;4444.309,3301.325;Inherit;False;1;0;FLOAT;3.14;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SinOpNode;1251;4446.309,3420.325;Inherit;False;1;0;FLOAT;3.14;False;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;1252;4649.309,3378.325;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.NormalizeNode;1253;4853.309,3390.325;Inherit;False;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0
 WireConnection;805;0;249;0
 WireConnection;805;1;806;0
-WireConnection;627;2;1232;0
-WireConnection;627;3;1170;0
+WireConnection;627;2;1253;0
 WireConnection;858;0;849;0
 WireConnection;858;1;855;0
 WireConnection;857;0;856;0
@@ -2072,7 +1774,7 @@ WireConnection;827;0;840;0
 WireConnection;827;1;830;0
 WireConnection;842;0;828;0
 WireConnection;842;1;830;0
-WireConnection;1120;0;1114;0
+WireConnection;1120;0;1237;0
 WireConnection;1120;1;1117;0
 WireConnection;1116;1;1112;1
 WireConnection;1115;0;1113;0
@@ -2110,7 +1812,6 @@ WireConnection;1124;1;1122;0
 WireConnection;1123;0;1112;2
 WireConnection;1123;1;1112;3
 WireConnection;1123;2;1121;0
-WireConnection;1117;0;1111;0
 WireConnection;832;0;844;0
 WireConnection;832;1;839;0
 WireConnection;831;0;841;0
@@ -2177,10 +1878,7 @@ WireConnection;1191;1;1185;0
 WireConnection;1192;0;1196;0
 WireConnection;1192;1;1173;0
 WireConnection;47;0;54;0
-WireConnection;54;0;46;0
-WireConnection;54;1;93;0
 WireConnection;93;1;1230;0
-WireConnection;93;5;252;0
 WireConnection;1193;0;1189;0
 WireConnection;4;0;3;0
 WireConnection;6;0;5;2
@@ -2197,8 +1895,6 @@ WireConnection;786;0;784;0
 WireConnection;793;0;792;0
 WireConnection;783;0;787;0
 WireConnection;1168;0;1161;0
-WireConnection;46;1;1088;0
-WireConnection;46;5;252;0
 WireConnection;1204;0;57;0
 WireConnection;976;0;1204;0
 WireConnection;815;0;814;0
@@ -2228,5 +1924,19 @@ WireConnection;1234;0;1105;0
 WireConnection;1234;1;1217;0
 WireConnection;1235;0;1234;0
 WireConnection;1232;1;1233;0
+WireConnection;1237;1;1110;0
+WireConnection;54;0;46;0
+WireConnection;54;1;93;0
+WireConnection;46;1;1088;0
+WireConnection;1238;0;1240;0
+WireConnection;1238;1;1240;1
+WireConnection;1240;0;1120;0
+WireConnection;1117;0;1111;0
+WireConnection;1241;0;1242;0
+WireConnection;1245;1;1247;0
+WireConnection;1245;0;1248;0
+WireConnection;1252;0;1250;0
+WireConnection;1252;1;1251;0
+WireConnection;1253;0;1252;0
 ASEEND*/
-//CHKSM=29C1B5FBB35E17DBEC48DB8791947B0B66DD4534
+//CHKSM=EDBF70CE5458ACB164AF32ADE2D1E2EABEB4AA6A
