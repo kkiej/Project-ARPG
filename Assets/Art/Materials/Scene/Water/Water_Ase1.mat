@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Water_Ase1
+  m_Shader: {fileID: 4800000, guid: ead09cb2ac2007b48807f871d12797a7, type: 3}
+  m_ValidKeywords:
+  - _INTERSECTIONEFFECTS_ON
+  - _LIGHTING_ON
+  - _SURFACEFOAM_ON
+  m_InvalidKeywords:
+  - _WORLDSPACEUV_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _GradientTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IntersectionFoamTexture:
+        m_Texture: {fileID: 2800000, guid: 772031b03d9d46e4ab03e15c8e17718c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTexture:
+        m_Texture: {fileID: 2800000, guid: a41da5f5671718b47bbc71e9ef691103, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SurfaceFoamTexture:
+        m_Texture: {fileID: 2800000, guid: ab507ff7ff37d954da98b07bf0bb152e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaCutoff: 0.5
+    - _ColorDepth: 0.84
+    - _Float1: 0.614
+    - _FoamShadowDepth: 10
+    - _FoamShadows: 0
+    - _Gradient: 0
+    - _Hardness: 0
+    - _HeightMask: 0.207
+    - _HeightMaskSmoothness: 0.556
+    - _HorizonDistance: 20
+    - _IntersectionDepth: 0.72
+    - _IntersectionEffects: 1
+    - _IntersectionFoamBlend: 1
+    - _IntersectionFoamScale: 0.19
+    - _IntersectionFoamShadowProjection: 4.6
+    - _IntersectionWaterBlend: 0
+    - _Lighting: 1
+    - _NormalStrength: 0.42
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _ReflectionFresnel: 2.5
+    - _ReflectionStrength: 0.82
+    - _Refraction: 0.022
+    - _ShadowStrength: 0.45
+    - _ShoreBlend: 1
+    - _ShoreDepth: 0.74
+    - _ShoreFade: 1
+    - _ShoreFoamBreakupScale: 0
+    - _ShoreFoamBreakupStrength: 0
+    - _ShoreFoamFrequency: 0
+    - _ShoreFoamSpeed: 0
+    - _ShoreFoamWidth: 0
+    - _ShoreMovement: 0
+    - _Smoothness: 0.71
+    - _SurfaceFoam: 1
+    - _SurfaceFoamBlend: 1
+    - _SurfaceFoamShadowDepth: 10
+    - _SurfaceFoamShadowProjection: 15
+    - _WorldSpaceUV: 1
+    m_Colors:
+    - _DeepColor: {r: 0.01176471, g: 0.28627446, b: 0.50980395, a: 1}
+    - _DiffuseColor: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IntersectionFoamColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IntersectionFoamMovement: {r: 0, g: 0, b: 0, a: 0}
+    - _IntersectionFoamSampling: {r: 1, g: 0, b: 0, a: 0}
+    - _NormalMovement: {r: 0.04, g: 0.36, b: 0, a: 0}
+    - _ShallowColor: {r: 0, g: 0.772549, b: 0.62352943, a: 0.5019608}
+    - _ShoreColor: {r: 0, g: 0.98039216, b: 0.30196074, a: 0}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 0}
+    - _SurfaceFoamColor1: {r: 1, g: 1, b: 1, a: 0.3215686}
+    - _SurfaceFoamColor2: {r: 1, g: 1, b: 1, a: 0.7294118}
+    - _SurfaceFoamMovement: {r: 0.7, g: 0, b: 0.47, a: 0.01}
+    - _SurfaceFoamSampling: {r: 0.62, g: 0, b: 0, a: 0}
+    - _SurfaceFoamTillingandOffset: {r: -1, g: -1, b: 0.57, a: 0.22}
+    - _WaveDirections: {r: 0, g: 0.64, b: 1, a: 0.33}
+    - _WaveVisuals: {r: 0.122, g: 7.9, b: 1.38, a: 0}
+  m_BuildTextureStacks: []
