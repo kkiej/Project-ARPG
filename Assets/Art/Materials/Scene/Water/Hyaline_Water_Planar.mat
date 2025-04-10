@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hyaline_Water_Planar
+  m_Shader: {fileID: 4800000, guid: 84327d24f36eb244f8817685aef81b07, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _CausticsTex:
+        m_Texture: {fileID: 2800000, guid: b3f9fed74fb5f1c4ea4fe5b062c3b953, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Foam_sat:
+        m_Texture: {fileID: 2800000, guid: 0a33360c1c6b85c45bb8a19af0c4e87a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: f87d53fcaf34530488b706ee35d9b519, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReflectionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaCutoff: 0.5
+    - _CausticsIntensity: 0.61
+    - _CausticsTilling: 15
+    - _Float12: -0.51
+    - _Float4: 1.42
+    - _FlowSpeed: 1
+    - _FoamBlend: -0.37
+    - _FoamEdge: 0.97
+    - _FoamFrequency: 27.94
+    - _FoamRange: 1
+    - _FoamSpeed: -5.51
+    - _FoamTide_Range: 30
+    - _FoamTide_Range2: 30
+    - _FoamTilling: 4.75
+    - _Opacity: 4.26
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _RefractionPower: 1
+    - _RefractionPower1: 0.1
+    - _SpecularPower: 20
+    - _UVMovement_Reflection: 0.14
+    - _WaveSpeed: -3
+    - _WaveTile: 1
+    - _depth_range: 2
+    - _foamspeed: 0.127
+    - _normal_in: 0.149
+    - _normal_in1: 0.073
+    m_Colors:
+    - _CausticsSpeed: {r: -0.1, g: -0.05, b: 0, a: 0}
+    - _Color2: {r: 0.6698113, g: 0.9897224, b: 1, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FoamNoiseSize: {r: 10, g: 40, b: 0, a: 0}
+    - _NormalMovement: {r: 1.6, g: 1.92, b: 0, a: 0}
+    - _NormalMovement1: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []

@@ -296,7 +296,7 @@ Shader "NMJJ/Scene/Water_ASE"
 			float3 _LightDir;
 			sampler2D _NormalMap;
 			sampler2D _CausticsTex;
-			sampler2D _ReflectionTex;
+			sampler2D _PlanarReflectionTexture;
 
 
 			float2 UnStereo( float2 UV )
@@ -569,7 +569,7 @@ Shader "NMJJ/Scene/Water_ASE"
 				float2 appendResult308 = (float2(ase_screenPosNorm.x , ase_screenPosNorm.y));
 				float3 SurfaceNormal241 = temp_output_245_0;
 				float2 temp_output_128_0 = ( (SurfaceNormal241).xy * _ReflectDistort );
-				float4 tex2DNode425 = tex2D( _ReflectionTex, ( ( appendResult308 / ase_screenPosNorm.w ) + temp_output_128_0 ) );
+				float4 tex2DNode425 = tex2D( _PlanarReflectionTexture, ( ( appendResult308 / ase_screenPosNorm.w ) + temp_output_128_0 ) );
 				float dotResult696 = dot( ase_worldViewDir , normalizedWorldNormal );
 				float ReflectionMask35 = pow( max( ( 1.0 - dotResult696 ) , 0.001 ) , _ReflectionRange );
 				float4 ReflectColor143 = ( tex2DNode425 * ReflectionMask35 * _ReflectionStrength );
@@ -1035,7 +1035,6 @@ Node;AmplifyShaderEditor.TextureTransformNode;580;-2252.228,-1813.699;Inherit;Fa
 Node;AmplifyShaderEditor.SamplerNode;466;-1665.8,-612.6228;Inherit;True;Property;_CausticsTex;Caustics Tex;14;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SwizzleNode;621;55.01221,9.700914;Inherit;False;FLOAT;3;1;2;3;1;0;FLOAT4;0,0,0,0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleDivideOpNode;622;256.0121,-58.2991;Inherit;False;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.SamplerNode;425;-4373.997,-412.7379;Inherit;True;Global;_ReflectionTex;_ReflectionTex;8;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.GetLocalVarNode;481;-6995.454,412.5105;Inherit;False;468;Refraction;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;474;500.9225,-661.4378;Inherit;False;139;WaterColor;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.IndirectSpecularLight;318;-4310.42,-599.6906;Inherit;False;World;3;0;FLOAT3;0,0,1;False;1;FLOAT;1;False;2;FLOAT;1;False;1;FLOAT3;0
@@ -1193,6 +1192,7 @@ Node;AmplifyShaderEditor.GetLocalVarNode;397;-1062.156,-97.92774;Inherit;False;6
 Node;AmplifyShaderEditor.RegisterLocalVarNode;468;-2749.3,-1667.157;Inherit;False;Refraction;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;748;-6716.502,-2074.85;Inherit;False;ReconstructWorldPosition;-1;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.FunctionNode;256;-7090.503,-2068.103;Inherit;False;Reconstruct World Position From Depth;-1;;14;e7094bcbcc80eb140b2a3dbe6a861de8;0;0;1;FLOAT4;0
+Node;AmplifyShaderEditor.SamplerNode;425;-4373.997,-412.7379;Inherit;True;Global;_PlanarReflectionTexture;_PlanarReflectionTexture;8;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 WireConnection;1;2;297;0
 WireConnection;1;3;629;0
 WireConnection;297;0;474;0
@@ -1301,7 +1301,6 @@ WireConnection;466;1;133;0
 WireConnection;621;0;620;0
 WireConnection;622;0;620;0
 WireConnection;622;1;621;0
-WireConnection;425;1;355;0
 WireConnection;318;0;384;0
 WireConnection;554;0;425;0
 WireConnection;554;1;340;0
@@ -1446,5 +1445,6 @@ WireConnection;248;5;512;0
 WireConnection;625;0;626;0
 WireConnection;468;0;420;0
 WireConnection;748;0;256;0
+WireConnection;425;1;355;0
 ASEEND*/
-//CHKSM=42BEF2838E7642B3537AD66529629DC3C4A380C3
+//CHKSM=073B4362387AB89BEF77D27F7558AF14BEB74A25

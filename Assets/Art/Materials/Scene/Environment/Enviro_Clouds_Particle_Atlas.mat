@@ -1,0 +1,171 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Enviro_Clouds_Particle_Atlas
+  m_Shader: {fileID: 4800000, guid: b3ee7d9139c160f4fb3daa5264a6940f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloudEdgeNoise:
+        m_Texture: {fileID: 2800000, guid: a82825a3824be7c4db49aa984e21dbfe, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0.4, y: 0.05}
+    - _CloudLerpTex:
+        m_Texture: {fileID: 2800000, guid: ed5abd2216e5933409fb15e967e3c55c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloudTex:
+        m_Texture: {fileID: 2800000, guid: 63e3eaf0b8f5bbb41948e1daec6e891b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: ed5abd2216e5933409fb15e967e3c55c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlbedoControl: 1.02
+    - _AlphaClip: 0
+    - _Blend: 0
+    - _BloomIntensity: 1
+    - _BloomRadius: 0.787
+    - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _ColorLerpSize: 1
+    - _ColorLerpStrength: 1
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DetailAlbedoMapScale: 1
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _EnvironmentReflections: 1
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _LerpCtrl: 1
+    - _LerpSpeed: 4
+    - _LerpTimeOffset: 0
+    - _Metallic: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.005
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _RimRadius: 30
+    - _RimSize: 0.16
+    - _RimStrength: 0.6
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Surface: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BrightC1: {r: 1, g: 0.8110465, b: 0.75, a: 1}
+    - _BrightC2: {r: 0.9811321, g: 0.9811321, b: 0.89320046, a: 1}
+    - _BrightC3: {r: 0.8537736, g: 0.9066265, b: 1, a: 1}
+    - _BrightC4: {r: 0.74038804, g: 0.8335954, b: 0.8867924, a: 1}
+    - _BrightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BrightColor1: {r: 1, g: 0.97853774, b: 0.9386792, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DarkColor: {r: 0.8773585, g: 0.79045033, b: 0.79045033, a: 1}
+    - _DarkColor1: {r: 0.8301887, g: 0.8301887, b: 0.8301887, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor1: {r: 1, g: 0.9866352, b: 0.9198113, a: 1}
+    - _SecDarkColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SecDarkColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowC1: {r: 0.7737629, g: 0.8504441, b: 0.8679245, a: 1}
+    - _ShadowC2: {r: 0.8301442, g: 0.85427344, b: 0.8584906, a: 1}
+    - _ShadowC3: {r: 0.7919452, g: 0.7924528, b: 0.75133497, a: 1}
+    - _ShadowC4: {r: 0.6604664, g: 0.6875928, b: 0.7735849, a: 1}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+  m_BuildTextureStacks: []
+--- !u!114 &7225349854875518690
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5
