@@ -1,0 +1,215 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-717853282410598306
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 2
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 12001_Body
+  m_Shader: {fileID: 4800000, guid: 890b740c422787446a465a4f10895257, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2001
+  stringTagMap: {}
+  disabledShaderPasses:
+  - ShineOutLine
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BlendTex:
+        m_Texture: {fileID: 2800000, guid: ea0a080db57c2df47b3f12947d09a82c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CelTex:
+        m_Texture: {fileID: 2800000, guid: d9b5cb36f56b3fb4bae5c8976fe22518, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionTex:
+        m_Texture: {fileID: 2800000, guid: 06cef72ceaa676d49a60b36c460ee516, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IceTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 9d3ac3ac5a9446945a1393c2c01dcd62, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StockingTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 20, y: 20}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AddObjectY: 0
+    - _AlphaClip: 0
+    - _Blend: 0
+    - _BumpScale: 1
+    - _CheckLine: 1.74
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DarkLuminance: 0
+    - _DissolveCut: 0
+    - _DissolveScale: 0
+    - _DissolveWidth: 0
+    - _DstBlend: 0
+    - _EdgeWidth: 0
+    - _EmissionStrength: 0
+    - _EnvironmentReflections: 1
+    - _FirstShadowFeather: 0.3
+    - _FirstShadowSet: 0.8
+    - _First_Fresnel_Shadow_Feather: 1
+    - _First_Fresnel_Shadow_Step: 0.26
+    - _FresnelFeather: 0.3
+    - _FresnelFlowRange: 0.5
+    - _FresnelRange: 0.3
+    - _Fresnel_Light_Feather: 0.25
+    - _Fresnel_Light_Step: 1
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _HairShadowDistace: 0.05
+    - _Hue: 0
+    - _IceNormalScale: 1
+    - _IceSpecPower: 1
+    - _Ice_Fresnel_Feather: 0.5
+    - _Ice_Fresnel_Step: 0.5
+    - _MetalScale: 0.023
+    - _Metallic: 0
+    - _NIGHTON: 0
+    - _OcclusionStrength: 1
+    - _Offset_Z: 0
+    - _OutlineWidth: 0.3
+    - _PosWDissolveScale: 0.5
+    - _PosWDissolveWidth: 0
+    - _PosWNoiseScale: 0
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _RimFeather: 0.074
+    - _RimRangeStep: 0.537
+    - _SSRimScale: 0.4
+    - _Saturation: 0
+    - _Second_Fresnel_Shadow_Feather: 0.19
+    - _Second_Fresnel_Shadow_Step: 0.09
+    - _ShadowFeather: 0.35
+    - _ShadowInvLen: 0.25
+    - _ShadowOffset: 0
+    - _ShadowRangeStep: 0.46
+    - _Shiness: 0
+    - _SmoothScale: 0.039
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecFalloff: 0.046
+    - _SpecStep: 0.29
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _StencilOutlineWidth: 0
+    - _Surface: 0
+    - _ToonLightStrength: 1
+    - _Top2Bottom: 0
+    - _Transparency: 1
+    - _UseAddLight: 1
+    - _UseAdditionFresnel: 0
+    - _UseAlphaClip: 0
+    - _UseCameraLight: 0
+    - _UseDarkLuminance: 0
+    - _UseDissolve: 0
+    - _UseDissolveCut: 0
+    - _UseHSV: 0
+    - _UseIce: 0
+    - _UseRoleFlickerEffect: 0
+    - _UseRolePosWDissolve: 0
+    - _UseSSRim: 0
+    - _UseSmoothNormal: 1
+    - _UseTransparentMask: 0
+    - _UseUnityFog: 1
+    - _Value: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    - _addShadowFeather: 0.3
+    - _addShadowRangeStep: 0.8
+    - _defaultShadowStrength: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DissolveColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EdgeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 1.3350784, b: 0, a: 1}
+    - _EyeShadowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FaceForwardVector: {r: 1, g: 1, b: 1, a: 1}
+    - _First_Fresnel_Shadow_Color: {r: 0.6192595, g: 0.5613208, b: 1, a: 1}
+    - _FlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Fresnel_Light_Color: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
+    - _IceRimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IceSpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IceVFXColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 0.26415092, g: 0.10736137, b: 0, a: 1}
+    - _OutlineSkinColor: {r: 0.83921576, g: 0.4431373, b: 0.28235295, a: 1}
+    - _PlaneShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _PosWDissolveColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 0.4433962, g: 0.43293875, b: 0.43293875, a: 1}
+    - _RimLightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ScreenUV: {r: 7, g: 3, b: 0, a: 0}
+    - _Second_Fresnel_Shadow_Color: {r: 0.79215693, g: 0.7058824, b: 0.79215693, a: 1}
+    - _ShadowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowFadeParams: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowPlane: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _StencilOutLineColor: {r: 1, g: 0.637931, b: 0.25, a: 1}
+    - _ToonLightDirection: {r: 1, g: 1, b: 1, a: 1}
+    - _WorldPos: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

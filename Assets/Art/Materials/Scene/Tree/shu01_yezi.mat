@@ -44,6 +44,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Noise:
+        m_Texture: {fileID: 2800000, guid: b906b1750ef74f6458aef9a53b8139f1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -78,9 +82,10 @@ Material:
     - _BumpScale: 1
     - _ColorNoiseIntensity: 1
     - _ColorNoiseScale: 1
-    - _ColorThreshold: 0.755
+    - _ColorThreshold: 0.683
     - _Cull: 2
     - _Cutoff: 0.5
+    - _Distance: 1.97
     - _Distortion: 5
     - _DstBlend: 0
     - _EnvironmentReflections: 1
@@ -91,6 +96,7 @@ Material:
     - _MaxRange: 1
     - _Metallic: 0
     - _MinRange: 0.157
+    - _NoiseSpeed: 0.03
     - _OcclusionStrength: 1
     - _Power: 3.2
     - _QueueControl: 0
@@ -105,20 +111,22 @@ Material:
     - _SpecularScale: 3.36
     - _SrcBlend: 1
     - _Surface: 0
+    - _WinPow: 0.38
+    - _WinUV: 0.02
     - _WindIntensity: 0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - Color_AB28D8D7: {r: 0.48500353, g: 0.58428305, b: 0.5943396, a: 0}
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _BottomColor: {r: 0, g: 0.5943396, b: 0, a: 1}
+    - _BottomColor: {r: 0.020879272, g: 0.6509434, b: 0.020879272, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _NoiseColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 0.9811321, g: 0.94304025, b: 0.485938, a: 0.19215687}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _TopColor: {r: 0.9808022, g: 1, b: 0.5424528, a: 1}
+    - _TopColor: {r: 0.44872326, g: 1, b: 0.40943396, a: 1}
     - _WaveTillingAndSpeed: {r: 1, g: 1, b: 0.3, a: 0.3}
   m_BuildTextureStacks: []
 --- !u!114 &3808642867462709860

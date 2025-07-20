@@ -10,6 +10,7 @@ Material:
   m_Name: Water
   m_Shader: {fileID: 4800000, guid: 3b4f958c5753402489670332c11739cf, type: 3}
   m_ValidKeywords:
+  - _FOAMSHADOWS_ON
   - _INTERSECTIONEFFECTS_ON
   - _LIGHTING_ON
   - _SURFACEFOAM_ON
@@ -52,7 +53,7 @@ Material:
     m_Floats:
     - _ColorDepth: 0.84
     - _FoamShadowDepth: 10
-    - _FoamShadows: 0
+    - _FoamShadows: 1
     - _Gradient: 0
     - _Hardness: 0
     - _HeightMask: 0.207

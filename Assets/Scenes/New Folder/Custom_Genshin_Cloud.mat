@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom_Genshin_Cloud
+  m_Shader: {fileID: 4800000, guid: 2949c77959ec7194a80e8fca20e972e2, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _IrradianceMap:
+        m_Texture: {fileID: 2800000, guid: a490c6bad1f27224aaa175ab8aff0121, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskMapRGBA:
+        m_Texture: {fileID: 2800000, guid: 157376338b950264697d8da2e278781f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseMapRGB:
+        m_Texture: {fileID: 2800000, guid: b18b7ff00f7acce449004d7cf0edb771, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _CloudMoreBright: 0.8299
+    - _DisturbanceNoiseOffset: 262.33862
+    - _DisturbanceScale: 0.0123
+    - _IrradianceMapG_maxAngleRange: 0.3
+    - _IrradianceMapR_maxAngleRange: 0.2
+    - _LDotV_damping_factor_cloud: 0.0881
+    - _MoonTransmission: 3.29897
+    - _SunAdditionIntensity: 0.5
+    - _SunTransmission: 4.09789
+    - _TransmissionLDotVStartAt: 0.80205
+    - _mainColorSunGatherFactor: 0.49336
+    - _moon_intensity_max: 0.19794
+    - _moon_intensity_slider: 0.5
+    - _sun_color_intensity: 0.01039
+    - _sun_disk_power_999: 8.30078
+    m_Colors:
+    - _CloudColor_Bright_Around: {r: 0.10390998, g: 0.41823998, b: 0.88688, a: 1}
+    - _CloudColor_Bright_Center: {r: 0.051989965, g: 0.10300998, b: 0.13597995, a: 1}
+    - _CloudColor_Dark_Around: {r: 0.02281, g: 0.057159968, b: 0.14665997, a: 1}
+    - _CloudColor_Dark_Center: {r: 0, g: 0.03576, b: 0.12082998, a: 1}
+    - _SunAdditionColor: {r: 0.00837, g: 0.105159976, b: 0.26224998, a: 1}
+    - _downPartSkyColor: {r: 0.05379998, g: 0.09840996, b: 0.20729998, a: 1}
+    - _downPartSunColor: {r: 0.05379998, g: 0.09840996, b: 0.20729998, a: 1}
+    - _moon_dir: {r: 0.31638, g: 0.70655, b: 0.633, a: 1}
+    - _moon_shine_color: {r: 0.29668996, g: 0.64985, b: 1, a: 1}
+    - _sun_color: {r: 0.01938, g: 0.0065099997, b: 0.02122, a: 1}
+    - _sun_dir: {r: 0.00688, g: -0.84638, b: -0.53253, a: 1}
+    - _sun_shine_color: {r: 0.01938, g: 0.0065099997, b: 0.02122, a: 1}
+    - _upPartSkyColor: {r: 0.00972, g: 0.02298, b: 0.06015998, a: 1}
+    - _upPartSunColor: {r: 0.7676575, g: 0.7985196, b: 0.9528302, a: 1}
+  m_BuildTextureStacks: []

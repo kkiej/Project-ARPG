@@ -156,7 +156,7 @@ float4 DrawCoreFragment(Varyings input, bool isFrontFace : SV_IsFrontFace) : SV_
     float2 sdfUV = float2(sign(dot(fixedLightDirectionWS, headRight)), 1) * input.uv * float2(-1, 1);
     float sdfValue = tex2D(_FaceMap, sdfUV).a;
     sdfValue += _FaceShadowOffset;
-
+    
     float sdfThreshold = 1 - (dot(fixedLightDirectionWS, headForward) * 0.5 + 0.5);
     float sdf = smoothstep(sdfThreshold - _FaceShadowTransitionSoftness, sdfThreshold + _FaceShadowTransitionSoftness, sdfValue);
     
@@ -166,6 +166,7 @@ float4 DrawCoreFragment(Varyings input, bool isFrontFace : SV_IsFrontFace) : SV_
     rampRowNum = 8;
 }
 #endif
+
     float rampUVx = mainLightShadow * (1 - _ShadowRampOffset) + _ShadowRampOffset;
     float rampUVy = (2 * rampRowIndex + 1) * (1.0 / (rampRowNum * 2));
     float2 rampUV = float2(rampUVx, rampUVy);
@@ -269,8 +270,8 @@ float4 DrawCoreFragment(Varyings input, bool isFrontFace : SV_IsFrontFace) : SV_
 #endif
     
     float3 albedo = 0;
-    albedo += indirectLightColor;
-    albedo += mainLightColor;
+    albedo += indirectLightColor * 0.8;
+    albedo += mainLightColor * 0.9;
     albedo += specularColor;
     albedo *= stockingsEffect;
     albedo += rimLightColor * lerp(1, albedo, _RimLightMixAlbedo);

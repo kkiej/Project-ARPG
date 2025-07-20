@@ -14,6 +14,12 @@ Shader "Custom/Tree"
     	_Scale("Scale", Range(0, 1)) = 0.2
     	_RimColor("Rim Color", Color) = (1, 1, 1, 1)
 		_RimOffset("Rim Offset", Range(0, 1)) = 0
+    	
+    	_WinUV ("WinUV", Float) = 0.02
+    	_NoiseSpeed ("NoiseSpeed", Float) = 0.03
+    	_Noise ("Noise", 2D) = "white"{}
+    	_WinPow ("WinPow", Float) = 0.38
+    	_Distance ("Distance", Float) = 1.97
 		//_RimThreshold("Rim Threshold", Range(0, 1)) = 0
     	//_MinRange("Min Range", Range(0, 1)) = 0.01
     	//_MaxRange("Max Range", Range(0, 1)) = 1
@@ -41,6 +47,11 @@ Shader "Custom/Tree"
         half _Scale;
         half4 _RimColor;
 		half _RimOffset;
+
+        half _WinUV;
+        half _NoiseSpeed;
+        half _WinPow;
+        half _Distance;
 		//half _RimThreshold;
         //half _MinRange;
         //half _MaxRange;
@@ -48,6 +59,8 @@ Shader "Custom/Tree"
 
         TEXTURE2D(_MainTex);
         SAMPLER(sampler_MainTex);
+        TEXTURE2D(_Noise);
+        SAMPLER(sampler_Noise);
         
         struct a2v
         {
@@ -90,13 +103,26 @@ Shader "Custom/Tree"
                 v2f o;
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
+
+        		float3 positionWS = TransformObjectToWorld(v.positionOS.xyz);
+        		float2 winUV = positionWS.xz * _WinUV + _Time.y * _NoiseSpeed;
+        		half4 noise = SAMPLE_TEXTURE2D_LOD(_Noise, sampler_Noise, winUV, 0);
+
+        		half a = (noise.r - 0.5) * 2 * _WinPow;
+        		positionWS = float3(positionWS.x + a, positionWS.y - abs(a), positionWS.z + a);
+        		o.positionWS = positionWS;
+        		o.positionCS = TransformWorldToHClip(positionWS);
+
+        		float3 center = unity_ObjectToWorld._14_24_34;
+        		float3 grassPosition = float3(center.x, 0, center.z);
+        		half distance = clamp(length(float3(0,0,0) - grassPosition), 0, _Distance);
                 
                 VertexNormalInputs normalInputs = GetVertexNormalInputs(v.normalOS.xyz);
                 o.normalWS = normalInputs.normalWS;
                 
-                VertexPositionInputs positionInputs = GetVertexPositionInputs(v.positionOS.xyz);
-                o.positionWS = positionInputs.positionWS;
-                o.positionCS = positionInputs.positionCS;
+                //VertexPositionInputs positionInputs = GetVertexPositionInputs(v.positionOS.xyz);
+                //o.positionWS = positionInputs.positionWS;
+                //o.positionCS = positionInputs.positionCS;
                 
                 o.fogCoord = ComputeFogFactor(o.positionCS.z);
                 o.uv = v.uv;
@@ -192,9 +218,14 @@ Shader "Custom/Tree"
                 VertexNormalInputs normalInputs = GetVertexNormalInputs(v.normalOS.xyz);
                 o.normalWS = normalInputs.normalWS;
                 
-                VertexPositionInputs positionInputs = GetVertexPositionInputs(v.positionOS.xyz);
-                o.positionWS = positionInputs.positionWS;
-                o.positionCS = positionInputs.positionCS;
+                float3 positionWS = TransformObjectToWorld(v.positionOS.xyz);
+        		float2 winUV = positionWS.xz * _WinUV + _Time.y * _NoiseSpeed;
+        		half4 noise = SAMPLE_TEXTURE2D_LOD(_Noise, sampler_Noise, winUV, 0);
+
+        		half a = (noise.r - 0.5) * 2 * _WinPow;
+        		positionWS = float3(positionWS.x + a, positionWS.y - abs(a), positionWS.z + a);
+        		o.positionWS = positionWS;
+        		o.positionCS = TransformWorldToHClip(positionWS);
                 
                 o.fogCoord = ComputeFogFactor(o.positionCS.z);
                 o.uv = v.uv;
@@ -244,9 +275,14 @@ Shader "Custom/Tree"
                 VertexNormalInputs normalInputs = GetVertexNormalInputs(v.normalOS.xyz);
                 o.normalWS = normalInputs.normalWS;
                 
-                VertexPositionInputs positionInputs = GetVertexPositionInputs(v.positionOS.xyz);
-                o.positionWS = positionInputs.positionWS;
-                o.positionCS = positionInputs.positionCS;
+                float3 positionWS = TransformObjectToWorld(v.positionOS.xyz);
+        		float2 winUV = positionWS.xz * _WinUV + _Time.y * _NoiseSpeed;
+        		half4 noise = SAMPLE_TEXTURE2D_LOD(_Noise, sampler_Noise, winUV, 0);
+
+        		half a = (noise.r - 0.5) * 2 * _WinPow;
+        		positionWS = float3(positionWS.x + a, positionWS.y - abs(a), positionWS.z + a);
+        		o.positionWS = positionWS;
+        		o.positionCS = TransformWorldToHClip(positionWS);
                 
                 o.fogCoord = ComputeFogFactor(o.positionCS.z);
                 o.uv = v.uv;
