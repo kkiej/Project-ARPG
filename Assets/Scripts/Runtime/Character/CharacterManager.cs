@@ -85,10 +85,7 @@ namespace LZ
             base.OnNetworkSpawn();
 
             animator.SetBool("isMoving", characterNetworkManager.isMoving.Value);
-            characterNetworkManager.OnIsActiveChanged(false, characterNetworkManager.isActive.Value);
-            
             characterNetworkManager.isMoving.OnValueChanged += characterNetworkManager.OnIsMovingChanged;
-            characterNetworkManager.isActive.OnValueChanged += characterNetworkManager.OnIsActiveChanged;
         }
 
         public override void OnNetworkDespawn()
@@ -96,7 +93,6 @@ namespace LZ
             base.OnNetworkDespawn();
             
             characterNetworkManager.isMoving.OnValueChanged -= characterNetworkManager.OnIsMovingChanged;
-            characterNetworkManager.isActive.OnValueChanged -= characterNetworkManager.OnIsActiveChanged;
         }
 
         public virtual IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)

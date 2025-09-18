@@ -8,9 +8,6 @@ namespace LZ
     {
         private CharacterManager character;
         
-        [Header("Active")]
-        public NetworkVariable<bool> isActive = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
         [Header("Position")]
         public NetworkVariable<Vector3> networkPosition =
             new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone,
@@ -110,11 +107,6 @@ namespace LZ
         public void OnIsMovingChanged(bool oldStatus, bool newStatus)
         {
             character.animator.SetBool("isMoving", isMoving.Value);
-        }
-        
-        public virtual void OnIsActiveChanged(bool oldStatus, bool newStatus)
-        {
-            gameObject.SetActive(isActive.Value);
         }
         
         // 服务器RPC是一个从客户端调用到服务器（在我们的情况下是主机）的函数
