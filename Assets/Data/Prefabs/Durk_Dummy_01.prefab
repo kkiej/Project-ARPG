@@ -227,6 +227,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9183b1a81b6a42ceae37411d9ef9716f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive:
+    m_InternalValue: 1
   networkPosition:
     m_InternalValue: {x: 0, y: 0, z: 0}
   networkRotation:
@@ -330,6 +332,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a18339af8b6c5b4aa0b0c7b6c8aa418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead:
+    m_InternalValue: 0
+  characterController: {fileID: 0}
+  animator: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
+  characterEffectsManager: {fileID: 0}
+  characterAnimatorManager: {fileID: 0}
+  characterCombatManager: {fileID: 0}
+  characterSoundFXManager: {fileID: 0}
+  characterLocomotionManager: {fileID: 0}
+  characterGroup: 0
+  isPerformingAction: 0
+  aiCharacterNetworkManager: {fileID: 0}
+  aiCharacterCombatManager: {fileID: 0}
+  aiCharacterLocomotionManager: {fileID: 0}
+  navMeshAgent: {fileID: 0}
+  currentState: {fileID: 0}
+  idle: {fileID: 11400000, guid: 98e90724dd65c514e9cc06a0eb3d03c1, type: 2}
+  pursueTarget: {fileID: 11400000, guid: c3b1e9dcbba712b4b86677768caf7d7a, type: 2}
+  combatStance: {fileID: 11400000, guid: df273aa9e0762ba4eac150a93caab800, type: 2}
+  attack: {fileID: 11400000, guid: 9154330417e946142a480143bafdfc6b, type: 2}
+  bossID: 0
+  hasBeenDefeated: 0
+  hasBeenAwakened: 0
+  fogWalls: []
+  wakeBossUp: 1
 --- !u!114 &799508835814462238
 MonoBehaviour:
   m_ObjectHideFlags: 0
