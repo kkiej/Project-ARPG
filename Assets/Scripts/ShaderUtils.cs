@@ -2244,7 +2244,7 @@ public class ShaderUtils : ShaderFunctions
     /// <param name="count"></param>
     public static void SetGloablTextureQuality(int count)
     {
-        QualitySettings.masterTextureLimit = count;
+        QualitySettings.globalTextureMipmapLimit = count;
     }
     
     /// <summary>
