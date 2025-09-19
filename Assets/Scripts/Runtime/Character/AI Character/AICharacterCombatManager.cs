@@ -9,6 +9,9 @@ namespace LZ
         
         [Header("Action Recovery")]
         public float actionRecoveryTimer = 0;
+
+        [Header("Pivot")]
+        public bool enablePivot = true;
         
         [Header("Target Information")]
         public float distanceFromTarget;
@@ -37,7 +40,7 @@ namespace LZ
                 return;
 
             Collider[] colliders = Physics.OverlapSphere(aiCharacter.transform.position, detectionRadius,
-                WorldUtilityManager.instance.GetCharacterLayers());
+                WorldUtilityManager.Instance.GetCharacterLayers());
 
             for (int i = 0; i < colliders.Length; i++)
             {
@@ -53,7 +56,7 @@ namespace LZ
                     continue;
                 
                 // 可以攻击这些角色吗？可以的话，把他们设置成目标
-                if (WorldUtilityManager.instance.CanIDamageThisTarget(aiCharacter.characterGroup, targetCharacter.characterGroup))
+                if (WorldUtilityManager.Instance.CanIDamageThisTarget(aiCharacter.characterGroup, targetCharacter.characterGroup))
                 {
                     // 可找到的潜在目标，必须是在我们面前的
                     Vector3 targetsDirection = targetCharacter.transform.position - aiCharacter.transform.position;
@@ -64,7 +67,7 @@ namespace LZ
                         // 最后检查一下环境遮挡
                         if (Physics.Linecast(aiCharacter.characterCombatManager.lockOnTransform.position,
                                 targetCharacter.characterCombatManager.lockOnTransform.position,
-                                WorldUtilityManager.instance.GetEnvironLayers()))
+                                WorldUtilityManager.Instance.GetEnvironLayers()))
                         {
                             Debug.DrawLine(aiCharacter.characterCombatManager.lockOnTransform.position,
                                 targetCharacter.characterCombatManager.lockOnTransform.position);
@@ -72,16 +75,18 @@ namespace LZ
                         else
                         {
                             targetsDirection = targetCharacter.transform.position - transform.position;
-                            viewableAngle = WorldUtilityManager.instance.GetAngleOfTarget(transform, targetsDirection);
+                            viewableAngle = WorldUtilityManager.Instance.GetAngleOfTarget(transform, targetsDirection);
                             aiCharacter.characterCombatManager.SetTarget(targetCharacter);
-                            PivotTowardsTarget(aiCharacter);
+                            
+                            if (enablePivot)
+                                PivotTowardsTarget(aiCharacter);
                         }
                     }
                 }
             }
         }
 
-        public void PivotTowardsTarget(AICharacterManager aiCharacter)
+        public virtual void PivotTowardsTarget(AICharacterManager aiCharacter)
         {
             // 根据目标的可视角度播放枢轴动画
             if (aiCharacter.isPerformingAction)

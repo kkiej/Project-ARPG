@@ -43,7 +43,9 @@ namespace LZ
                 
                 // 检查目标是否在格挡
                 
-                // 检查目标是否无敌
+                // 检查目标是否无敌（已经在TakeDamageEffect中检查了）
+                //if (damageTarget.characterNetworkManager.isInvulnerable.Value)
+                //    return;
                 
                 DamageTarget(damageTarget);
             }

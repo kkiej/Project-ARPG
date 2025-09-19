@@ -168,7 +168,7 @@ namespace LZ
             
             // TODO:使用LayerMask
             Collider[] colliders = Physics.OverlapSphere(player.transform.position, lockOnRadius,
-                WorldUtilityManager.instance.GetCharacterLayers());
+                WorldUtilityManager.Instance.GetCharacterLayers());
 
             for (int i = 0; i < colliders.Length; i++)
             {
@@ -198,7 +198,7 @@ namespace LZ
                         // TODO: 添加只有环境的LayerMask
                         if (Physics.Linecast(player.playerCombatManager.lockOnTransform.position,
                                 lockOnTarget.characterCombatManager.lockOnTransform.position, out hit,
-                                WorldUtilityManager.instance.GetEnvironLayers()))
+                                WorldUtilityManager.Instance.GetEnvironLayers()))
                         {
                             // 我们击中某物，但是看不见
                             continue;

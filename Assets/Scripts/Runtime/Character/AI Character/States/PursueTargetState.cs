@@ -21,10 +21,13 @@ namespace LZ
                 aiCharacter.navMeshAgent.enabled = true;
 
             // 如果我们的目标在角色可视角度外，转向面对他们
-            if (aiCharacter.aiCharacterCombatManager.viewableAngle < aiCharacter.aiCharacterCombatManager.minimumFOV ||
-                aiCharacter.aiCharacterCombatManager.viewableAngle > aiCharacter.aiCharacterCombatManager.maximumFOV)
+            if (aiCharacter.aiCharacterCombatManager.enablePivot)
             {
-                aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);
+                if (aiCharacter.aiCharacterCombatManager.viewableAngle < aiCharacter.aiCharacterCombatManager.minimumFOV ||
+                    aiCharacter.aiCharacterCombatManager.viewableAngle > aiCharacter.aiCharacterCombatManager.maximumFOV)
+                {
+                    aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);
+                }
             }
             
             aiCharacter.aiCharacterLocomotionManager.RotateTowardsAgent(aiCharacter);

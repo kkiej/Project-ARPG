@@ -40,13 +40,15 @@ namespace LZ
 
         public override void ProcessEffect(CharacterManager character)
         {
+            // 检查“无敌状态”
+            if (character.characterNetworkManager.isInvulnerable.Value)
+                return;
+            
             base.ProcessEffect(character);
 
             // 如果角色死亡，不处理额外的受击特效
             if (character.isDead.Value)
                 return;
-            
-            // 检查“无敌状态”
 
             CalculateDamage(character);
             

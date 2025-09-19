@@ -5,7 +5,7 @@ namespace LZ
 {
     public class WorldUtilityManager : MonoBehaviour
     {
-        public static WorldUtilityManager instance;
+        public static WorldUtilityManager Instance;
 
         [Header("Layers")]
         [SerializeField] private LayerMask characterLayers;
@@ -13,9 +13,9 @@ namespace LZ
         
         private void Awake()
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = this;
+                Instance = this;
             }
             else
             {

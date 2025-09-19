@@ -15,16 +15,16 @@ namespace LZ
 
         [Header("Attacks")]
         public List<AICharacterAttackAction> aiCharacterAttacks; // 此角色可能进行的所有攻击的列表
-        protected List<AICharacterAttackAction> potentialAttacks; // 包含在此情境下所有可能的攻击（基于角度、距离等）
-        private AICharacterAttackAction chosenAttack;
-        private AICharacterAttackAction previousAttack;
+        [SerializeField] protected List<AICharacterAttackAction> potentialAttacks; // 包含在此情境下所有可能的攻击（基于角度、距离等）
+        [SerializeField] private AICharacterAttackAction chosenAttack;
+        [SerializeField] private AICharacterAttackAction previousAttack;
         protected bool hasAttack;
 
         [Header("Combo")]
         [SerializeField] protected bool canPerformCombo; // 如果角色可以执行连击攻击，在初次攻击后
         [SerializeField] protected int chanceToPerformCombo = 25; // 角色在下一次攻击时执行连击的几率（百分比）
         protected bool hasRolledForComboChance; // 如果我们已经在这个状态下掷过几率了
-
+        
         [Header("Engagement Distance")]
         [SerializeField] public float maximumEngagementDistance = 5; // 在我们进入追击状态前距离目标最远的距离
 
@@ -37,11 +37,12 @@ namespace LZ
                 aiCharacter.navMeshAgent.enabled = true;
             
             // 如果你希望AI角色在目标超出其视野范围时朝向并转向目标
-            if (!aiCharacter.aiCharacterNetworkManager.isMoving.Value)
+            if (aiCharacter.aiCharacterCombatManager.enablePivot)
             {
-                if (aiCharacter.aiCharacterCombatManager.viewableAngle < -30 || aiCharacter.aiCharacterCombatManager.viewableAngle > 30)
+                if (!aiCharacter.aiCharacterNetworkManager.isMoving.Value)
                 {
-                    aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);
+                    if (aiCharacter.aiCharacterCombatManager.viewableAngle < -30 || aiCharacter.aiCharacterCombatManager.viewableAngle > 30)
+                        aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);
                 }
             }
             
