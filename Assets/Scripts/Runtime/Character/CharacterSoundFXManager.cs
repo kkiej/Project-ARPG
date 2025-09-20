@@ -11,6 +11,11 @@ namespace LZ
         
         [Header("Attack Grunts")]
         [SerializeField] protected AudioClip[] attackGrunts;
+        
+        [Header("FootSteps")]
+        [SerializeField] protected AudioClip[] footSteps;
+        //public AudioClip[] footStepsDirt;
+        //public AudioClip[] footStepsStone;
 
         protected virtual void Awake()
         {
@@ -32,16 +37,22 @@ namespace LZ
             audioSource.PlayOneShot(WorldSoundFXManager.instance.rollSFX);
         }
 
-        public virtual void PlayDamageGrunt()
+        public virtual void PlayDamageGruntSoundFX()
         {
             if (damageGrunts.Length > 0)
                 PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(damageGrunts));
         }
         
-        public virtual void PlayAttackGrunt()
+        public virtual void PlayAttackGruntSoundFX()
         {
             if (attackGrunts.Length > 0)
                 PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(attackGrunts));
+        }
+        
+        public virtual void PlayFootStepSoundFX()
+        {
+            if (footSteps.Length > 0)
+                PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(footSteps));
         }
     }
 }

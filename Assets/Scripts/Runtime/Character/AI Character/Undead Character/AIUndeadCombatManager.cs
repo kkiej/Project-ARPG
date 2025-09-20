@@ -27,7 +27,7 @@ namespace LZ
 
         public void OpenRightHandDamageCollider()
         {
-            aiCharacter.characterSoundFXManager.PlayAttackGrunt();
+            aiCharacter.characterSoundFXManager.PlayAttackGruntSoundFX();
             rightHandDamageCollider.EnableDamageCollider();
         }
 
@@ -38,7 +38,7 @@ namespace LZ
         
         public void OpenLeftHandDamageCollider()
         {
-            aiCharacter.characterSoundFXManager.PlayAttackGrunt();
+            aiCharacter.characterSoundFXManager.PlayAttackGruntSoundFX();
             leftHandDamageCollider.EnableDamageCollider();
         }
 

@@ -67,7 +67,7 @@ namespace LZ
 
         protected void OnDrawGizmosSelected()
         {
-            Gizmos.DrawSphere(character.transform.position, groundCheckSphereRadius);
+            Gizmos.DrawSphere(transform.position, groundCheckSphereRadius);
         }
 
         public void EnableCanRotate()

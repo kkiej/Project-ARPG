@@ -35,5 +35,19 @@ namespace LZ
 
             return array[index];
         }
+
+        /*public AudioClip ChooseRandomFootStepSoundBasedOnGround(GameObject steppedOnObject, CharacterManager character)
+        {
+            if (steppedOnObject.CompareTag("Dirt"))
+            {
+                return ChooseRandomSFXFromArray(character.characterSoundFXManager.footStepsDirt);
+            }
+            else if (steppedOnObject.CompareTag("Stone"))
+            {
+                return ChooseRandomSFXFromArray(character.characterSoundFXManager.footStepsStone);
+            }
+
+            return null;
+        }*/
     }
 }
