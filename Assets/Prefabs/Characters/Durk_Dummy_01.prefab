@@ -282,6 +282,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a673272e5ccad794b9676574b8b8c88a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1176686548608896205, guid: a673272e5ccad794b9676574b8b8c88a,
         type: 3}
       propertyPath: m_Layer
@@ -462,7 +467,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a673272e5ccad794b9676574b8b8c88a,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2749053669332449802}
+      addedObject: {fileID: 1831694161707721482}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a673272e5ccad794b9676574b8b8c88a,
         type: 3}
       insertIndex: -1
@@ -1405,7 +1410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1144207908
+  GlobalObjectIdHash: 3281729339
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1414,7 +1419,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &2749053669332449802
+--- !u!114 &1831694161707721482
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1423,7 +1428,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7618196052738550841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9183b1a81b6a42ceae37411d9ef9716f, type: 3}
+  m_Script: {fileID: 11500000, guid: d70a0bb395f1ba84cb9c26592516ac9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isActive:
@@ -1562,6 +1567,8 @@ MonoBehaviour:
   combatStance: {fileID: 11400000, guid: 94f38a0de4bb9ec48a897ea76ec1d581, type: 2}
   attack: {fileID: 11400000, guid: 46dc08fa14548fb4686f56e41c05e64b, type: 2}
   bossID: 0
+  bossIntroClip: {fileID: 8300000, guid: 7a9e29af9acdbd946822a9d73f6d1861, type: 3}
+  bossBattleLoopClip: {fileID: 8300000, guid: 0a8551d869f9ff14f8c916bb78c2ad1c, type: 3}
   bossFightIsActive:
     m_InternalValue: 0
   hasBeenAwakened:
@@ -1571,6 +1578,10 @@ MonoBehaviour:
   fogWalls: []
   sleepAnimation: Sleep_01
   awakeAnimation: Awaken_01
+  minimumHealthPercentageToShift: 50
+  phaseShiftAnimation: Phase_Change_01
+  phase02CombatStanceState: {fileID: 11400000, guid: e24200ab43c1c1640a815cf76f52f33c,
+    type: 2}
   sleepState: {fileID: 11400000, guid: 3b84abac98c0a814f9d279944f9aec69, type: 2}
   durkSoundFXManager: {fileID: 0}
   durkCombatManager: {fileID: 0}

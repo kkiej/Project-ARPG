@@ -6,10 +6,17 @@ namespace LZ
 {
     public class PlayerUIPopUpManager : MonoBehaviour
     {
+        [Header("YOU DIED Pop Up")]
         [SerializeField] private GameObject youDiedPopUpGameObject;
         [SerializeField] private TextMeshProUGUI youDiedPopUpBackgroundText;
         [SerializeField] private TextMeshProUGUI youDiedPopUpText;
         [SerializeField] private CanvasGroup youDiedPopUpCanvasGroup; // 允许我们随着时间设置alpha来渐隐
+        
+        [Header("BOSS DEFEATED Pop Up")]
+        [SerializeField] GameObject bossDefeatedPopUpGameObject;
+        [SerializeField] TextMeshProUGUI bossDefeatedPopUpBackgroundText;
+        [SerializeField] TextMeshProUGUI bossDefeatedPopUpText;
+        [SerializeField] CanvasGroup bossDefeatedPopUpCanvasGroup;   // 允许我们随着时间设置alpha来渐隐
 
         public void SendYouDiedPopUp()
         {
@@ -18,8 +25,19 @@ namespace LZ
             youDiedPopUpGameObject.SetActive(true);
             youDiedPopUpBackgroundText.characterSpacing = 0;
             StartCoroutine(StretchPopUpTextOverTime(youDiedPopUpBackgroundText, 8, 19));
-            StartCoroutine(FadeInPopUpOverTime(youDiedPopUpCanvasGroup, 4));
+            StartCoroutine(FadeInPopUpOverTime(youDiedPopUpCanvasGroup, 5));
             StartCoroutine(WaitThenFadeOutPopUpOverTime(youDiedPopUpCanvasGroup, 2, 5));
+        }
+        
+        public void SendBossDefeatedPopUp(string bossDefeatedMessage)
+        {
+            bossDefeatedPopUpText.text = bossDefeatedMessage;
+            bossDefeatedPopUpBackgroundText.text = bossDefeatedMessage;
+            bossDefeatedPopUpGameObject.SetActive(true);
+            bossDefeatedPopUpBackgroundText.characterSpacing = 0;
+            StartCoroutine(StretchPopUpTextOverTime(bossDefeatedPopUpBackgroundText, 8, 19));
+            StartCoroutine(FadeInPopUpOverTime(bossDefeatedPopUpCanvasGroup, 5));
+            StartCoroutine(WaitThenFadeOutPopUpOverTime(bossDefeatedPopUpCanvasGroup, 2, 5));
         }
 
         private IEnumerator StretchPopUpTextOverTime(TextMeshProUGUI text, float duration, float stretchAmount)

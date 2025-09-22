@@ -34,18 +34,28 @@ namespace LZ
             
             navMeshAgent = GetComponentInChildren<NavMeshAgent>();
         }
+        
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            if (IsOwner)
+            {
+                idle = Instantiate(idle);
+                pursueTarget = Instantiate(pursueTarget);
+                combatStance = Instantiate(combatStance);
+                attack = Instantiate(attack);
+                currentState = idle;
+            }
+
+            aiCharacterNetworkManager.currentHealth.OnValueChanged += aiCharacterNetworkManager.CheckHP;
+        }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
             
-            // 使用可编程对象的拷贝，因此源文件不会被修改
-            if (IsOwner)
-            {
-                idle = Instantiate(idle);
-                pursueTarget = Instantiate(pursueTarget);
-                currentState = idle;
-            }
+            aiCharacterNetworkManager.currentHealth.OnValueChanged -= aiCharacterNetworkManager.CheckHP;
         }
 
         protected override void Update()
