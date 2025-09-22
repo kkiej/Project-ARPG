@@ -87,15 +87,17 @@ namespace LZ
 
         private void HandleGroundedMovement()
         {
-            if (!player.playerLocomotionManager.canMove)
+            if (player.characterLocomotionManager.canMove || player.playerLocomotionManager.canRotate)
+            {
+                GetMovementValues();
+            }
+
+            if (!player.characterLocomotionManager.canMove)
                 return;
             
-            GetMovementValues();
-            
-            // our move direction is based on our cameras facing perspective & our movement inputs
-            var cameraTransform = PlayerCamera.instance.transform;
-            moveDirection = cameraTransform.forward * verticalMovement;
-            moveDirection += cameraTransform.right * horizontalMovement;
+            // 移动方向由摄像机朝向视角与移动输入共同决定
+            moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;
+            moveDirection = moveDirection + PlayerCamera.instance.transform.right * horizontalMovement;
             moveDirection.Normalize();
             moveDirection.y = 0;
 
