@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace LZ
@@ -7,33 +8,41 @@ namespace LZ
     public class AIBossCharacterManager : AICharacterManager
     {
         public int bossID = 0;
-        [SerializeField] bool hasBeenDefeated = false;
-        [SerializeField] bool hasBeenAwakened = false;
 
+        [Header("Status")]
+        public NetworkVariable<bool> hasBeenAwakened = new NetworkVariable<bool>(false,
+            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> hasBeenDefeated = new NetworkVariable<bool>(false,
+            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         [SerializeField] private List<FogWallInteractable> fogWalls;
+        [SerializeField] private string sleepAnimation;
+        [SerializeField] string awakeAnimation;
+        
+        [Header("States")]
+        [SerializeField] BossSleepState sleepState;
+        
         //  WHEN THIS A.I IS SPAWNED, CHECK OUR SAVE FILE (DICTIONARY)
         //  IF THE SAVE FILE DOES NOT CONTAIN A BOSS MONSTER WITH THIS I.D ADD IT
         //  IF IT IS PRESENT, CHECK IF THE BOSS HAS BEEN DEFEATED
         //  IF THE BOSS HAS BEEN DEFEATED, DISABLE THIS GAMEOBJECT
         //  IF THE BOSS HAS NOT BEEN DEFEATED, ALLOW THIS OBJECT TO CONTINUE TO BE ACTIVE
 
-        [Header("DEBUG")]
-        [SerializeField] bool wakeBossUp = false;
-
-        protected override void Update()
+        protected override void Awake()
         {
-            base.Update();
+            base.Awake();
 
-            if (wakeBossUp)
-            {
-                wakeBossUp = false;
-                WakeBoss();
-            }
+            
         }
-        
+
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            
+            if (IsOwner)
+            {
+                sleepState = Instantiate(sleepState);
+                currentState = sleepState;
+            }
 
             if (IsServer)
             {
@@ -46,15 +55,15 @@ namespace LZ
                 //  OTHERWISE, LOAD THE DATA THAT ALREADY EXISTS ON THIS BOSS
                 else
                 {
-                    hasBeenDefeated = WorldSaveGameManager.instance.currentCharacterData.bossesDefeated[bossID];
-                    hasBeenAwakened = WorldSaveGameManager.instance.currentCharacterData.bossesAwakened[bossID];
+                    hasBeenDefeated.Value = WorldSaveGameManager.instance.currentCharacterData.bossesDefeated[bossID];
+                    hasBeenAwakened.Value = WorldSaveGameManager.instance.currentCharacterData.bossesAwakened[bossID];
                 }
                 
                 //  LOCATE FOG WALLS
                 StartCoroutine(GetFogWallsFromWorldObjectManager());
 
                 //  IF THE BOSS HAS BEEN AWAKENED, ENABLE THE FOG WALLS
-                if (hasBeenAwakened)
+                if (hasBeenAwakened.Value)
                 {
                     for (int i = 0; i < fogWalls.Count; i++)
                     {
@@ -63,7 +72,7 @@ namespace LZ
                 }
 
                 //  IF THE BOSS HAS BEEN DEFEATED DISABLE THE FOG WALLS
-                if (hasBeenDefeated)
+                if (hasBeenDefeated.Value)
                 {
                     for (int i = 0; i < fogWalls.Count; i++)
                     {
@@ -72,6 +81,11 @@ namespace LZ
 
                     aiCharacterNetworkManager.isActive.Value = false;
                 }
+            }
+
+            if (!hasBeenAwakened.Value)
+            {
+                characterAnimatorManager.PlayTargetActionAnimation(sleepAnimation, true);
             }
         }
         
@@ -106,7 +120,7 @@ namespace LZ
                     characterAnimatorManager.PlayTargetActionAnimation("Dead_01", true);
                 }
 
-                hasBeenDefeated = true;
+                hasBeenDefeated.Value = true;
                 //  IF OUR SAVE DATA DOES NOT CONTAIN INFORMATION ON THIS BOSS, ADD IT NOW
                 if (!WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.ContainsKey(bossID))
                 {
@@ -136,22 +150,30 @@ namespace LZ
         
         public void WakeBoss()
         {
-            hasBeenAwakened = true;
+            if (IsOwner)
+            {
+                if (!hasBeenAwakened.Value)
+                {
+                    characterAnimatorManager.PlayTargetActionAnimation(awakeAnimation, true);
+                }
+                hasBeenAwakened.Value = true;
+                currentState = idle;
 
-            if (!WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.ContainsKey(bossID))
-            {
-                WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.Add(bossID, true);
-            }
-            else
-            {
-                WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.Remove(bossID);
-                WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.Add(bossID, true);
-            }
+                if (!WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.ContainsKey(bossID))
+                {
+                    WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.Add(bossID, true);
+                }
+                else
+                {
+                    WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.Remove(bossID);
+                    WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.Add(bossID, true);
+                }
 
-            for (int i = 0; i < fogWalls.Count; i++)
-            {
-                fogWalls[i].isActive.Value = true;
-                Debug.Log(fogWalls[i].name);
+                for (int i = 0; i < fogWalls.Count; i++)
+                {
+                    fogWalls[i].isActive.Value = true;
+                    Debug.Log(fogWalls[i].name);
+                }
             }
         }
     }

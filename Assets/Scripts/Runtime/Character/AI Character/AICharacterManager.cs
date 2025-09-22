@@ -13,7 +13,7 @@ namespace LZ
         public NavMeshAgent navMeshAgent;
         
         [Header("Current State")]
-        [SerializeField] private AIState currentState;
+        [SerializeField] protected AIState currentState;
 
         [Header("States")]
         public IdleState idle;
@@ -30,12 +30,19 @@ namespace LZ
             aiCharacterLocomotionManager = GetComponent<AICharacterLocomotionManager>();
             
             navMeshAgent = GetComponentInChildren<NavMeshAgent>();
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
             
             // 使用可编程对象的拷贝，因此源文件不会被修改
-            idle = Instantiate(idle);
-            pursueTarget = Instantiate(pursueTarget);
-
-            currentState = idle;
+            if (IsOwner)
+            {
+                idle = Instantiate(idle);
+                pursueTarget = Instantiate(pursueTarget);
+                currentState = idle;
+            }
         }
 
         protected override void Update()

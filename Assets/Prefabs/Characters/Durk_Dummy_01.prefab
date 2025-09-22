@@ -1556,10 +1556,14 @@ MonoBehaviour:
   combatStance: {fileID: 11400000, guid: 94f38a0de4bb9ec48a897ea76ec1d581, type: 2}
   attack: {fileID: 11400000, guid: 46dc08fa14548fb4686f56e41c05e64b, type: 2}
   bossID: 0
-  hasBeenDefeated: 0
-  hasBeenAwakened: 0
+  hasBeenAwakened:
+    m_InternalValue: 1
+  hasBeenDefeated:
+    m_InternalValue: 1
   fogWalls: []
-  wakeBossUp: 0
+  sleepAnimation: Sleep_01
+  awakeAnimation: Awaken_01
+  sleepState: {fileID: 11400000, guid: 3b84abac98c0a814f9d279944f9aec69, type: 2}
   durkSoundFXManager: {fileID: 0}
   durkCombatManager: {fileID: 0}
 --- !u!114 &799508835814462238
