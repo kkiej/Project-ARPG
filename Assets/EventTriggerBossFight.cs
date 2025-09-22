@@ -10,7 +10,12 @@ namespace LZ
         
         private void OnTriggerEnter(Collider other)
         {
-            
+            AIBossCharacterManager boss = WorldAIManager.instance.GetBossCharacterByID(bossID);
+
+            if (boss != null)
+            {
+                boss.WakeBoss();
+            }
         }
     }
 }

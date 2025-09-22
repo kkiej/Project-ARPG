@@ -10,6 +10,8 @@ namespace LZ
         public int bossID = 0;
 
         [Header("Status")]
+        public NetworkVariable<bool> bossFightIsActive = new NetworkVariable<bool>(false,
+            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> hasBeenAwakened = new NetworkVariable<bool>(false,
             NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> hasBeenDefeated = new NetworkVariable<bool>(false,
@@ -30,13 +32,14 @@ namespace LZ
         protected override void Awake()
         {
             base.Awake();
-
-            
         }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+
+            bossFightIsActive.OnValueChanged += OnBossFightIsActiveChanged;
+            OnBossFightIsActiveChanged(false, bossFightIsActive.Value);
             
             if (IsOwner)
             {
@@ -88,7 +91,14 @@ namespace LZ
                 characterAnimatorManager.PlayTargetActionAnimation(sleepAnimation, true);
             }
         }
-        
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            
+            bossFightIsActive.OnValueChanged -= OnBossFightIsActiveChanged;
+        }
+
         private IEnumerator GetFogWallsFromWorldObjectManager()
         {
             while (WorldObjectManager.instance.fogWalls.Count == 0)
@@ -109,6 +119,8 @@ namespace LZ
             {
                 characterNetworkManager.currentHealth.Value = 0;
                 isDead.Value = true;
+
+                bossFightIsActive.Value = false;
 
                 //  RESET ANY FLAGS HERE THAT NEED TO BE RESET
                 //  NOTHING YET
@@ -156,6 +168,8 @@ namespace LZ
                 {
                     characterAnimatorManager.PlayTargetActionAnimation(awakeAnimation, true);
                 }
+
+                bossFightIsActive.Value = true;
                 hasBeenAwakened.Value = true;
                 currentState = idle;
 
@@ -174,6 +188,18 @@ namespace LZ
                     fogWalls[i].isActive.Value = true;
                     Debug.Log(fogWalls[i].name);
                 }
+            }
+        }
+        
+        private void OnBossFightIsActiveChanged(bool oldStatus, bool newStatus)
+        {
+            if (bossFightIsActive.Value)
+            {
+                GameObject bossHealthBar = Instantiate(PlayerUIManager.instance.playerUIHudManager.bossHealthBarObject,
+                    PlayerUIManager.instance.playerUIHudManager.bossHealthBarParent);
+
+                UI_Boss_HP_Bar bossHPBar = bossHealthBar.GetComponentInChildren<UI_Boss_HP_Bar>();
+                bossHPBar.EnableBossHPBar(this);
             }
         }
     }

@@ -377,6 +377,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 4573718657531855810, guid: a673272e5ccad794b9676574b8b8c88a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5332809968238436118, guid: a673272e5ccad794b9676574b8b8c88a,
         type: 3}
       propertyPath: m_Layer
@@ -1451,13 +1456,13 @@ MonoBehaviour:
   isChargingAttack:
     m_InternalValue: 0
   currentHealth:
-    m_InternalValue: 0
+    m_InternalValue: 785
   maxHealth:
-    m_InternalValue: 0
+    m_InternalValue: 785
   currentStamina:
-    m_InternalValue: 0
+    m_InternalValue: 500
   maxStamina:
-    m_InternalValue: 0
+    m_InternalValue: 500
   vitality:
     m_InternalValue: 1
   endurance:
@@ -1546,6 +1551,7 @@ MonoBehaviour:
   characterLocomotionManager: {fileID: 0}
   characterGroup: 1
   isPerformingAction: 0
+  characterName: Durk, Guardian Of The Prototype Realms
   aiCharacterNetworkManager: {fileID: 0}
   aiCharacterCombatManager: {fileID: 0}
   aiCharacterLocomotionManager: {fileID: 0}
@@ -1556,10 +1562,12 @@ MonoBehaviour:
   combatStance: {fileID: 11400000, guid: 94f38a0de4bb9ec48a897ea76ec1d581, type: 2}
   attack: {fileID: 11400000, guid: 46dc08fa14548fb4686f56e41c05e64b, type: 2}
   bossID: 0
+  bossFightIsActive:
+    m_InternalValue: 0
   hasBeenAwakened:
-    m_InternalValue: 1
+    m_InternalValue: 0
   hasBeenDefeated:
-    m_InternalValue: 1
+    m_InternalValue: 0
   fogWalls: []
   sleepAnimation: Sleep_01
   awakeAnimation: Awaken_01

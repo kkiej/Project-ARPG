@@ -5,13 +5,17 @@ namespace LZ
 {
     public class PlayerUIHudManager : MonoBehaviour
     {
-        [Header("STAT BARS")]
-        [SerializeField] private UI_StartBar healthBar;
-        [SerializeField] private UI_StartBar staminaBar;
+        [Header("Stat Bars")]
+        [SerializeField] private UI_StatBar healthBar;
+        [SerializeField] private UI_StatBar staminaBar;
 
-        [Header("QUICK SLOTS")]
+        [Header("Quick Slots")]
         [SerializeField] private Image rightWeaponQuickSlotIcon;
         [SerializeField] private Image leftWeaponQuickSlotIcon;
+
+        [Header("Boss Health Bar")]
+        public Transform bossHealthBarParent;
+        public GameObject bossHealthBarObject;
 
         public void RefreshHUD()
         {

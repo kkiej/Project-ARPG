@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Linq;
 
 namespace LZ
 {
@@ -11,13 +11,12 @@ namespace LZ
     {
         public static WorldAIManager instance;
 
-        //[Header("DEBUG")]
-        //[SerializeField] private bool despawnCharacters;
-        //[SerializeField] private bool respawnCharacters;
-
         [Header("Characters")]
         [SerializeField] List<AICharacterSpawner> aiCharacterSpawners;
-        [SerializeField] private List<GameObject> spawnedInCharacters;
+        [SerializeField] private List<AICharacterManager> spawnedInCharacters;
+        
+        [Header("Bosses")]
+        [SerializeField] List<AIBossCharacterManager> spawnedInBosses;
 
         private void Awake()
         {
@@ -30,40 +29,7 @@ namespace LZ
                 Destroy(gameObject);
             }
         }
-
-        /*private void Start()
-        {
-            if (NetworkManager.Singleton.IsServer)
-            {
-                StartCoroutine(WaitForSceneToLoadThenSpawnCharacters());
-            }
-        }*/
-
-        /*private void Update()
-        {
-            if (respawnCharacters)
-            {
-                respawnCharacters = false;
-                SpawnAllCharacters();
-            }
-
-            if (despawnCharacters)
-            {
-                despawnCharacters = false;
-                DespawnAllCharacters();
-            }
-        }*/
-
-        /*private IEnumerator WaitForSceneToLoadThenSpawnCharacters()
-        {
-            while (!SceneManager.GetActiveScene().isLoaded)
-            {
-                yield return null;
-            }
-            
-            SpawnAllCharacters();
-        }*/
-
+        
         public void SpawnCharacter(AICharacterSpawner aiCharacterSpawner)
         {
             if (NetworkManager.Singleton.IsServer)
@@ -71,6 +37,29 @@ namespace LZ
                 aiCharacterSpawners.Add(aiCharacterSpawner);
                 aiCharacterSpawner.AttemptToSpawnCharacter();
             }
+        }
+        
+        public void AddCharacterToSpawnedCharactersList(AICharacterManager character)
+        {
+            if (spawnedInCharacters.Contains(character))
+                return;
+
+            spawnedInCharacters.Add(character);
+
+            AIBossCharacterManager bossCharacter = character as AIBossCharacterManager;
+
+            if (bossCharacter != null)
+            {
+                if (spawnedInBosses.Contains(bossCharacter))
+                    return;
+
+                spawnedInBosses.Add(bossCharacter);
+            }
+        }
+        
+        public AIBossCharacterManager GetBossCharacterByID(int ID)
+        {
+            return spawnedInBosses.FirstOrDefault(boss => boss.bossID == ID);
         }
 
         private void DespawnAllCharacters()

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace LZ
 {
-    public class UI_StartBar : MonoBehaviour
+    public class UI_StatBar : MonoBehaviour
     {
         private Slider slider;
         private RectTransform rectTransform;
