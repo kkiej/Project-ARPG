@@ -14,7 +14,7 @@ namespace LZ
 
         // Change these to tweak camera performance
         [Header("Camera Settings")]
-        private float cameraSmoothSpeed = 1f; // the bigger this number, the longer for the camera to reach its position during movement
+        [SerializeField] private float cameraSmoothSpeed = 1f; // the bigger this number, the longer for the camera to reach its position during movement
         [SerializeField] private float leftAndRightRotationSpeed = 220;
         [SerializeField] private float upAndDownRotationSpeed = 220;
         [SerializeField] private float minimumPivot = -30;

@@ -5,42 +5,52 @@ namespace LZ
 {
     public class PlayerInputManager : MonoBehaviour
     {
-        public static PlayerInputManager instance;
-
-        public PlayerManager player;
-        
+        // 输入控制
         private PlayerControls playerControls;
         
-        [Header("CAMERA MOVEMENT INPUT")]
+        // Singleton
+        public static PlayerInputManager instance;
+
+        // local player
+        public PlayerManager player;
+        
+        [Header("Camera Movement Input")]
         [SerializeField] private Vector2 cameraInput;
         public float cameraHorizontalInput;
         public float cameraVerticalInput;
 
-        [Header("LOCK ON INPUT")]
+        [Header("Lock On Input")]
         [SerializeField] private bool lockOn_Input;
         [SerializeField] private bool lockOn_Left_Input;
         [SerializeField] private bool lockOn_Right_Input;
         private Coroutine lockOnCoroutine;
 
-        [Header("PLAYER MOVEMENT INPUT")]
+        [Header("Player Movement Input")]
         [SerializeField] private Vector2 movementInput;
         public float horizontalInput;
         public float verticalInput;
         public float moveAmount;
 
-        [Header("PLAYER ACTION INPUT")]
+        [Header("Player Action Input")]
         [SerializeField] private bool dodgeInput;
         [SerializeField] private bool sprintInput;
         [SerializeField] private bool jumpInput;
         [SerializeField] private bool switch_Right_Weapon_Input;
         [SerializeField] private bool switch_Left_Weapon_Input;
         
-        [Header("BUMPER INPUTS")]
+        [Header("Bumper Inputs")]
         [SerializeField] private bool RB_Input;
 
-        [Header("TRIGGER INPUTS")]
+        [Header("Trigger Inputs")]
         [SerializeField] private bool RT_Input;
         [SerializeField] private bool Hold_RT_Input;
+        
+        [Header("Qued Inputs")]
+        [SerializeField] private bool input_Que_Is_Active = false;
+        [SerializeField] float default_Que_Input_Time = 0.35f;
+        [SerializeField] float que_Input_Timer = 0;
+        [SerializeField] bool que_RB_Input = false;
+        [SerializeField] bool que_RT_Input = false;
 
         private void Awake()
         {
@@ -123,6 +133,10 @@ namespace LZ
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
                 // 释放输入，将bool设置成false
                 playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
+                
+                //  QUED INPUTS
+                playerControls.PlayerActions.QueRB.performed += i => QueInput(ref que_RB_Input);
+                playerControls.PlayerActions.QueRT.performed += i => QueInput(ref que_RT_Input);
             }
             
             playerControls.Enable();
@@ -169,6 +183,7 @@ namespace LZ
             HandleChargeRTInput();
             HandleSwitchRightWeaponInput();
             HandleSwitchLeftWeaponInput();
+            HandleQuedInputs();
         }
 
         private void HandleLockOnInput()
@@ -401,6 +416,58 @@ namespace LZ
             {
                 switch_Left_Weapon_Input = false;
                 player.playerEquipmentManager.SwitchLeftWeapon();
+            }
+        }
+        
+        private void QueInput(ref bool quedInput)   //传递引用意味着我们传递的是特定的布尔变量本身，而非该布尔变量的值（真或假）
+        {
+            // 重置所有已排队的输入，以确保每次只能有一个（输入）进入队列
+            que_RB_Input = false;
+            que_RT_Input = false;
+            //que_LB_Input = false;
+            //que_LT_Input = false;
+
+            // 检查UI窗口是否处于打开状态，若已打开则直接返回
+
+            if (player.isPerformingAction || player.playerNetworkManager.isJumping.Value)
+            {
+                quedInput = true;
+                que_Input_Timer = default_Que_Input_Time;
+                input_Que_Is_Active = true;
+            }
+        }
+
+        private void ProcessQuedInput()
+        {
+            if (player.isDead.Value)
+                return;
+
+            if (que_RB_Input)
+                RB_Input = true;
+
+            if (que_RT_Input)
+                RT_Input = true;
+        }
+
+        private void HandleQuedInputs()
+        {
+            if (input_Que_Is_Active)
+            {
+                // 当计时器大于0，一直尝试输入
+                if (que_Input_Timer > 0)
+                {
+                    que_Input_Timer -= Time.deltaTime;
+                    ProcessQuedInput();
+                }
+                else
+                {
+                    // 重置所有输入队列
+                    que_RB_Input = false;
+                    que_RT_Input = false;
+
+                    input_Que_Is_Active = false;
+                    que_Input_Timer = 0;
+                }
             }
         }
     }
