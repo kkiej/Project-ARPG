@@ -21,7 +21,13 @@ namespace LZ
         [SerializeField] TextMeshProUGUI bossDefeatedPopUpBackgroundText;
         [SerializeField] TextMeshProUGUI bossDefeatedPopUpText;
         [SerializeField] CanvasGroup bossDefeatedPopUpCanvasGroup;   // 允许我们随着时间设置alpha来渐隐
-
+        
+        [Header("GRACE RESTORED Pop Up")]
+        [SerializeField] GameObject graceRestoredPopUpGameObject;
+        [SerializeField] TextMeshProUGUI graceRestoredPopUpBackgroundText;
+        [SerializeField] TextMeshProUGUI graceRestoredPopUpText;
+        [SerializeField] CanvasGroup graceRestoredPopUpCanvasGroup;   // 允许我们随着时间设置alpha来渐隐
+        
         public void CloseAllPopUpWindows()
         {
             popUpMessageGameObject.SetActive(false);
@@ -56,6 +62,17 @@ namespace LZ
             StartCoroutine(StretchPopUpTextOverTime(bossDefeatedPopUpBackgroundText, 8, 19));
             StartCoroutine(FadeInPopUpOverTime(bossDefeatedPopUpCanvasGroup, 5));
             StartCoroutine(WaitThenFadeOutPopUpOverTime(bossDefeatedPopUpCanvasGroup, 2, 5));
+        }
+        
+        public void SendGraceRestoredPopUp(string graceRestoredMessage)
+        {
+            graceRestoredPopUpText.text = graceRestoredMessage;
+            graceRestoredPopUpBackgroundText.text = graceRestoredMessage;
+            graceRestoredPopUpGameObject.SetActive(true);
+            graceRestoredPopUpBackgroundText.characterSpacing = 0;
+            StartCoroutine(StretchPopUpTextOverTime(graceRestoredPopUpBackgroundText, 8, 19));
+            StartCoroutine(FadeInPopUpOverTime(graceRestoredPopUpCanvasGroup, 5));
+            StartCoroutine(WaitThenFadeOutPopUpOverTime(graceRestoredPopUpCanvasGroup, 2, 5));
         }
 
         private IEnumerator StretchPopUpTextOverTime(TextMeshProUGUI text, float duration, float stretchAmount)

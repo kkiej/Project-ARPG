@@ -61,6 +61,16 @@ namespace LZ
         {
             return spawnedInBosses.FirstOrDefault(boss => boss.bossID == ID);
         }
+        
+        public void ResetAllCharacters()
+        {
+            DespawnAllCharacters();
+
+            foreach (var spawner in aiCharacterSpawners)
+            {
+                spawner.AttemptToSpawnCharacter();
+            }
+        }
 
         private void DespawnAllCharacters()
         {
@@ -68,6 +78,8 @@ namespace LZ
             {
                 character.GetComponent<NetworkObject>().Despawn();
             }
+            
+            spawnedInCharacters.Clear();
         }
 
         private void DisableAllCharacters()

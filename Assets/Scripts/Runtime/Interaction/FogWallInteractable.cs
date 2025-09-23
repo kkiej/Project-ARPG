@@ -99,7 +99,7 @@ namespace LZ
 
         private IEnumerator DisableCollisionForTime(PlayerManager player)
         {
-            //  MAKE THIS FUNCTION THE SAME TIME AS THE WALKING THROUGH FOG WALL ANIMATION LENGTH
+            // 使此函数的执行时长与穿过雾墙的动画时长保持一致
             Physics.IgnoreCollision(player.characterController, fogWallCollider, true);
             yield return new WaitForSeconds(3);
             Physics.IgnoreCollision(player.characterController, fogWallCollider, false);
