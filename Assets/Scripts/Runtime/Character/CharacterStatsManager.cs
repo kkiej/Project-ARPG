@@ -44,7 +44,7 @@ namespace LZ
             return Mathf.RoundToInt(stamina);
         }
         
-        public virtual void RegenerationStamina()
+        public virtual void RegenerateStamina()
         {
             // 只有自己可以编辑他们的网络变量
             if (!character.IsOwner)

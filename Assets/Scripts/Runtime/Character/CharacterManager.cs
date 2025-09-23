@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -20,6 +21,7 @@ namespace LZ
         [HideInInspector] public CharacterCombatManager characterCombatManager;
         [HideInInspector] public CharacterSoundFXManager characterSoundFXManager;
         [HideInInspector] public CharacterLocomotionManager characterLocomotionManager;
+        [HideInInspector] public CharacterUIManager characterUIManager;
 
         [Header("Character Group")]
         public CharacterGroup characterGroup;
@@ -39,6 +41,7 @@ namespace LZ
             characterCombatManager = GetComponent<CharacterCombatManager>();
             characterSoundFXManager = GetComponent<CharacterSoundFXManager>();
             characterLocomotionManager = GetComponent<CharacterLocomotionManager>();
+            characterUIManager = GetComponent<CharacterUIManager>();
         }
 
         protected virtual void Start()
@@ -76,6 +79,16 @@ namespace LZ
         }
 
         protected virtual void LateUpdate()
+        {
+            
+        }
+
+        protected virtual void OnEnable()
+        {
+            
+        }
+        
+        protected virtual void OnDisable()
         {
             
         }

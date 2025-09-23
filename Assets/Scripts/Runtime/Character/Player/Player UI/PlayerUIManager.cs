@@ -7,8 +7,8 @@ namespace LZ
     {
         public static PlayerUIManager instance;
         
-        [Header("NETWORK JOIN")] [SerializeField]
-        private bool startGameAsClient;
+        [Header("NETWORK JOIN")]
+        [SerializeField] private bool startGameAsClient;
 
         [HideInInspector] public PlayerUIHudManager playerUIHudManager;
         [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;

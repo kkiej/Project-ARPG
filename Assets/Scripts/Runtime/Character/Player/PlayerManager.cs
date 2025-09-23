@@ -43,7 +43,7 @@ namespace LZ
             playerLocomotionManager.HandleAllMovement();
             
             // 耐力再生
-            playerStatsManager.RegenerationStamina();
+            playerStatsManager.RegenerateStamina();
         }
 
         protected override void LateUpdate()
@@ -57,6 +57,16 @@ namespace LZ
             PlayerCamera.instance.HandleAllCameraActions();
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+        }
+        
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -81,6 +91,10 @@ namespace LZ
                 playerNetworkManager.currentStamina.OnValueChanged +=
                     playerStatsManager.ResetStaminaRegenTimer;
             }
+            
+            // 仅当该角色非本地玩家角色时，才更新浮动血条（避免在自身头顶显示血条）
+            if (!IsOwner)
+                characterNetworkManager.currentHealth.OnValueChanged += characterUIManager.OnHPChanged;
 
             // 状态
             playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
@@ -130,6 +144,9 @@ namespace LZ
                 playerNetworkManager.currentStamina.OnValueChanged -=
                     playerStatsManager.ResetStaminaRegenTimer;
             }
+            
+            if (!IsOwner)
+                characterNetworkManager.currentHealth.OnValueChanged -= characterUIManager.OnHPChanged;
 
             // 状态
             playerNetworkManager.currentHealth.OnValueChanged -= playerNetworkManager.CheckHP;
@@ -230,7 +247,7 @@ namespace LZ
                 playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
-            PlayerUIManager.instance.playerUIHudManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
+            //PlayerUIManager.instance.playerUIHudManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
             PlayerUIManager.instance.playerUIHudManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
         }
 
