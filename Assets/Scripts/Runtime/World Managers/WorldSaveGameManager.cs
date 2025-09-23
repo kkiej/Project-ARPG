@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 namespace LZ
 {
@@ -261,7 +262,7 @@ namespace LZ
             player.playerNetworkManager.endurance.Value = 10;
             
             SaveGame();
-            StartCoroutine(LoadWorldScene());
+            LoadWorldScene(worldSceneIndex);
         }
         
         public void LoadGame()
@@ -275,7 +276,7 @@ namespace LZ
             saveFileDataWriter.saveFileName = saveFileName;
             currentCharacterData = saveFileDataWriter.LoadSaveFile();
 
-            StartCoroutine(LoadWorldScene());
+            LoadWorldScene(worldSceneIndex);
         }
 
         public void SaveGame()
@@ -352,24 +353,13 @@ namespace LZ
             characterSlot10 = saveFileDataWriter.LoadSaveFile();
         }
 
-        public IEnumerator LoadWorldScene()
+        public void LoadWorldScene(int buildIndex)
         {
-            // 如果只想要一个世界场景就用这个
-            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldSceneIndex);
-            
-            // 如果想为不同关卡使用不同场景就用这个
-            //AsyncOperation loadOperation = SceneManager.LoadSceneAsync(currentCharacterData.sceneIndex);
-            
-            player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
+            string worldScene = SceneUtility.GetScenePathByBuildIndex(buildIndex);
+            NetworkManager.Singleton.SceneManager.LoadScene(worldScene, LoadSceneMode.Single);
 
-            yield return null;
+            player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
         }
-        
-        // 如果你想使用多场景设置，新角色上没有当前场景索引
-        //private IEnumerator LoadWorldSceneNewGame()
-        //{
-        //    
-        //}
 
         public int GetWorldSceneIndex()
         {

@@ -5,7 +5,7 @@ using Unity.Netcode;
 
 namespace LZ
 {
-    public class Interactable : MonoBehaviour
+    public class Interactable : NetworkBehaviour
     {
         public string interactableText; // 进入交互碰撞体时显示的文本提示（拾取物品、拉杠杆等）
         [SerializeField] protected Collider interactableCollider;   // 用于检测玩家交互的碰撞体
