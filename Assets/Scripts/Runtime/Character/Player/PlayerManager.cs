@@ -14,6 +14,7 @@ namespace LZ
         [HideInInspector] public PlayerInventoryManager playerInventoryManager;
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
         [HideInInspector] public PlayerCombatManager playerCombatManager;
+        [HideInInspector] public PlayerInteractionManager playerInteractionManager;
         
         protected override void Awake()
         {
@@ -27,6 +28,7 @@ namespace LZ
             playerInventoryManager = GetComponent<PlayerInventoryManager>();
             playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
             playerCombatManager = GetComponent<PlayerCombatManager>();
+            playerInteractionManager = GetComponent<PlayerInteractionManager>();
         }
 
         protected override void Update()
@@ -35,9 +37,7 @@ namespace LZ
             
             // 如果我们不拥有这个gameObject，我们就不处理/编辑它
             if (!IsOwner)
-            {
                 return;
-            }
             
             // 处理位移
             playerLocomotionManager.HandleAllMovement();

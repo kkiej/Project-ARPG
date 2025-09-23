@@ -6,6 +6,10 @@ namespace LZ
 {
     public class PlayerUIPopUpManager : MonoBehaviour
     {
+        [Header("Message Pop Up")]
+        [SerializeField] TextMeshProUGUI popUpMessageText;
+        [SerializeField] GameObject popUpMessageGameObject;
+        
         [Header("YOU DIED Pop Up")]
         [SerializeField] private GameObject youDiedPopUpGameObject;
         [SerializeField] private TextMeshProUGUI youDiedPopUpBackgroundText;
@@ -18,6 +22,20 @@ namespace LZ
         [SerializeField] TextMeshProUGUI bossDefeatedPopUpText;
         [SerializeField] CanvasGroup bossDefeatedPopUpCanvasGroup;   // 允许我们随着时间设置alpha来渐隐
 
+        public void CloseAllPopUpWindows()
+        {
+            popUpMessageGameObject.SetActive(false);
+
+            PlayerUIManager.instance.popUpWindowIsOpen = false;
+        }
+        
+        public void SendPlayerMessagePopUp(string messageText)
+        {
+            PlayerUIManager.instance.popUpWindowIsOpen = true;
+            popUpMessageText.text = messageText;
+            popUpMessageGameObject.SetActive(true);
+        }
+        
         public void SendYouDiedPopUp()
         {
             // 激活后处理效果
