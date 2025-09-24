@@ -13,6 +13,7 @@ namespace LZ
         
         [Header("Damage")]
         public TakeDamageEffect takeDamageEffect;
+        public TakeBlockedDamageEffect takeBlockedDamageEffect;
 
         [SerializeField] private List<InstantCharacterEffect> instantEffects;
 

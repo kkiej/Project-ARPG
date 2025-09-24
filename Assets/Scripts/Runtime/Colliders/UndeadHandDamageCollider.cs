@@ -15,6 +15,12 @@ namespace LZ
             undeadCharacter = GetComponentInParent<AICharacterManager>();
         }
 
+        protected override void GetBlockingDotValues(CharacterManager damageTarget)
+        {
+            directionFromAttackToDamageTarget = undeadCharacter.transform.position - damageTarget.transform.position;
+            dotValueFromAttackToDamageTarget = Vector3.Dot(directionFromAttackToDamageTarget, damageTarget.transform.forward);
+        }
+
         protected override void DamageTarget(CharacterManager damageTarget)
         {
             // 我们不想在一次攻击中对同一个目标造成多次伤害

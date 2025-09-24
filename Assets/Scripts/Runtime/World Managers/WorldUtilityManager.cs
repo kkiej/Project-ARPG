@@ -69,12 +69,34 @@ namespace LZ
             float viewableAngle = Vector3.Angle(characterTransform.forward, targetsDirection);
             Vector3 cross = Vector3.Cross(characterTransform.forward, targetsDirection);
 
-            if (cross.y < 0)
-            {
+            if (cross.y < 0) 
                 viewableAngle = -viewableAngle;
-            }
 
             return viewableAngle;
+        }
+
+        public DamageIntensity GetDamageIntensityBasedOnPoiseDamage(float poiseDamage)
+        {
+            // 投掷匕首、小型物品
+            DamageIntensity damageIntensity = DamageIntensity.Ping;
+
+            // 匕首 / 轻攻击
+            if (poiseDamage >= 10)
+                damageIntensity = DamageIntensity.Light;
+
+            // 标准武器 / 中型攻击
+            if (poiseDamage >= 30)
+                damageIntensity = DamageIntensity.Medium;
+
+            // 巨型武器 / 重攻击
+            if (poiseDamage >= 70)
+                damageIntensity = DamageIntensity.Heavy;
+
+            // 终极武器 / 毁天灭地攻击
+            if (poiseDamage >= 120)
+                damageIntensity = DamageIntensity.Colossal;
+
+            return damageIntensity;
         }
     }
 }

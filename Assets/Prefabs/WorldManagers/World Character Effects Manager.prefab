@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7099222610459741573}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9080416336766322476
 MonoBehaviour:
@@ -47,6 +47,9 @@ MonoBehaviour:
   bloodSplatterVFX: {fileID: 5576258312851126688, guid: 5b594aa05d01ac8409cf17f5a2a25ddf,
     type: 3}
   takeDamageEffect: {fileID: 11400000, guid: c147f56f3809f664b85157517c3e83bf, type: 2}
+  takeBlockedDamageEffect: {fileID: 11400000, guid: fccce03cbd8513f43adc53b23f48babd,
+    type: 2}
   instantEffects:
   - {fileID: 11400000, guid: 4135ba1bbebe83d43a4bf7ed7cd30f90, type: 2}
   - {fileID: 11400000, guid: c147f56f3809f664b85157517c3e83bf, type: 2}
+  - {fileID: 11400000, guid: fccce03cbd8513f43adc53b23f48babd, type: 2}

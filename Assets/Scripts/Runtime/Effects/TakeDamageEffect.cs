@@ -34,7 +34,7 @@ namespace LZ
         public bool willPlayDamageSFX = true;
         public AudioClip elementalDamageSoundFX; // 如果有元素伤害（魔法/火焰/雷电/神圣），在常规SFX上使用
 
-        [Header("Direction damage Taken From")]
+        [Header("Direction Damage Taken From")]
         public float angleHitFrom; // 用来角色播放哪个受击动画（向后，向左，向右等）
         public Vector3 contactPoint; // 用来决定血液特效实例化的位置
 

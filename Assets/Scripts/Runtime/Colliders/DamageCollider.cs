@@ -21,6 +21,10 @@ namespace LZ
 
         [Header("Characters Damaged")]
         protected List<CharacterManager> charactersDamaged = new List<CharacterManager>();
+        
+        [Header("Block")]
+        protected Vector3 directionFromAttackToDamageTarget;
+        protected float dotValueFromAttackToDamageTarget;
 
         protected virtual void Awake()
         {
@@ -38,6 +42,7 @@ namespace LZ
                 // 检查是否可以基于友军伤害对目标造成伤害
                 
                 // 检查目标是否在格挡
+                CheckForBlock(damageTarget);
                 
                 // 检查目标是否无敌（已经在TakeDamageEffect中检查了）
                 //if (damageTarget.characterNetworkManager.isInvulnerable.Value)
@@ -45,6 +50,40 @@ namespace LZ
                 
                 DamageTarget(damageTarget);
             }
+        }
+        
+        protected virtual void CheckForBlock(CharacterManager damageTarget)
+        {
+            //  若该角色已受损，请勿继续
+            if (charactersDamaged.Contains(damageTarget))
+                return;
+
+            GetBlockingDotValues(damageTarget);
+
+            // 1. 检查受损角色是否处于格挡状态
+            if (damageTarget.characterNetworkManager.isBlocking.Value && dotValueFromAttackToDamageTarget > 0.3f)
+            {
+                // 2. 若角色正在格挡，则检查其是否面向正确方向以成功格挡
+
+                charactersDamaged.Add(damageTarget);
+
+                TakeBlockedDamageEffect damageEffect = Instantiate(WorldCharacterEffectsManager.instance.takeBlockedDamageEffect);
+
+                damageEffect.physicalDamage = physicalDamage;
+                damageEffect.magicDamage = magicDamage;
+                damageEffect.fireDamage = fireDamage;
+                damageEffect.holyDamage = holyDamage;
+                damageEffect.contactPoint = contactPoint;
+
+                // 3. 对目标施加被格挡后的角色的伤害
+                damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);
+            }
+        }
+
+        protected virtual void GetBlockingDotValues(CharacterManager damageTarget)
+        {
+            directionFromAttackToDamageTarget = transform.position - damageTarget.transform.position;
+            dotValueFromAttackToDamageTarget = Vector3.Dot(directionFromAttackToDamageTarget, damageTarget.transform.forward);
         }
 
         protected virtual void DamageTarget(CharacterManager damageTarget)
