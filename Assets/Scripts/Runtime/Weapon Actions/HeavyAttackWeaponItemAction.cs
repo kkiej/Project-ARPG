@@ -19,7 +19,7 @@ namespace LZ
             if (playerPerformingAction.playerNetworkManager.currentStamina.Value <= 0)
                 return;
 
-            if (!playerPerformingAction.playerLocomotionManager.isGrounded)
+            if (!playerPerformingAction.characterLocomotionManager.isGrounded)
                 return;
             
             PerformHeavyAttack(playerPerformingAction, weaponPerformingAction);
@@ -36,20 +36,20 @@ namespace LZ
                 // 基于上一个播放的攻击来决定播放哪个攻击动画
                 if (playerPerformingAction.characterCombatManager.lastAttackAnimationPerformed == heavy_Attack_01)
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.HeavyAttack02,
-                        heavy_Attack_02, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                        AttackType.HeavyAttack02, heavy_Attack_02, true);
                 }
                 else
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.HeavyAttack01,
-                        heavy_Attack_01, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                        AttackType.HeavyAttack01, heavy_Attack_01, true);
                 }
             }
             // 否则，只播放常规攻击
             else if (!playerPerformingAction.isPerformingAction)
             {
-                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.HeavyAttack01,
-                    heavy_Attack_01, true);
+                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                    AttackType.HeavyAttack01, heavy_Attack_01, true);
             }
         }
     }

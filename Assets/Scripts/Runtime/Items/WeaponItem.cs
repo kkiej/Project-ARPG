@@ -4,7 +4,8 @@ namespace LZ
 {
     public class WeaponItem : Item
     {
-        // 动画控制器覆盖（根据当前使用的武器更改攻击动画）
+        [Header("Animations")]
+        public AnimatorOverrideController weaponAnimator;
 
         [Header("Weapon Model")]
         public GameObject weaponModel;

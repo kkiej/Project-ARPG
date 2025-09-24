@@ -86,6 +86,7 @@ namespace LZ
         {
             float snappedHorizontal;
             float snappedVertical;
+			// 该if条件链会将水平移动值取整为 -1、-0.5、0、0.5 或 1 这几个离散值
 
             if (horizontalMovement > 0 && horizontalMovement <= 0.5f)
             {
@@ -157,7 +158,7 @@ namespace LZ
                 targetAnimation, applyRootMotion);
         }
         
-        public virtual void PlayTargetAttackActionAnimation(AttackType attackType, string targetAnimation,
+        public virtual void PlayTargetAttackActionAnimation(WeaponItem weapon, AttackType attackType, string targetAnimation,
             bool isPerformingAction, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
         {
             // 跟踪上次执行的攻击（用于连招）
@@ -167,6 +168,7 @@ namespace LZ
             // 通知网络我们的“正在攻击”标志是激活状态（用于反击伤害等）
             character.characterCombatManager.currentAttackType = attackType;
             character.characterCombatManager.lastAttackAnimationPerformed = targetAnimation;
+            UpdateAnimatorController(weapon.weaponAnimator);
             this.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(targetAnimation, 0.2f);
             character.isPerformingAction = isPerformingAction;
@@ -176,6 +178,11 @@ namespace LZ
             // 告诉服务器/主机我们播放了一个动画，并为在场的每个人播放这个动画
             character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId,
                 targetAnimation, applyRootMotion);
+		}
+
+        public void UpdateAnimatorController(AnimatorOverrideController weaponController)
+        {
+            character.animator.runtimeAnimatorController = weaponController;
         }
     }
 }

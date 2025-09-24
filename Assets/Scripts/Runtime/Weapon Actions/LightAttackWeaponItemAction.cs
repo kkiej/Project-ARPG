@@ -66,20 +66,20 @@ namespace LZ
                 // 基于上一个播放的攻击来决定播放哪个攻击动画
                 if (playerPerformingAction.characterCombatManager.lastAttackAnimationPerformed == light_Attack_01)
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.LightAttack02,
-                        light_Attack_02, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                        AttackType.LightAttack02, light_Attack_02, true);
                 }
                 else
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.LightAttack01,
-                        light_Attack_01, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                        AttackType.LightAttack01, light_Attack_01, true);
                 }
             }
             // 否则，只播放常规攻击
             else if (!playerPerformingAction.isPerformingAction)
             {
-                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.LightAttack01,
-                    light_Attack_01, true);
+                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                    AttackType.LightAttack01, light_Attack_01, true);
             }
         }
         
@@ -88,7 +88,8 @@ namespace LZ
             // 若双手持武，则执行双手奔跑攻击（待实现）
             // 否则执行单手奔跑攻击
 
-            playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.RunningAttack01, run_Attack_01, true);
+            playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                AttackType.RunningAttack01, run_Attack_01, true);
         }
 
         private void PerformRollingAttack(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
@@ -96,7 +97,8 @@ namespace LZ
             // 若双手持武，则执行双手奔跑攻击（待实现）
             // 否则执行单手奔跑攻击
             playerPerformingAction.playerCombatManager.canPerformRollingAttack = false;
-            playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.RollingAttack01, roll_Attack_01, true);
+            playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                AttackType.RollingAttack01, roll_Attack_01, true);
         }
 
         private void PerformBackstepAttack(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
@@ -104,7 +106,8 @@ namespace LZ
             // 若双手持武，则执行双手奔跑攻击（待实现）
             // 否则执行单手奔跑攻击
             playerPerformingAction.playerCombatManager.canPerformBackstepAttack = false;
-            playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(AttackType.BackstepAttack01, backstep_Attack_01, true);
+            playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction,
+                AttackType.BackstepAttack01, backstep_Attack_01, true);
         }
     }
 }

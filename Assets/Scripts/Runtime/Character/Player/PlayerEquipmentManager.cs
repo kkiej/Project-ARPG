@@ -123,9 +123,8 @@ namespace LZ
                         player.playerInventoryManager.weaponsInRightHandSlots[
                             player.playerInventoryManager.rightHandWeaponIndex];
                     // 分配网络武器ID，方便它为所有连接的客户端切换
-                    player.playerNetworkManager.currentRightHandWeaponID.Value =
-                        player.playerInventoryManager.weaponsInRightHandSlots[
-                            player.playerInventoryManager.rightHandWeaponIndex].itemID;
+                    player.playerNetworkManager.currentRightHandWeaponID.Value = player.playerInventoryManager
+                        .weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex].itemID;
                     return;
                 }
             }
@@ -148,6 +147,8 @@ namespace LZ
                 rightHandSlot.LoadWeapon(rightHandWeaponModel);
                 rightWeaponManager = rightHandWeaponModel.GetComponent<WeaponManager>();
                 rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
+                player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager
+                    .currentRightHandWeapon.weaponAnimator);
             }
         }
 
@@ -220,9 +221,8 @@ namespace LZ
                         player.playerInventoryManager.weaponsInLeftHandSlots[
                             player.playerInventoryManager.leftHandWeaponIndex];
                     // 分配网络武器ID，方便它为所有连接的客户端切换
-                    player.playerNetworkManager.currentLeftHandWeaponID.Value =
-                        player.playerInventoryManager.weaponsInLeftHandSlots[
-                            player.playerInventoryManager.leftHandWeaponIndex].itemID;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = player.playerInventoryManager
+                        .weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID;
                     return;
                 }
             }
