@@ -20,6 +20,7 @@ namespace LZ
             meleeDamageCollider.fireDamage = weapon.fireDamage;
             meleeDamageCollider.lightningDamage = weapon.lightningDamage;
             meleeDamageCollider.holyDamage = weapon.holyDamage;
+            meleeDamageCollider.poiseDamage = weapon.poiseDamage;
 
             meleeDamageCollider.light_Attack_01_Modifier = weapon.light_Attack_01_Modifier;
             meleeDamageCollider.light_Attack_02_Modifier = weapon.light_Attack_02_Modifier;

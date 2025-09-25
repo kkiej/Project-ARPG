@@ -36,6 +36,7 @@ namespace LZ
             damageEffect.fireDamage = fireDamage;
             //damageEffect.lightningDamage = lightningDamage;
             damageEffect.holyDamage = holyDamage;
+            damageEffect.poiseDamage = poiseDamage;
             damageEffect.contactPoint = contactPoint;
             damageEffect.angleHitFrom = Vector3.SignedAngle(undeadCharacter.transform.forward,
                 damageTarget.transform.forward, Vector3.up);

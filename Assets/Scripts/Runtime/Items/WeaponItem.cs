@@ -67,7 +67,8 @@ namespace LZ
         // 战争灰烬
         // 格挡声音
 
-        [Header("Whooshes")]
+        [Header("SFX")]
         public AudioClip[] whooshes;
+        public AudioClip[] blocking;
     }
 }
