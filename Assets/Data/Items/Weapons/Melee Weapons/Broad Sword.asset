@@ -17,6 +17,7 @@ MonoBehaviour:
   itemDescription: A broad sword.
   itemID: 2
   weaponAnimator: {fileID: 22100000, guid: 93cea43a47d3f20489175a4826e6e643, type: 2}
+  weaponModelType: 0
   weaponModel: {fileID: 6060313255631063246, guid: 3452547aec3fdfe4aa16097afddd1774,
     type: 3}
   strengthREQ: 10
@@ -45,8 +46,15 @@ MonoBehaviour:
   runningAttackStaminaCostMultiplier: 1.1
   rollingAttackStaminaCostMultiplier: 1.1
   backstepAttackStaminaCostMultiplier: 1.1
+  physicalBaseDamageAbsorption: 50
+  magicBaseDamageAbsorption: 50
+  fireBaseDamageAbsorption: 50
+  holyBaseDamageAbsorption: 50
+  lightningBaseDamageAbsorption: 50
+  stability: 50
   oh_RB_Action: {fileID: 11400000, guid: 8d0a7d9832e242c4f964814424f6105a, type: 2}
   oh_RT_Action: {fileID: 11400000, guid: 7007d4651a902224c960d1ab93dfe0d8, type: 2}
+  oh_LB_Action: {fileID: 11400000, guid: 404fc1bdca50f434d8ae8a9e193f7118, type: 2}
   whooshes:
   - {fileID: 8300000, guid: adfc66decb7e78148a1e864183039cf7, type: 3}
   - {fileID: 8300000, guid: 7e44dddba4947d24cb6b4f09277aa273, type: 3}

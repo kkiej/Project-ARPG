@@ -111,6 +111,7 @@ namespace LZ
                 playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
             playerNetworkManager.currentWeaponBeingUsed.OnValueChanged +=
                 playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
+			playerNetworkManager.isBlocking.OnValueChanged += playerNetworkManager.OnIsBlockingChanged;
             
             // Flags
             playerNetworkManager.isChargingAttack.OnValueChanged += playerNetworkManager.OnIsChargingAttackChanged;
@@ -258,6 +259,9 @@ namespace LZ
                 playerNetworkManager.currentRightHandWeaponID.Value);
             playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0,
                 playerNetworkManager.currentLeftHandWeaponID.Value);
+
+			// 同步格挡状态
+            playerNetworkManager.OnIsBlockingChanged(false, playerNetworkManager.isBlocking.Value);
             
             // 护甲
             

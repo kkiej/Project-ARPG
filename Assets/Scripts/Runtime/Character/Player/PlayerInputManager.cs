@@ -40,7 +40,8 @@ namespace LZ
         [SerializeField] bool interaction_Input = false;
         
         [Header("Bumper Inputs")]
-        [SerializeField] private bool RB_Input;
+        [SerializeField] bool RB_Input = false;
+        [SerializeField] bool LB_Input = false;
 
         [Header("Trigger Inputs")]
         [SerializeField] private bool RT_Input;
@@ -120,6 +121,8 @@ namespace LZ
                 
                 // Bumpers
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
+				playerControls.PlayerActions.LB.performed += i => LB_Input = true;
+                playerControls.PlayerActions.LB.canceled += i => player.playerNetworkManager.isBlocking.Value = false;
                 
                 // Triggers
                 playerControls.PlayerActions.RT.performed += i => RT_Input = true;
@@ -181,6 +184,7 @@ namespace LZ
             HandleSprintInput();
             HandleJumpInput();
             HandleRBInput();
+            HandleLBInput();
             HandleRTInput();
             HandleChargeRTInput();
             HandleSwitchRightWeaponInput();
@@ -371,6 +375,22 @@ namespace LZ
                 player.playerCombatManager.PerformWeaponBasedAction(
                     player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action,
                     player.playerInventoryManager.currentRightHandWeapon);
+            }
+        }
+		
+		private void HandleLBInput()
+        {
+            if (LB_Input)
+            {
+                LB_Input = false;
+
+                //  TODO: IF WE HAVE A UI WINDOW OPEN, RETURN AND DO NOTHING
+
+                player.playerNetworkManager.SetCharacterActionHand(false);
+
+                //  TODO: IF WE ARE TWO HANDING THE WEAPON, USE THE TWO HANDED ACTION
+
+                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentLeftHandWeapon.oh_LB_Action, player.playerInventoryManager.currentLeftHandWeapon);
             }
         }
 

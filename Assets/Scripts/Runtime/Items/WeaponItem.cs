@@ -7,6 +7,9 @@ namespace LZ
         [Header("Animations")]
         public AnimatorOverrideController weaponAnimator;
 
+        [Header("Model Instantiation")]
+        public WeaponModelType weaponModelType;
+
         [Header("Weapon Model")]
         public GameObject weaponModel;
 
@@ -49,10 +52,18 @@ namespace LZ
         public float rollingAttackStaminaCostMultiplier = 1.1f;
         public float backstepAttackStaminaCostMultiplier = 1.1f;
 
+        [Header("Weapon Blocking Absorption")]
+        public float physicalBaseDamageAbsorption = 50;
+        public float magicBaseDamageAbsorption = 50;
+        public float fireBaseDamageAbsorption = 50;
+        public float holyBaseDamageAbsorption = 50;
+        public float lightningBaseDamageAbsorption = 50;
+        public float stability = 50;    // REDUCES STAMINA LOST FROM BLOCK
+
         [Header("Actions")]
         public WeaponItemAction oh_RB_Action;
         public WeaponItemAction oh_RT_Action;
-
+		public WeaponItemAction oh_LB_Action;   // ONE HAND LEFT BUMPER ACTION
         // 战争灰烬
         // 格挡声音
 

@@ -29,12 +29,14 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 				Opaque:HideOption:  Blend
 				Opaque:RemoveDefine:_SURFACE_TYPE_TRANSPARENT 1
 				Opaque:ExcludePass:Universal2D
+				Opaque:ExcludePass:DepthNormalsOnly
 				Transparent:SetPropertyOnSubShader:RenderType,Transparent
 				Transparent:SetPropertyOnSubShader:RenderQueue,Transparent
 				Transparent:SetPropertyOnPass:Forward:ZWrite,Off
 				Transparent:ShowOption:  Blend
 				Transparent:SetDefine:_SURFACE_TYPE_TRANSPARENT 1
 				Transparent:ExcludePass:Universal2D
+				Transparent:ExcludePass:DepthNormalsOnly
 			Option:  Blend:Alpha,Premultiply,Additive,Multiply:Alpha
 				Alpha:SetPropertyOnPass:Forward:BlendRGB,SrcAlpha,OneMinusSrcAlpha
 				Premultiply:SetPropertyOnPass:Forward:BlendRGB,One,OneMinusSrcAlpha
@@ -536,12 +538,15 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 			HLSLPROGRAM
 
-			#pragma multi_compile _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
+			#pragma instancing_options renderinglayer
 
 			#pragma multi_compile _ LIGHTMAP_ON
-			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
-			#pragma shader_feature _ _SAMPLE_GI
-			#pragma multi_compile _ DEBUG_DISPLAY
+        	#pragma multi_compile _ DIRLIGHTMAP_COMBINED
+        	#pragma shader_feature _ _SAMPLE_GI
+        	#pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
+        	#pragma multi_compile_fragment _ DEBUG_DISPLAY
+        	#pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
+        	#pragma multi_compile_fragment _ _WRITE_RENDERING_LAYERS
 
 			#pragma vertex vert
 			#pragma fragment frag
@@ -730,7 +735,11 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 			}
 			#endif
 
-			half4 frag ( VertexOutput IN /*ase_frag_input*/ ) : SV_Target
+			half4 frag ( VertexOutput IN
+				#ifdef _WRITE_RENDERING_LAYERS
+				, out float4 outRenderingLayers : SV_Target1
+				#endif
+				/*ase_frag_input*/ ) : SV_Target
 			{
 				UNITY_SETUP_INSTANCE_ID( IN );
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
@@ -775,6 +784,11 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 				#ifdef ASE_FOG
 					Color = MixFog( Color, IN.fogFactor );
+				#endif
+
+				#ifdef _WRITE_RENDERING_LAYERS
+					uint renderingLayers = GetMeshRenderingLayer();
+					outRenderingLayers = float4( EncodeMeshRenderingLayer( renderingLayers ), 0, 0, 0 );
 				#endif
 
 				return half4( Color, Alpha );
@@ -1969,6 +1983,9 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 			#pragma vertex vert
 			#pragma fragment frag
 
+			#pragma multi_compile_fragment _ _WRITE_RENDERING_LAYERS
+        	#pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
+
 			#define ATTRIBUTES_NEED_NORMAL
 			#define ATTRIBUTES_NEED_TANGENT
 			#define VARYINGS_NEED_NORMAL_WS
@@ -2137,7 +2154,12 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 			}
 			#endif
 
-			half4 frag(VertexOutput IN /*ase_frag_input*/) : SV_TARGET
+			void frag( VertexOutput IN
+				, out half4 outNormalWS : SV_Target0
+			#ifdef _WRITE_RENDERING_LAYERS
+				, out float4 outRenderingLayers : SV_Target1
+			#endif
+				/*ase_frag_input*/ )
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 
@@ -2154,16 +2176,28 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 					LODDitheringTransition( IN.clipPos.xyz, unity_LODFade.x );
 				#endif
 
-				float3 normalWS = IN.normalWS;
+				#if defined(_GBUFFER_NORMALS_OCT)
+					float3 normalWS = normalize(IN.normalWS);
+					float2 octNormalWS = PackNormalOctQuadEncode(normalWS);           // values between [-1, +1], must use fp32 on some platforms
+					float2 remappedOctNormalWS = saturate(octNormalWS * 0.5 + 0.5);   // values between [ 0,  1]
+					half3 packedNormalWS = PackFloat2To888(remappedOctNormalWS);      // values between [ 0,  1]
+					outNormalWS = half4(packedNormalWS, 0.0);
+				#else
+					float3 normalWS = IN.normalWS;
+					outNormalWS = half4(NormalizeNormalPerPixel(normalWS), 0.0);
+				#endif
 
-				return half4(NormalizeNormalPerPixel(normalWS), 0.0);
+				#ifdef _WRITE_RENDERING_LAYERS
+					uint renderingLayers = GetMeshRenderingLayer();
+					outRenderingLayers = float4(EncodeMeshRenderingLayer(renderingLayers), 0, 0, 0);
+				#endif
 			}
 
 			ENDHLSL
 		}
 
 		/*ase_pass*/
-		Pass
+		Pass // -- DEPRECATED --
 		{
 			/*ase_hide_pass*/
             Name "DepthNormalsOnly"

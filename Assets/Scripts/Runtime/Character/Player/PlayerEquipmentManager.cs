@@ -7,7 +7,8 @@ namespace LZ
         private PlayerManager player;
         
         public WeaponModelInstantiationSlot rightHandSlot;
-        public WeaponModelInstantiationSlot leftHandSlot;
+        public WeaponModelInstantiationSlot leftHandWeaponSlot;
+        public WeaponModelInstantiationSlot leftHandShieldSlot;
 
         [SerializeField] private WeaponManager rightWeaponManager;
         [SerializeField] private WeaponManager leftWeaponManager;
@@ -41,9 +42,13 @@ namespace LZ
                 {
                     rightHandSlot = weaponSlot;
                 }
-                else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHand)
+                else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHandWeaponSlot)
                 {
-                    leftHandSlot = weaponSlot;
+                    leftHandWeaponSlot = weaponSlot;
+                }
+                else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHandShieldSlot)
+                {
+                    leftHandShieldSlot = weaponSlot;
                 }
             }
         }
@@ -238,11 +243,27 @@ namespace LZ
             if (player.playerInventoryManager.currentLeftHandWeapon != null)
             {
                 // 移除旧武器
-                leftHandSlot.UnloadWeapon();
-                
+                if (leftHandWeaponSlot.currentWeaponModel != null)
+                    leftHandWeaponSlot.UnloadWeapon();
+
+                if (leftHandShieldSlot.currentWeaponModel != null)
+                    leftHandShieldSlot.UnloadWeapon();
+
                 // 加载新武器
                 leftHandWeaponModel = Instantiate(player.playerInventoryManager.currentLeftHandWeapon.weaponModel);
-                leftHandSlot.LoadWeapon(leftHandWeaponModel);
+
+                switch (player.playerInventoryManager.currentLeftHandWeapon.weaponModelType)
+                {
+                    case WeaponModelType.Weapon:
+                        leftHandWeaponSlot.LoadWeapon(leftHandWeaponModel);
+                        break;
+                    case WeaponModelType.Shield:
+                        leftHandShieldSlot.LoadWeapon(leftHandWeaponModel);
+                        break;
+                    default:
+                        break;
+                }
+
                 leftWeaponManager = leftHandWeaponModel.GetComponent<WeaponManager>();
                 leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
             }

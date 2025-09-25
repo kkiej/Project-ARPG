@@ -31,6 +31,9 @@ namespace LZ
             if (!playerPerformingAction.characterLocomotionManager.isGrounded)
                 return;
 
+            if (playerPerformingAction.IsOwner)
+                playerPerformingAction.playerNetworkManager.isAttacking.Value = true;
+
             // 如果我们正在冲刺，播放冲刺攻击
             if (playerPerformingAction.characterNetworkManager.isSprinting.Value)
             {
