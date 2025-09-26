@@ -15,7 +15,14 @@ namespace LZ
         public TakeDamageEffect takeDamageEffect;
         public TakeBlockedDamageEffect takeBlockedDamageEffect;
 
-        [SerializeField] private List<InstantCharacterEffect> instantEffects;
+        [Header("Two Hand")]
+        public TwoHandingEffect twoHandingEffect;
+
+        [Header("Instant Effects")]
+        [SerializeField] List<InstantCharacterEffect> instantEffects;
+
+        [Header("Static Effects")]
+        [SerializeField] List<StaticCharacterEffect> staticEffects;
 
         private void Awake()
         {
@@ -36,6 +43,11 @@ namespace LZ
             for (int i = 0; i < instantEffects.Count; i++)
             {
                 instantEffects[i].instantEffectID = i;
+            }
+
+            for (int i = 0; i < staticEffects.Count; i++)
+            {
+                staticEffects[i].staticEffectID = i;
             }
         }
     }
