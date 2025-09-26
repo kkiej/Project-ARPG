@@ -20,6 +20,13 @@ namespace LZ
         public float blockingHolyAbsorption;
         public float blockingStability;
 
+        [Header("Poise")]
+        public float totalPoiseDamage;              // 累计承受的韧性伤害值
+        public float offensivePoiseBonus;           // 使用武器获得的韧性加成（重型武器提供显著更高的加成）
+        public float basePoiseDefense;              // 通过护甲/护符等装备获得的韧性加成
+        public float defaultPoiseResetTime = 8;     // 韧性伤害重置所需时间（若在此时间内未受击则重置）
+        public float poiseResetTimer = 0;           // 当前韧性重置的计时器
+
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
@@ -29,7 +36,12 @@ namespace LZ
         {
             
         }
-        
+
+        protected virtual void Update()
+        {
+            HandlePoiseResetTimer();
+        }
+
         public int CalculateHealthBasedOnVitalityLevel(int vitality)
         {
             float health = 0;
@@ -89,6 +101,18 @@ namespace LZ
             if (currentStaminaAmount < previousStaminaAmount)
             {
                 staminaRegenerationTimer = 0;
+            }
+        }
+
+        protected virtual void HandlePoiseResetTimer()
+        {
+            if (poiseResetTimer > 0)
+            {
+                poiseResetTimer -= Time.deltaTime;
+            }
+            else
+            {
+                totalPoiseDamage = 0;
             }
         }
     }
