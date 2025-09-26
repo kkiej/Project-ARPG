@@ -6,7 +6,7 @@ namespace LZ
 {
     public class WorldItemDatabase : MonoBehaviour
     {
-        public static WorldItemDatabase instance;
+        public static WorldItemDatabase Instance;
 
         public WeaponItem unarmedWeapon;
 
@@ -18,9 +18,9 @@ namespace LZ
 
         private void Awake()
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = this;
+                Instance = this;
             }
             else
             {

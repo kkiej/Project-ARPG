@@ -67,7 +67,7 @@ namespace LZ
 
         public void OnCurrentRightHandWeaponIDChange(int oldID, int newID)
         {
-            WeaponItem newWeapon = Instantiate(WorldItemDatabase.instance.GetWeaponByID(newID));
+            WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
             player.playerInventoryManager.currentRightHandWeapon = newWeapon;
             player.playerEquipmentManager.LoadRightWeapon();
 
@@ -79,7 +79,7 @@ namespace LZ
         
         public void OnCurrentLeftHandWeaponIDChange(int oldID, int newID)
         {
-            WeaponItem newWeapon = Instantiate(WorldItemDatabase.instance.GetWeaponByID(newID));
+            WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
             player.playerInventoryManager.currentLeftHandWeapon = newWeapon;
             player.playerEquipmentManager.LoadLeftWeapon();
             
@@ -91,7 +91,7 @@ namespace LZ
 
         public void OnCurrentWeaponBeingUsedIDChange(int oldID, int newID)
         {
-            WeaponItem newWeapon = Instantiate(WorldItemDatabase.instance.GetWeaponByID(newID));
+            WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
             player.playerCombatManager.currentWeaponBeingUsed = newWeapon;
 
             // 如果本端是拥有者则无需执行此代码，因为已在本地完成过处理
@@ -120,7 +120,17 @@ namespace LZ
         public void OnIsTwoHandingWeaponChanged(bool oldStatus, bool newStatus)
         {
             if (!isTwoHandingWeapon.Value)
+            {
+                if (IsOwner)
+                {
+                    isTwoHandingLeftWeapon.Value = false;
+                    isTwoHandingRightWeapon.Value = false;
+                }
+
                 player.playerEquipmentManager.UnTwoHandWeapon();
+            }
+
+            player.animator.SetBool("isTwoHandingWeapon", isTwoHandingWeapon.Value);
         }
 
         public void OnIsTwoHandingRightWeaponChanged(bool oldStatus, bool newStatus)
@@ -132,23 +142,25 @@ namespace LZ
             {
                 currentWeaponBeingTwoHanded.Value = currentRightHandWeaponID.Value;
                 isTwoHandingWeapon.Value = true;
-                player.playerInventoryManager.currentTwoHandWeapon = player.playerInventoryManager.currentRightHandWeapon;
-                player.playerEquipmentManager.TwoHandRightWeapon();
             }
+
+            player.playerInventoryManager.currentTwoHandWeapon = player.playerInventoryManager.currentRightHandWeapon;
+            player.playerEquipmentManager.TwoHandRightWeapon();
         }
 
         public void OnIsTwoHandingLeftWeaponChanged(bool oldStatus, bool newStatus)
         {
-            if (!isTwoHandingRightWeapon.Value)
+            if (!isTwoHandingLeftWeapon.Value)
                 return;
 
             if (IsOwner)
             {
                 currentWeaponBeingTwoHanded.Value = currentLeftHandWeaponID.Value;
                 isTwoHandingWeapon.Value = true;
-                player.playerInventoryManager.currentTwoHandWeapon = player.playerInventoryManager.currentLeftHandWeapon;
-                player.playerEquipmentManager.TwoHandLeftWeapon();
             }
+
+            player.playerInventoryManager.currentTwoHandWeapon = player.playerInventoryManager.currentLeftHandWeapon;
+            player.playerEquipmentManager.TwoHandLeftWeapon();
         }
 
         //  ITEM ACTIONS
@@ -176,7 +188,7 @@ namespace LZ
 
             if (weaponAction != null)
             {
-                weaponAction.AttemptToPerformAction(player, WorldItemDatabase.instance.GetWeaponByID(weaponID));
+                weaponAction.AttemptToPerformAction(player, WorldItemDatabase.Instance.GetWeaponByID(weaponID));
             }
             else
             {

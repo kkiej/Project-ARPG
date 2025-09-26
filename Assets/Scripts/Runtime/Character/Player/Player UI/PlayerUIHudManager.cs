@@ -46,7 +46,7 @@ namespace LZ
 
         public void SetRightWeaponQuickSlotIcon(int weaponID)
         {
-            WeaponItem weapon = WorldItemDatabase.instance.GetWeaponByID(weaponID);
+            WeaponItem weapon = WorldItemDatabase.Instance.GetWeaponByID(weaponID);
             
             if (weapon == null)
             {
@@ -71,7 +71,7 @@ namespace LZ
         
         public void SetLeftWeaponQuickSlotIcon(int weaponID)
         {
-            WeaponItem weapon = WorldItemDatabase.instance.GetWeaponByID(weaponID);
+            WeaponItem weapon = WorldItemDatabase.Instance.GetWeaponByID(weaponID);
             
             if (weapon == null)
             {
