@@ -4,17 +4,21 @@ namespace LZ
 {
     public class PlayerEquipmentManager : CharacterEquipmentManager
     {
-        private PlayerManager player;
-        
+        PlayerManager player;
+
+        [Header("Weapon Model Instantiation Slots")]
         public WeaponModelInstantiationSlot rightHandSlot;
         public WeaponModelInstantiationSlot leftHandWeaponSlot;
         public WeaponModelInstantiationSlot leftHandShieldSlot;
+        public WeaponModelInstantiationSlot backSlot;
 
-        [SerializeField] private WeaponManager rightWeaponManager;
-        [SerializeField] private WeaponManager leftWeaponManager;
-
+        [Header("Weapon Models")]
         public GameObject rightHandWeaponModel;
         public GameObject leftHandWeaponModel;
+
+        [Header("Weapon Managers")]
+        [SerializeField] WeaponManager rightWeaponManager;
+        [SerializeField] WeaponManager leftWeaponManager;
 
         protected override void Awake()
         {
@@ -49,6 +53,10 @@ namespace LZ
                 else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHandShieldSlot)
                 {
                     leftHandShieldSlot = weaponSlot;
+                }
+                else if (weaponSlot.weaponSlot == WeaponModelSlot.BackSlot)
+                {
+                    backSlot = weaponSlot;
                 }
             }
         }
@@ -269,6 +277,34 @@ namespace LZ
             }
         }
 
+        //  TWO HAND
+        public void UnTwoHandWeapon()
+        {
+            // 将动画控制器更新为当前主手武器配置
+            // 移除力量加成（双手持武会使力量等级变为：原始力量 + (原始力量 * 0.5)）
+            // 取消模型的双手持握状态，并将非双手持握的模型移回其对应手持部位（如存在）
+            // 刷新伤害碰撞体计算（由于移除了力量加成，强度缩放系数将受到影响）
+        }
+
+        public void TwoHandRightWeapon()
+        {
+            // 1. 检查是否为不可双手持握的物品（例如徒手）。若尝试对徒手状态进行双手持握操作，则直接返回
+            // 2. 如果是返回状态且未处于双手持武状态，则重置相关布尔状态量
+            // 3. 将非双手持握的武器模型放置在背部或腰部插槽
+            // 4. 将双手持握的武器模型放置在主手（右手）
+            // 例如：若正在双手持握左手武器，则将该左手武器模型放置在角色的右手
+        }
+
+        public void TwoHandLeftWeapon()
+        {
+            // 1. 检查是否为不可双手持握的物品（例如徒手）。若尝试对徒手状态进行双手持握操作，则直接返回
+            // 2. 如果是返回状态且未处于双手持武状态，则重置相关布尔状态量
+            // 3. 将非双手持握的武器模型放置在背部或腰部插槽
+            // 4. 将双手持握的武器模型放置在主手（右手）
+            // 例如：若正在双手持握左手武器，则将该左手武器模型放置在角色的右手
+        }
+
+        //  DAMAGE COLLIDERS
         public void OpenDamageCollider()
         {
             // 打开右手武器伤害碰撞体

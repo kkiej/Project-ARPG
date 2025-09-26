@@ -113,6 +113,11 @@ namespace LZ
                 playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
 			playerNetworkManager.isBlocking.OnValueChanged += playerNetworkManager.OnIsBlockingChanged;
             
+            // 双手
+            playerNetworkManager.isTwoHandingWeapon.OnValueChanged += playerNetworkManager.OnIsTwoHandingWeaponChanged;
+            playerNetworkManager.isTwoHandingRightWeapon.OnValueChanged += playerNetworkManager.OnIsTwoHandingRightWeaponChanged;
+            playerNetworkManager.isTwoHandingLeftWeapon.OnValueChanged += playerNetworkManager.OnIsTwoHandingLeftWeaponChanged;
+            
             // Flags
             playerNetworkManager.isChargingAttack.OnValueChanged += playerNetworkManager.OnIsChargingAttackChanged;
             
@@ -164,6 +169,11 @@ namespace LZ
                 playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
             playerNetworkManager.currentWeaponBeingUsed.OnValueChanged -=
                 playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
+            
+            // 双手
+            playerNetworkManager.isTwoHandingWeapon.OnValueChanged -= playerNetworkManager.OnIsTwoHandingWeaponChanged;
+            playerNetworkManager.isTwoHandingRightWeapon.OnValueChanged -= playerNetworkManager.OnIsTwoHandingRightWeaponChanged;
+            playerNetworkManager.isTwoHandingLeftWeapon.OnValueChanged -= playerNetworkManager.OnIsTwoHandingLeftWeaponChanged;
             
             // Flags
             playerNetworkManager.isChargingAttack.OnValueChanged -= playerNetworkManager.OnIsChargingAttackChanged;
@@ -260,6 +270,10 @@ namespace LZ
             playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0,
                 playerNetworkManager.currentLeftHandWeaponID.Value);
 
+            // 同步双手状态
+            playerNetworkManager.OnIsTwoHandingRightWeaponChanged(false, playerNetworkManager.isTwoHandingRightWeapon.Value);
+            playerNetworkManager.OnIsTwoHandingLeftWeaponChanged(false, playerNetworkManager.isTwoHandingLeftWeapon.Value);
+            
 			// 同步格挡状态
             playerNetworkManager.OnIsBlockingChanged(false, playerNetworkManager.isBlocking.Value);
             

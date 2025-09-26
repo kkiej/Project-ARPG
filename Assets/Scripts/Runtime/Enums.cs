@@ -23,7 +23,7 @@ public enum CharacterSlot
 public enum CharacterGroup
 {
     Team01,
-    Team02,
+    Team02
 }
 
 public enum WeaponModelSlot
@@ -31,9 +31,9 @@ public enum WeaponModelSlot
     RightHand,
     LeftHandWeaponSlot,
     LeftHandShieldSlot,
+    BackSlot
     //Right Hips
     //Left Hips
-    //Back
 }
 
 public enum WeaponModelType

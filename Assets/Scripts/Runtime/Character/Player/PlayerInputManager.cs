@@ -47,6 +47,11 @@ namespace LZ
         [SerializeField] private bool RT_Input;
         [SerializeField] private bool Hold_RT_Input;
         
+		[Header("Two Hand Inputs")]
+        [SerializeField] bool two_Hand_Input = false;
+        [SerializeField] bool two_Hand_Right_Weapon_Input = false;
+        [SerializeField] bool two_Hand_Left_Weapon_Input = false;
+		
         [Header("Qued Inputs")]
         [SerializeField] private bool input_Que_Is_Active = false;
         [SerializeField] float default_Que_Input_Time = 0.35f;
@@ -128,8 +133,16 @@ namespace LZ
                 playerControls.PlayerActions.RT.performed += i => RT_Input = true;
                 playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
                 playerControls.PlayerActions.HoldRT.canceled += i => Hold_RT_Input = false;
-                
-                // 锁定
+
+                //  TWO HAND
+                playerControls.PlayerActions.TwoHandWeapon.performed += i => two_Hand_Input = true;
+                playerControls.PlayerActions.TwoHandWeapon.canceled += i => two_Hand_Input = false;
+                playerControls.PlayerActions.TwoHandRightWeapon.performed += i => two_Hand_Right_Weapon_Input = true;
+                playerControls.PlayerActions.TwoHandRightWeapon.canceled += i => two_Hand_Right_Weapon_Input = false;
+                playerControls.PlayerActions.TwoHandLeftWeapon.performed += i => two_Hand_Left_Weapon_Input = true;
+                playerControls.PlayerActions.TwoHandLeftWeapon.canceled += i => two_Hand_Left_Weapon_Input = false;
+
+                //  LOCK ON
                 playerControls.PlayerActions.LockOn.performed += i => lockOn_Input = true;
                 playerControls.PlayerActions.SeekLeftLockOnTarget.performed += i => lockOn_Left_Input = true;
                 playerControls.PlayerActions.SeekRightLockOnTarget.performed += i => lockOn_Right_Input = true;
@@ -176,6 +189,7 @@ namespace LZ
 
         private void HandleAllInputs()
         {
+            HandleTwoHandInput();
             HandleLockOnInput();
             HandleLockOnSwitchTargetInput();
             HandlePlayerMovementInput();
@@ -193,8 +207,62 @@ namespace LZ
             HandleInteractionInput();
         }
 
+        //  TWO HAND
+        private void HandleTwoHandInput()
+        {
+            if (!two_Hand_Input)
+                return;
+
+            if (two_Hand_Right_Weapon_Input)
+            {
+                //  IF WE ARE USING THE TWO HAND INPUT AND PRESSING THE RIGHT TWO HAND BUTTON WE WANT TO STOP THE REGULAR RB INPUT (OR ELSE WE WOULD ATTACK)
+                RB_Input = false;
+                two_Hand_Right_Weapon_Input = false;
+                player.playerNetworkManager.isBlocking.Value = false;
+
+                if (player.playerNetworkManager.isTwoHandingWeapon.Value)
+                {
+                    //  IF WE ARE TWO HANDING A WEAPON ALREADY, CHANGE THE IS TWOHANDING BOOL TO FALSE WHICH TRIGGERS AN "ONVALUECHANGED" FUNCTION,
+                    //  WHICH UN-TWOHANDS CURRENT WEAPON
+                    player.playerNetworkManager.isTwoHandingWeapon.Value = false;
+                    return;
+                }
+                else
+                {
+                    //  IF WE ARE NOT ALREADY TWO HANGING, CHANGE THE RIGHT TWO HAND BOOL TO TRUE, WHICH TRIGGERS AN ONVALUECHANGED FUNCTION
+                    //  THIS FUNCTION TWO HANDS THE RIGHT WEAPON
+                    player.playerNetworkManager.isTwoHandingRightWeapon.Value = true;
+                    return;
+                }
+            }
+            else if (two_Hand_Left_Weapon_Input)
+            {
+                //  IF WE ARE USING THE TWO HAND INPUT AND PRESSING THE RIGHT TWO HAND BUTTON WE WANT TO STOP THE REGULAR RB INPUT (OR ELSE WE WOULD ATTACK)
+                LB_Input = false;
+                two_Hand_Left_Weapon_Input = false;
+                player.playerNetworkManager.isBlocking.Value = false;
+
+                if (player.playerNetworkManager.isTwoHandingWeapon.Value)
+                {
+                    //  IF WE ARE TWO HANDING A WEAPON ALREADY, CHANGE THE IS TWOHANDING BOOL TO FALSE WHICH TRIGGERS AN "ONVALUECHANGED" FUNCTION,
+                    //  WHICH UN-TWOHANDS CURRENT WEAPON
+                    player.playerNetworkManager.isTwoHandingWeapon.Value = false;
+                    return;
+                }
+                else
+                {
+                    //  IF WE ARE NOT ALREADY TWO HANGING, CHANGE THE RIGHT TWO HAND BOOL TO TRUE, WHICH TRIGGERS AN ONVALUECHANGED FUNCTION
+                    //  THIS FUNCTION TWO HANDS THE RIGHT WEAPON
+                    player.playerNetworkManager.isTwoHandingLeftWeapon.Value = true;
+                    return;
+                }
+            }
+        }
+
+        //  LOCK ON
         private void HandleLockOnInput()
         {
+            //  CHECK FOR DEAD TARGET
             if (player.playerNetworkManager.isLockedOn.Value)
             {
                 if (player.playerCombatManager.currentTarget == null)
@@ -205,6 +273,9 @@ namespace LZ
                     player.playerNetworkManager.isLockedOn.Value = false;
                 }
 
+                //  ATTEMPT TO FIND NEW TARGET
+
+                //  THIS ASSURES US THAT THE COROUTINE NEVER RUNS MUILTPLE TIMES OVERLAPPING ITSELF
                 if (lockOnCoroutine != null)
                     StopCoroutine(lockOnCoroutine);
 
@@ -216,6 +287,7 @@ namespace LZ
                 lockOn_Input = false;
                 PlayerCamera.instance.ClearLockOnTargets();
                 player.playerNetworkManager.isLockedOn.Value = false;
+                //  DISABLE LOCK ON
                 return;
             }
             
@@ -362,6 +434,9 @@ namespace LZ
 
         private void HandleRBInput()
         {
+            if (two_Hand_Input)
+                return;
+
             if (RB_Input)
             {
                 RB_Input = false;
@@ -380,6 +455,9 @@ namespace LZ
 		
 		private void HandleLBInput()
         {
+            if (two_Hand_Input)
+                return;
+
             if (LB_Input)
             {
                 LB_Input = false;

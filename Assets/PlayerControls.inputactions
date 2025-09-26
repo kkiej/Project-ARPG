@@ -123,6 +123,33 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Two Hand Weapon",
+                    "type": "PassThrough",
+                    "id": "f4f83ab9-1848-4f90-8d39-56f9d0b2041b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Two Hand Right Weapon",
+                    "type": "Button",
+                    "id": "384ff2cf-84ea-4ce0-aed2-2fa9075be8ad",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Two Hand Left Weapon",
+                    "type": "Button",
+                    "id": "3886cc56-4ca8-45fe-9ef8-22fa832b1344",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Que RB",
                     "type": "Button",
                     "id": "6d289ede-b168-4f3d-8b70-8fb190a8071d",
@@ -260,6 +287,17 @@
                 },
                 {
                     "name": "",
+                    "id": "212974f7-9b90-4d33-b643-7c82b4dee09d",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Two Hand Right Weapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "bc7fc1ad-8911-4c9c-bee0-327dd867799d",
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
@@ -271,12 +309,34 @@
                 },
                 {
                     "name": "",
+                    "id": "d62bf448-9350-4fd7-aa27-0692a69e6b9a",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Two Hand Left Weapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "19bc7b49-1c41-4b28-bd68-103d394ddf1c",
                     "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9a49c8a9-dab8-4464-8809-bd1d2a51757a",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Two Hand Weapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
