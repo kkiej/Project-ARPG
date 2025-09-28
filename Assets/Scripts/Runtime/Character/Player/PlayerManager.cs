@@ -16,6 +16,7 @@ namespace LZ
         [HideInInspector] public PlayerCombatManager playerCombatManager;
         [HideInInspector] public PlayerInteractionManager playerInteractionManager;
         [HideInInspector] public PlayerEffectsManager playerEffectsManager;
+        [HideInInspector] public PlayerBodyManager playerBodyManager;
 
         protected override void Awake()
         {
@@ -31,6 +32,7 @@ namespace LZ
             playerCombatManager = GetComponent<PlayerCombatManager>();
             playerInteractionManager = GetComponent<PlayerInteractionManager>();
             playerEffectsManager = GetComponent<PlayerEffectsManager>();
+            playerBodyManager = GetComponent<PlayerBodyManager>();
         }
 
         protected override void Update()

@@ -53,7 +53,7 @@ public enum WeaponClass
 public enum EquipmentModelType
 {
     FullHelmet,     // WOULD ALWAYS HIDE FACE, HAIR ECT
-    OpenHelmet,     // WOULD ALWAYS HIDE HAIR
+    Hat,     // WOULD ALWAYS HIDE HAIR
     Hood,           // WOULD ALWAYS HIDE HAIR
     HelmetAcessorie,
     FaceCover,
@@ -75,6 +75,14 @@ public enum EquipmentModelType
     RightKnee,
     LeftLeg,
     LeftKnee
+}
+
+public enum HeadEquipmentType
+{
+    FullHelmet, // HIDE ENTIRE HEAD + FEATURES
+    Hat,        // DOES NOT HIDE ANYTHING
+    Hood,       // HIDES HAIR
+    FaceCover   // HIDES BEARD
 }
 
 //  THIS IS USED TO CALCULATE DAMAGE BASED ON ATTACK TYPE
