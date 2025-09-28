@@ -2,7 +2,7 @@
 
 namespace LZ
 {
-    public class WeaponItem : Item
+    public class WeaponItem : EquipmentItem
     {
         [Header("Animations")]
         public AnimatorOverrideController weaponAnimator;

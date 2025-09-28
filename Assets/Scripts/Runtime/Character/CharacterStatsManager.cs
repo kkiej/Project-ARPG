@@ -20,6 +20,19 @@ namespace LZ
         public float blockingHolyAbsorption;
         public float blockingStability;
 
+        [Header("Armor Absorption")]
+        public float armorPhysicalDamageAbsorption;
+        public float armorMagicDamageAbsorption;
+        public float armorFireDamageAbsorption;
+        public float armorHolyDamageAbsorption;
+        public float armorLightningDamageAbsorption;
+
+        [Header("Armor Resistances")]
+        public float armorImmunity;      // 腐败与中毒抗性
+        public float armorRobustness;    // 出血与冰冻抗性
+        public float armorFocus;         // 狂乱与睡眠抗性
+        public float armorVitality;      // 死亡诅咒抗性
+
         [Header("Poise")]
         public float totalPoiseDamage;              // 累计承受的韧性伤害值
         public float offensivePoiseBonus;           // 使用武器获得的韧性加成（重型武器提供显著更高的加成）

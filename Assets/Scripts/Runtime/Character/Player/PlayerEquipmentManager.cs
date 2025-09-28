@@ -20,6 +20,9 @@ namespace LZ
         [SerializeField] WeaponManager rightWeaponManager;
         [SerializeField] WeaponManager leftWeaponManager;
 
+        [Header("DEBUG DELETE LATER")]
+        [SerializeField] bool equipNewItems = false;
+
         protected override void Awake()
         {
             base.Awake();
@@ -34,6 +37,82 @@ namespace LZ
             base.Start();
             
             LoadWeaponsOnBothHands();
+        }
+        
+        private void Update()
+        {
+            if (equipNewItems)
+            {
+                equipNewItems = false;
+                DebugEquipNewItems();
+            }
+        }
+
+        private void DebugEquipNewItems()
+        {
+            Debug.Log("EQUIPPING NEW ITEMS");
+
+            if (player.playerInventoryManager.headEquipment != null)
+                LoadHeadEquipment(player.playerInventoryManager.headEquipment);
+
+            if (player.playerInventoryManager.bodyEquipment != null)
+                LoadBodyEquipment(player.playerInventoryManager.bodyEquipment);
+
+            if (player.playerInventoryManager.legEquipment != null)
+                LoadLegEquipment(player.playerInventoryManager.legEquipment);
+
+            if (player.playerInventoryManager.handEquipment != null)
+                LoadHandEquipment(player.playerInventoryManager.handEquipment);
+        }
+        
+        //  EQUIPMENT
+        public void LoadHeadEquipment(HeadEquipmentItem equipment)
+        {
+            // 1. 卸载旧的头部装备模型（如存在）
+            // 2. 若装备为空，则直接将库存中的装备设为空并返回
+            // 3. 若装备具有"OnItemEquipped"回调函数，立即执行
+            // 4. 将传入此函数的装备设为玩家库存中的当前头部装备
+            // 5. 如需根据头部装备类型禁用特定身体特征（如头罩禁用头发，全覆式头盔禁用头部模型），在此处执行检查
+            // 6. 加载头部装备模型
+            // 7. 计算总装备负重（所有穿戴装备的重量之和，该数值会影响翻滚速度，过重时还会影响移动速度）
+            // 8. 计算总护甲伤害吸收率
+            player.playerStatsManager.CalculateTotalArmorAbsorption();
+        }
+        
+        public void LoadBodyEquipment(BodyEquipmentItem equipment)
+        {
+            // 1. 卸载旧装备模型（如存在）
+            // 2. 若装备为空，则直接将库存中的对应装备设为空并返回
+            // 3. 若装备具有"OnItemEquipped"回调函数，立即执行
+            // 4. 将传入的装备设为玩家库存中的当前装备
+            // 5. 加载新装备模型
+            // 6. 计算总装备负重（所有穿戴装备的重量之和，影响翻滚速度，超重时还会降低移动速度）
+            // 7. 计算总护甲伤害吸收率
+            player.playerStatsManager.CalculateTotalArmorAbsorption();
+        }
+
+        public void LoadLegEquipment(LegEquipmentItem equipment)
+        {
+            // 1. 卸载旧装备模型（如存在）
+            // 2. 若装备为空，则直接将库存中的对应装备设为空并返回
+            // 3. 若装备具有"OnItemEquipped"回调函数，立即执行
+            // 4. 将传入的装备设为玩家库存中的当前装备
+            // 5. 加载新装备模型
+            // 6. 计算总装备负重（所有穿戴装备的重量之和，影响翻滚速度，超重时还会降低移动速度）
+            // 7. 计算总护甲伤害吸收率
+            player.playerStatsManager.CalculateTotalArmorAbsorption();
+        }
+
+        public void LoadHandEquipment(HandEquipmentItem equipment)
+        {
+            // 1. 卸载旧装备模型（如存在）
+            // 2. 若装备为空，则直接将库存中的对应装备设为空并返回
+            // 3. 若装备具有"OnItemEquipped"回调函数，立即执行
+            // 4. 将传入的装备设为玩家库存中的当前装备
+            // 5. 加载新装备模型
+            // 6. 计算总装备负重（所有穿戴装备的重量之和，影响翻滚速度，超重时还会降低移动速度）
+            // 7. 计算总护甲伤害吸收率
+            player.playerStatsManager.CalculateTotalArmorAbsorption();
         }
 
         private void InitializeWeaponSlots()

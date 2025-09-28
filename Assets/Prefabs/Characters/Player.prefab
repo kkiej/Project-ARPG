@@ -1380,7 +1380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 260631240
+  GlobalObjectIdHash: 167461833
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1445,6 +1445,10 @@ MonoBehaviour:
   vitality:
     m_InternalValue: 1
   endurance:
+    m_InternalValue: 1
+  strength:
+    m_InternalValue: 1
+  strengthModifier:
     m_InternalValue: 1
   characterName:
     m_InternalValue:
@@ -1567,6 +1571,7 @@ MonoBehaviour:
   playerEquipmentManager: {fileID: 0}
   playerCombatManager: {fileID: 0}
   playerInteractionManager: {fileID: 0}
+  playerEffectsManager: {fileID: 0}
 --- !u!114 &-2724111231889242918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1608,6 +1613,15 @@ MonoBehaviour:
   blockingLightningAbsorption: 0
   blockingHolyAbsorption: 0
   blockingStability: 0
+  armorPhysicalDamageAbsorption: 0
+  armorMagicDamageAbsorption: 0
+  armorFireDamageAbsorption: 0
+  armorHolyDamageAbsorption: 0
+  armorLightningDamageAbsorption: 0
+  armorImmunity: 0
+  armorRobustness: 0
+  armorFocus: 0
+  armorVitality: 0
   totalPoiseDamage: 0
   offensivePoiseBonus: 0
   basePoiseDefense: 0
@@ -1678,6 +1692,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3b078b648a2791842a349a233ee58681, type: 2}
   - {fileID: 11400000, guid: e31beeaeaecf5584d9f989a01380cfe8, type: 2}
   leftHandWeaponIndex: 0
+  headEquipment: {fileID: 0}
+  bodyEquipment: {fileID: 0}
+  legEquipment: {fileID: 0}
+  handEquipment: {fileID: 0}
 --- !u!114 &-5161139859344176224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1698,6 +1716,7 @@ MonoBehaviour:
   leftHandWeaponModel: {fileID: 0}
   rightWeaponManager: {fileID: 0}
   leftWeaponManager: {fileID: 0}
+  equipNewItems: 0
 --- !u!114 &5151947465647773821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1772,6 +1791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloodSplatterVFX: {fileID: 0}
+  staticEffects: []
   effectToTest: {fileID: 0}
   processEffect: 0
 --- !u!114 &8953273550207781400
