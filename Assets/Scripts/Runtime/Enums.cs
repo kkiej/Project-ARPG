@@ -50,6 +50,33 @@ public enum WeaponClass
     Fist
 }
 
+public enum EquipmentModelType
+{
+    FullHelmet,     // WOULD ALWAYS HIDE FACE, HAIR ECT
+    OpenHelmet,     // WOULD ALWAYS HIDE HAIR
+    Hood,           // WOULD ALWAYS HIDE HAIR
+    HelmetAcessorie,
+    FaceCover,
+    Torso,
+    Back,
+    RightShoulder,
+    RightUpperArm,
+    RightElbow,
+    RightLowerArm,
+    RightHand,
+    LeftShoulder,
+    LeftUpperArm,
+    LeftElbow,
+    LeftLowerArm,
+    LeftHand,
+    Hips,
+    HipsAttachment,
+    RightLeg,
+    RightKnee,
+    LeftLeg,
+    LeftKnee
+}
+
 //  THIS IS USED TO CALCULATE DAMAGE BASED ON ATTACK TYPE
 public enum AttackType
 {

@@ -22,6 +22,6 @@ namespace LZ
         [Header("Poise")]
         public float poise;
 
-        //  ARMOR MODELS
+        public EquipmentModel[] equipmentModels;
     }
 }

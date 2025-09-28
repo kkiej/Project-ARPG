@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
@@ -23,6 +24,10 @@ namespace LZ
         [Header("DEBUG DELETE LATER")]
         [SerializeField] bool equipNewItems = false;
 
+        [Header("Male Equipment Models")]
+        public GameObject maleFullHelmetObject;
+        public GameObject[] maleHeadFullHelmets;
+
         protected override void Awake()
         {
             base.Awake();
@@ -30,6 +35,15 @@ namespace LZ
             player = GetComponent<PlayerManager>();
             
             InitializeWeaponSlots();
+
+            List<GameObject> maleFullHelmetsList = new List<GameObject>();
+
+            foreach (Transform child in maleFullHelmetObject.transform)
+            {
+                maleFullHelmetsList.Add(child.gameObject);
+            }
+
+            maleHeadFullHelmets = maleFullHelmetsList.ToArray();
         }
 
         protected override void Start()
@@ -52,8 +66,7 @@ namespace LZ
         {
             Debug.Log("EQUIPPING NEW ITEMS");
 
-            if (player.playerInventoryManager.headEquipment != null)
-                LoadHeadEquipment(player.playerInventoryManager.headEquipment);
+            LoadHeadEquipment(player.playerInventoryManager.headEquipment);
 
             if (player.playerInventoryManager.bodyEquipment != null)
                 LoadBodyEquipment(player.playerInventoryManager.bodyEquipment);
@@ -69,16 +82,50 @@ namespace LZ
         public void LoadHeadEquipment(HeadEquipmentItem equipment)
         {
             // 1. 卸载旧的头部装备模型（如存在）
+            UnloadHeadEquipmentModels();
+            
             // 2. 若装备为空，则直接将库存中的装备设为空并返回
+            if (equipment == null)
+            {
+                if (player.IsOwner)
+                    player.playerNetworkManager.headEquipmentID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
+
+                player.playerInventoryManager.headEquipment = null;
+                return;
+            }
+            
             // 3. 若装备具有"OnItemEquipped"回调函数，立即执行
+            
             // 4. 将传入此函数的装备设为玩家库存中的当前头部装备
+            player.playerInventoryManager.headEquipment = equipment;
+            
             // 5. 如需根据头部装备类型禁用特定身体特征（如头罩禁用头发，全覆式头盔禁用头部模型），在此处执行检查
             // 6. 加载头部装备模型
+            foreach (var model in equipment.equipmentModels)
+            {
+                model.LoadModel(player, true);
+            }
+            
             // 7. 计算总装备负重（所有穿戴装备的重量之和，该数值会影响翻滚速度，过重时还会影响移动速度）
+            
             // 8. 计算总护甲伤害吸收率
             player.playerStatsManager.CalculateTotalArmorAbsorption();
+            
+            if (player.IsOwner)
+                player.playerNetworkManager.headEquipmentID.Value = equipment.itemID;
         }
-        
+
+        private void UnloadHeadEquipmentModels()
+        {
+            foreach (var model in maleHeadFullHelmets)
+            {
+                model.SetActive(false);
+            }
+
+            //  RE-ENABLE HEAD
+            //  RE-ENABLE HAIR
+        }
+
         public void LoadBodyEquipment(BodyEquipmentItem equipment)
         {
             // 1. 卸载旧装备模型（如存在）
