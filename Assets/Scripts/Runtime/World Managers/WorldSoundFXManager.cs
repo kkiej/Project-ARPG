@@ -16,6 +16,7 @@ namespace LZ
         public AudioClip[] physicalDamageSFX;
 
         [Header("Action Sounds")]
+        public AudioClip pickUpItemSFX;
         public AudioClip rollSFX;
         
         private void Awake()
@@ -33,6 +34,13 @@ namespace LZ
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
+        }
+
+        public AudioClip ChooseRandomSFXFromArray(AudioClip[] array)
+        {
+            int index = Random.Range(0, array.Length);
+
+            return array[index];
         }
 
         public void PlayBossTrack(AudioClip introTrack, AudioClip loopTrack)
@@ -65,26 +73,5 @@ namespace LZ
             bossIntroPlayer.Stop();
             bossLoopPlayer.Stop();
         }
-        
-        public AudioClip ChooseRandomSFXFromArray(AudioClip[] array)
-        {
-            int index = Random.Range(0, array.Length);
-
-            return array[index];
-        }
-
-        /*public AudioClip ChooseRandomFootStepSoundBasedOnGround(GameObject steppedOnObject, CharacterManager character)
-        {
-            if (steppedOnObject.CompareTag("Dirt"))
-            {
-                return ChooseRandomSFXFromArray(character.characterSoundFXManager.footStepsDirt);
-            }
-            else if (steppedOnObject.CompareTag("Stone"))
-            {
-                return ChooseRandomSFXFromArray(character.characterSoundFXManager.footStepsStone);
-            }
-
-            return null;
-        }*/
     }
 }

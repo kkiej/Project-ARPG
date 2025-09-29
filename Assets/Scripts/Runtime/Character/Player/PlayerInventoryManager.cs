@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
@@ -20,5 +21,18 @@ namespace LZ
         public BodyEquipmentItem bodyEquipment;
         public LegEquipmentItem legEquipment;
         public HandEquipmentItem handEquipment;
+
+        [Header("Inventory")]
+        public List<Item> itemsInInventory;
+
+        public void AddItemToInventory(Item item)
+        {
+            itemsInInventory.Add(item);
+        }
+
+        public void RemoveItemFromInventory()
+        {
+            //  TO DO: CREATE AN RPC HERE THAT SPAWNS ITEM ON NETWORK WHEN DROPPED
+        }
     }
 }

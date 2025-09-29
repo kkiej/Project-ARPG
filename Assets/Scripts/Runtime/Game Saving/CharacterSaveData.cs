@@ -40,6 +40,9 @@ namespace LZ
         public SerializableDictionary<int, bool> bossesAwakened;    //  THE INT IS THE BOSS I.D, THE BOOL IS THE AWAKENED STATUS
         public SerializableDictionary<int, bool> bossesDefeated;    //  THE INT IS THE BOSS I.D, THE BOOL IS THE DEFEATED STATUS
 
+        [Header("World Items")]
+        public SerializableDictionary<int, bool> worldItemsLooted;  //  THE INT IS THE ITEM I.D, THE BOOL IS THE LOOTED STATUS
+
         [Header("Equipment")]
         public int headEquipment;
         public int bodyEquipment;
@@ -62,6 +65,7 @@ namespace LZ
             sitesOfGrace = new SerializableDictionary<int, bool>();
             bossesAwakened = new SerializableDictionary<int, bool>();
             bossesDefeated = new SerializableDictionary<int, bool>();
+            worldItemsLooted = new SerializableDictionary<int, bool>();
         }
     }
 }
