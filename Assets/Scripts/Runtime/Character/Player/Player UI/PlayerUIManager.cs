@@ -12,7 +12,9 @@ namespace LZ
 
         [HideInInspector] public PlayerUIHudManager playerUIHudManager;
         [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;
-        
+        [HideInInspector] public PlayerUICharacterMenuManager playerUICharacterMenuManager;
+        [HideInInspector] public PlayerUIEquipmentManager playerUIEquipmentManager;
+
         [Header("UI Flags")]
         public bool menuWindowIsOpen = false;       // 物品栏界面、装备菜单、铁匠菜单等
         public bool popUpWindowIsOpen = false;      // 物品拾取、对话弹出等
@@ -30,6 +32,8 @@ namespace LZ
 
             playerUIHudManager = GetComponentInChildren<PlayerUIHudManager>();
             playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>();
+            playerUICharacterMenuManager = GetComponentInChildren<PlayerUICharacterMenuManager>();
+            playerUIEquipmentManager = GetComponentInChildren<PlayerUIEquipmentManager>();
         }
 
         private void Start()
@@ -47,6 +51,12 @@ namespace LZ
                 // we then restart, as a client
                 NetworkManager.Singleton.StartClient();
             }
+        }
+
+        public void CloseAllMenuWindows()
+        {
+            playerUICharacterMenuManager.CloseCharacterMenu();
+            playerUIEquipmentManager.CloseEquipmentManagerMenu();
         }
     }
 }
