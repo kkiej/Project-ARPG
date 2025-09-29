@@ -3875,6 +3875,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1954177516467324, guid: 3f581b8f5dacdc54b8e405d2157e1d8b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1955168994951106, guid: 3f581b8f5dacdc54b8e405d2157e1d8b, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -4209,7 +4213,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -4685354200206294194}
+      addedObject: {fileID: -4464893832920623198}
     - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
       insertIndex: -1
@@ -4659,7 +4663,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-4685354200206294194
+--- !u!114 &-4464893832920623198
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4810,13 +4814,13 @@ MonoBehaviour:
   isMale:
     m_InternalValue: 1
   headEquipmentID:
-    m_InternalValue: 0
+    m_InternalValue: -1
   bodyEquipmentID:
-    m_InternalValue: 0
+    m_InternalValue: -1
   legEquipmentID:
-    m_InternalValue: 0
+    m_InternalValue: -1
   handEquipmentID:
-    m_InternalValue: 0
+    m_InternalValue: -1
 --- !u!114 &-9026425792257213334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5137,6 +5141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hair: {fileID: 688551728606198529}
   facialHair: {fileID: 688328337853730763}
+  maleObject: {fileID: 688900371822239635}
   maleHead: {fileID: 688942635026267453}
   maleBody:
   - {fileID: 688251653169924543}
@@ -5153,6 +5158,7 @@ MonoBehaviour:
   - {fileID: 688632611058923517}
   maleEyebrows: {fileID: 688026587543768315}
   maleFacialHair: {fileID: 688328337853730763}
+  femaleObject: {fileID: 688405595744854569}
   femaleHead: {fileID: 688998596681347149}
   femaleBody:
   - {fileID: 688833713065221153}
@@ -5386,6 +5392,12 @@ GameObject:
 --- !u!1 &688404580758003501 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1952991332796792, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
+    type: 3}
+  m_PrefabInstance: {fileID: 687718605654136405}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &688405595744854569 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1954177516467324, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
     type: 3}
   m_PrefabInstance: {fileID: 687718605654136405}
   m_PrefabAsset: {fileID: 0}
@@ -5816,6 +5828,12 @@ GameObject:
 --- !u!1 &688892387458210383 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1173816199597082, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
+    type: 3}
+  m_PrefabInstance: {fileID: 687718605654136405}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &688900371822239635 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1182324627098054, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
     type: 3}
   m_PrefabInstance: {fileID: 687718605654136405}
   m_PrefabAsset: {fileID: 0}

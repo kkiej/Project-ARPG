@@ -105,7 +105,36 @@ namespace LZ
             player = GetComponent<PlayerManager>();
             
             InitializeWeaponSlots();
+            InitializeArmorModels();
+        }
 
+        protected override void Start()
+        {
+            base.Start();
+
+            EquipWeapons();
+        }
+
+        private void Update()
+        {
+            if (equipNewItems)
+            {
+                equipNewItems = false;
+                EquipArmor();
+            }
+        }
+
+        public void EquipArmor()
+        {
+            LoadHeadEquipment(player.playerInventoryManager.headEquipment);
+            LoadBodyEquipment(player.playerInventoryManager.bodyEquipment);
+            LoadLegEquipment(player.playerInventoryManager.legEquipment);
+            LoadHandEquipment(player.playerInventoryManager.handEquipment);
+        }
+
+        //  EQUIPMENT
+        private void InitializeArmorModels()
+        {
             //  HATS
             List<GameObject> hatsList = new List<GameObject>();
 
@@ -343,40 +372,110 @@ namespace LZ
             {
                 femaleFullHelmetsList.Add(child.gameObject);
             }
-        }
 
-        protected override void Start()
-        {
-            base.Start();
-            
-            LoadWeaponsOnBothHands();
-        }
-        
-        private void Update()
-        {
-            if (equipNewItems)
+            femaleHeadFullHelmets = femaleFullHelmetsList.ToArray();
+
+            //  FEMALE BODY
+            List<GameObject> femaleBodyList = new List<GameObject>();
+
+            foreach (Transform child in femaleFullBodyObject.transform)
             {
-                equipNewItems = false;
-                DebugEquipNewItems();
+                femaleBodyList.Add(child.gameObject);
             }
+
+            femaleBodies = femaleBodyList.ToArray();
+
+            //  FEMALE RIGHT UPPER ARM
+            List<GameObject> femaleRightUpperArmList = new List<GameObject>();
+
+            foreach (Transform child in femaleRightUpperArmObject.transform)
+            {
+                femaleRightUpperArmList.Add(child.gameObject);
+            }
+
+            femaleRightUpperArms = femaleRightUpperArmList.ToArray();
+
+            //  FEMALE RIGHT LOWER ARM
+            List<GameObject> femaleRightLowerArmList = new List<GameObject>();
+
+            foreach (Transform child in femaleRightLowerArmObject.transform)
+            {
+                femaleRightLowerArmList.Add(child.gameObject);
+            }
+
+            femaleRightLowerArms = femaleRightLowerArmList.ToArray();
+
+            //  FEMALE RIGHT HANDS
+            List<GameObject> femaleRightHandsList = new List<GameObject>();
+
+            foreach (Transform child in femaleRightHandObject.transform)
+            {
+                femaleRightHandsList.Add(child.gameObject);
+            }
+
+            femaleRightHands = femaleRightHandsList.ToArray();
+
+            //  FEMALE LEFT UPPER ARM
+            List<GameObject> femaleLeftUpperArmList = new List<GameObject>();
+
+            foreach (Transform child in femaleLeftUpperArmObject.transform)
+            {
+                femaleLeftUpperArmList.Add(child.gameObject);
+            }
+
+            femaleLeftUpperArms = femaleLeftUpperArmList.ToArray();
+
+            //  FEMALE LEFT LOWER ARM
+            List<GameObject> femaleLeftLowerArmList = new List<GameObject>();
+
+            foreach (Transform child in femaleLeftLowerArmObject.transform)
+            {
+                femaleLeftLowerArmList.Add(child.gameObject);
+            }
+
+            femaleLeftLowerArms = femaleLeftLowerArmList.ToArray();
+
+            //  FEMALE LEFT HANDS
+            List<GameObject> femaleLeftHandsList = new List<GameObject>();
+
+            foreach (Transform child in femaleLeftHandObject.transform)
+            {
+                femaleLeftHandsList.Add(child.gameObject);
+            }
+
+            femaleLeftHands = femaleLeftHandsList.ToArray();
+
+            //  FEMALE HIPS
+            List<GameObject> femaleHipsList = new List<GameObject>();
+
+            foreach (Transform child in femaleHipsObject.transform)
+            {
+                femaleHipsList.Add(child.gameObject);
+            }
+
+            femaleHips = femaleHipsList.ToArray();
+
+            //  FEMALE RIGHT LEG
+            List<GameObject> femaleRightLegList = new List<GameObject>();
+
+            foreach (Transform child in femaleRightLegObject.transform)
+            {
+                femaleRightLegList.Add(child.gameObject);
+            }
+
+            femaleRightLegs = femaleRightLegList.ToArray();
+
+            //  FEMALE LEFT LEG
+            List<GameObject> femaleLeftLegList = new List<GameObject>();
+
+            foreach (Transform child in femaleLeftLegObject.transform)
+            {
+                femaleLeftLegList.Add(child.gameObject);
+            }
+
+            femaleLeftLegs = femaleLeftLegList.ToArray();
         }
 
-        private void DebugEquipNewItems()
-        {
-            Debug.Log("EQUIPPING NEW ITEMS");
-
-            LoadHeadEquipment(player.playerInventoryManager.headEquipment);
-
-            LoadBodyEquipment(player.playerInventoryManager.bodyEquipment);
-
-            if (player.playerInventoryManager.legEquipment != null)
-                LoadLegEquipment(player.playerInventoryManager.legEquipment);
-
-            if (player.playerInventoryManager.handEquipment != null)
-                LoadHandEquipment(player.playerInventoryManager.handEquipment);
-        }
-        
-        //  EQUIPMENT
         public void LoadHeadEquipment(HeadEquipmentItem equipment)
         {
             // 1. 卸载旧的头部装备模型（如存在）
@@ -419,7 +518,7 @@ namespace LZ
             // 6. 加载头部装备模型
             foreach (var model in equipment.equipmentModels)
             {
-                model.LoadModel(player, true);
+                model.LoadModel(player, player.playerNetworkManager.isMale.Value);
             }
             
             // 7. 计算总装备负重（所有穿戴装备的重量之和，该数值会影响翻滚速度，过重时还会影响移动速度）
@@ -481,21 +580,24 @@ namespace LZ
                 player.playerInventoryManager.bodyEquipment = null;
                 return;
             }
-			
-            // 3. 若装备具有"OnItemEquipped"回调函数，立即执行
-			
-            // 4. 将传入的装备设为玩家库存中的当前装备
-			player.playerInventoryManager.bodyEquipment = equipment;
-			
-            // 5. 加载新装备模型
-			foreach (var model in equipment.equipmentModels)
+
+            //  3. IF YOU HAVE AN "ONITEMEQUIPPED" CALL ON YOUR EQUIPMENT, RUN IT NOW
+
+            //  4. SET CURRENT HEAD EQUIPMENT IN PLAYER INVENTORY TO THE EQUIPMENT THAT IS PASSED TO THIS FUNCTION
+            player.playerInventoryManager.bodyEquipment = equipment;
+
+            //  5. IF YOU NEED TO CHECK FOR HEAD EQUIPMENT TYPE TO DISABLE CERTAIN BODY FEATURES (HOODS DISABLING HAIR ECT, FULL HELMS DISABLING HEADS) DO IT NOW
+            player.playerBodyManager.DisableBody();
+
+            //  6. LOAD HEAD EQUIPMENT MODELS
+            foreach (var model in equipment.equipmentModels)
             {
-                model.LoadModel(player, true);
+                model.LoadModel(player, player.playerNetworkManager.isMale.Value);
             }
-			
-			
-            // 6. 计算总装备负重（所有穿戴装备的重量之和，影响翻滚速度，超重时还会降低移动速度）
-            // 7. 计算总护甲伤害吸收率
+
+            //  7. CALCULATE TOTAL EQUIPMENT LOAD (WEIGHT OF ALL YOUR WORN EQUIPMENT. THIS IMPACTS ROLL SPEED AND AT EXTREME WEIGHTS, MOVEMENT SPEED)
+
+            //  8. CALCULATE TOTAL ARMOR ABSORPTION
             player.playerStatsManager.CalculateTotalArmorAbsorption();
 			
 			if (player.IsOwner)
@@ -567,28 +669,171 @@ namespace LZ
 
         public void LoadLegEquipment(LegEquipmentItem equipment)
         {
-            // 1. 卸载旧装备模型（如存在）
-            // 2. 若装备为空，则直接将库存中的对应装备设为空并返回
-            // 3. 若装备具有"OnItemEquipped"回调函数，立即执行
-            // 4. 将传入的装备设为玩家库存中的当前装备
-            // 5. 加载新装备模型
-            // 6. 计算总装备负重（所有穿戴装备的重量之和，影响翻滚速度，超重时还会降低移动速度）
-            // 7. 计算总护甲伤害吸收率
+            //  1. UNLOAD OLD EQUIPMENT MODELS (IF ANY)
+            UnloadLegEquipmentModels();
+
+            //  2. IF EQUIPMENT IS NULL SIMPLY SET EQUIPMENT IN INVENTORY TO NULL AND RETURN
+            if (equipment == null)
+            {
+                if (player.IsOwner)
+                    player.playerNetworkManager.legEquipmentID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
+
+                player.playerInventoryManager.legEquipment = null;
+                return;
+            }
+
+            //  3. IF YOU HAVE AN "ONITEMEQUIPPED" CALL ON YOUR EQUIPMENT, RUN IT NOW
+
+            //  4. SET CURRENT HEAD EQUIPMENT IN PLAYER INVENTORY TO THE EQUIPMENT THAT IS PASSED TO THIS FUNCTION
+            player.playerInventoryManager.legEquipment = equipment;
+
+            //  5. IF YOU NEED TO CHECK FOR HEAD EQUIPMENT TYPE TO DISABLE CERTAIN BODY FEATURES (HOODS DISABLING HAIR ECT, FULL HELMS DISABLING HEADS) DO IT NOW
+            player.playerBodyManager.DisableLowerBody();
+
+            //  6. LOAD HEAD EQUIPMENT MODELS
+            foreach (var model in equipment.equipmentModels)
+            {
+                model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+            }
+
+            //  7. CALCULATE TOTAL EQUIPMENT LOAD (WEIGHT OF ALL YOUR WORN EQUIPMENT. THIS IMPACTS ROLL SPEED AND AT EXTREME WEIGHTS, MOVEMENT SPEED)
+
+            //  8. CALCULATE TOTAL ARMOR ABSORPTION
             player.playerStatsManager.CalculateTotalArmorAbsorption();
+
+            if (player.IsOwner)
+                player.playerNetworkManager.legEquipmentID.Value = equipment.itemID;
+        }
+
+        private void UnloadLegEquipmentModels()
+        {
+            foreach (var model in maleHips)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in femaleHips)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in leftKnee)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in rightKnee)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in maleLeftLegs)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in maleRightLegs)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in femaleLeftLegs)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in femaleRightLegs)
+            {
+                model.SetActive(false);
+            }
+
+            player.playerBodyManager.EnableLowerBody();
         }
 
         public void LoadHandEquipment(HandEquipmentItem equipment)
         {
-            // 1. 卸载旧装备模型（如存在）
-            // 2. 若装备为空，则直接将库存中的对应装备设为空并返回
-            // 3. 若装备具有"OnItemEquipped"回调函数，立即执行
-            // 4. 将传入的装备设为玩家库存中的当前装备
-            // 5. 加载新装备模型
-            // 6. 计算总装备负重（所有穿戴装备的重量之和，影响翻滚速度，超重时还会降低移动速度）
-            // 7. 计算总护甲伤害吸收率
+            //  1. UNLOAD OLD EQUIPMENT MODELS (IF ANY)
+            UnloadHandEquipmentModels();
+
+            //  2. IF EQUIPMENT IS NULL SIMPLY SET EQUIPMENT IN INVENTORY TO NULL AND RETURN
+            if (equipment == null)
+            {
+                if (player.IsOwner)
+                    player.playerNetworkManager.handEquipmentID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
+
+                player.playerInventoryManager.handEquipment = null;
+                return;
+            }
+
+            //  3. IF YOU HAVE AN "ONITEMEQUIPPED" CALL ON YOUR EQUIPMENT, RUN IT NOW
+
+            //  4. SET CURRENT HEAD EQUIPMENT IN PLAYER INVENTORY TO THE EQUIPMENT THAT IS PASSED TO THIS FUNCTION
+            player.playerInventoryManager.handEquipment = equipment;
+
+            //  5. IF YOU NEED TO CHECK FOR HEAD EQUIPMENT TYPE TO DISABLE CERTAIN BODY FEATURES (HOODS DISABLING HAIR ECT, FULL HELMS DISABLING HEADS) DO IT NOW
+            player.playerBodyManager.DisableArms();
+
+            //  6. LOAD HEAD EQUIPMENT MODELS
+            foreach (var model in equipment.equipmentModels)
+            {
+                model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+            }
+
+            //  7. CALCULATE TOTAL EQUIPMENT LOAD (WEIGHT OF ALL YOUR WORN EQUIPMENT. THIS IMPACTS ROLL SPEED AND AT EXTREME WEIGHTS, MOVEMENT SPEED)
+
+            //  8. CALCULATE TOTAL ARMOR ABSORPTION
             player.playerStatsManager.CalculateTotalArmorAbsorption();
+
+            if (player.IsOwner)
+                player.playerNetworkManager.handEquipmentID.Value = equipment.itemID;
         }
 
+        private void UnloadHandEquipmentModels()
+        {
+            foreach (var model in maleLeftLowerArms)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in maleRightLowerArms)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in femaleLeftLowerArms)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in femaleRightLowerArms)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in maleLeftHands)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in maleRightHands)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in femaleLeftHands)
+            {
+                model.SetActive(false);
+            }
+
+            foreach (var model in femaleRightHands)
+            {
+                model.SetActive(false);
+            }
+
+            player.playerBodyManager.EnableArms();
+        }
+
+        //  WEAPONS
         private void InitializeWeaponSlots()
         {
             WeaponModelInstantiationSlot[] weaponSlots = GetComponentsInChildren<WeaponModelInstantiationSlot>();
@@ -614,7 +859,7 @@ namespace LZ
             }
         }
 
-        public void LoadWeaponsOnBothHands()
+        public void EquipWeapons()
         {
             LoadRightWeapon();
             LoadLeftWeapon();
