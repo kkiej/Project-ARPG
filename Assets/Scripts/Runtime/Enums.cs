@@ -86,12 +86,16 @@ public enum EquipmentModelType
 //  USED TO DETERMINE WHICH EQUIPMENT SLOT IS CURRENTLY SELECTED (HELMET, BODY, LEGS, HANDS, RIGHT WEAPON 01, TALISMAN 02, ECT)
 public enum EquipmentType
 {
-    RightWeapon01,
-    RightWeapon02,
-    RightWeapon03,
-    LeftWeapon01,
-    LeftWeapon02,
-    LeftWeapon03,
+    RightWeapon01,  // 0
+    RightWeapon02,  // 1
+    RightWeapon03,  // 2
+    LeftWeapon01,   // 3
+    LeftWeapon02,   // 4
+    LeftWeapon03,   // 5
+    Head,           // 6
+    Body,           // 7
+    Legs,           // 8
+    Hands           // 9
 }
 
 //  USED TO TAG HELMET TYPE, SO SPECIFIC HEAD PORTIONS CAN BE HIDDEN DURING EQUIP PROCESS (HAIR, BEARD, ECT)

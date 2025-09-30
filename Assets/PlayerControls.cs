@@ -127,6 +127,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""X"",
+                    ""type"": ""Button"",
+                    ""id"": ""dfcab22a-2821-407f-9592-bbedb1b45982"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""OpenCharacterMenu"",
                     ""type"": ""Button"",
                     ""id"": ""ec9cda7f-bc04-40b5-9297-fdcd8074a2e3"",
@@ -313,6 +322,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""RB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cffc9247-c2e0-413c-8710-b93b61f4c792"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""X"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -594,6 +614,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
         m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
         m_PlayerActions_RB = m_PlayerActions.FindAction("RB", throwIfNotFound: true);
+        m_PlayerActions_X = m_PlayerActions.FindAction("X", throwIfNotFound: true);
         m_PlayerActions_OpenCharacterMenu = m_PlayerActions.FindAction("OpenCharacterMenu", throwIfNotFound: true);
         m_PlayerActions_LB = m_PlayerActions.FindAction("LB", throwIfNotFound: true);
         m_PlayerActions_Interact = m_PlayerActions.FindAction("Interact", throwIfNotFound: true);
@@ -734,6 +755,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Dodge;
     private readonly InputAction m_PlayerActions_Jump;
     private readonly InputAction m_PlayerActions_RB;
+    private readonly InputAction m_PlayerActions_X;
     private readonly InputAction m_PlayerActions_OpenCharacterMenu;
     private readonly InputAction m_PlayerActions_LB;
     private readonly InputAction m_PlayerActions_Interact;
@@ -757,6 +779,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Dodge => m_Wrapper.m_PlayerActions_Dodge;
         public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
         public InputAction @RB => m_Wrapper.m_PlayerActions_RB;
+        public InputAction @X => m_Wrapper.m_PlayerActions_X;
         public InputAction @OpenCharacterMenu => m_Wrapper.m_PlayerActions_OpenCharacterMenu;
         public InputAction @LB => m_Wrapper.m_PlayerActions_LB;
         public InputAction @Interact => m_Wrapper.m_PlayerActions_Interact;
@@ -791,6 +814,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @RB.started += instance.OnRB;
             @RB.performed += instance.OnRB;
             @RB.canceled += instance.OnRB;
+            @X.started += instance.OnX;
+            @X.performed += instance.OnX;
+            @X.canceled += instance.OnX;
             @OpenCharacterMenu.started += instance.OnOpenCharacterMenu;
             @OpenCharacterMenu.performed += instance.OnOpenCharacterMenu;
             @OpenCharacterMenu.canceled += instance.OnOpenCharacterMenu;
@@ -852,6 +878,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @RB.started -= instance.OnRB;
             @RB.performed -= instance.OnRB;
             @RB.canceled -= instance.OnRB;
+            @X.started -= instance.OnX;
+            @X.performed -= instance.OnX;
+            @X.canceled -= instance.OnX;
             @OpenCharacterMenu.started -= instance.OnOpenCharacterMenu;
             @OpenCharacterMenu.performed -= instance.OnOpenCharacterMenu;
             @OpenCharacterMenu.canceled -= instance.OnOpenCharacterMenu;
@@ -1018,6 +1047,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnDodge(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnRB(InputAction.CallbackContext context);
+        void OnX(InputAction.CallbackContext context);
         void OnOpenCharacterMenu(InputAction.CallbackContext context);
         void OnLB(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
