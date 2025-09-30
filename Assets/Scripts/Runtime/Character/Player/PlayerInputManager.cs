@@ -519,6 +519,10 @@ namespace LZ
             if (switch_Right_Weapon_Input)
             {
                 switch_Right_Weapon_Input = false;
+
+                if (PlayerUIManager.instance.menuWindowIsOpen)
+                    return;
+
                 player.playerEquipmentManager.SwitchRightWeapon();
             }
         }
@@ -528,6 +532,10 @@ namespace LZ
             if (switch_Left_Weapon_Input)
             {
                 switch_Left_Weapon_Input = false;
+
+                if (PlayerUIManager.instance.menuWindowIsOpen)
+                    return;
+
                 player.playerEquipmentManager.SwitchLeftWeapon();
             }
         }

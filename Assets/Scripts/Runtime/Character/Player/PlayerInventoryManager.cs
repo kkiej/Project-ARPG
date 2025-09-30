@@ -30,9 +30,20 @@ namespace LZ
             itemsInInventory.Add(item);
         }
 
-        public void RemoveItemFromInventory()
+        public void RemoveItemFromInventory(Item item)
         {
             //  TO DO: CREATE AN RPC HERE THAT SPAWNS ITEM ON NETWORK WHEN DROPPED
+
+            itemsInInventory.Remove(item);
+
+            // CHECKS FOR NULL LIST SLOTS AND REMOVES THEM
+            for (int i = itemsInInventory.Count - 1; i > -1; i--)
+            {
+                if (itemsInInventory[i] == null)
+                {
+                    itemsInInventory.RemoveAt(i);
+                }
+            }
         }
     }
 }
