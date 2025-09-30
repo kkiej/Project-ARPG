@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -183,8 +184,35 @@ namespace LZ
                 targetAnimation, applyRootMotion);
         }
         
-        public virtual void PlayTargetAttackActionAnimation(WeaponItem weapon, AttackType attackType, string targetAnimation,
-            bool isPerformingAction, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
+        public virtual void PlayTargetActionAnimationInstantly(
+            string targetAnimation,
+            bool isPerformingAction,
+            bool applyRootMotion = true,
+            bool canRotate = false,
+            bool canMove = false)
+        {
+            this.applyRootMotion = applyRootMotion;
+            character.animator.Play(targetAnimation);
+            //  CAN BE USED TO STOP CHARACTER FROM ATTEMPTING NEW ACTIONS
+            //  FOR EXAMPLE, IF YOU GET DAMAGED, AND BEGIN PERFORMING A DAMAGE ANIMATION
+            //  THIS FLAG WILL TURN TRUE IF YOU ARE STUNNED
+            //  WE CAN THEN CHECK FOR THIS BEFORE ATTEMPTING NEW ACTIONS
+            character.isPerformingAction = isPerformingAction;
+            character.characterLocomotionManager.canRotate = canRotate;
+            character.characterLocomotionManager.canMove = canMove;
+
+            //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
+            character.characterNetworkManager.NotifyTheServerOfInstantActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
+        }
+
+        public virtual void PlayTargetAttackActionAnimation(
+            WeaponItem weapon,
+            AttackType attackType,
+            string targetAnimation,
+            bool isPerformingAction,
+            bool applyRootMotion = true,
+            bool canRotate = false,
+            bool canMove = false)
         {
             // 跟踪上次执行的攻击（用于连招）
             // 跟踪当前攻击类型（轻攻击、重攻击等）

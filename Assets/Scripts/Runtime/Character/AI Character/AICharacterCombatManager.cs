@@ -26,6 +26,18 @@ namespace LZ
         [Header("Attack Rotation Speed")]
         public float attackRotationSpeed = 25;
 
+        [Header("Stance Settings")]
+        public float maxStance = 150;
+        public float currentStance;
+        [SerializeField] float stanceRegeneratedPersecond = 15;
+        [SerializeField] bool ignoreStanceBreak = false;
+
+        [Header("Stance Timer")]
+        [SerializeField] float stanceRegenerationTimer = 0;
+        private float stanceTickTimer = 0; 
+        [SerializeField] float defaultTimeUntilStanceRegenerationBegins = 15;
+
+
         protected override void Awake()
         {
             base.Awake();
@@ -34,7 +46,76 @@ namespace LZ
             lockOnTransform = GetComponentInChildren<LockOnTransform>().transform;
         }
 
-        public void FindATargetViaLineOfSight(AICharacterManager aiCharacter)
+        private void FixedUpdate()
+        {
+            HandleStanceBreak();
+        }
+
+        private void HandleStanceBreak()
+        {
+            if (!aiCharacter.IsOwner)
+                return;
+
+            if (aiCharacter.isDead.Value)
+                return;
+
+            if (stanceRegenerationTimer > 0)
+            {
+                stanceRegenerationTimer -= Time.deltaTime;
+            }
+            else
+            {
+                stanceRegenerationTimer = 0;
+
+                if (currentStance < maxStance)
+                {
+                    //  BEGIN ADDING STANCE EACH TICK
+                    stanceTickTimer += Time.deltaTime;
+
+                    if (stanceTickTimer >= 1)
+                    {
+                        stanceTickTimer = 0;
+                        currentStance += stanceRegeneratedPersecond;
+                    }
+                }
+                else
+                {
+                    currentStance = maxStance;
+                }
+            }
+
+            if (currentStance <= 0)
+            {
+                //  (OPTIONAL) IF WE ARE IN A VERY HIGH INTENSITY DAMAGE ANIMATION (LIKE BEING LAUNCHED INTO THE AIR) DO NOT PLAY THE STANCE BREAK ANIMATION
+                //  THIS WOULD FEEL LESS IMPACTFUL IN GAMEPLAY
+                DamageIntensity previousDamageIntensity = WorldUtilityManager.Instance.GetDamageIntensityBasedOnPoiseDamage(previousPoiseDamageTaken);
+
+                if (previousDamageIntensity == DamageIntensity.Colossal)
+                {
+                    currentStance = 1;
+                    return;
+                }
+
+                //  TO DO: IF WE ARE BEING BACKSTABBED/RIPOSTED (CRITICALLY DAMAGED) DO NOT PLAY THE STANCE BREAK ANIMATION, AS THIS WOULD BREAK THE STATE
+
+                currentStance = maxStance;
+
+                if (ignoreStanceBreak)
+                    return;
+
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly("Stance_Break_01", true);
+            }
+        }
+
+        public void DamageStance(int stanceDamage)
+        {
+            //  WHEN STANCE IS DAMAGED, THE TIMER IS RESET, MEANING CONSTANT ATTACKS GIVE NO CHANCE AT RECOVERING STANCE THAT IS LOST
+            stanceRegenerationTimer = defaultTimeUntilStanceRegenerationBegins;
+
+            currentStance -= stanceDamage;
+        }
+
+        public virtual void FindATargetViaLineOfSight(AICharacterManager aiCharacter)
         {
             if (currentTarget != null)
                 return;
@@ -108,19 +189,19 @@ namespace LZ
             {
                 aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_90", true);
             }
-            else if (viewableAngle >= 111 && viewableAngle <= 145)
+            if (viewableAngle >= 110 && viewableAngle <= 145)
             {
                 aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_135", true);
             }
-            else if (viewableAngle <= -111 && viewableAngle >= -145)
+            else if (viewableAngle <= -110 && viewableAngle >= -145)
             {
                 aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_135", true);
             }
-            else if (viewableAngle >= 146 && viewableAngle <= 180)
+            if (viewableAngle >= 146 && viewableAngle <= 180)
             {
                 aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_180", true);
             }
-            else if (viewableAngle <= -146 && viewableAngle >= -180)
+            else if (viewableAngle <= -146 &&viewableAngle >= -180)
             {
                 aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_180", true);
             }
@@ -139,7 +220,7 @@ namespace LZ
             if (currentTarget == null)
                 return;
 
-            if (!aiCharacter.aiCharacterLocomotionManager.canRotate)
+            if (!aiCharacter.characterLocomotionManager.canRotate)
                 return;
 
             if (!aiCharacter.isPerformingAction)
@@ -154,8 +235,8 @@ namespace LZ
 
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
 
-            aiCharacter.transform.rotation = Quaternion.Slerp(aiCharacter.transform.rotation, targetRotation,
-                attackRotationSpeed * Time.deltaTime);
+            aiCharacter.transform.rotation = Quaternion.Slerp(aiCharacter.transform.rotation, targetRotation, attackRotationSpeed * Time.deltaTime);
+
         }
 
         public void HandleActionRecovery(AICharacterManager aiCharacter)
