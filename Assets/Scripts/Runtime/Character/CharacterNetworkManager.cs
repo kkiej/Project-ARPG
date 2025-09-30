@@ -12,11 +12,8 @@ namespace LZ
         public NetworkVariable<bool> isActive = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
         [Header("Position")]
-        public NetworkVariable<Vector3> networkPosition =
-            new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        public NetworkVariable<Quaternion> networkRotation =
-            new NetworkVariable<Quaternion>(Quaternion.identity, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
+        public NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<Quaternion> networkRotation = new NetworkVariable<Quaternion>(Quaternion.identity, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public Vector3 networkPositionVelocity;
         public float networkPositionSmoothTime = 0.1f;
         public float networkRotationSmoothTime = 0.1f;
@@ -28,8 +25,7 @@ namespace LZ
         public NetworkVariable<float> moveAmount = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Target")]
-        public NetworkVariable<ulong> currentTargetNetworkObjectID = new NetworkVariable<ulong>(0,
-            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<ulong> currentTargetNetworkObjectID = new NetworkVariable<ulong>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Flags")]
         public NetworkVariable<bool> isBlocking = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -39,7 +35,8 @@ namespace LZ
         public NetworkVariable<bool> isSprinting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isJumping = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> isChargingAttack = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-		public NetworkVariable<bool> isRipostable = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isRipostable = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isBeingCriticallyDamaged = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Resources")]
         public NetworkVariable<int> currentHealth = new NetworkVariable<int>(400, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -77,12 +74,16 @@ namespace LZ
             }
         }
 
+        public virtual void OnIsDeadChanged(bool oldStatus, bool newStatus)
+        {
+            character.animator.SetBool("isDead", character.isDead.Value);
+        }
+
         public void OnLockOnTargetIDChange(ulong oldID, ulong newID)
         {
             if (!IsOwner)
             {
-                character.characterCombatManager.currentTarget = NetworkManager.Singleton.SpawnManager
-                    .SpawnedObjects[newID].gameObject.GetComponent<CharacterManager>();
+                character.characterCombatManager.currentTarget = NetworkManager.Singleton.SpawnManager.SpawnedObjects[newID].gameObject.GetComponent<CharacterManager>();
             }
         }
 
@@ -261,8 +262,92 @@ namespace LZ
             damageEffect.angleHitFrom = angleHitFrom;
             damageEffect.contactPoint = new Vector3(contactPointX, contactPointY, contactPointZ);
             damageEffect.characterCausingDamage = characterCausingDamage;
-            
+
             damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
+        }
+
+        //  CRITICAL ATTACK
+        [ServerRpc(RequireOwnership = false)]
+        public void NotifyTheServerOfRiposteServerRpc(
+            ulong damagedCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation,
+            int weaponID,
+            float physicalDamage,
+            float magicDamage,
+            float fireDamage,
+            float holyDamage,
+            float poiseDamage)
+        {
+            if (IsServer)
+            {
+                NotifyTheServerOfRiposteClientRpc(
+                    damagedCharacterID, 
+                    characterCausingDamageID, 
+                    criticalDamageAnimation,
+                    weaponID,
+                    physicalDamage, 
+                    magicDamage, 
+                    fireDamage, holyDamage, 
+                    poiseDamage);
+            }
+        }
+
+        [ClientRpc]
+        public void NotifyTheServerOfRiposteClientRpc(
+            ulong damagedCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation,
+            int weaponID,
+            float physicalDamage,
+            float magicDamage,
+            float fireDamage,
+            float holyDamage,
+            float poiseDamage)
+        {
+            ProcessRiposteFromServer(damagedCharacterID, 
+                characterCausingDamageID,
+                criticalDamageAnimation,
+                weaponID,
+                physicalDamage, 
+                magicDamage, 
+                fireDamage, 
+                holyDamage, 
+                poiseDamage);
+        }
+
+        public void ProcessRiposteFromServer(
+            ulong damagedCharacterID,
+            ulong characterCausingDamageID,
+            string criticalDamageAnimation,
+            int weaponID,
+            float physicalDamage,
+            float magicDamage,
+            float fireDamage,
+            float holyDamage,
+            float poiseDamage)
+        {
+            CharacterManager damagedCharacter = NetworkManager.Singleton.SpawnManager.SpawnedObjects[damagedCharacterID].gameObject.GetComponent<CharacterManager>();
+            CharacterManager characterCausingDamage = NetworkManager.Singleton.SpawnManager.SpawnedObjects[characterCausingDamageID].gameObject.GetComponent<CharacterManager>();
+            WeaponItem weapon = WorldItemDatabase.Instance.GetWeaponByID(weaponID);
+            TakeCriticalDamageEffect damageEffect = Instantiate(WorldCharacterEffectsManager.instance.takeCriticalDamageEffect);
+
+            if (damagedCharacter.IsOwner)
+                damagedCharacter.characterNetworkManager.isBeingCriticallyDamaged.Value = true;
+
+            damageEffect.physicalDamage = physicalDamage;
+            damageEffect.magicDamage = magicDamage;
+            damageEffect.fireDamage = fireDamage;
+            damageEffect.holyDamage = holyDamage;
+            damageEffect.poiseDamage = poiseDamage;
+            damageEffect.characterCausingDamage = characterCausingDamage;
+
+            damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
+            damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
+
+            // MOVE THE ENEMY TO THE PROPER RIPOSTE POSITION
+            StartCoroutine(damagedCharacter.characterCombatManager.ForceMoveEnemyCharacterToRipsotePosition
+                (characterCausingDamage, WorldUtilityManager.Instance.GetRipostingPositionBasedOnWeaponClass(weapon.weaponClass)));
         }
     }
 }

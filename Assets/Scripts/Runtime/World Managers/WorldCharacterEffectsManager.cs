@@ -10,10 +10,12 @@ namespace LZ
 
         [Header("VFX")]
         public GameObject bloodSplatterVFX;
-        
+        public GameObject criticalBloodSplatterVFX;
+
         [Header("Damage")]
         public TakeDamageEffect takeDamageEffect;
         public TakeBlockedDamageEffect takeBlockedDamageEffect;
+        public TakeCriticalDamageEffect takeCriticalDamageEffect;
 
         [Header("Two Hand")]
         public TwoHandingEffect twoHandingEffect;

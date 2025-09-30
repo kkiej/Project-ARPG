@@ -9,9 +9,8 @@ namespace LZ
     public class CharacterManager : NetworkBehaviour
     {
         [Header("Status")]
-        public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Owner);
-        
+        public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         [HideInInspector] public CharacterController characterController;
         [HideInInspector] public Animator animator;
 
@@ -101,7 +100,8 @@ namespace LZ
 
             animator.SetBool("isMoving", characterNetworkManager.isMoving.Value);
             characterNetworkManager.OnIsActiveChanged(false, characterNetworkManager.isActive.Value);
-            
+
+            isDead.OnValueChanged += characterNetworkManager.OnIsDeadChanged;
             characterNetworkManager.isMoving.OnValueChanged += characterNetworkManager.OnIsMovingChanged;
             characterNetworkManager.isActive.OnValueChanged += characterNetworkManager.OnIsActiveChanged;
         }
@@ -109,7 +109,8 @@ namespace LZ
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
-            
+
+            isDead.OnValueChanged -= characterNetworkManager.OnIsDeadChanged;
             characterNetworkManager.isMoving.OnValueChanged -= characterNetworkManager.OnIsMovingChanged;
             characterNetworkManager.isActive.OnValueChanged -= characterNetworkManager.OnIsActiveChanged;
         }

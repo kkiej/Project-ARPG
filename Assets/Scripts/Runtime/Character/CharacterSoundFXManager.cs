@@ -60,6 +60,11 @@ namespace LZ
             audioSource.PlayOneShot(WorldSoundFXManager.instance.stanceBreakSFX);
         }
 
+        public virtual void PlayCriticalStrikeSoundFX()
+        {
+            audioSource.PlayOneShot(WorldSoundFXManager.instance.criticalStrikeSFX);
+        }
+
         public virtual void PlayBlockSoundFX()
         {
 

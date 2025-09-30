@@ -18,8 +18,8 @@ namespace LZ
         [HideInInspector] public GameObject leftHandWeaponModel;
 
         [Header("Weapon Managers")]
-        WeaponManager rightWeaponManager;
-        WeaponManager leftWeaponManager;
+        public WeaponManager rightWeaponManager;
+        public WeaponManager leftWeaponManager;
 
         [Header("DEBUG DELETE LATER")]
         [SerializeField] bool equipNewItems = false;
@@ -930,12 +930,9 @@ namespace LZ
                 // 如果下一个可能的武器不是空手
                 if (player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex].itemID != WorldItemDatabase.Instance.unarmedWeapon.itemID)
                 {
-                    selectedWeapon =
-                        player.playerInventoryManager.weaponsInRightHandSlots[
-                            player.playerInventoryManager.rightHandWeaponIndex];
-                    // 分配网络武器ID，方便它为所有连接的客户端切换
-                    player.playerNetworkManager.currentRightHandWeaponID.Value = player.playerInventoryManager
-                        .weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex].itemID;
+                    selectedWeapon = player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex];
+                    //  ASSIGN THE NETWORK WEAPON ID SO IT SWITCHES FOR ALL CONNECTED CLIENTS
+                    player.playerNetworkManager.currentRightHandWeaponID.Value = player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex].itemID;
                     return;
                 }
             }
@@ -958,8 +955,7 @@ namespace LZ
                 rightHandWeaponSlot.PlaceWeaponModelIntoSlot(rightHandWeaponModel);
                 rightWeaponManager = rightHandWeaponModel.GetComponent<WeaponManager>();
                 rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
-                player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager
-                    .currentRightHandWeapon.weaponAnimator);
+                player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentRightHandWeapon.weaponAnimator);
             }
         }
 
@@ -1028,12 +1024,9 @@ namespace LZ
                 // 如果下一个可能的武器不是空手
                 if (player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID != WorldItemDatabase.Instance.unarmedWeapon.itemID)
                 {
-                    selectedWeapon =
-                        player.playerInventoryManager.weaponsInLeftHandSlots[
-                            player.playerInventoryManager.leftHandWeaponIndex];
-                    // 分配网络武器ID，方便它为所有连接的客户端切换
-                    player.playerNetworkManager.currentLeftHandWeaponID.Value = player.playerInventoryManager
-                        .weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID;
+                    selectedWeapon = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex];
+                    //  ASSIGN THE NETWORK WEAPON ID SO IT SWITCHES FOR ALL CONNECTED CLIENTS
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID;
                     return;
                 }
             }
@@ -1170,17 +1163,13 @@ namespace LZ
             if (player.playerNetworkManager.isUsingRightHand.Value)
             {
                 rightWeaponManager.meleeDamageCollider.EnableDamageCollider();
-                player.characterSoundFXManager.PlaySoundFX(
-                    WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerInventoryManager
-                        .currentRightHandWeapon.whooshes));
+                player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerInventoryManager.currentRightHandWeapon.whooshes));
             }
             // 打开左手武器伤害碰撞体
             else if (player.playerNetworkManager.isUsingLeftHand.Value)
             {
                 leftWeaponManager.meleeDamageCollider.EnableDamageCollider();
-                player.characterSoundFXManager.PlaySoundFX(
-                    WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerInventoryManager
-                        .currentLeftHandWeapon.whooshes));
+                player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerInventoryManager.currentLeftHandWeapon.whooshes));
             }
             
             // 播放音效

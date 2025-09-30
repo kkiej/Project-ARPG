@@ -165,8 +165,12 @@ namespace LZ
             character.animator.SetFloat(vertical, snappedVertical, 0.1f, Time.deltaTime);
         }
 
-        public virtual void PlayTargetActionAnimation(string targetAnimation, bool isPerformingAction,
-            bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
+        public virtual void PlayTargetActionAnimation(
+            string targetAnimation, 
+            bool isPerformingAction, 
+            bool applyRootMotion = true, 
+            bool canRotate = false, 
+            bool canMove = false)
         {
             //Debug.Log("Playing Animation: " + targetAnimation);
             this.applyRootMotion = applyRootMotion;

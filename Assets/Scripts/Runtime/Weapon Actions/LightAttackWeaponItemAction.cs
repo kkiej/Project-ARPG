@@ -5,6 +5,7 @@ namespace LZ
     [CreateAssetMenu(menuName = "Character Actions/Weapon Actions/Light Attack Action")]
     public class LightAttackWeaponItemAction : WeaponItemAction
     {
+        //  MAIN HAND
         [Header("Light Attacks")]
         [SerializeField] string light_Attack_01 = "Main_Light_Attack_01";
         [SerializeField] string light_Attack_02 = "Main_Light_Attack_02";
@@ -68,7 +69,9 @@ namespace LZ
                 PerformBackstepAttack(playerPerformingAction, weaponPerformingAction);
                 return;
             }
-            
+
+            playerPerformingAction.characterCombatManager.AttemptCriticalAttack();
+
             PerformLightAttack(playerPerformingAction, weaponPerformingAction);
         }
 

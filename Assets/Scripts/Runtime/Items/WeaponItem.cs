@@ -45,6 +45,7 @@ namespace LZ
         public float running_Attack_01_Modifier = 1.1f;
         public float rolling_Attack_01_Modifier = 1.1f;
         public float backstep_Attack_01_Modifier = 1.1f;
+        public float riposte_Attack_01_Modifier = 3.3f;
 
         [Header("Stamina Cost Modifiers")]
         public int baseStaminaCost = 20;
