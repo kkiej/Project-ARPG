@@ -127,7 +127,7 @@ namespace LZ
                 
                 // 如果我们不在地面上，播放空中死亡动画
 
-                if (!manuallySelectDeathAnimation)
+                if (!manuallySelectDeathAnimation && !characterNetworkManager.isBeingCriticallyDamaged.Value)
                 {
                     characterAnimatorManager.PlayTargetActionAnimation("Dead_01", true);
                 }

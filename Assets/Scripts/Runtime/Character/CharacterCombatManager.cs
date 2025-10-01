@@ -28,9 +28,11 @@ namespace LZ
         public bool canPerformRollingAttack = false;
         public bool canPerformBackstepAttack = false;
         public bool canBlock = true;
+        public bool canBeBackstabbed = true;
 
         [Header("Critical Attack")]
         private Transform riposteReceiverTransform;
+        private Transform backstabReceiverTransform;
         [SerializeField] float criticalAttackDistanceCheck = 0.7f;
         public int pendingCriticalDamage;
 
@@ -100,12 +102,29 @@ namespace LZ
                         }
                     }
 
-                    //  TO DO ADD BACKSTAB CHECK
+                    if (targetCharacter.characterCombatManager.canBeBackstabbed)
+                    {
+                        if (targetViewableAngle <= 180 && targetViewableAngle >= 145)
+                        {
+                            AttemptBackstab(hit);
+                            return;
+                        }
+                        if (targetViewableAngle >= -180 && targetViewableAngle <= -145)
+                        {
+                            AttemptBackstab(hit);
+                            return;
+                        }
+                    }
                 }
             }
         }
 
         public virtual void AttemptRiposte(RaycastHit hit)
+        {
+
+        }
+
+        public virtual void AttemptBackstab(RaycastHit hit)
         {
 
         }
@@ -124,24 +143,49 @@ namespace LZ
         {
             float timer = 0;
 
-            if (riposteReceiverTransform == null)
+            while (timer < 0.2f)
             {
-                GameObject riposteTransformObject = new GameObject("Riposte Transform");
-                riposteTransformObject.transform.parent = transform;
-                riposteTransformObject.transform.position = Vector3.zero;
-                riposteReceiverTransform = riposteTransformObject.transform;
-            }
+                timer += Time.deltaTime;
 
-            riposteReceiverTransform.localPosition = ripostePosition;
-            enemyCharacter.transform.position = riposteReceiverTransform.position;
-            transform.rotation = Quaternion.LookRotation(-enemyCharacter.transform.forward);
+                if (riposteReceiverTransform == null)
+                {
+                    GameObject riposteTransformObject = new GameObject("Riposte Transform");
+                    riposteTransformObject.transform.parent = transform;
+                    riposteTransformObject.transform.position = Vector3.zero;
+                    riposteReceiverTransform = riposteTransformObject.transform;
+                }
+
+                riposteReceiverTransform.localPosition = ripostePosition;
+                enemyCharacter.transform.position = riposteReceiverTransform.position;
+                transform.rotation = Quaternion.LookRotation(-enemyCharacter.transform.forward);
+
+                yield return null;
+            }
+        }
+
+        public IEnumerator ForceMoveEnemyCharacterToBackstabPosition(CharacterManager enemyCharacter, Vector3 backstabPosition)
+        {
+            float timer = 0;
 
             while (timer < 0.2f)
             {
                 timer += Time.deltaTime;
+
+                if (riposteReceiverTransform == null)
+                {
+                    GameObject backstabTransformObject = new GameObject("Backstab Transform");
+                    backstabTransformObject.transform.parent = transform;
+                    backstabTransformObject.transform.position = Vector3.zero;
+                    backstabReceiverTransform = backstabTransformObject.transform;
+                }
+
+                backstabReceiverTransform.localPosition = backstabPosition;
+                enemyCharacter.transform.position = backstabReceiverTransform.position;
+                transform.rotation = Quaternion.LookRotation(enemyCharacter.transform.forward);
+
                 yield return null;
             }
-        }     
+        }
 
         public void EnableIsInvulnerable()
         {

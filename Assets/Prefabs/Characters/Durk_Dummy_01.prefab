@@ -1150,6 +1150,7 @@ MonoBehaviour:
   fireDamage: 0
   lightningDamage: 0
   holyDamage: 0
+  poiseDamage: 0
   bossCharacter: {fileID: 0}
 --- !u!1 &4533654260572746094 stripped
 GameObject:
@@ -1342,6 +1343,7 @@ MonoBehaviour:
   fireDamage: 0
   lightningDamage: 0
   holyDamage: 0
+  poiseDamage: 0
   durkCharacterManager: {fileID: 0}
 --- !u!1 &5652605834163158494 stripped
 GameObject:
@@ -1569,7 +1571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1144207908
+  GlobalObjectIdHash: 3281729339
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1609,6 +1611,10 @@ MonoBehaviour:
     m_InternalValue: 0
   currentTargetNetworkObjectID:
     m_InternalValue: 0
+  isBlocking:
+    m_InternalValue: 0
+  isAttacking:
+    m_InternalValue: 0
   isInvulnerable:
     m_InternalValue: 0
   isLockedOn:
@@ -1618,6 +1624,10 @@ MonoBehaviour:
   isJumping:
     m_InternalValue: 0
   isChargingAttack:
+    m_InternalValue: 0
+  isRipostable:
+    m_InternalValue: 0
+  isBeingCriticallyDamaged:
     m_InternalValue: 0
   currentHealth:
     m_InternalValue: 785
@@ -1630,6 +1640,10 @@ MonoBehaviour:
   vitality:
     m_InternalValue: 1
   endurance:
+    m_InternalValue: 1
+  strength:
+    m_InternalValue: 1
+  strengthModifier:
     m_InternalValue: 1
 --- !u!114 &8624909866300056868
 MonoBehaviour:
@@ -1669,11 +1683,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastAttackAnimationPerformed: 
+  previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
   currentAttackType: 0
   lockOnTransform: {fileID: 0}
   canPerformRollingAttack: 0
   canPerformBackstepAttack: 0
+  canBlock: 1
+  criticalAttackDistanceCheck: 0.7
+  pendingCriticalDamage: 0
   actionRecoveryTimer: 0
   enablePivot: 1
   distanceFromTarget: 0
@@ -1683,10 +1701,17 @@ MonoBehaviour:
   minimumFOV: -35
   maximumFOV: 35
   attackRotationSpeed: 25
+  maxStance: 150
+  currentStance: 150
+  stanceRegeneratedPersecond: 15
+  ignoreStanceBreak: 0
+  stanceRegenerationTimer: 0
+  defaultTimeUntilStanceRegenerationBegins: 15
   clubDamageCollider: {fileID: 331951057629359738}
   stompCollider: {fileID: 5780664513750619873}
   stompAttackAOERadius: 1.5
   baseDamage: 25
+  basePoiseDamage: 25
   attack01DamageModifier: 1
   attack02DamageModifier: 1.4
   attack03DamageModifier: 1.6
@@ -1713,6 +1738,7 @@ MonoBehaviour:
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}
   characterCombatManager: {fileID: 0}
+  characterStatsManager: {fileID: 0}
   characterSoundFXManager: {fileID: 0}
   characterLocomotionManager: {fileID: 0}
   characterUIManager: {fileID: 0}
@@ -1761,6 +1787,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   applyRootMotion: 1
   lastDamageAnimationPlayed: 
+  hit_Forward_Ping_01: Hit_Forward_Ping_01
+  hit_Forward_Ping_02: Hit_Forward_Ping_02
+  hit_Backward_Ping_01: Hit_Backward_Ping_01
+  hit_Backward_Ping_02: Hit_Backward_Ping_02
+  hit_Left_Ping_01: Hit_Left_Ping_01
+  hit_Left_Ping_02: Hit_Left_Ping_02
+  hit_Right_Ping_01: Hit_Right_Ping_01
+  hit_Right_Ping_02: Hit_Right_Ping_02
+  forward_Ping_Damage: []
+  backward_Ping_Damage: []
+  left_Ping_Damage: []
+  right_Ping_Damage: []
   hit_Forward_Medium_01: Hit_Forward_Medium_01
   hit_Forward_Medium_02: Hit_Forward_Medium_02
   hit_Backward_Medium_01: Hit_Backward_Medium_01
@@ -1787,6 +1825,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   staminaRegenerationAmount: 2
   staminaRegenerationDelay: 2
+  blockingPhysicalAbsorption: 0
+  blockingFireAbsorption: 0
+  blockingMagicAbsorption: 0
+  blockingLightningAbsorption: 0
+  blockingHolyAbsorption: 0
+  blockingStability: 0
+  armorPhysicalDamageAbsorption: 0
+  armorMagicDamageAbsorption: 0
+  armorFireDamageAbsorption: 0
+  armorHolyDamageAbsorption: 0
+  armorLightningDamageAbsorption: 0
+  armorImmunity: 0
+  armorRobustness: 0
+  armorFocus: 0
+  armorVitality: 0
+  totalPoiseDamage: 0
+  offensivePoiseBonus: 0
+  basePoiseDefense: 0
+  defaultPoiseResetTime: 8
+  poiseResetTimer: 0
 --- !u!114 &1554564816207402233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1812,6 +1870,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloodSplatterVFX: {fileID: 0}
+  criticalBloodSplatterVFX: {fileID: 0}
+  staticEffects: []
 --- !u!114 &6939140254105549991
 MonoBehaviour:
   m_ObjectHideFlags: 0

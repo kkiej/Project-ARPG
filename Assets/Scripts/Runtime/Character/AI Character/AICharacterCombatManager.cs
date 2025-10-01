@@ -28,7 +28,7 @@ namespace LZ
 
         [Header("Stance Settings")]
         public float maxStance = 150;
-        public float currentStance;
+        public float currentStance = 150;
         [SerializeField] float stanceRegeneratedPersecond = 15;
         [SerializeField] bool ignoreStanceBreak = false;
 
