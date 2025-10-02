@@ -52,7 +52,8 @@ public enum WeaponClass
     StraightSword,
     Spear,
     MediumShield,
-    Fist
+    Fist,
+    LightShield
 }
 
 //  USED TO TAG EQUIPMENT MODELS WITH SPECIFIC BODY PARTS THAT THEY WILL COVER

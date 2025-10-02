@@ -24,8 +24,11 @@ namespace LZ
 
         [Header("Hand Equipment")]
         [SerializeField] List<HandEquipmentItem> handEquipment = new List<HandEquipmentItem>();
-        
-        // 游戏中我们有的每一个物品的列表
+
+        [Header("Ashes Of War")]
+        [SerializeField] List<AshOfWar> ashesOfWar = new List<AshOfWar>();
+
+        //  A LIST OF EVERY ITEM WE HAVE IN THE GAME
         [Header("Items")]
         private List<Item> items = new List<Item>();
 
@@ -65,8 +68,13 @@ namespace LZ
             {
                 items.Add(item);
             }
-            
-            // 为所有的物品分配一个唯一的ID
+
+            foreach (var item in ashesOfWar)
+            {
+                items.Add(item);
+            }
+
+            //  ASSIGN ALL OF OUR ITEMS A UNIQUE ITEM ID
             for (int i = 0; i < items.Count; i++)
             {
                 items[i].itemID = i;
@@ -96,6 +104,11 @@ namespace LZ
         public HandEquipmentItem GetHandEquipmentByID(int ID)
         {
             return handEquipment.FirstOrDefault(equipment => equipment.itemID == ID);
+        }
+
+        public AshOfWar GetAshOfWarByID(int ID)
+        {
+            return ashesOfWar.FirstOrDefault(item => item.itemID == ID);
         }
     }
 }

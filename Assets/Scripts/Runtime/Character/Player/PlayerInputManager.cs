@@ -46,6 +46,7 @@ namespace LZ
         [Header("Trigger Inputs")]
         [SerializeField] private bool RT_Input;
         [SerializeField] private bool Hold_RT_Input;
+        [SerializeField] bool LT_Input = false;
         
 		[Header("Two Hand Inputs")]
         [SerializeField] bool two_Hand_Input = false;
@@ -137,6 +138,7 @@ namespace LZ
                 playerControls.PlayerActions.RT.performed += i => RT_Input = true;
                 playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
                 playerControls.PlayerActions.HoldRT.canceled += i => Hold_RT_Input = false;
+                playerControls.PlayerActions.LT.performed += i => LT_Input = true;
 
                 //  TWO HAND
                 playerControls.PlayerActions.TwoHandWeapon.performed += i => two_Hand_Input = true;
@@ -209,6 +211,7 @@ namespace LZ
             HandleLBInput();
             HandleRTInput();
             HandleChargeRTInput();
+            HandleLTInput();
             HandleSwitchRightWeaponInput();
             HandleSwitchLeftWeaponInput();
             HandleQuedInputs();
@@ -387,14 +390,12 @@ namespace LZ
             // 如果我们没有锁定目标，只使用moveAmount
             if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
             {
-                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount,
-                    player.playerNetworkManager.isSprinting.Value);
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
             }
             // 如果我们被锁定，也要传递水平方向的movement
             else
             {
-                player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput,
-                    player.playerNetworkManager.isSprinting.Value);
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput, player.playerNetworkManager.isSprinting.Value);
             }
         }
 
@@ -459,9 +460,7 @@ namespace LZ
                 
                 // TODO: 如果我们双持武器，使用双持动作
 
-                player.playerCombatManager.PerformWeaponBasedAction(
-                    player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action,
-                    player.playerInventoryManager.currentRightHandWeapon);
+                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action, player.playerInventoryManager.currentRightHandWeapon);
             }
         }
 		
@@ -496,9 +495,7 @@ namespace LZ
                 
                 // TODO: 如果我们双持武器，使用双持动作
 
-                player.playerCombatManager.PerformWeaponBasedAction(
-                    player.playerInventoryManager.currentRightHandWeapon.oh_RT_Action,
-                    player.playerInventoryManager.currentRightHandWeapon);
+                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RT_Action, player.playerInventoryManager.currentRightHandWeapon);
             }
         }
 
@@ -511,6 +508,18 @@ namespace LZ
                 {
                     player.playerNetworkManager.isChargingAttack.Value = Hold_RT_Input;
                 }
+            }
+        }
+
+        private void HandleLTInput()
+        {
+            if (LT_Input)
+            {
+                LT_Input = false;
+
+                WeaponItem weaponPerformingAshOfWar = player.playerCombatManager.SelectWeaponToPerformAshOfWar();
+
+                weaponPerformingAshOfWar.ashOfWarAction.AttemptToPerformAction(player);
             }
         }
 

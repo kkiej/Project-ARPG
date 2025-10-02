@@ -67,7 +67,7 @@ namespace LZ
         public WeaponItemAction oh_RB_Action;
         public WeaponItemAction oh_RT_Action;
 		public WeaponItemAction oh_LB_Action;   // ONE HAND LEFT BUMPER ACTION
-        // 战争灰烬
+        public AshOfWar ashOfWarAction;
         // 格挡声音
 
         [Header("SFX")]
