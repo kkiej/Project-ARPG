@@ -11,6 +11,7 @@ namespace LZ
         [HideInInspector] public AICharacterNetworkManager aiCharacterNetworkManager;
         [HideInInspector] public AICharacterCombatManager aiCharacterCombatManager;
         [HideInInspector] public AICharacterLocomotionManager aiCharacterLocomotionManager;
+        [HideInInspector] public AICharacterInventoryManager aiCharacterInventoryManager;
 
         [Header("Navmesh Agent")]
         public NavMeshAgent navMeshAgent;
@@ -31,7 +32,8 @@ namespace LZ
             aiCharacterNetworkManager = GetComponent<AICharacterNetworkManager>();
             aiCharacterCombatManager = GetComponent<AICharacterCombatManager>();
             aiCharacterLocomotionManager = GetComponent<AICharacterLocomotionManager>();
-            
+            aiCharacterInventoryManager = GetComponent<AICharacterInventoryManager>();
+
             navMeshAgent = GetComponentInChildren<NavMeshAgent>();
         }
         
@@ -86,9 +88,7 @@ namespace LZ
             base.FixedUpdate();
 
             if (IsOwner)
-            {
                 ProcessStateMachine();
-            }
         }
 
         private void ProcessStateMachine()
@@ -106,12 +106,9 @@ namespace LZ
 
             if (aiCharacterCombatManager.currentTarget != null)
             {
-                aiCharacterCombatManager.targetsDirection =
-                    aiCharacterCombatManager.currentTarget.transform.position - transform.position;
-                aiCharacterCombatManager.viewableAngle =
-                    WorldUtilityManager.Instance.GetAngleOfTarget(transform, aiCharacterCombatManager.targetsDirection);
-                aiCharacterCombatManager.distanceFromTarget = Vector3.Distance(transform.position,
-                    aiCharacterCombatManager.currentTarget.transform.position);
+                aiCharacterCombatManager.targetsDirection = aiCharacterCombatManager.currentTarget.transform.position - transform.position;
+                aiCharacterCombatManager.viewableAngle = WorldUtilityManager.Instance.GetAngleOfTarget(transform, aiCharacterCombatManager.targetsDirection);
+                aiCharacterCombatManager.distanceFromTarget = Vector3.Distance(transform.position, aiCharacterCombatManager.currentTarget.transform.position);
             }
 
             if (navMeshAgent.enabled)

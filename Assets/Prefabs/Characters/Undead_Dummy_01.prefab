@@ -1515,6 +1515,7 @@ GameObject:
   - component: {fileID: 2563438246709438731}
   - component: {fileID: -4410606119701210936}
   - component: {fileID: 1846663786944354891}
+  - component: {fileID: -1345521384039439942}
   - component: {fileID: 6455997160412682467}
   - component: {fileID: 1615410691195373144}
   - component: {fileID: 5899868901223486559}
@@ -1625,6 +1626,10 @@ MonoBehaviour:
     m_InternalValue: 0
   isBlocking:
     m_InternalValue: 0
+  isParrying:
+    m_InternalValue: 0
+  isParryable:
+    m_InternalValue: 0
   isAttacking:
     m_InternalValue: 0
   isInvulnerable:
@@ -1702,6 +1707,7 @@ MonoBehaviour:
   canPerformRollingAttack: 0
   canPerformBackstepAttack: 0
   canBlock: 1
+  canBeBackstabbed: 1
   criticalAttackDistanceCheck: 0.7
   pendingCriticalDamage: 0
   actionRecoveryTimer: 0
@@ -1755,6 +1761,7 @@ MonoBehaviour:
   aiCharacterNetworkManager: {fileID: 0}
   aiCharacterCombatManager: {fileID: 0}
   aiCharacterLocomotionManager: {fileID: 0}
+  aiCharacterInventoryManager: {fileID: 0}
   navMeshAgent: {fileID: 0}
   currentState: {fileID: 11400000, guid: 98e90724dd65c514e9cc06a0eb3d03c1, type: 2}
   idle: {fileID: 11400000, guid: 98e90724dd65c514e9cc06a0eb3d03c1, type: 2}
@@ -1799,6 +1806,22 @@ MonoBehaviour:
   backward_Medium_Damage: []
   left_Medium_Damage: []
   right_Medium_Damage: []
+--- !u!114 &-1345521384039439942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5291642110726466519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba006cea6b36bce42b02a796f11ddf75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropItemChance: 10
+  droppableItems:
+  - {fileID: 11400000, guid: 97eaba4af3a3c79469a5502c22e37f92, type: 2}
+  - {fileID: 11400000, guid: d6240c4793cc39f4fb5f44ea62b6bdeb, type: 2}
 --- !u!114 &6455997160412682467
 MonoBehaviour:
   m_ObjectHideFlags: 0
