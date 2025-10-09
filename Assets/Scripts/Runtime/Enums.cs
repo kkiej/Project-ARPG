@@ -56,6 +56,13 @@ public enum WeaponClass
     LightShield
 }
 
+//  USED TO DETERMINE WHICH ITEM (CATALYST) IS NEEDED TO CAST SPELL
+public enum SpellClass
+{
+    Incantation,
+    Sorcery
+}
+
 //  USED TO TAG EQUIPMENT MODELS WITH SPECIFIC BODY PARTS THAT THEY WILL COVER
 public enum EquipmentModelType
 {

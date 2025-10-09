@@ -30,6 +30,9 @@ namespace LZ
         [Header("Ashes Of War")]
         [SerializeField] List<AshOfWar> ashesOfWar = new List<AshOfWar>();
 
+        [Header("Spells")]
+        [SerializeField] List<SpellItem> spells = new List<SpellItem>();
+
         //  A LIST OF EVERY ITEM WE HAVE IN THE GAME
         [Header("Items")]
         private List<Item> items = new List<Item>();
@@ -76,6 +79,11 @@ namespace LZ
                 items.Add(item);
             }
 
+            foreach (var item in spells)
+            {
+                items.Add(item);
+            }
+
             //  ASSIGN ALL OF OUR ITEMS A UNIQUE ITEM ID
             for (int i = 0; i < items.Count; i++)
             {
@@ -116,6 +124,11 @@ namespace LZ
         public AshOfWar GetAshOfWarByID(int ID)
         {
             return ashesOfWar.FirstOrDefault(item => item.itemID == ID);
+        }
+
+        public SpellItem GetSpellByID(int ID)
+        {
+            return spells.FirstOrDefault(item => item.itemID == ID);
         }
     }
 }

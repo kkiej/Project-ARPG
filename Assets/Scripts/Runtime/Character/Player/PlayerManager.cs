@@ -85,14 +85,11 @@ namespace LZ
                 // 当与生命值或体力相关的属性发生变化时，更新其总量
                 playerNetworkManager.vitality.OnValueChanged += playerNetworkManager.SetNewMaxHealthValue;
                 playerNetworkManager.endurance.OnValueChanged += playerNetworkManager.SetNewMaxStaminaValue;
-                
+
                 // 当一个状态（生命或体力）改变时更新UI状态条
-                playerNetworkManager.currentHealth.OnValueChanged +=
-                    PlayerUIManager.instance.playerUIHudManager.SetNewHealthValue;
-                playerNetworkManager.currentStamina.OnValueChanged +=
-                    PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
-                playerNetworkManager.currentStamina.OnValueChanged +=
-                    playerStatsManager.ResetStaminaRegenTimer;
+                playerNetworkManager.currentHealth.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewHealthValue;
+                playerNetworkManager.currentStamina.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
+                playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegenTimer;
             }
             
             // 仅当该角色非本地玩家角色时，才更新浮动血条（避免在自身头顶显示血条）
@@ -107,17 +104,14 @@ namespace LZ
             
             // 锁定
             playerNetworkManager.isLockedOn.OnValueChanged += playerNetworkManager.OnIsLockedOnChanged;
-            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged +=
-                playerNetworkManager.OnLockOnTargetIDChange;
-            
+            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged += playerNetworkManager.OnLockOnTargetIDChange;
+
             // 装备
-            playerNetworkManager.currentRightHandWeaponID.OnValueChanged +=
-                playerNetworkManager.OnCurrentRightHandWeaponIDChange;
-            playerNetworkManager.currentLeftHandWeaponID.OnValueChanged +=
-                playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
-            playerNetworkManager.currentWeaponBeingUsed.OnValueChanged +=
-                playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
-			playerNetworkManager.isBlocking.OnValueChanged += playerNetworkManager.OnIsBlockingChanged;
+            playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
+            playerNetworkManager.currentLeftHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
+            playerNetworkManager.currentWeaponBeingUsed.OnValueChanged += playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
+            playerNetworkManager.currentSpellID.OnValueChanged += playerNetworkManager.OnCurrentSpellIDChange;
+            playerNetworkManager.isBlocking.OnValueChanged += playerNetworkManager.OnIsBlockingChanged;
             playerNetworkManager.headEquipmentID.OnValueChanged += playerNetworkManager.OnHeadEquipmentChanged;
             playerNetworkManager.bodyEquipmentID.OnValueChanged += playerNetworkManager.OnBodyEquipmentChanged;
             playerNetworkManager.legEquipmentID.OnValueChanged += playerNetworkManager.OnLegEquipmentChanged;
@@ -151,14 +145,11 @@ namespace LZ
                 // 当与生命值或体力相关的属性发生变化时，更新其总量
                 playerNetworkManager.vitality.OnValueChanged -= playerNetworkManager.SetNewMaxHealthValue;
                 playerNetworkManager.endurance.OnValueChanged -= playerNetworkManager.SetNewMaxStaminaValue;
-                
+
                 // 当一个状态（生命或体力）改变时更新UI状态条
-                playerNetworkManager.currentHealth.OnValueChanged -=
-                    PlayerUIManager.instance.playerUIHudManager.SetNewHealthValue;
-                playerNetworkManager.currentStamina.OnValueChanged -=
-                    PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
-                playerNetworkManager.currentStamina.OnValueChanged -=
-                    playerStatsManager.ResetStaminaRegenTimer;
+                playerNetworkManager.currentHealth.OnValueChanged -= PlayerUIManager.instance.playerUIHudManager.SetNewHealthValue;
+                playerNetworkManager.currentStamina.OnValueChanged -= PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
+                playerNetworkManager.currentStamina.OnValueChanged -= playerStatsManager.ResetStaminaRegenTimer;
             }
             
             if (!IsOwner)
@@ -172,16 +163,13 @@ namespace LZ
             
             // 锁定
             playerNetworkManager.isLockedOn.OnValueChanged -= playerNetworkManager.OnIsLockedOnChanged;
-            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged -=
-                playerNetworkManager.OnLockOnTargetIDChange;
-            
+            playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged -= playerNetworkManager.OnLockOnTargetIDChange;
+
             // 装备
-            playerNetworkManager.currentRightHandWeaponID.OnValueChanged -=
-                playerNetworkManager.OnCurrentRightHandWeaponIDChange;
-            playerNetworkManager.currentLeftHandWeaponID.OnValueChanged -=
-                playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
-            playerNetworkManager.currentWeaponBeingUsed.OnValueChanged -=
-                playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
+            playerNetworkManager.currentRightHandWeaponID.OnValueChanged -= playerNetworkManager.OnCurrentRightHandWeaponIDChange;
+            playerNetworkManager.currentLeftHandWeaponID.OnValueChanged -= playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
+            playerNetworkManager.currentWeaponBeingUsed.OnValueChanged -= playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
+            playerNetworkManager.currentSpellID.OnValueChanged -= playerNetworkManager.OnCurrentSpellIDChange;
             playerNetworkManager.headEquipmentID.OnValueChanged -= playerNetworkManager.OnHeadEquipmentChanged;
             playerNetworkManager.bodyEquipmentID.OnValueChanged -= playerNetworkManager.OnBodyEquipmentChanged;
             playerNetworkManager.legEquipmentID.OnValueChanged -= playerNetworkManager.OnLegEquipmentChanged;
@@ -285,12 +273,10 @@ namespace LZ
 
             playerNetworkManager.vitality.Value = currentCharacterData.vitality;
             playerNetworkManager.endurance.Value = currentCharacterData.endurance;
-            
+
             // 当添加了保存和加载功能后，这将会被移走
-            playerNetworkManager.maxHealth.Value =
-                playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
-            playerNetworkManager.maxStamina.Value =
-                playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
+            playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
+            playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
             //PlayerUIManager.instance.playerUIHudManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
@@ -413,6 +399,7 @@ namespace LZ
             //  SYNC WEAPONS
             playerNetworkManager.OnCurrentRightHandWeaponIDChange(0, playerNetworkManager.currentRightHandWeaponID.Value);
             playerNetworkManager.OnCurrentLeftHandWeaponIDChange(0, playerNetworkManager.currentLeftHandWeaponID.Value);
+            playerNetworkManager.OnCurrentSpellIDChange(0, playerNetworkManager.currentSpellID.Value);
 
             //  SYNC ARMOR
             playerNetworkManager.OnHeadEquipmentChanged(0, playerNetworkManager.headEquipmentID.Value);

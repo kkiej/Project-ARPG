@@ -259,6 +259,22 @@ namespace LZ
             //player.playerCombatManager.canComboWithOffHandWeapon = false;
         }
 
+        public void InstantiateSpellWarmUpFX()
+        {
+            if (player.playerInventoryManager.currentSpell == null)
+                return;
+
+            player.playerInventoryManager.currentSpell.InstantiateWarmUpSpellFX(player);
+        }
+
+        public void InstantiateSpellReleaseFX()
+        {
+            if (player.playerInventoryManager.currentSpell == null)
+                return;
+
+            player.playerInventoryManager.currentSpell.InstantiateReleaseFX(player);
+        }
+
         public WeaponItem SelectWeaponToPerformAshOfWar()
         {
             //  TO DO SELECT WEAPON DEPENDING ON SETUP
