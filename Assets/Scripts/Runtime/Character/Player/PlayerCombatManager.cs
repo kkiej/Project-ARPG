@@ -33,7 +33,15 @@ namespace LZ
             }
         }
 
-        // 处决攻击
+        public override void CloseAllDamageColliders()
+        {
+            base.CloseAllDamageColliders();
+
+            player.playerEquipmentManager.rightWeaponManager.meleeDamageCollider.DisableDamageCollider();
+            player.playerEquipmentManager.leftWeaponManager.meleeDamageCollider.DisableDamageCollider();
+        }
+
+        //  CRITICAL ATTACKS
         public override void AttemptRiposte(RaycastHit hit)
         {
             CharacterManager targetCharacter = hit.transform.gameObject.GetComponent<CharacterManager>();

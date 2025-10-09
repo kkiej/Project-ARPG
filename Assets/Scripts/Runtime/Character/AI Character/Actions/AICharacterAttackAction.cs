@@ -7,7 +7,8 @@ namespace LZ
     {
         [Header("Attack")]
         [SerializeField] private string attackAnimation;
-        
+        [SerializeField] bool isParryable = true;
+
         [Header("Combo Action")]
         public AICharacterAttackAction comboAction; // 该攻击动作的连击动作
 
@@ -28,6 +29,7 @@ namespace LZ
 
             // 若你的AI使用的是纯动画驱动的简单攻击（非装备/物品驱动），则使用此逻辑
             aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(attackAnimation, true);
+            aiCharacter.aiCharacterNetworkManager.isParryable.Value = isParryable;
         }
     }
 }

@@ -57,10 +57,36 @@ namespace LZ
             if (damageTarget.IsOwner)
             {
                 damageTarget.characterNetworkManager.NotifyTheServerOfCharacterDamageServerRpc(
-                    damageTarget.NetworkObjectId, undeadCharacter.NetworkObjectId, damageEffect.physicalDamage,
-                    damageEffect.magicDamage, damageEffect.fireDamage, damageEffect.holyDamage,
-                    damageEffect.poiseDamage, damageEffect.angleHitFrom, damageEffect.contactPoint.x,
-                    damageEffect.contactPoint.y, damageEffect.contactPoint.z);
+                    damageTarget.NetworkObjectId,
+                    undeadCharacter.NetworkObjectId,
+                    damageEffect.physicalDamage,
+                    damageEffect.magicDamage,
+                    damageEffect.fireDamage,
+                    damageEffect.holyDamage,
+                    damageEffect.poiseDamage,
+                    damageEffect.angleHitFrom,
+                    damageEffect.contactPoint.x,
+                    damageEffect.contactPoint.y,
+                    damageEffect.contactPoint.z);
+            }
+        }
+
+        protected override void CheckForParry(CharacterManager damageTarget)
+        {
+            if (charactersDamaged.Contains(damageTarget))
+                return;
+
+            if (!undeadCharacter.characterNetworkManager.isParryable.Value)
+                return;
+
+            if (!damageTarget.IsOwner)
+                return;
+
+            if (damageTarget.characterNetworkManager.isParrying.Value)
+            {
+                charactersDamaged.Add(damageTarget);
+                damageTarget.characterNetworkManager.NotifyServerOfParryServerRpc(undeadCharacter.NetworkObjectId);
+                damageTarget.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parry_Land_01", true);
             }
         }
     }

@@ -36,21 +36,43 @@ namespace LZ
 
             if (damageTarget != null)
             {
-                // 我们不想伤害自己
+                contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+
+                //  WE DO NOT WANT TO DAMAGE OURSELVES
                 if (damageTarget == characterCausingDamage)
                     return;
-                
-                contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-                
-                // 检查是否可以基于友军伤害对目标造成伤害
-                
-                // 检查目标是否在格挡
-                
-                // 检查目标是否无敌（已经在TakeDamageEffect中检查了）
-                //if (damageTarget.characterNetworkManager.isInvulnerable.Value)
-                //    return;
-                
-                DamageTarget(damageTarget);
+
+                //  CHECK IF WE CAN DAMAGE THIS TARGET BASED ON FRIENDLY FIRE
+                if (!WorldUtilityManager.Instance.CanIDamageThisTarget(characterCausingDamage.characterGroup, damageTarget.characterGroup))
+                    return;
+
+                //  CHECK IF TARGET IS PARRYING
+                CheckForParry(damageTarget);
+
+                //  CHECK IF TARGET IS BLOCKING
+                CheckForBlock(damageTarget);
+
+                if (!damageTarget.characterNetworkManager.isInvulnerable.Value)
+                    DamageTarget(damageTarget);
+            }
+        }
+
+        protected override void CheckForParry(CharacterManager damageTarget)
+        {
+            if (charactersDamaged.Contains(damageTarget))
+                return;
+
+            if (!characterCausingDamage.characterNetworkManager.isParryable.Value)
+                return;
+
+            if (!damageTarget.IsOwner)
+                return;
+
+            if (damageTarget.characterNetworkManager.isParrying.Value)
+            {
+                charactersDamaged.Add(damageTarget);
+                damageTarget.characterNetworkManager.NotifyServerOfParryServerRpc(characterCausingDamage.NetworkObjectId);
+                damageTarget.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parry_Land_01", true);
             }
         }
 
@@ -77,8 +99,7 @@ namespace LZ
             damageEffect.holyDamage = holyDamage;
             damageEffect.poiseDamage = poiseDamage;
             damageEffect.contactPoint = contactPoint;
-            damageEffect.angleHitFrom = Vector3.SignedAngle(characterCausingDamage.transform.forward,
-                damageTarget.transform.forward, Vector3.up);
+            damageEffect.angleHitFrom = Vector3.SignedAngle(characterCausingDamage.transform.forward, damageTarget.transform.forward, Vector3.up);
 
             switch (characterCausingDamage.characterCombatManager.currentAttackType)
             {
@@ -128,7 +149,6 @@ namespace LZ
             damage.physicalDamage *= modifier;
             damage.magicDamage *= modifier;
             damage.fireDamage *= modifier;
-            damage.lightningDamage *= modifier;
             damage.holyDamage *= modifier;
             damage.poiseDamage *= modifier;
             

@@ -46,12 +46,12 @@ namespace LZ
                 
                 // 检查目标是否在格挡
                 CheckForBlock(damageTarget);
-                
-                // 检查目标是否无敌（已经在TakeDamageEffect中检查了）
-                //if (damageTarget.characterNetworkManager.isInvulnerable.Value)
-                //    return;
-                
-                DamageTarget(damageTarget);
+
+                //  CHECK IF TARGET IS PARRYING
+                CheckForParry(damageTarget);
+
+                if (!damageTarget.characterNetworkManager.isInvulnerable.Value)
+                    DamageTarget(damageTarget);
             }
         }
         
@@ -83,6 +83,11 @@ namespace LZ
                 // 3. 对目标施加被格挡后的角色的伤害
                 damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);
             }
+        }
+
+        protected virtual void CheckForParry(CharacterManager damageTarget)
+        {
+
         }
 
         protected virtual void GetBlockingDotValues(CharacterManager damageTarget)
