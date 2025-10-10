@@ -26,10 +26,6 @@ namespace LZ
             {
                 // 执行动作
                 weaponAction.AttemptToPerformAction(player, weaponPerformingAction);
-            
-                // 通知服务器我们执行了动作，因此我们也从服务器端执行它
-                player.playerNetworkManager.NotifyTheServerOfWeaponActionServerRpc(
-                    NetworkManager.Singleton.LocalClientId, weaponAction.actionID, weaponPerformingAction.itemID);
             }
         }
 
@@ -267,12 +263,12 @@ namespace LZ
             player.playerInventoryManager.currentSpell.InstantiateWarmUpSpellFX(player);
         }
 
-        public void InstantiateSpellReleaseFX()
+        public void SuccessfullyCastSpell()
         {
             if (player.playerInventoryManager.currentSpell == null)
                 return;
 
-            player.playerInventoryManager.currentSpell.InstantiateReleaseFX(player);
+            player.playerInventoryManager.currentSpell.SuccessfullyCastSpell(player);
         }
 
         public WeaponItem SelectWeaponToPerformAshOfWar()

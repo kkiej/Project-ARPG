@@ -251,5 +251,11 @@ namespace LZ
         {
 
         }
+
+        //  USED TO DESTROY THINGS LIKE A "DRAWED ARROW" OR "SPELL WARM UP FX" WHEN THE CHARACTER IS POISE BROKEN
+        public void DestroyAllCurrentActionFX()
+        {
+            character.characterNetworkManager.DestroyAllCurrentActionFXServerRpc();
+        }
     }
 }

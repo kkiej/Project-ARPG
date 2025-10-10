@@ -116,7 +116,24 @@ namespace LZ
         {
             character.animator.SetBool("isBlocking", isBlocking.Value);
         }
-        
+
+        //  USED TO CANCEL FX WHEN POISE BROKEN
+        [ServerRpc]
+        public void DestroyAllCurrentActionFXServerRpc()
+        {
+            if (IsServer)
+            {
+                DestroyAllCurrentActionFXClientRpc();
+            }
+        }
+
+        [ClientRpc]
+        public void DestroyAllCurrentActionFXClientRpc()
+        {
+            if (character.characterEffectsManager.activeSpellWarmUpFX != null)
+                Destroy(character.characterEffectsManager.activeSpellWarmUpFX);
+        }
+
         // 服务器RPC是一个从客户端调用到服务器（在我们的情况下是主机）的函数
         [ServerRpc]
         public void NotifyTheServerOfActionAnimationServerRpc(ulong clientID, string animationID, bool applyRootMotion)
@@ -345,7 +362,8 @@ namespace LZ
             damageEffect.characterCausingDamage = characterCausingDamage;
 
             damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
-            damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
+            if (damagedCharacter.IsOwner)
+                damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
 
             // MOVE THE ENEMY TO THE PROPER RIPOSTE POSITION
             StartCoroutine(damagedCharacter.characterCombatManager.ForceMoveEnemyCharacterToRipsotePosition

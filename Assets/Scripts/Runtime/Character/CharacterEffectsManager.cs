@@ -12,7 +12,10 @@ namespace LZ
         
         // 处理静态特效（添加/移除Buff）
 
-        private CharacterManager character;
+        CharacterManager character;
+
+        [Header("Current Active FX")]
+        public GameObject activeSpellWarmUpFX;
 
         [Header("VFX")]
         [SerializeField] GameObject bloodSplatterVFX;

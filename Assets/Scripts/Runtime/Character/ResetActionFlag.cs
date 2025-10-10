@@ -23,6 +23,9 @@ namespace LZ
             character.characterCombatManager.DisableCanDoCombo();
             character.characterCombatManager.DisableCanDoRollingAttack();
             character.characterCombatManager.DisableCanDoBackstepAttack();
+            
+            if (character.characterEffectsManager.activeSpellWarmUpFX != null)
+                Destroy(character.characterEffectsManager.activeSpellWarmUpFX);
 
             if (character.IsOwner)
             {

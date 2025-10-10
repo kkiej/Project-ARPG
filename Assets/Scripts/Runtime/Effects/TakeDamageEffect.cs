@@ -202,6 +202,7 @@ namespace LZ
             {
                 // 若处于破防状态，则限制角色的移动和行动能力
                 character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, true);
+                character.characterCombatManager.DestroyAllCurrentActionFX();
             }
             else
             {
