@@ -209,7 +209,7 @@ namespace LZ
 
         public void OnHeadEquipmentChanged(int oldValue, int newValue)
         {
-            //  WE ALREADY RUN THE LOGIC ON THE OWNERS SIDE, SO THERES NO POINT IN RUNNING IT AGAIN
+            // 该逻辑已在拥有端执行，无需重复运行
             if (IsOwner)
                 return;
 
@@ -227,7 +227,7 @@ namespace LZ
 
         public void OnBodyEquipmentChanged(int oldValue, int newValue)
         {
-            //  WE ALREADY RUN THE LOGIC ON THE OWNERS SIDE, SO THERES NO POINT IN RUNNING IT AGAIN
+            // 该逻辑已在拥有端执行，无需重复运行
             if (IsOwner)
                 return;
 
@@ -245,7 +245,7 @@ namespace LZ
 
         public void OnLegEquipmentChanged(int oldValue, int newValue)
         {
-            //  WE ALREADY RUN THE LOGIC ON THE OWNERS SIDE, SO THERES NO POINT IN RUNNING IT AGAIN
+            // 该逻辑已在拥有端执行，无需重复运行
             if (IsOwner)
                 return;
 
@@ -263,7 +263,7 @@ namespace LZ
 
         public void OnHandEquipmentChanged(int oldValue, int newValue)
         {
-            //  WE ALREADY RUN THE LOGIC ON THE OWNERS SIDE, SO THERES NO POINT IN RUNNING IT AGAIN
+            // 该逻辑已在拥有端执行，无需重复运行
             if (IsOwner)
                 return;
 

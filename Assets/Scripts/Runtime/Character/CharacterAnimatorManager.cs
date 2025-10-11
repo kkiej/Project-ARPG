@@ -231,7 +231,7 @@ namespace LZ
             character.isPerformingAction = isPerformingAction;
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
-            
+            character.characterNetworkManager.isAttacking.Value = true;
             // 告诉服务器/主机我们播放了一个动画，并为在场的每个人播放这个动画
             character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId,
                 targetAnimation, applyRootMotion);

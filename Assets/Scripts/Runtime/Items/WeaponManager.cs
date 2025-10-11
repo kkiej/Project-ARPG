@@ -24,10 +24,10 @@ namespace LZ
 
             meleeDamageCollider.light_Attack_01_Modifier = weapon.light_Attack_01_Modifier;
             meleeDamageCollider.light_Attack_02_Modifier = weapon.light_Attack_02_Modifier;
-            
+            meleeDamageCollider.light_Jump_Attack_01_Modifier = weapon.light_Jumping_Attack_01_Modifier;
             meleeDamageCollider.heavy_Attack_01_Modifier = weapon.heavy_Attack_01_Modifier;
             meleeDamageCollider.heavy_Attack_02_Modifier = weapon.heavy_Attack_02_Modifier;
-            
+            meleeDamageCollider.heavy_Jump_Attack_01_Modifier = weapon.heavy_Jumping_Attack_01_Modifier;
             meleeDamageCollider.charge_Attack_01_Modifier = weapon.charge_Attack_01_Modifier;
             meleeDamageCollider.charge_Attack_02_Modifier = weapon.charge_Attack_02_Modifier;
             

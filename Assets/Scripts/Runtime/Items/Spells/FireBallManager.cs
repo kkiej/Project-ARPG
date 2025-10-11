@@ -36,13 +36,7 @@ namespace LZ
             base.Update();
 
             if (spellTarget != null)
-                transform.LookAt(spellTarget.transform);
-
-            if (fireBallRigidbody != null)
-            {
-                Vector3 currentVelocity = fireBallRigidbody.velocity;
-                fireBallRigidbody.velocity = transform.forward + currentVelocity;
-            }
+                transform.LookAt(spellTarget.characterCombatManager.lockOnTransform.position);
         }
 
         private void OnCollisionEnter(Collision collision)

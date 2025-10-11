@@ -10,8 +10,10 @@ namespace LZ
         [Header("Weapon Attack Modifiers")]
         public float light_Attack_01_Modifier;
         public float light_Attack_02_Modifier;
+        public float light_Jump_Attack_01_Modifier;
         public float heavy_Attack_01_Modifier;
         public float heavy_Attack_02_Modifier;
+        public float heavy_Jump_Attack_01_Modifier;
         public float charge_Attack_01_Modifier;
         public float charge_Attack_02_Modifier;
         public float running_Attack_01_Modifier;
@@ -109,11 +111,17 @@ namespace LZ
                 case AttackType.LightAttack02:
                     ApplyAttackDamageModifiers(light_Attack_02_Modifier, damageEffect);
                     break;
+                case AttackType.LightJumpingAttack01:
+                    ApplyAttackDamageModifiers(light_Jump_Attack_01_Modifier, damageEffect);
+                    break;
                 case AttackType.HeavyAttack01:
                     ApplyAttackDamageModifiers(heavy_Attack_01_Modifier, damageEffect);
                     break;
                 case AttackType.HeavyAttack02:
                     ApplyAttackDamageModifiers(heavy_Attack_02_Modifier, damageEffect);
+                    break;
+                case AttackType.HeavyJumpingAttack01:
+                    ApplyAttackDamageModifiers(heavy_Jump_Attack_01_Modifier, damageEffect);
                     break;
                 case AttackType.ChargedAttack01:
                     ApplyAttackDamageModifiers(charge_Attack_01_Modifier, damageEffect);
@@ -137,10 +145,17 @@ namespace LZ
             if (characterCausingDamage.IsOwner)
             {
                 damageTarget.characterNetworkManager.NotifyTheServerOfCharacterDamageServerRpc(
-                    damageTarget.NetworkObjectId, characterCausingDamage.NetworkObjectId, damageEffect.physicalDamage,
-                    damageEffect.magicDamage, damageEffect.fireDamage, damageEffect.holyDamage,
-                    damageEffect.poiseDamage, damageEffect.angleHitFrom, damageEffect.contactPoint.x,
-                    damageEffect.contactPoint.y, damageEffect.contactPoint.z);
+                    damageTarget.NetworkObjectId,
+                    characterCausingDamage.NetworkObjectId,
+                    damageEffect.physicalDamage,
+                    damageEffect.magicDamage,
+                    damageEffect.fireDamage,
+                    damageEffect.holyDamage,
+                    damageEffect.poiseDamage,
+                    damageEffect.angleHitFrom,
+                    damageEffect.contactPoint.x,
+                    damageEffect.contactPoint.y,
+                    damageEffect.contactPoint.z);
             }
         }
 
