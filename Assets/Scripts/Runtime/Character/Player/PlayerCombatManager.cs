@@ -5,8 +5,8 @@ namespace LZ
 {
     public class PlayerCombatManager : CharacterCombatManager
     {
-        private PlayerManager player;
-        
+        PlayerManager player;
+
         public WeaponItem currentWeaponBeingUsed;
 
         [Header("Flags")]
@@ -269,6 +269,22 @@ namespace LZ
                 return;
 
             player.playerInventoryManager.currentSpell.SuccessfullyCastSpell(player);
+        }
+
+        public void SuccessfullyChargeSpell()
+        {
+            if (player.playerInventoryManager.currentSpell == null)
+                return;
+
+            player.playerInventoryManager.currentSpell.SuccessfullyChargeSpell(player);
+        }
+
+        public void SuccessfullyCastSpellFullCharge()
+        {
+            if (player.playerInventoryManager.currentSpell == null)
+                return;
+
+            player.playerInventoryManager.currentSpell.SuccessfullyCastSpellFullCharge(player);
         }
 
         public WeaponItem SelectWeaponToPerformAshOfWar()

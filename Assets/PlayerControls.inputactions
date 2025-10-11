@@ -105,6 +105,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "HoldRB",
+                    "type": "Button",
+                    "id": "1975ac4c-660b-4ca6-9645-eafa02cb882d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "X",
                     "type": "Button",
                     "id": "dfcab22a-2821-407f-9592-bbedb1b45982",
@@ -126,6 +135,15 @@
                     "name": "LB",
                     "type": "Button",
                     "id": "97123929-4bd3-4942-8262-d3c8db5f8ce1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "HoldLB",
+                    "type": "Button",
+                    "id": "eb387b1e-cc8c-4858-9be9-943880443365",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -314,6 +332,17 @@
                 },
                 {
                     "name": "",
+                    "id": "ce8f3e82-b951-46d7-af5e-f7be9779a7cc",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HoldRB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "cffc9247-c2e0-413c-8710-b93b61f4c792",
                     "path": "<Gamepad>/buttonWest",
                     "interactions": "",
@@ -353,6 +382,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "13670e9d-8e23-4038-bb02-cbff95d55725",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HoldLB",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -7,8 +7,8 @@ namespace LZ
     public class DamageCollider : MonoBehaviour
     {
         [Header("Collider")]
-        [SerializeField] protected Collider damageCollider;
-        
+        public Collider damageCollider;
+
         [Header("Damage")]
         public float physicalDamage = 0; // （未来会被分为“标准”，“打击”，“挥砍”和“穿刺”）
         public float magicDamage = 0;

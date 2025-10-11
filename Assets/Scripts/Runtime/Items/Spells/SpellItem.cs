@@ -15,7 +15,9 @@ namespace LZ
 
         [Header("Spell FX")]
         [SerializeField] protected GameObject spellCastWarmUpFX;
+        [SerializeField] protected GameObject spellChargeFX;
         [SerializeField] protected GameObject spellCastReleaseFX;
+        [SerializeField] protected GameObject spellCastReleaseFXFullCharge;
         //  FULL CHARGE VERSION OF FX (TO DO)
 
         [Header("Animations")]
@@ -40,6 +42,16 @@ namespace LZ
 
         //  THIS IS WHERE SPELL PROJECTS/FX ARE ACTIVATED
         public virtual void SuccessfullyCastSpell(PlayerManager player)
+        {
+
+        }
+
+        public virtual void SuccessfullyChargeSpell(PlayerManager player)
+        {
+
+        }
+
+        public virtual void SuccessfullyCastSpellFullCharge(PlayerManager player)
         {
 
         }

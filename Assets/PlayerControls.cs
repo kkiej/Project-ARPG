@@ -127,6 +127,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""HoldRB"",
+                    ""type"": ""Button"",
+                    ""id"": ""1975ac4c-660b-4ca6-9645-eafa02cb882d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""X"",
                     ""type"": ""Button"",
                     ""id"": ""dfcab22a-2821-407f-9592-bbedb1b45982"",
@@ -148,6 +157,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": ""LB"",
                     ""type"": ""Button"",
                     ""id"": ""97123929-4bd3-4942-8262-d3c8db5f8ce1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HoldLB"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb387b1e-cc8c-4858-9be9-943880443365"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -336,6 +354,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""ce8f3e82-b951-46d7-af5e-f7be9779a7cc"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HoldRB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""cffc9247-c2e0-413c-8710-b93b61f4c792"",
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
@@ -375,6 +404,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""LB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13670e9d-8e23-4038-bb02-cbff95d55725"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HoldLB"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -634,9 +674,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
         m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
         m_PlayerActions_RB = m_PlayerActions.FindAction("RB", throwIfNotFound: true);
+        m_PlayerActions_HoldRB = m_PlayerActions.FindAction("HoldRB", throwIfNotFound: true);
         m_PlayerActions_X = m_PlayerActions.FindAction("X", throwIfNotFound: true);
         m_PlayerActions_OpenCharacterMenu = m_PlayerActions.FindAction("OpenCharacterMenu", throwIfNotFound: true);
         m_PlayerActions_LB = m_PlayerActions.FindAction("LB", throwIfNotFound: true);
+        m_PlayerActions_HoldLB = m_PlayerActions.FindAction("HoldLB", throwIfNotFound: true);
         m_PlayerActions_Interact = m_PlayerActions.FindAction("Interact", throwIfNotFound: true);
         m_PlayerActions_TwoHandWeapon = m_PlayerActions.FindAction("Two Hand Weapon", throwIfNotFound: true);
         m_PlayerActions_TwoHandRightWeapon = m_PlayerActions.FindAction("Two Hand Right Weapon", throwIfNotFound: true);
@@ -776,9 +818,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Dodge;
     private readonly InputAction m_PlayerActions_Jump;
     private readonly InputAction m_PlayerActions_RB;
+    private readonly InputAction m_PlayerActions_HoldRB;
     private readonly InputAction m_PlayerActions_X;
     private readonly InputAction m_PlayerActions_OpenCharacterMenu;
     private readonly InputAction m_PlayerActions_LB;
+    private readonly InputAction m_PlayerActions_HoldLB;
     private readonly InputAction m_PlayerActions_Interact;
     private readonly InputAction m_PlayerActions_TwoHandWeapon;
     private readonly InputAction m_PlayerActions_TwoHandRightWeapon;
@@ -801,9 +845,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Dodge => m_Wrapper.m_PlayerActions_Dodge;
         public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
         public InputAction @RB => m_Wrapper.m_PlayerActions_RB;
+        public InputAction @HoldRB => m_Wrapper.m_PlayerActions_HoldRB;
         public InputAction @X => m_Wrapper.m_PlayerActions_X;
         public InputAction @OpenCharacterMenu => m_Wrapper.m_PlayerActions_OpenCharacterMenu;
         public InputAction @LB => m_Wrapper.m_PlayerActions_LB;
+        public InputAction @HoldLB => m_Wrapper.m_PlayerActions_HoldLB;
         public InputAction @Interact => m_Wrapper.m_PlayerActions_Interact;
         public InputAction @TwoHandWeapon => m_Wrapper.m_PlayerActions_TwoHandWeapon;
         public InputAction @TwoHandRightWeapon => m_Wrapper.m_PlayerActions_TwoHandRightWeapon;
@@ -837,6 +883,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @RB.started += instance.OnRB;
             @RB.performed += instance.OnRB;
             @RB.canceled += instance.OnRB;
+            @HoldRB.started += instance.OnHoldRB;
+            @HoldRB.performed += instance.OnHoldRB;
+            @HoldRB.canceled += instance.OnHoldRB;
             @X.started += instance.OnX;
             @X.performed += instance.OnX;
             @X.canceled += instance.OnX;
@@ -846,6 +895,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @LB.started += instance.OnLB;
             @LB.performed += instance.OnLB;
             @LB.canceled += instance.OnLB;
+            @HoldLB.started += instance.OnHoldLB;
+            @HoldLB.performed += instance.OnHoldLB;
+            @HoldLB.canceled += instance.OnHoldLB;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
@@ -904,6 +956,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @RB.started -= instance.OnRB;
             @RB.performed -= instance.OnRB;
             @RB.canceled -= instance.OnRB;
+            @HoldRB.started -= instance.OnHoldRB;
+            @HoldRB.performed -= instance.OnHoldRB;
+            @HoldRB.canceled -= instance.OnHoldRB;
             @X.started -= instance.OnX;
             @X.performed -= instance.OnX;
             @X.canceled -= instance.OnX;
@@ -913,6 +968,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @LB.started -= instance.OnLB;
             @LB.performed -= instance.OnLB;
             @LB.canceled -= instance.OnLB;
+            @HoldLB.started -= instance.OnHoldLB;
+            @HoldLB.performed -= instance.OnHoldLB;
+            @HoldLB.canceled -= instance.OnHoldLB;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
@@ -1076,9 +1134,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnDodge(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnRB(InputAction.CallbackContext context);
+        void OnHoldRB(InputAction.CallbackContext context);
         void OnX(InputAction.CallbackContext context);
         void OnOpenCharacterMenu(InputAction.CallbackContext context);
         void OnLB(InputAction.CallbackContext context);
+        void OnHoldLB(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnTwoHandWeapon(InputAction.CallbackContext context);
         void OnTwoHandRightWeapon(InputAction.CallbackContext context);

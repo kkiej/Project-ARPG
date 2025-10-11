@@ -41,7 +41,9 @@ namespace LZ
         
         [Header("Bumper Inputs")]
         [SerializeField] bool RB_Input = false;
+        [SerializeField] bool hold_RB_Input = false;
         [SerializeField] bool LB_Input = false;
+        [SerializeField] bool hold_LB_Input = false;
 
         [Header("Trigger Inputs")]
         [SerializeField] private bool RT_Input;
@@ -131,10 +133,15 @@ namespace LZ
                 
                 // Bumpers
                 playerControls.PlayerActions.RB.performed += i => RB_Input = true;
-				playerControls.PlayerActions.LB.performed += i => LB_Input = true;
+                playerControls.PlayerActions.HoldRB.performed += i => hold_RB_Input = true;
+                playerControls.PlayerActions.HoldRB.canceled += i => hold_RB_Input = false;
+
+                playerControls.PlayerActions.LB.performed += i => LB_Input = true;
                 playerControls.PlayerActions.LB.canceled += i => player.playerNetworkManager.isBlocking.Value = false;
-                
-                // Triggers
+                playerControls.PlayerActions.HoldLB.performed += i => hold_LB_Input = true;
+                playerControls.PlayerActions.HoldLB.canceled += i => hold_LB_Input = false;
+
+                //  TRIGGERS
                 playerControls.PlayerActions.RT.performed += i => RT_Input = true;
                 playerControls.PlayerActions.HoldRT.performed += i => Hold_RT_Input = true;
                 playerControls.PlayerActions.HoldRT.canceled += i => Hold_RT_Input = false;
@@ -208,7 +215,9 @@ namespace LZ
             HandleSprintInput();
             HandleJumpInput();
             HandleRBInput();
+            HandleHoldRBInput();
             HandleLBInput();
+            HandleHoldLBInput();
             HandleRTInput();
             HandleChargeRTInput();
             HandleLTInput();
@@ -463,8 +472,20 @@ namespace LZ
                 player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action, player.playerInventoryManager.currentRightHandWeapon);
             }
         }
-		
-		private void HandleLBInput()
+
+        private void HandleHoldRBInput()
+        {
+            if (hold_RB_Input)
+            {
+                player.playerNetworkManager.isChargingRightSpell.Value = true;
+            }
+            else
+            {
+                player.playerNetworkManager.isChargingRightSpell.Value = false;
+            }
+        }
+
+        private void HandleLBInput()
         {
             if (two_Hand_Input)
                 return;
@@ -480,6 +501,18 @@ namespace LZ
                 //  TODO: IF WE ARE TWO HANDING THE WEAPON, USE THE TWO HANDED ACTION
 
                 player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentLeftHandWeapon.oh_LB_Action, player.playerInventoryManager.currentLeftHandWeapon);
+            }
+        }
+
+        private void HandleHoldLBInput()
+        {
+            if (hold_LB_Input)
+            {
+                player.playerNetworkManager.isChargingLeftSpell.Value = true;
+            }
+            else
+            {
+                player.playerNetworkManager.isChargingLeftSpell.Value = false;
             }
         }
 
