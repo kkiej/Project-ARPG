@@ -28,11 +28,13 @@ namespace LZ
         [Header("Resources")]
         public int currentHealth;
         public float currentStamina;
-        
+        public int currentFocusPoints;
+
         [Header("Stats")]
         public int vitality;
         public int endurance;
-        
+        public int mind;
+
         [Header("Sites Of Grace")]
         public SerializableDictionary<int, bool> sitesOfGrace;      //  THE INT IS THE SITE OF GRACE I.D, THE BOOL IS THE "ACTIVATED" STATUS
         
@@ -58,6 +60,9 @@ namespace LZ
         public int leftWeapon01;
         public int leftWeapon02;
         public int leftWeapon03;
+
+        //  THIS WILL CHANGE A LITTLE WHEN WE ADD MULTIPLE SPELL SLOTS, IT WILL BE SOMEWHAT SIMILAR TO HOW WEAPONS ARE SAVED
+        public int currentSpell;
 
 
         public CharacterSaveData()

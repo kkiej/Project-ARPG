@@ -85,10 +85,12 @@ namespace LZ
                 // 当与生命值或体力相关的属性发生变化时，更新其总量
                 playerNetworkManager.vitality.OnValueChanged += playerNetworkManager.SetNewMaxHealthValue;
                 playerNetworkManager.endurance.OnValueChanged += playerNetworkManager.SetNewMaxStaminaValue;
+                playerNetworkManager.mind.OnValueChanged += playerNetworkManager.SetNewMaxFocusPointsValue;
 
                 // 当一个状态（生命或体力）改变时更新UI状态条
                 playerNetworkManager.currentHealth.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewHealthValue;
                 playerNetworkManager.currentStamina.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
+                playerNetworkManager.currentFocusPoints.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewFocusPointValue;
                 playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegenTimer;
             }
             
@@ -149,10 +151,12 @@ namespace LZ
                 // 当与生命值或体力相关的属性发生变化时，更新其总量
                 playerNetworkManager.vitality.OnValueChanged -= playerNetworkManager.SetNewMaxHealthValue;
                 playerNetworkManager.endurance.OnValueChanged -= playerNetworkManager.SetNewMaxStaminaValue;
+                playerNetworkManager.mind.OnValueChanged -= playerNetworkManager.SetNewMaxFocusPointsValue;
 
                 // 当一个状态（生命或体力）改变时更新UI状态条
                 playerNetworkManager.currentHealth.OnValueChanged -= PlayerUIManager.instance.playerUIHudManager.SetNewHealthValue;
                 playerNetworkManager.currentStamina.OnValueChanged -= PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
+                playerNetworkManager.currentFocusPoints.OnValueChanged -= PlayerUIManager.instance.playerUIHudManager.SetNewFocusPointValue;
                 playerNetworkManager.currentStamina.OnValueChanged -= playerStatsManager.ResetStaminaRegenTimer;
             }
             
@@ -251,8 +255,11 @@ namespace LZ
 
             currentCharacterData.currentHealth = playerNetworkManager.currentHealth.Value;
             currentCharacterData.currentStamina = playerNetworkManager.currentStamina.Value;
+            currentCharacterData.currentFocusPoints = playerNetworkManager.currentFocusPoints.Value;
+
             currentCharacterData.vitality = playerNetworkManager.vitality.Value;
             currentCharacterData.endurance = playerNetworkManager.endurance.Value;
+            currentCharacterData.mind = playerNetworkManager.mind.Value;
 
             //  EQUIPMENT
             currentCharacterData.headEquipment = playerNetworkManager.headEquipmentID.Value;
@@ -269,6 +276,9 @@ namespace LZ
             currentCharacterData.leftWeapon01 = playerInventoryManager.weaponsInLeftHandSlots[0].itemID; //   THIS SHOULD NEVER BE NULL (it should always default to unarmed)
             currentCharacterData.leftWeapon02 = playerInventoryManager.weaponsInLeftHandSlots[1].itemID; //   THIS SHOULD NEVER BE NULL (it should always default to unarmed)
             currentCharacterData.leftWeapon03 = playerInventoryManager.weaponsInLeftHandSlots[2].itemID; //   THIS SHOULD NEVER BE NULL (it should always default to unarmed)
+
+            if (playerInventoryManager.currentSpell != null)
+                currentCharacterData.currentSpell = playerInventoryManager.currentSpell.itemID;
         }
 
         public void LoadGameDataFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
@@ -281,14 +291,15 @@ namespace LZ
 
             playerNetworkManager.vitality.Value = currentCharacterData.vitality;
             playerNetworkManager.endurance.Value = currentCharacterData.endurance;
+            playerNetworkManager.mind.Value = currentCharacterData.mind;
 
             // 当添加了保存和加载功能后，这将会被移走
             playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
             playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
+            playerNetworkManager.maxFocusPoints.Value = playerStatsManager.CalculateFocusPointsBasedOnMindLevel(playerNetworkManager.mind.Value);
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
-            //PlayerUIManager.instance.playerUIHudManager.SetMaxHealthValue(playerNetworkManager.maxHealth.Value);
-            PlayerUIManager.instance.playerUIHudManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+            playerNetworkManager.currentFocusPoints.Value = currentCharacterData.currentFocusPoints;
 
             //  EQUIPMENT
             if (WorldItemDatabase.Instance.GetHeadEquipmentByID(currentCharacterData.headEquipment))
@@ -389,6 +400,16 @@ namespace LZ
             else
             {
                 playerInventoryManager.weaponsInLeftHandSlots[2] = null;
+            }
+
+            if (WorldItemDatabase.Instance.GetSpellByID(currentCharacterData.currentSpell))
+            {
+                SpellItem currentSpell = Instantiate(WorldItemDatabase.Instance.GetSpellByID(currentCharacterData.currentSpell));
+                playerNetworkManager.currentSpellID.Value = currentSpell.itemID;
+            }
+            else
+            {
+                playerNetworkManager.currentSpellID.Value = -1; // -1 SETS SPELL TO NULL AS ITS NOT A VALID ID
             }
 
             playerEquipmentManager.EquipArmor();

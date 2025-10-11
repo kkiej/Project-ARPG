@@ -22,6 +22,7 @@ namespace LZ
             //  UNTIL THEN HOWEVER, STATS ARE NEVER CALCULATED, SO WE DO IT HERE ON START, IF A SAVE FILE EXISTS THEY WILL BE OVER WRITTEN WHEN LOADING INTO A SCENE
             CalculateHealthBasedOnVitalityLevel(player.playerNetworkManager.vitality.Value);
             CalculateStaminaBasedOnEnduranceLevel(player.playerNetworkManager.endurance.Value);
+            CalculateFocusPointsBasedOnMindLevel(player.playerNetworkManager.mind.Value);
         }
 
         public void CalculateTotalArmorAbsorption()

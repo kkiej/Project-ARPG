@@ -8,12 +8,14 @@ namespace LZ
         [SerializeField] CanvasGroup[] canvasGroup;
 
         [Header("Stat Bars")]
-        [SerializeField] private UI_StatBar healthBar;
-        [SerializeField] private UI_StatBar staminaBar;
+        [SerializeField] UI_StatBar healthBar;
+        [SerializeField] UI_StatBar staminaBar;
+        [SerializeField] UI_StatBar focusPointBar;
 
         [Header("Quick Slots")]
-        [SerializeField] private Image rightWeaponQuickSlotIcon;
-        [SerializeField] private Image leftWeaponQuickSlotIcon;
+        [SerializeField] Image rightWeaponQuickSlotIcon;
+        [SerializeField] Image leftWeaponQuickSlotIcon;
+        [SerializeField] Image spellItemQuickSlotIcon;
 
         [Header("Boss Health Bar")]
         public Transform bossHealthBarParent;
@@ -45,7 +47,10 @@ namespace LZ
             healthBar.gameObject.SetActive(true);
             staminaBar.gameObject.SetActive(false);
             staminaBar.gameObject.SetActive(true);
+            focusPointBar.gameObject.SetActive(false);
+            focusPointBar.gameObject.SetActive(true);
         }
+
         public void SetNewHealthValue(int oldValue, int newValue)
         {
             healthBar.SetStat(newValue);
@@ -64,6 +69,17 @@ namespace LZ
         public void SetMaxStaminaValue(int maxStamina)
         {
             staminaBar.SetMaxStat(maxStamina);
+        }
+
+
+        public void SetNewFocusPointValue(int oldValue, int newValue)
+        {
+            focusPointBar.SetStat(Mathf.RoundToInt(newValue));
+        }
+
+        public void SetMaxFocusPointValue(int maxFocusPoints)
+        {
+            focusPointBar.SetMaxStat(maxFocusPoints);
         }
 
         public void SetRightWeaponQuickSlotIcon(int weaponID)
@@ -93,7 +109,7 @@ namespace LZ
 
             if (weapon.itemIcon == null)
             {
-                Debug.Log("Item has no icon");
+                Debug.Log("ITEM HAS NO ICON");
                 rightWeaponQuickSlotIcon.enabled = false;
                 rightWeaponQuickSlotIcon.sprite = null;
                 return;
@@ -132,7 +148,7 @@ namespace LZ
 
             if (weapon.itemIcon == null)
             {
-                Debug.Log("Item has no icon");
+                Debug.Log("ITEM HAS NO ICON");
                 leftWeaponQuickSlotIcon.enabled = false;
                 leftWeaponQuickSlotIcon.sprite = null;
                 return;
@@ -142,6 +158,32 @@ namespace LZ
 
             leftWeaponQuickSlotIcon.sprite = weapon.itemIcon;
             leftWeaponQuickSlotIcon.enabled = true;
+        }
+
+        public void SetSpellItemQuickSlotIcon(int spellID)
+        {
+            SpellItem spell = WorldItemDatabase.Instance.GetSpellByID(spellID);
+
+            if (spell == null)
+            {
+                Debug.Log("ITEM IS NULL");
+                spellItemQuickSlotIcon.enabled = false;
+                spellItemQuickSlotIcon.sprite = null;
+                return;
+            }
+
+            if (spell.itemIcon == null)
+            {
+                Debug.Log("ITEM HAS NO ICON");
+                spellItemQuickSlotIcon.enabled = false;
+                spellItemQuickSlotIcon.sprite = null;
+                return;
+            }
+
+            //  THIS IS WHERE YOU WOULD CHECK TO SEE IF YOU MEET THE ITEMS REQUIREMENTS IF YOU WANT TO CREATE THE WARNING FOR NOT BEING ABLE TO WIELD IT IN THE UI
+
+            spellItemQuickSlotIcon.sprite = spell.itemIcon;
+            spellItemQuickSlotIcon.enabled = true;
         }
     }
 }

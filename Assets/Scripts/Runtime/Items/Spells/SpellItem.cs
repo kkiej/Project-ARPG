@@ -10,8 +10,12 @@ namespace LZ
         public SpellClass SpellClass;
 
         [Header("Spell Modifiers")]
-        //public float fullChargeEffectMultiplier = 2;
+        public float fullChargeEffectMultiplier = 2;
+
+        [Header("Spell Costs")]
         public int spellSlotsUsed = 1;
+        public int staminaCost = 25;
+        public int focusPointCost = 25;
 
         [Header("Spell FX")]
         [SerializeField] protected GameObject spellCastWarmUpFX;
@@ -43,7 +47,11 @@ namespace LZ
         //  THIS IS WHERE SPELL PROJECTS/FX ARE ACTIVATED
         public virtual void SuccessfullyCastSpell(PlayerManager player)
         {
-
+            if (player.IsOwner)
+            {
+                player.playerNetworkManager.currentFocusPoints.Value -= focusPointCost;
+                player.playerNetworkManager.currentStamina.Value -= staminaCost;
+            }
         }
 
         public virtual void SuccessfullyChargeSpell(PlayerManager player)
@@ -53,12 +61,28 @@ namespace LZ
 
         public virtual void SuccessfullyCastSpellFullCharge(PlayerManager player)
         {
-
+            if (player.IsOwner)
+            {
+                player.playerNetworkManager.currentFocusPoints.Value -= Mathf.RoundToInt(focusPointCost * fullChargeEffectMultiplier);
+                player.playerNetworkManager.currentStamina.Value -= staminaCost * fullChargeEffectMultiplier; ;
+            }
         }
 
         //  HELPER FUNCTION TO CHECK WEATHER OR NOT WE ARE ABLE TO USE THE SPELL WHEN ATTEMPTING TO CAST
         public virtual bool CanICastThisSpell(PlayerManager player)
         {
+            if (player.playerNetworkManager.currentFocusPoints.Value <= focusPointCost)
+                return false;
+
+            if (player.playerNetworkManager.currentStamina.Value <= staminaCost)
+                return false;
+
+            if (player.isPerformingAction)
+                return false;
+
+            if (player.playerNetworkManager.isJumping.Value)
+                return false;
+
             return true;
         }
     }

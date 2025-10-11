@@ -258,9 +258,11 @@ namespace LZ
 
         private void NewGame()
         {
-            player.playerNetworkManager.vitality.Value = 10;
+            //  SAVES THE NEWLY CREATED CHARACTERS STATS, AND ITEMS (WHEN CREATION SCREEN IS ADDED)
+            player.playerNetworkManager.vitality.Value = 15;
             player.playerNetworkManager.endurance.Value = 10;
-            
+            player.playerNetworkManager.mind.Value = 10;
+
             SaveGame();
             LoadWorldScene(worldSceneIndex);
         }

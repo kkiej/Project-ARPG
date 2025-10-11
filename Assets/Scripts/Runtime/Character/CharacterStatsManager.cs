@@ -76,7 +76,18 @@ namespace LZ
 
             return Mathf.RoundToInt(stamina);
         }
-        
+
+        public int CalculateFocusPointsBasedOnMindLevel(int mind)
+        {
+            int focusPoints = 0;
+
+            //  CREATE AN EQUATION FOR HOW YOU WANT YOUR STAMINA TO BE CALCULATED
+
+            focusPoints = mind * 10;
+
+            return Mathf.RoundToInt(focusPoints);
+        }
+
         public virtual void RegenerateStamina()
         {
             // 只有自己可以编辑他们的网络变量

@@ -70,6 +70,13 @@ namespace LZ
             currentStamina.Value = maxStamina.Value;
         }
 
+        public void SetNewMaxFocusPointsValue(int oldMind, int newMind)
+        {
+            maxFocusPoints.Value = player.playerStatsManager.CalculateFocusPointsBasedOnMindLevel(newMind);
+            PlayerUIManager.instance.playerUIHudManager.SetMaxFocusPointValue(maxFocusPoints.Value);
+            currentFocusPoints.Value = maxFocusPoints.Value;
+        }
+
         public void OnCurrentRightHandWeaponIDChange(int oldID, int newID)
         {
             WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
@@ -109,10 +116,18 @@ namespace LZ
 
         public void OnCurrentSpellIDChange(int oldID, int newID)
         {
-            SpellItem newSpell = Instantiate(WorldItemDatabase.Instance.GetSpellByID(newID));
+            SpellItem newSpell = null;
+
+            if (WorldItemDatabase.Instance.GetSpellByID(newID))
+                newSpell = Instantiate(WorldItemDatabase.Instance.GetSpellByID(newID));
 
             if (newSpell != null)
+            {
                 player.playerInventoryManager.currentSpell = newSpell;
+
+                if (player.IsOwner)
+                    PlayerUIManager.instance.playerUIHudManager.SetSpellItemQuickSlotIcon(newID);
+            }
         }
 
         public void OnIsChargingRightSpellChanged(bool oldStatus, bool newStatus)
