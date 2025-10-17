@@ -128,7 +128,7 @@ namespace LZ
 
         private void HandleFreeFallMovement()
         {
-            if (!player.playerLocomotionManager.isGrounded)
+            if (!player.characterLocomotionManager.isGrounded)
             {
                 Vector3 freeFallDirection;
 
@@ -144,8 +144,8 @@ namespace LZ
         {
             if (player.isDead.Value)
                 return;
-            
-            if (!player.playerLocomotionManager.canRotate)
+
+            if (!player.characterLocomotionManager.canRotate)
                 return;
 
             if (player.playerNetworkManager.isLockedOn.Value)
@@ -185,9 +185,8 @@ namespace LZ
             else
             {
                 targetRotationDirection = Vector3.zero;
-                var cameraTransform = PlayerCamera.instance.cameraObject.transform;
-                targetRotationDirection = cameraTransform.forward * verticalMovement;
-                targetRotationDirection += cameraTransform.right * horizontalMovement;
+                targetRotationDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                targetRotationDirection = targetRotationDirection + PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
                 targetRotationDirection.Normalize();
                 targetRotationDirection.y = 0;
 
@@ -197,8 +196,7 @@ namespace LZ
                 }
 
                 Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
-                Quaternion targetRotation =
-                    Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
+                Quaternion targetRotation = Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
                 transform.rotation = targetRotation;
             }
         }
@@ -242,10 +240,10 @@ namespace LZ
                 return;
             
             // 如果我们在运动中尝试躲避，我们将播放翻滚动画
-            if (moveAmount > 0)
+            if (PlayerInputManager.instance.moveAmount > 0)
             {
-                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
-                rollDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * PlayerInputManager.instance.verticalInput;
+                rollDirection += PlayerCamera.instance.cameraObject.transform.right * PlayerInputManager.instance.horizontalInput;
                 rollDirection.y = 0;
                 rollDirection.Normalize();
             
@@ -262,6 +260,7 @@ namespace LZ
             }
 
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
+            player.playerNetworkManager.DestroyAllCurrentActionFXServerRpc();
         }
         
         public void AttemptToPerformJump()
@@ -279,7 +278,7 @@ namespace LZ
                 return;
 
             // 如果我们不在地面上，不允许跳跃
-            if (!player.playerLocomotionManager.isGrounded)
+            if (!player.characterLocomotionManager.isGrounded)
                 return;
             
             // To Do : 如果双持武器，播放双持条约动画，否则播放单手动画

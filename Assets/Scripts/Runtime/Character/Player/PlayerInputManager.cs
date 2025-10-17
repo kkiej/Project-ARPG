@@ -395,8 +395,24 @@ namespace LZ
             {
                 player.playerNetworkManager.isMoving.Value = false;
             }
-            
-            // 如果我们没有锁定目标，只使用moveAmount
+
+            if (!player.playerLocomotionManager.canRun)
+            {
+                if (moveAmount > 0.5f)
+                    moveAmount = 0.5f;
+
+                if (verticalInput > 0.5f)
+                    verticalInput = 0.5f;
+
+                if (horizontalInput > 0.5f)
+                    horizontalInput = 0.5f;
+                Debug.Log("canRun: false" + "   moveAmount: " + moveAmount);
+            }
+            else
+            {
+                Debug.Log("canRun: true" + "   moveAmount: " + moveAmount);
+            }
+
             if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
             {
                 player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
@@ -478,10 +494,12 @@ namespace LZ
             if (hold_RB_Input)
             {
                 player.playerNetworkManager.isChargingRightSpell.Value = true;
+                player.playerNetworkManager.isHoldingArrow.Value = true;
             }
             else
             {
                 player.playerNetworkManager.isChargingRightSpell.Value = false;
+                player.playerNetworkManager.isHoldingArrow.Value = false;
             }
         }
 

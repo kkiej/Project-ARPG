@@ -20,6 +20,8 @@ namespace LZ
         public AudioClip rollSFX;
         public AudioClip stanceBreakSFX;
         public AudioClip criticalStrikeSFX;
+        public AudioClip[] releaseArrowSFX;
+        public AudioClip[] notchArrowSFX;
 
         private void Awake()
         {

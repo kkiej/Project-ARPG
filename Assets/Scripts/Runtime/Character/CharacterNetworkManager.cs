@@ -131,7 +131,7 @@ namespace LZ
         }
 
         [ClientRpc]
-        public void DestroyAllCurrentActionFXClientRpc()
+        public virtual void DestroyAllCurrentActionFXClientRpc()
         {
             if (character.characterEffectsManager.activeSpellWarmUpFX != null)
                 Destroy(character.characterEffectsManager.activeSpellWarmUpFX);

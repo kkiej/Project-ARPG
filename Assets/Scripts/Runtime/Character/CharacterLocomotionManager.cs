@@ -21,6 +21,7 @@ namespace LZ
         public bool isRolling = false;
         public bool canRotate = true;
         public bool canMove = true;
+        public bool canRun = true;
         public bool isGrounded = true;
         
         protected virtual void Awake()
@@ -65,9 +66,10 @@ namespace LZ
             isGrounded = Physics.CheckSphere(character.transform.position, groundCheckSphereRadius, groundLayer);
         }
 
+        //  DRAWS OUR GROUND CHECK SPHERE IN SCENE VIEW
         protected void OnDrawGizmosSelected()
         {
-            Gizmos.DrawSphere(transform.position, groundCheckSphereRadius);
+            //Gizmos.DrawSphere(character.transform.position, groundCheckSphereRadius);
         }
 
         public void EnableCanRotate()

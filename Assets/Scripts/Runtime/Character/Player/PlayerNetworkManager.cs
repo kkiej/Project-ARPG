@@ -40,7 +40,8 @@ namespace LZ
         [Header("Projectiles")]
         public NetworkVariable<int> mainProjectileID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> secondaryProjectileID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        public NetworkVariable<bool> hasArrowNotched = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> hasArrowNotched = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);        //  THIS LETS US KNOW IF WE ALREADY HAVE A PROJECTILE LOADED
+        public NetworkVariable<bool> isHoldingArrow = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);        //  THIS LETS US KNOW IF WE ARE HOLDING THAT PROJECTILE SO IT DOES NOT RELEASE
 
         protected override void Awake()
         {
@@ -157,6 +158,11 @@ namespace LZ
 
             if (newProjectile != null)
                 player.playerInventoryManager.secondaryProjectile = newProjectile;
+        }
+
+        public void OnIsHoldingArrowChanged(bool oldStatus, bool newStatus)
+        {
+            player.animator.SetBool("isHoldingArrow", isHoldingArrow.Value);
         }
 
         public void OnIsChargingRightSpellChanged(bool oldStatus, bool newStatus)
@@ -342,7 +348,35 @@ namespace LZ
             }
             else
             {
-                Debug.LogError("Action is null, cannot be performed.");
+                Debug.LogError("ACTION IS NULL, CANNOT BE PERFORMED");
+            }
+        }
+
+        [ClientRpc]
+        public override void DestroyAllCurrentActionFXClientRpc()
+        {
+            base.DestroyAllCurrentActionFXClientRpc();
+
+            if (hasArrowNotched.Value)
+            {
+                // ANIMATE THE BOW
+                Animator bowAnimator;
+
+                if (player.playerNetworkManager.isTwoHandingLeftWeapon.Value)
+                {
+                    bowAnimator = player.playerEquipmentManager.leftHandWeaponModel.GetComponentInChildren<Animator>();
+                }
+                else
+                {
+                    bowAnimator = player.playerEquipmentManager.rightHandWeaponModel.GetComponentInChildren<Animator>();
+                }
+
+                //  ANIMATE THE BOW
+                bowAnimator.SetBool("isDrawn", false);
+                bowAnimator.Play("Bow_Fire_01");
+
+                if (player.IsOwner)
+                    hasArrowNotched.Value = false;
             }
         }
 
@@ -377,6 +411,9 @@ namespace LZ
             //  INSTANTIATE THE ARROW
             GameObject arrow = Instantiate(WorldItemDatabase.Instance.GetProjectileByID(projectileID).drawProjectileModel, player.playerEquipmentManager.leftHandWeaponSlot.transform);
             player.playerEffectsManager.activeDrawnProjectileFX = arrow;
+
+            //  PLAY SFX
+            player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(WorldSoundFXManager.instance.notchArrowSFX));
         }
     }
 }
