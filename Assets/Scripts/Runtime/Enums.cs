@@ -53,7 +53,8 @@ public enum WeaponClass
     Spear,
     MediumShield,
     Fist,
-    LightShield
+    LightShield,
+    Bow
 }
 
 //  USED TO DETERMINE WHICH ITEM (CATALYST) IS NEEDED TO CAST SPELL
@@ -61,6 +62,13 @@ public enum SpellClass
 {
     Incantation,
     Sorcery
+}
+
+//  USED TO DETERMINE WHICH RANGED WEAPON CAN FIRE THIS AMMO
+public enum ProjectileClass
+{
+    Arrow,
+    Bolt
 }
 
 //  USED TO TAG EQUIPMENT MODELS WITH SPECIFIC BODY PARTS THAT THEY WILL COVER

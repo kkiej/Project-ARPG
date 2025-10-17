@@ -33,6 +33,9 @@ namespace LZ
         [Header("Spells")]
         [SerializeField] List<SpellItem> spells = new List<SpellItem>();
 
+        [Header("Projectiles")]
+        [SerializeField] List<RangedProjectileItem> projectiles = new List<RangedProjectileItem>();
+
         //  A LIST OF EVERY ITEM WE HAVE IN THE GAME
         [Header("Items")]
         private List<Item> items = new List<Item>();
@@ -84,6 +87,11 @@ namespace LZ
                 items.Add(item);
             }
 
+            foreach (var item in projectiles)
+            {
+                items.Add(item);
+            }
+
             //  ASSIGN ALL OF OUR ITEMS A UNIQUE ITEM ID
             for (int i = 0; i < items.Count; i++)
             {
@@ -129,6 +137,11 @@ namespace LZ
         public SpellItem GetSpellByID(int ID)
         {
             return spells.FirstOrDefault(item => item.itemID == ID);
+        }
+
+        public RangedProjectileItem GetProjectileByID(int ID)
+        {
+            return projectiles.FirstOrDefault(item => item.itemID == ID);
         }
     }
 }
