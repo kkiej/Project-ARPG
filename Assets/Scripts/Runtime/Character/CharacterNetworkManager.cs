@@ -135,6 +135,9 @@ namespace LZ
         {
             if (character.characterEffectsManager.activeSpellWarmUpFX != null)
                 Destroy(character.characterEffectsManager.activeSpellWarmUpFX);
+
+            if (character.characterEffectsManager.activeDrawnProjectileFX != null)
+                Destroy(character.characterEffectsManager.activeDrawnProjectileFX);
         }
 
         // 服务器RPC是一个从客户端调用到服务器（在我们的情况下是主机）的函数

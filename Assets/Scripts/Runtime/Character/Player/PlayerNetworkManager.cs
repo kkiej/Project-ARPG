@@ -10,13 +10,15 @@ namespace LZ
 
         public NetworkVariable<FixedString64Bytes> characterName = new NetworkVariable<FixedString64Bytes>("Character", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+        [Header("Actions")]
+        public NetworkVariable<bool> isUsingRightHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isUsingLeftHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         [Header("Equipment")]
         public NetworkVariable<int> currentWeaponBeingUsed = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> currentRightHandWeaponID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> currentLeftHandWeaponID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> currentSpellID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        public NetworkVariable<bool> isUsingRightHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        public NetworkVariable<bool> isUsingLeftHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Two Handing")]
         public NetworkVariable<int> currentWeaponBeingTwoHanded = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -34,6 +36,11 @@ namespace LZ
         public NetworkVariable<int> bodyEquipmentID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> legEquipmentID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> handEquipmentID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        [Header("Projectiles")]
+        public NetworkVariable<int> mainProjectileID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> secondaryProjectileID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> hasArrowNotched = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         protected override void Awake()
         {
@@ -128,6 +135,28 @@ namespace LZ
                 if (player.IsOwner)
                     PlayerUIManager.instance.playerUIHudManager.SetSpellItemQuickSlotIcon(newID);
             }
+        }
+
+        public void OnMainProjectileIDChange(int oldID, int newID)
+        {
+            RangedProjectileItem newProjectile = null;
+
+            if (WorldItemDatabase.Instance.GetProjectileByID(newID))
+                newProjectile = Instantiate(WorldItemDatabase.Instance.GetProjectileByID(newID));
+
+            if (newProjectile != null)
+                player.playerInventoryManager.mainProjectile = newProjectile;
+        }
+
+        public void OnSecondaryProjectileIDChange(int oldID, int newID)
+        {
+            RangedProjectileItem newProjectile = null;
+
+            if (WorldItemDatabase.Instance.GetProjectileByID(newID))
+                newProjectile = Instantiate(WorldItemDatabase.Instance.GetProjectileByID(newID));
+
+            if (newProjectile != null)
+                player.playerInventoryManager.secondaryProjectile = newProjectile;
         }
 
         public void OnIsChargingRightSpellChanged(bool oldStatus, bool newStatus)
@@ -315,6 +344,39 @@ namespace LZ
             {
                 Debug.LogError("Action is null, cannot be performed.");
             }
+        }
+
+        //  DRAW PROJECTILE
+        [ServerRpc]
+        public void NotifyServerOfDrawnProjectileServerRpc(int projectileID)
+        {
+            if (IsServer)
+            {
+                NotifyServerOfDrawnProjectileClientRpc(projectileID);
+            }
+        }
+
+        [ClientRpc]
+        private void NotifyServerOfDrawnProjectileClientRpc(int projectileID)
+        {
+            Animator bowAnimator;
+
+            if (isTwoHandingLeftWeapon.Value)
+            {
+                bowAnimator = player.playerEquipmentManager.leftHandWeaponModel.GetComponentInChildren<Animator>();
+            }
+            else
+            {
+                bowAnimator = player.playerEquipmentManager.rightHandWeaponModel.GetComponentInChildren<Animator>();
+            }
+
+            //  ANIMATE THE BOW
+            bowAnimator.SetBool("isDrawn", true);
+            bowAnimator.Play("Bow_Draw_01");
+
+            //  INSTANTIATE THE ARROW
+            GameObject arrow = Instantiate(WorldItemDatabase.Instance.GetProjectileByID(projectileID).drawProjectileModel, player.playerEquipmentManager.leftHandWeaponSlot.transform);
+            player.playerEffectsManager.activeDrawnProjectileFX = arrow;
         }
     }
 }

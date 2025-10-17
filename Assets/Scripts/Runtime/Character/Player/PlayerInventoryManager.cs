@@ -23,6 +23,10 @@ namespace LZ
         public LegEquipmentItem legEquipment;
         public HandEquipmentItem handEquipment;
 
+        [Header("Projectiles")]
+        public RangedProjectileItem mainProjectile;
+        public RangedProjectileItem secondaryProjectile;
+
         [Header("Inventory")]
         public List<Item> itemsInInventory;
 

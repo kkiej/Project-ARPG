@@ -71,6 +71,12 @@ public enum ProjectileClass
     Bolt
 }
 
+public enum ProjectileSlot
+{
+    Main,
+    Secondary
+}
+
 //  USED TO TAG EQUIPMENT MODELS WITH SPECIFIC BODY PARTS THAT THEY WILL COVER
 public enum EquipmentModelType
 {
