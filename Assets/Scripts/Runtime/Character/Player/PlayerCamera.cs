@@ -10,7 +10,7 @@ namespace LZ
         public static PlayerCamera instance;
         public PlayerManager player;
         public Camera cameraObject;
-        [SerializeField] private Transform cameraPivotTransform;
+        public Transform cameraPivotTransform;
 
         // Change these to tweak camera performance
         [Header("Camera Settings")]
@@ -43,7 +43,9 @@ namespace LZ
         public CharacterManager nearestLockOnTarget;
         public CharacterManager leftLockOnTarget;
         public CharacterManager rightLockOnTarget;
-        
+
+        [Header("Ranged Aim")]
+        private Transform followTransformWhenAiming;
 
         private void Awake()
         {
@@ -75,44 +77,90 @@ namespace LZ
 
         private void HandleFollowTarget()
         {
-            Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, player.transform.position,
-                ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
-            transform.position = targetCameraPosition;
+            if (player.playerNetworkManager.isAiming.Value)
+            {
+                if (followTransformWhenAiming == null)
+                {
+                    followTransformWhenAiming = player.GetComponentInChildren<PlayerAimCameraFollowTransform>().transform;
+                    return;
+                }
+
+                Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, followTransformWhenAiming.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
+                transform.position = targetCameraPosition;
+            }
+            else
+            {
+                Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, player.transform.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
+                transform.position = targetCameraPosition;
+            }
         }
 
         private void HandleRotations()
         {
+            if (player.playerNetworkManager.isAiming.Value)
+            {
+                HandleAimRotations();
+            }
+            else
+            {
+                HandleStandardRotations();
+            }
+        }
+
+        private void HandleAimRotations()
+        {
+            if (!player.playerLocomotionManager.isGrounded)
+                player.playerNetworkManager.isAiming.Value = false;
+
+            if (player.isPerformingAction)
+                return;
+
+            //  LEFT AND RIGHT LOOK
+            Vector3 cameraRotationY = Vector3.zero;
+            //  UP AND DOWN LOOK
+            Vector3 cameraRotationX = Vector3.zero;
+
+            leftAndRightLookAngle += (PlayerInputManager.instance.cameraHorizontalInput * leftAndRightRotationSpeed) * Time.deltaTime;
+            upAndDownLookAngle -= (PlayerInputManager.instance.cameraVerticalInput * upAndDownRotationSpeed) * Time.deltaTime;
+            upAndDownLookAngle = Mathf.Clamp(upAndDownLookAngle, minimumPivot, maximumPivot);
+
+            cameraRotationY.y = leftAndRightLookAngle;
+            cameraRotationX.x = upAndDownLookAngle;
+
+            cameraObject.transform.localEulerAngles = new Vector3(upAndDownLookAngle, leftAndRightLookAngle, 0);
+        }
+
+        private void HandleStandardRotations()
+        {
+            //  IF LOCKED ON, FORCE ROTATION TOWARDS TARGET
             if (player.playerNetworkManager.isLockedOn.Value)
             {
-                Vector3 rotationDirection =
-                    player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position -
-                    transform.position;
+                //  THIS ROTATES THIS GAMEOBJECT
+                Vector3 rotationDirection = player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position - transform.position;
                 rotationDirection.Normalize();
                 rotationDirection.y = 0;
                 Quaternion targetRotation = Quaternion.LookRotation(rotationDirection);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lockOnTargetFollowSpeed);
 
-                rotationDirection =
-                    player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position -
-                    cameraPivotTransform.position;
+                //  THIS ROTATES THE PIVOT OBJECT
+                rotationDirection = player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position - cameraPivotTransform.position;
                 rotationDirection.Normalize();
 
                 targetRotation = Quaternion.LookRotation(rotationDirection);
-                cameraPivotTransform.rotation = Quaternion.Slerp(cameraPivotTransform.rotation,
-                    targetRotation, lockOnTargetFollowSpeed);
-                
-                // 将旋转保存为相机视角，解锁时不会偏离太远
+                cameraPivotTransform.transform.rotation = Quaternion.Slerp(cameraPivotTransform.rotation, targetRotation, lockOnTargetFollowSpeed);
+
+                //  SAVE OUR ROTATIONS TO OUR LOOK ANGLES, SO WHEN WE UNLOCK IT DOESNT SNAP TOO FAR AWAY
                 leftAndRightLookAngle = transform.eulerAngles.y;
                 upAndDownLookAngle = transform.eulerAngles.x;
             }
+            //  ELSE ROTATE REGULARLY
             else
             {
-                // 根据右操纵杆的水平移动来左右旋转相机
-                leftAndRightLookAngle += (PlayerInputManager.instance.cameraHorizontalInput * leftAndRightRotationSpeed) *
-                                         Time.deltaTime;
-                // 根据右操纵杆的垂直移动来上下旋转相机
-                upAndDownLookAngle -= (PlayerInputManager.instance.cameraVerticalInput * upAndDownRotationSpeed) *
-                                      Time.deltaTime;
+                //  ROTATE LEFT AND RIGHT BASED ON HORIZONTAL MOVEMENT ON THE RIGHT JOYSTICK
+                leftAndRightLookAngle += (PlayerInputManager.instance.cameraHorizontalInput * leftAndRightRotationSpeed) * Time.deltaTime;
+                //  ROTATE UP AND DOWN BASED ON VERTICAL MOVEMENT ON THE RIGHT JOYSTICK
+                upAndDownLookAngle -= (PlayerInputManager.instance.cameraVerticalInput * upAndDownRotationSpeed) * Time.deltaTime;
+                //  CLAMP THE UP AND DOWN LOOK ANGLE BETWEEN A MIN AND MAX VALUE
                 upAndDownLookAngle = Mathf.Clamp(upAndDownLookAngle, minimumPivot, maximumPivot);
 
                 Vector3 cameraRotation = Vector3.zero;
@@ -139,9 +187,8 @@ namespace LZ
             Vector3 direction = cameraObject.transform.position - cameraPivotTransform.position;
             direction.Normalize();
 
-            // we check if there is an object in front of our desired direction ^ (see above)
-            if (Physics.SphereCast(cameraPivotTransform.position, cameraCollisionRadius, direction, out hit,
-                    Mathf.Abs(targetCameraZPosition), collideWithLayers))
+            //  WE CHECK IF THERE IS AN OBJECT IN FRONT OF OUR DESIRED DIRECTION ^ (SEE ABOVE)
+            if (Physics.SphereCast(cameraPivotTransform.position, cameraCollisionRadius, direction, out hit, Mathf.Abs(targetCameraZPosition), collideWithLayers))
             {
                 // if there is, we get our distance from it
                 float distanceFromHitObject = Vector3.Distance(cameraPivotTransform.position, hit.point);

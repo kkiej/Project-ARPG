@@ -110,6 +110,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 692247072288382975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2194320439184859812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4391651623890829338}
+  - component: {fileID: 4486863504749974462}
+  m_Layer: 6
+  m_Name: Aim Camera Follow Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4391651623890829338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2194320439184859812}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 692280629730864343}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4486863504749974462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2194320439184859812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a49a91c815b054845b7940d6cc105b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2379004666193950098
 GameObject:
   m_ObjectHideFlags: 0
@@ -4149,6 +4193,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8213022444571021944}
+    - targetCorrespondingSourceObject: {fileID: 4571756472629890, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4391651623890829338}
     - targetCorrespondingSourceObject: {fileID: 4538126667909546, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
       insertIndex: 0
@@ -4654,7 +4702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 167461833
+  GlobalObjectIdHash: 260631240
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -4696,6 +4744,10 @@ MonoBehaviour:
     m_InternalValue: 0
   isBlocking:
     m_InternalValue: 0
+  isParrying:
+    m_InternalValue: 0
+  isParryable:
+    m_InternalValue: 0
   isAttacking:
     m_InternalValue: 0
   isInvulnerable:
@@ -4708,6 +4760,10 @@ MonoBehaviour:
     m_InternalValue: 0
   isChargingAttack:
     m_InternalValue: 0
+  isRipostable:
+    m_InternalValue: 0
+  isBeingCriticallyDamaged:
+    m_InternalValue: 0
   currentHealth:
     m_InternalValue: 400
   maxHealth:
@@ -4716,9 +4772,15 @@ MonoBehaviour:
     m_InternalValue: 0
   maxStamina:
     m_InternalValue: 0
+  currentFocusPoints:
+    m_InternalValue: 400
+  maxFocusPoints:
+    m_InternalValue: 400
   vitality:
     m_InternalValue: 1
   endurance:
+    m_InternalValue: 1
+  mind:
     m_InternalValue: 1
   strength:
     m_InternalValue: 1
@@ -4793,15 +4855,17 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
+  isUsingRightHand:
+    m_InternalValue: 0
+  isUsingLeftHand:
+    m_InternalValue: 0
   currentWeaponBeingUsed:
     m_InternalValue: 0
   currentRightHandWeaponID:
     m_InternalValue: 0
   currentLeftHandWeaponID:
     m_InternalValue: 0
-  isUsingRightHand:
-    m_InternalValue: 0
-  isUsingLeftHand:
+  currentSpellID:
     m_InternalValue: 0
   currentWeaponBeingTwoHanded:
     m_InternalValue: 0
@@ -4810,6 +4874,10 @@ MonoBehaviour:
   isTwoHandingRightWeapon:
     m_InternalValue: 0
   isTwoHandingLeftWeapon:
+    m_InternalValue: 0
+  isChargingRightSpell:
+    m_InternalValue: 0
+  isChargingLeftSpell:
     m_InternalValue: 0
   isMale:
     m_InternalValue: 1
@@ -4821,6 +4889,16 @@ MonoBehaviour:
     m_InternalValue: -1
   handEquipmentID:
     m_InternalValue: -1
+  mainProjectileID:
+    m_InternalValue: -1
+  secondaryProjectileID:
+    m_InternalValue: -1
+  hasArrowNotched:
+    m_InternalValue: 0
+  isHoldingArrow:
+    m_InternalValue: 0
+  isAiming:
+    m_InternalValue: 0
 --- !u!114 &-9026425792257213334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4870,13 +4948,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastAttackAnimationPerformed: 
+  previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
   currentAttackType: 0
   lockOnTransform: {fileID: 3268591790919751491}
   canPerformRollingAttack: 0
   canPerformBackstepAttack: 0
   canBlock: 1
+  canBeBackstabbed: 1
+  criticalAttackDistanceCheck: 0.7
+  pendingCriticalDamage: 0
   currentWeaponBeingUsed: {fileID: 0}
+  currentProjectileBeingUsed: 0
   canComboWithMainHandWeapon: 0
 --- !u!114 &-5474465599812946486
 MonoBehaviour:
@@ -4936,6 +5019,7 @@ MonoBehaviour:
   isRolling: 0
   canRotate: 1
   canMove: 1
+  canRun: 1
   isGrounded: 1
   verticalMovement: 0
   horizontalMovement: 0
@@ -4975,10 +5059,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d6240c4793cc39f4fb5f44ea62b6bdeb, type: 2}
   - {fileID: 11400000, guid: bfb949bd867d04842b1eccc4da17aa0a, type: 2}
   leftHandWeaponIndex: 0
+  currentSpell: {fileID: 0}
   headEquipment: {fileID: 0}
   bodyEquipment: {fileID: 0}
   legEquipment: {fileID: 0}
   handEquipment: {fileID: 0}
+  mainProjectile: {fileID: 0}
+  secondaryProjectile: {fileID: 0}
   itemsInInventory: []
 --- !u!114 &-5161139859344176224
 MonoBehaviour:
@@ -4998,6 +5085,8 @@ MonoBehaviour:
   backSlot: {fileID: 0}
   rightHandWeaponModel: {fileID: 0}
   leftHandWeaponModel: {fileID: 0}
+  rightWeaponManager: {fileID: 0}
+  leftWeaponManager: {fileID: 0}
   equipNewItems: 0
   hatsObject: {fileID: 688381542811186929}
   hats: []
@@ -5187,10 +5276,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18482f3199014fb0923aef231c6c81e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeSpellWarmUpFX: {fileID: 0}
+  activeDrawnProjectileFX: {fileID: 0}
   bloodSplatterVFX: {fileID: 0}
+  criticalBloodSplatterVFX: {fileID: 0}
   staticEffects: []
-  effectToTest: {fileID: 0}
-  processEffect: 0
 --- !u!114 &8953273550207781400
 MonoBehaviour:
   m_ObjectHideFlags: 0

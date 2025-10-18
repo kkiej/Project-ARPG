@@ -138,6 +138,7 @@ namespace LZ
 
                 playerControls.PlayerActions.LB.performed += i => LB_Input = true;
                 playerControls.PlayerActions.LB.canceled += i => player.playerNetworkManager.isBlocking.Value = false;
+                playerControls.PlayerActions.LB.canceled += i => player.playerNetworkManager.isAiming.Value = false;
                 playerControls.PlayerActions.HoldLB.performed += i => hold_LB_Input = true;
                 playerControls.PlayerActions.HoldLB.canceled += i => hold_LB_Input = false;
 
@@ -406,11 +407,6 @@ namespace LZ
 
                 if (horizontalInput > 0.5f)
                     horizontalInput = 0.5f;
-                Debug.Log("canRun: false" + "   moveAmount: " + moveAmount);
-            }
-            else
-            {
-                Debug.Log("canRun: true" + "   moveAmount: " + moveAmount);
             }
 
             if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
@@ -517,8 +513,14 @@ namespace LZ
                 player.playerNetworkManager.SetCharacterActionHand(false);
 
                 //  TODO: IF WE ARE TWO HANDING THE WEAPON, USE THE TWO HANDED ACTION
-
-                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentLeftHandWeapon.oh_LB_Action, player.playerInventoryManager.currentLeftHandWeapon);
+                if (player.playerNetworkManager.isTwoHandingRightWeapon.Value)
+                {
+                    player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_LB_Action, player.playerInventoryManager.currentRightHandWeapon);
+                }
+                else
+                {
+                    player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentLeftHandWeapon.oh_LB_Action, player.playerInventoryManager.currentLeftHandWeapon);
+                }
             }
         }
 

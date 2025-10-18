@@ -336,14 +336,30 @@ namespace LZ
 
             //  FIRE AN ARROW BASED ON 1 OF 3 VARIATIONS
             // 1. LOCKED ONTO A TARGET
-            if (player.playerCombatManager.currentTarget != null)
+
+            // 2. AIMING
+            if (player.playerNetworkManager.isAiming.Value)
             {
-                Quaternion arrowRotation = Quaternion.LookRotation(player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position 
-                    - projectileGameObject.transform.position);
-                projectileGameObject.transform.rotation = arrowRotation;
+
             }
-            // 2. UNLOCKED AND NOT AIMING
-            // 3. AIMING
+            else
+            {
+                // 2. LOCKED AND NOT AIMING
+                if (player.playerCombatManager.currentTarget != null)
+                {
+                    Quaternion arrowRotation = Quaternion.LookRotation(player.playerCombatManager.currentTarget.characterCombatManager.lockOnTransform.position
+                        - projectileGameObject.transform.position);
+                    projectileGameObject.transform.rotation = arrowRotation;
+                }
+                // 3. UNLOCKED AND NOT AIMING
+                else
+                {
+                    //  TEMPORARY, IN THE FUTURE THE ARROW WILL USE THE CAMERA'S LOOK DIRECTION TO ALIGN ITS UP/DOWN ROTATION VALUE
+                    //  HINT IF YOU WANT TO DO THIS ON YOUR OWN LOOK AT THE FORWARD DIRECTION VALUE OF THE CAMERA, AND DIRECT THE ARROW ACCORDINGLY
+                    Quaternion arrowRotation = Quaternion.LookRotation(player.transform.forward);
+                    projectileGameObject.transform.rotation = arrowRotation;
+                }
+            }
 
             //  GET ALL CHARACTER COLLIDERS AND IGNORE SELF
             Collider[] characterColliders = player.GetComponentsInChildren<Collider>();

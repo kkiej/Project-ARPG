@@ -42,6 +42,7 @@ namespace LZ
         public NetworkVariable<int> secondaryProjectileID = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> hasArrowNotched = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);        //  THIS LETS US KNOW IF WE ALREADY HAVE A PROJECTILE LOADED
         public NetworkVariable<bool> isHoldingArrow = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);        //  THIS LETS US KNOW IF WE ARE HOLDING THAT PROJECTILE SO IT DOES NOT RELEASE
+        public NetworkVariable<bool> isAiming = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);             //  THIS LETS US KNOW IF WE ARE "ZOOMED" IN AND USING OUR AIMING CAMERA
 
         protected override void Awake()
         {
@@ -163,6 +164,25 @@ namespace LZ
         public void OnIsHoldingArrowChanged(bool oldStatus, bool newStatus)
         {
             player.animator.SetBool("isHoldingArrow", isHoldingArrow.Value);
+        }
+
+        public void OnIsAimingChanged(bool oldStatus, bool newStatus)
+        {
+            if (!isAiming.Value)
+            {
+                PlayerCamera.instance.cameraObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                PlayerCamera.instance.cameraObject.fieldOfView = 60;
+                PlayerCamera.instance.cameraObject.nearClipPlane = 0.3f;
+                PlayerUIManager.instance.playerUIHudManager.crossHair.SetActive(false);
+            }
+            else
+            {
+                PlayerCamera.instance.gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
+                PlayerCamera.instance.cameraPivotTransform.localEulerAngles = new Vector3(0, 0, 0);
+                PlayerCamera.instance.cameraObject.fieldOfView = 40;
+                PlayerCamera.instance.cameraObject.nearClipPlane = 1.3f;
+                PlayerUIManager.instance.playerUIHudManager.crossHair.SetActive(true);
+            }
         }
 
         public void OnIsChargingRightSpellChanged(bool oldStatus, bool newStatus)

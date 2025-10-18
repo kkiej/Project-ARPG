@@ -21,6 +21,9 @@ namespace LZ
         public Transform bossHealthBarParent;
         public GameObject bossHealthBarObject;
 
+        [Header("Crosshair")]
+        public GameObject crossHair;
+
         public void ToggleHUD(bool status)
         {
             //  TO DO FADE IN AND OUT OVER TIME
