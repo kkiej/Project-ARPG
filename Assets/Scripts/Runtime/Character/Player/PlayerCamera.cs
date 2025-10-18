@@ -11,6 +11,7 @@ namespace LZ
         public PlayerManager player;
         public Camera cameraObject;
         public Transform cameraPivotTransform;
+        public float cameraPivotYPositionOffSet = 1.5f;
 
         // Change these to tweak camera performance
         [Header("Camera Settings")]
@@ -46,6 +47,7 @@ namespace LZ
 
         [Header("Ranged Aim")]
         private Transform followTransformWhenAiming;
+        public Vector3 aimDirection;
 
         private void Awake()
         {
@@ -79,13 +81,7 @@ namespace LZ
         {
             if (player.playerNetworkManager.isAiming.Value)
             {
-                if (followTransformWhenAiming == null)
-                {
-                    followTransformWhenAiming = player.GetComponentInChildren<PlayerAimCameraFollowTransform>().transform;
-                    return;
-                }
-
-                Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, followTransformWhenAiming.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
+                Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, player.playerCombatManager.lockOnTransform.position, ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
                 transform.position = targetCameraPosition;
             }
             else
@@ -114,6 +110,8 @@ namespace LZ
 
             if (player.isPerformingAction)
                 return;
+
+            aimDirection = cameraObject.transform.forward.normalized;
 
             //  LEFT AND RIGHT LOOK
             Vector3 cameraRotationY = Vector3.zero;
@@ -202,7 +200,15 @@ namespace LZ
                 targetCameraZPosition = -cameraCollisionRadius;
             }
 
-            // we then apply our final position using a lerp over a time of 0.2f
+            //  WE THEN APPLY OUR FINAL POSITION USING A LERP OVER A TIME OF 0.2F
+
+            if (player.playerNetworkManager.isAiming.Value)
+            {
+                cameraObjectPosition.z = 0;
+                cameraObject.transform.localPosition = cameraObjectPosition;
+                return;
+            }
+
             cameraObjectPosition.z = Mathf.Lerp(cameraObject.transform.localPosition.z, targetCameraZPosition, 0.2f);
             cameraObject.transform.localPosition = cameraObjectPosition;
         }

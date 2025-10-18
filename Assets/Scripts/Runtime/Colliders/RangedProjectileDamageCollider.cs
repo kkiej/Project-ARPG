@@ -10,14 +10,16 @@ namespace LZ
         public CharacterManager characterShootingProjectile;
 
         [Header("Collision")]
-        private bool hasCollided = false;
+        private bool hasPenetratedSurface = false;
         public Rigidbody rigidBody;
+        private CapsuleCollider capsuleCollider;
 
         protected override void Awake()
         {
             base.Awake();
 
             rigidBody = GetComponent<Rigidbody>();
+            capsuleCollider = GetComponent<CapsuleCollider>();
         }
 
         private void FixedUpdate()
@@ -30,30 +32,86 @@ namespace LZ
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!hasCollided)
+            CreatePenetrationIntoObject(collision);
+
+            CharacterManager potentialTarget = collision.transform.gameObject.GetComponent<CharacterManager>();
+
+            //  (TODO) CHECK FOR SHIELD OBJECT AND PERFORM BLOCK
+
+            //  (TODO) INSTANTIATE IMPACT PARTICLE AND PERFORM ARROW PENETRATION
+
+            if (characterShootingProjectile == null)
+                return;
+
+            Collider contactCollider = collision.gameObject.GetComponent<Collider>();
+
+            if (contactCollider != null)
+                contactPoint = contactCollider.ClosestPointOnBounds(transform.position);
+
+            if (potentialTarget == null)
+                return;
+
+            if (WorldUtilityManager.Instance.CanIDamageThisTarget(characterShootingProjectile.characterGroup, potentialTarget.characterGroup))
             {
-                //  NOT USED YET
-                //hasCollided = true;
+                CheckForBlock(potentialTarget);
+                DamageTarget(potentialTarget);
+            }
+        }
 
-                CharacterManager potentialTarget = collision.transform.gameObject.GetComponent<CharacterManager>();
+        protected override void CheckForBlock(CharacterManager damageTarget)
+        {
+            if (charactersDamaged.Contains(damageTarget))
+                return;
 
-                //  (TODO) CHECK FOR SHIELD OBJECT AND PERFORM BLOCK
+            float angle = Vector3.Angle(damageTarget.transform.forward, transform.forward);
 
-                //  (TODO) INSTANTIATE IMPACT PARTICLE AND PERFORM ARROW PENETRATION
+            if (damageTarget.characterNetworkManager.isBlocking.Value && angle > 145)
+            {
+                charactersDamaged.Add(damageTarget);
+                TakeBlockedDamageEffect blockedDamageEffect = Instantiate(WorldCharacterEffectsManager.instance.takeBlockedDamageEffect);
 
-                if (characterShootingProjectile == null)
-                    return;
+                if (characterShootingProjectile != null)
+                    blockedDamageEffect.characterCausingDamage = characterShootingProjectile;
 
-                if (potentialTarget == null)
-                    return;
+                blockedDamageEffect.physicalDamage = physicalDamage;
+                blockedDamageEffect.magicDamage = magicDamage;
+                blockedDamageEffect.fireDamage = fireDamage;
+                blockedDamageEffect.holyDamage = holyDamage;
+                blockedDamageEffect.poiseDamage = poiseDamage;
+                blockedDamageEffect.staminaDamage = poiseDamage;   // IF YOU WANT TO GIVE STAMINA DAMAGE ITS OWN VARIABLE, INSTEAD OF USING POISE GO FOR IT
+                blockedDamageEffect.contactPoint = contactPoint;
 
-                if (WorldUtilityManager.Instance.CanIDamageThisTarget(characterShootingProjectile.characterGroup, potentialTarget.characterGroup))
-                {
-                    DamageTarget(potentialTarget);
-                }
+                // 3. APPLY BLOCKED CHARACTER DAMAGE TO TARGET
+                damageTarget.characterEffectsManager.ProcessInstantEffect(blockedDamageEffect);
+            }
 
-                //  TEMPORARY UNTIL WE CREATE THE ARROW PENETRATION LOGIC
-                Destroy(gameObject);
+            //  TO DO MAKE ARROW "BOUNCE OFF" SHIELD INSTEAD OF PENETRATING PLAYER/CHARACTER
+        }
+
+        private void CreatePenetrationIntoObject(Collision hit)
+        {
+            if (!hasPenetratedSurface)
+            {
+                hasPenetratedSurface = true;
+
+                //  GET THE CONTACT POINT
+                gameObject.transform.position = hit.GetContact(0).point;
+
+                //  STOPS OUR ARROW FROM "SCALING" IN SIZE WITH SCALED UP OR DOWN OBJECTS
+                var emptyObject = new GameObject();
+                emptyObject.transform.parent = hit.collider.transform;
+                gameObject.transform.SetParent(emptyObject.transform, true);
+
+                //  HOW FAR THE ARROW PENETRATES INTO THE SURFACE
+                transform.position += transform.forward * (Random.Range(0.1f, 0.3f));
+
+                //  DISABLE COLLIDERS AND RIGIDBODY
+                rigidBody.isKinematic = true;
+                capsuleCollider.enabled = false;
+
+                //  DESTROY DAMAGE COLLIDER, AND DESTROY ARROW AFTER A TIME
+                Destroy(GetComponent<RangedProjectileDamageCollider>());
+                Destroy(gameObject, 20);
             }
         }
     }

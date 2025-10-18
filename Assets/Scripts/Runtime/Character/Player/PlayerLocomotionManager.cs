@@ -57,14 +57,12 @@ namespace LZ
                 // 如果没锁定，传递movement
                 if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
                 {
-                    player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount,
-                        player.playerNetworkManager.isSprinting.Value);
+                    player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
                 }
                 // 如果锁定了，传递水平方向和垂直方向的movement
                 else
                 {
-                    player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalMovement, verticalMovement,
-                        player.playerNetworkManager.isSprinting.Value);
+                    player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalMovement, verticalMovement, player.playerNetworkManager.isSprinting.Value);
                 }
             }
         }
@@ -94,12 +92,23 @@ namespace LZ
 
             if (!player.characterLocomotionManager.canMove)
                 return;
-            
-            // 移动方向由摄像机朝向视角与移动输入共同决定
-            moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;
-            moveDirection = moveDirection + PlayerCamera.instance.transform.right * horizontalMovement;
-            moveDirection.Normalize();
-            moveDirection.y = 0;
+
+            //  OUR MOVE DIRECTION IS BASED ON OUR CAMERAS FACING PERSPECTIVE & OUR MOVEMENT INPUTS
+
+            if (player.playerNetworkManager.isAiming.Value)
+            {
+                moveDirection = transform.forward * verticalMovement;
+                moveDirection = moveDirection + transform.right * horizontalMovement;
+                moveDirection.Normalize();
+                moveDirection.y = 0;
+            }
+            else
+            {
+                moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;
+                moveDirection = moveDirection + PlayerCamera.instance.transform.right * horizontalMovement;
+                moveDirection.Normalize();
+                moveDirection.y = 0;
+            }
 
             if (player.playerNetworkManager.isSprinting.Value)
             {

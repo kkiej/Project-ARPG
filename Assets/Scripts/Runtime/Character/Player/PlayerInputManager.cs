@@ -409,15 +409,22 @@ namespace LZ
                     horizontalInput = 0.5f;
             }
 
-            if (!player.playerNetworkManager.isLockedOn.Value || player.playerNetworkManager.isSprinting.Value)
+            if (player.playerNetworkManager.isLockedOn.Value && !player.playerNetworkManager.isSprinting.Value)
             {
-                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
-            }
-            // 如果我们被锁定，也要传递水平方向的movement
-            else
-            {
+                //  IF WE ARE LOCKED ON PASS THE HORIZONTAL MOVEMENT AS WELL
                 player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput, player.playerNetworkManager.isSprinting.Value);
+                return;
             }
+
+            if (player.playerNetworkManager.isAiming.Value)
+            {
+                //  IF WE ARE LOCKED ON PASS THE HORIZONTAL MOVEMENT AS WELL
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(horizontalInput, verticalInput, player.playerNetworkManager.isSprinting.Value);
+                return;
+            }
+
+            //  IF WE ARE NOT LOCKED ON, ONLY USE THE MOVE AMOUNT
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
         }
 
         private void HandleCameraMovementInput()

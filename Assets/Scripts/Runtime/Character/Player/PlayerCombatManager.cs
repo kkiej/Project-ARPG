@@ -11,6 +11,9 @@ namespace LZ
         public WeaponItem currentWeaponBeingUsed;
         public ProjectileSlot currentProjectileBeingUsed;
 
+        [Header("Projectile")]
+        private Vector3 projectileAimDirection;
+
         [Header("Flags")]
         public bool canComboWithMainHandWeapon;
         //public bool canComboWithOffHandWeapon;
@@ -335,12 +338,15 @@ namespace LZ
             projectileDamageCollider.characterShootingProjectile = player;
 
             //  FIRE AN ARROW BASED ON 1 OF 3 VARIATIONS
-            // 1. LOCKED ONTO A TARGET
+
+            float yRotationDuringFire = player.transform.localEulerAngles.y;
 
             // 2. AIMING
             if (player.playerNetworkManager.isAiming.Value)
             {
-
+                Ray newRay = new Ray(player.playerCombatManager.lockOnTransform.position, PlayerCamera.instance.aimDirection);
+                projectileAimDirection = newRay.GetPoint(5);
+                projectileGameObject.transform.LookAt(projectileAimDirection);
             }
             else
             {
@@ -375,6 +381,13 @@ namespace LZ
             projectileGameObject.transform.parent = null;
 
             //  TO DO (SYNC ARRROW FIRE WITH SERVER RPC)
+            player.playerNetworkManager.NotifyServerOfReleasedProjectileServerRpc(
+                player.OwnerClientId, 
+                projectileItem.itemID, 
+                projectileAimDirection.x, 
+                projectileAimDirection.y, 
+                projectileAimDirection.z,
+                yRotationDuringFire);
         }
 
         //  SPELL
@@ -410,6 +423,8 @@ namespace LZ
 
             player.playerInventoryManager.currentSpell.SuccessfullyCastSpellFullCharge(player);
         }
+
+        //  ASH OF WAR
 
         public WeaponItem SelectWeaponToPerformAshOfWar()
         {
