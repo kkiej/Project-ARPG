@@ -328,6 +328,17 @@ namespace LZ
             //  SUBTRACT AMMO
             projectileItem.currentAmmoAmount -= 1;
             //  (TODO MAKE AND UPDATE ARROW COUNT UI)
+            switch (currentProjectileBeingUsed)
+            {
+                case ProjectileSlot.Main:
+                    PlayerUIManager.instance.playerUIHudManager.SetMainProjectileQuickSlotIcon(projectileItem);
+                    break;
+                case ProjectileSlot.Secondary:
+                    PlayerUIManager.instance.playerUIHudManager.SetSecondaryProjectileQuickSlotIcon(projectileItem);
+                    break;
+                default:
+                    break;
+            }
 
             projectileInstantiationLocation = player.playerCombatManager.lockOnTransform;
             projectileGameObject = Instantiate(projectileItem.releaseProjectileModel, projectileInstantiationLocation);

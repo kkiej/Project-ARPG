@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
@@ -32,6 +33,12 @@ namespace LZ
         private Button legEquipmentSlotButton;
         [SerializeField] Image handEquipmentSlot;
         private Button handEquipmentSlotButton;
+        [SerializeField] Image mainProjectileEquipmentSlot;
+        [SerializeField] TextMeshProUGUI mainProjectileCount;
+        private Button mainProjectileEquipmentSlotButton;
+        [SerializeField] Image secondaryProjectileEquipmentSlot;
+        [SerializeField] TextMeshProUGUI secondaryProjectileCount;
+        private Button secondaryProjectileEquipmentSlotButton;
 
         //  THIS INVENTORY POPULATES WITH RELATED ITEMS WHEN CHANGING EQUIPMENT
         [Header("Equipment Inventory")]
@@ -55,6 +62,9 @@ namespace LZ
             bodyEquipmentSlotButton = bodyEquipmentSlot.GetComponentInParent<Button>(true);
             handEquipmentSlotButton = handEquipmentSlot.GetComponentInParent<Button>(true);
             legEquipmentSlotButton = legEquipmentSlot.GetComponentInParent<Button>(true);
+
+            mainProjectileEquipmentSlotButton = mainProjectileEquipmentSlot.GetComponentInParent<Button>(true);
+            secondaryProjectileEquipmentSlotButton = secondaryProjectileEquipmentSlot.GetComponentInParent<Button>(true);
         }
 
         public void OpenEquipmentManagerMenu()
@@ -87,6 +97,9 @@ namespace LZ
             bodyEquipmentSlotButton.enabled = isEnabled;
             legEquipmentSlotButton.enabled = isEnabled;
             handEquipmentSlotButton.enabled = isEnabled;
+
+            mainProjectileEquipmentSlotButton.enabled = isEnabled;
+            secondaryProjectileEquipmentSlotButton.enabled = isEnabled;
         }
 
         //  THIS FUNCTION SIMPLY RETURNS YOU TO THE LAST SELECTED BUTTON WHEN YOU ARE FINISHED EQUIPPING A NEW ITEM
@@ -127,6 +140,12 @@ namespace LZ
                     break;
                 case EquipmentType.Hands:
                     lastSelectedButton = handEquipmentSlotButton;
+                    break;
+                case EquipmentType.MainProjectile:
+                    lastSelectedButton = mainProjectileEquipmentSlotButton;
+                    break;
+                case EquipmentType.SecondaryProjectile:
+                    lastSelectedButton = secondaryProjectileEquipmentSlotButton;
                     break;
                 default:
                     break;
@@ -280,6 +299,37 @@ namespace LZ
             {
                 handEquipmentSlot.enabled = false;
             }
+
+            //  PROJECTILE EQUIPMENT
+            RangedProjectileItem mainProjectileEquipment = player.playerInventoryManager.mainProjectile;
+
+            if (mainProjectileEquipment != null)
+            {
+                mainProjectileEquipmentSlot.enabled = true;
+                mainProjectileEquipmentSlot.sprite = mainProjectileEquipment.itemIcon;
+                mainProjectileCount.enabled = true;
+                mainProjectileCount.text = mainProjectileEquipment.currentAmmoAmount.ToString();
+            }
+            else
+            {
+                mainProjectileEquipmentSlot.enabled = false;
+                mainProjectileCount.enabled = false;
+            }
+
+            RangedProjectileItem secondaryProjectileEquipment = player.playerInventoryManager.secondaryProjectile;
+
+            if (secondaryProjectileEquipment != null)
+            {
+                secondaryProjectileEquipmentSlot.enabled = true;
+                secondaryProjectileEquipmentSlot.sprite = secondaryProjectileEquipment.itemIcon;
+                secondaryProjectileCount.enabled = true;
+                secondaryProjectileCount.text = secondaryProjectileEquipment.currentAmmoAmount.ToString();
+            }
+            else
+            {
+                secondaryProjectileEquipmentSlot.enabled = false;
+                secondaryProjectileCount.enabled = false;
+            }
         }
 
         private void ClearEquipmentInventory()
@@ -326,6 +376,12 @@ namespace LZ
                     break;
                 case EquipmentType.Hands:
                     LoadHandEquipmentInventory();
+                    break;
+                case EquipmentType.MainProjectile:
+                    LoadProjectileInventory();
+                    break;
+                case EquipmentType.SecondaryProjectile:
+                    LoadProjectileInventory();
                     break;
                 default:
                     break;
@@ -547,6 +603,49 @@ namespace LZ
             }
         }
 
+        private void LoadProjectileInventory()
+        {
+            PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+
+            List<RangedProjectileItem> projectilesInInventory = new List<RangedProjectileItem>();
+
+            //  SEARCH OUR ENTIRE INVENTORY, AND OUT OF ALL OF THE ITEMS IN OUR INVENTORY IF THE ITEM IS A WEAPON ADD IT TO OUR WEAPONS LIST
+            for (int i = 0; i < player.playerInventoryManager.itemsInInventory.Count; i++)
+            {
+                RangedProjectileItem projectile = player.playerInventoryManager.itemsInInventory[i] as RangedProjectileItem;
+
+                if (projectile != null)
+                    projectilesInInventory.Add(projectile);
+            }
+
+            if (projectilesInInventory.Count <= 0)
+            {
+                //  TO DO SEND A PLAYER A MESSAGE THAT HE HAS NONE OF ITEM TYPE IN INVENTORY
+                equipmentInventoryWindow.SetActive(false);
+                ToggleEquipmentButtons(true);
+                RefreshMenu();
+                return;
+            }
+
+            bool hasSelectedFirstInventorySlot = false;
+
+            for (int i = 0; i < projectilesInInventory.Count; i++)
+            {
+                GameObject inventorySlotGameObject = Instantiate(equipmentInventorySlotPrefab, equipmentInventoryContentWindow);
+                UI_EquipmentInventorySlot equipmentInventorySlot = inventorySlotGameObject.GetComponent<UI_EquipmentInventorySlot>();
+                equipmentInventorySlot.AddItem(projectilesInInventory[i]);
+
+                //  THIS WILL SELECT THE FIRST BUTTON IN THE LIST
+                if (!hasSelectedFirstInventorySlot)
+                {
+                    hasSelectedFirstInventorySlot = true;
+                    Button inventorySlotButton = inventorySlotGameObject.GetComponent<Button>();
+                    inventorySlotButton.Select();
+                    inventorySlotButton.OnSelect(null);
+                }
+            }
+        }
+
         public void SelectEquipmentSlot(int equipmentSlot)
         {
             currentSelectedEquipmentSlot = (EquipmentType)equipmentSlot;
@@ -697,6 +796,28 @@ namespace LZ
 
                     player.playerInventoryManager.handEquipment = null;
                     player.playerEquipmentManager.LoadHandEquipment(player.playerInventoryManager.handEquipment);
+
+                    break;
+                case EquipmentType.MainProjectile:
+
+                    unequippedItem = player.playerInventoryManager.mainProjectile;
+
+                    if (unequippedItem != null)
+                        player.playerInventoryManager.AddItemToInventory(unequippedItem);
+
+                    player.playerInventoryManager.mainProjectile = null;
+                    player.playerEquipmentManager.LoadMainProjectileEquipment(player.playerInventoryManager.mainProjectile);
+
+                    break;
+                case EquipmentType.SecondaryProjectile:
+
+                    unequippedItem = player.playerInventoryManager.secondaryProjectile;
+
+                    if (unequippedItem != null)
+                        player.playerInventoryManager.AddItemToInventory(unequippedItem);
+
+                    player.playerInventoryManager.secondaryProjectile = null;
+                    player.playerEquipmentManager.LoadSecondaryProjectileEquipment(player.playerInventoryManager.secondaryProjectile);
 
                     break;
                 default:

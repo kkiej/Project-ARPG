@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace LZ
 {
@@ -17,6 +18,11 @@ namespace LZ
         [SerializeField] Image leftWeaponQuickSlotIcon;
         [SerializeField] Image spellItemQuickSlotIcon;
         [SerializeField] Image quickSlotItemQuickSlotIcon;
+        [SerializeField] GameObject projectileQuickSlotsGameObject;
+        [SerializeField] Image mainProjectileQuickSlotIcon;
+        [SerializeField] TextMeshProUGUI mainProjectileCount;
+        [SerializeField] Image secondaryProjectileQuickSlotIcon;
+        [SerializeField] TextMeshProUGUI secondaryProjectileCount;
 
         [Header("Boss Health Bar")]
         public Transform bossHealthBarParent;
@@ -215,6 +221,69 @@ namespace LZ
 
             quickSlotItemQuickSlotIcon.sprite = quickSlotItem.itemIcon;
             quickSlotItemQuickSlotIcon.enabled = true;
+        }
+
+        public void ToggleProjectileQuickSlotsVisibility(bool status)
+        {
+            projectileQuickSlotsGameObject.SetActive(status);
+        }
+
+        public void SetMainProjectileQuickSlotIcon(RangedProjectileItem projectileItem)
+        {
+            if (projectileItem == null)
+            {
+                Debug.Log("ITEM IS NULL");
+                mainProjectileQuickSlotIcon.enabled = false;
+                mainProjectileQuickSlotIcon.sprite = null;
+                mainProjectileCount.enabled = false;
+                return;
+            }
+
+            if (projectileItem.itemIcon == null)
+            {
+                Debug.Log("ITEM HAS NO ICON");
+                mainProjectileQuickSlotIcon.enabled = false;
+                mainProjectileQuickSlotIcon.sprite = null;
+                mainProjectileCount.enabled = false;
+                return;
+            }
+
+            //  TO DO, UPDATE QUANTITY LEFT, SHOW IN UI
+            //  FADE OUT ICON IF NONE REMAINING
+
+            mainProjectileQuickSlotIcon.sprite = projectileItem.itemIcon;
+            mainProjectileCount.text = projectileItem.currentAmmoAmount.ToString();
+            mainProjectileQuickSlotIcon.enabled = true;
+            mainProjectileCount.enabled = true;
+        }
+
+        public void SetSecondaryProjectileQuickSlotIcon(RangedProjectileItem projectileItem)
+        {
+            if (projectileItem == null)
+            {
+                Debug.Log("ITEM IS NULL");
+                secondaryProjectileQuickSlotIcon.enabled = false;
+                secondaryProjectileQuickSlotIcon.sprite = null;
+                secondaryProjectileCount.enabled = false;
+                return;
+            }
+
+            if (projectileItem.itemIcon == null)
+            {
+                Debug.Log("ITEM HAS NO ICON");
+                secondaryProjectileQuickSlotIcon.enabled = false;
+                secondaryProjectileQuickSlotIcon.sprite = null;
+                secondaryProjectileCount.enabled = false;
+                return;
+            }
+
+            //  TO DO, UPDATE QUANTITY LEFT, SHOW IN UI
+            //  FADE OUT ICON IF NONE REMAINING
+
+            secondaryProjectileQuickSlotIcon.sprite = projectileItem.itemIcon;
+            secondaryProjectileCount.text = projectileItem.currentAmmoAmount.ToString();
+            secondaryProjectileQuickSlotIcon.enabled = true;
+            secondaryProjectileCount.enabled = true;
         }
     }
 }

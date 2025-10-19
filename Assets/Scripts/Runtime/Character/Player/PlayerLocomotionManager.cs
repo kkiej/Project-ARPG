@@ -302,7 +302,11 @@ namespace LZ
             if (player.isPerformingAction)
                 return;
 
-            // 如果没有体力，不允许跳跃
+            //  IF WE ARE USING AN ITEM, WE DO NOT ALLOW JUMP
+            if (player.playerCombatManager.isUsingItem)
+                return;
+
+            //  IF WE ARE OUT OF STAMINA, WE DO NOT WISH TO ALLOW A JUMP
             if (player.playerNetworkManager.currentStamina.Value <= 0)
                 return;
 

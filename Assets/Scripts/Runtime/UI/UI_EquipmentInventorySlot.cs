@@ -279,6 +279,52 @@ namespace LZ
                     PlayerUIManager.instance.playerUIEquipmentManager.RefreshMenu();
 
                     break;
+                case EquipmentType.MainProjectile:
+
+                    //  IF OUR CURRENT EQUIPMENT IN THIS SLOT, IS NOT A NULL ITEM, ADD IT TO OUR INVENTORY
+                    equippedItem = player.playerInventoryManager.mainProjectile;
+
+                    if (equippedItem != null)
+                    {
+                        player.playerInventoryManager.AddItemToInventory(equippedItem);
+                    }
+
+                    //  THEN ASSIGN THE SLOT OUR NEW ITEM
+                    player.playerInventoryManager.mainProjectile = currentItem as RangedProjectileItem;
+
+                    //  THEN REMOVE THE NEW ITEM FROM OUR INVENTORY
+                    player.playerInventoryManager.RemoveItemFromInventory(currentItem);
+
+                    //  RE-EQUIP NEW ITEM
+                    player.playerEquipmentManager.LoadMainProjectileEquipment(player.playerInventoryManager.mainProjectile);
+
+                    //  REFRESHES EQUIPMENT WINDOW
+                    PlayerUIManager.instance.playerUIEquipmentManager.RefreshMenu();
+
+                    break;
+                case EquipmentType.SecondaryProjectile:
+
+                    //  IF OUR CURRENT EQUIPMENT IN THIS SLOT, IS NOT A NULL ITEM, ADD IT TO OUR INVENTORY
+                    equippedItem = player.playerInventoryManager.secondaryProjectile;
+
+                    if (equippedItem != null)
+                    {
+                        player.playerInventoryManager.AddItemToInventory(equippedItem);
+                    }
+
+                    //  THEN ASSIGN THE SLOT OUR NEW ITEM
+                    player.playerInventoryManager.secondaryProjectile = currentItem as RangedProjectileItem;
+
+                    //  THEN REMOVE THE NEW ITEM FROM OUR INVENTORY
+                    player.playerInventoryManager.RemoveItemFromInventory(currentItem);
+
+                    //  RE-EQUIP NEW ITEM
+                    player.playerEquipmentManager.LoadSecondaryProjectileEquipment(player.playerInventoryManager.secondaryProjectile);
+
+                    //  REFRESHES EQUIPMENT WINDOW
+                    PlayerUIManager.instance.playerUIEquipmentManager.RefreshMenu();
+
+                    break;
                 default:
                     break;
             }

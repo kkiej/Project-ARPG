@@ -833,6 +833,49 @@ namespace LZ
             player.playerBodyManager.EnableArms();
         }
 
+        //  PROJECTILES
+        public void LoadMainProjectileEquipment(RangedProjectileItem equipment)
+        {
+            //  1. IF EQUIPMENT IS NULL SIMPLY SET EQUIPMENT IN INVENTORY TO NULL AND RETURN
+            if (equipment == null)
+            {
+                if (player.IsOwner)
+                    player.playerNetworkManager.mainProjectileID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
+
+                player.playerInventoryManager.mainProjectile = null;
+                return;
+            }
+
+            //  2. IF YOU HAVE AN "ONITEMEQUIPPED" CALL ON YOUR EQUIPMENT, RUN IT NOW
+
+            //  3. SET CURRENT PROJECTILE EQUIPMENT IN PLAYER INVENTORY TO THE EQUIPMENT THAT IS PASSED TO THIS FUNCTION
+            player.playerInventoryManager.mainProjectile = equipment;
+
+            if (player.IsOwner)
+                player.playerNetworkManager.mainProjectileID.Value = equipment.itemID;
+        }
+
+        public void LoadSecondaryProjectileEquipment(RangedProjectileItem equipment)
+        {
+            //  1. IF EQUIPMENT IS NULL SIMPLY SET EQUIPMENT IN INVENTORY TO NULL AND RETURN
+            if (equipment == null)
+            {
+                if (player.IsOwner)
+                    player.playerNetworkManager.secondaryProjectileID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
+
+                player.playerInventoryManager.secondaryProjectile = null;
+                return;
+            }
+
+            //  2. IF YOU HAVE AN "ONITEMEQUIPPED" CALL ON YOUR EQUIPMENT, RUN IT NOW
+
+            //  3. SET CURRENT PROJECTILE EQUIPMENT IN PLAYER INVENTORY TO THE EQUIPMENT THAT IS PASSED TO THIS FUNCTION
+            player.playerInventoryManager.secondaryProjectile = equipment;
+
+            if (player.IsOwner)
+                player.playerNetworkManager.secondaryProjectileID.Value = equipment.itemID;
+        }
+
         //  WEAPONS
         private void InitializeWeaponSlots()
         {
@@ -1191,10 +1234,10 @@ namespace LZ
         public void UnHideWeapons()
         {
             if (player.playerEquipmentManager.rightHandWeaponModel != null)
-                player.playerEquipmentManager.rightHandWeaponModel.SetActive(false);
+                player.playerEquipmentManager.rightHandWeaponModel.SetActive(true);
 
             if (player.playerEquipmentManager.leftHandWeaponModel != null)
-                player.playerEquipmentManager.leftHandWeaponModel.SetActive(false);
+                player.playerEquipmentManager.leftHandWeaponModel.SetActive(true);
         }
     }
 }

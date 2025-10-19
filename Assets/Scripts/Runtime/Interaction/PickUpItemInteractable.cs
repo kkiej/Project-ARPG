@@ -96,6 +96,9 @@ namespace LZ
             if (player.isPerformingAction)
                 return;
 
+            if (player.playerCombatManager.isUsingItem)
+                return;
+
             base.Interact(player);
 
             // 1. PLAY A SFX
