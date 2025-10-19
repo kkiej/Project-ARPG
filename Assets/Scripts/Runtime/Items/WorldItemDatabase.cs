@@ -36,6 +36,9 @@ namespace LZ
         [Header("Projectiles")]
         [SerializeField] List<RangedProjectileItem> projectiles = new List<RangedProjectileItem>();
 
+        [Header("Quick Slot")]
+        [SerializeField] List<QuickSlotItem> quickSlotItems = new List<QuickSlotItem>();
+
         //  A LIST OF EVERY ITEM WE HAVE IN THE GAME
         [Header("Items")]
         private List<Item> items = new List<Item>();
@@ -92,6 +95,11 @@ namespace LZ
                 items.Add(item);
             }
 
+            foreach (var item in quickSlotItems)
+            {
+                items.Add(item);
+            }
+
             //  ASSIGN ALL OF OUR ITEMS A UNIQUE ITEM ID
             for (int i = 0; i < items.Count; i++)
             {
@@ -142,6 +150,11 @@ namespace LZ
         public RangedProjectileItem GetProjectileByID(int ID)
         {
             return projectiles.FirstOrDefault(item => item.itemID == ID);
+        }
+
+        public QuickSlotItem GetQuickSlotItemByID(int ID)
+        {
+            return quickSlotItems.FirstOrDefault(item => item.itemID == ID);
         }
     }
 }

@@ -170,7 +170,8 @@ namespace LZ
             bool isPerformingAction, 
             bool applyRootMotion = true, 
             bool canRotate = false, 
-            bool canMove = false)
+            bool canMove = false,
+            bool canRun = true)
         {
             //Debug.Log("Playing Animation: " + targetAnimation);
             this.applyRootMotion = applyRootMotion;
@@ -182,10 +183,9 @@ namespace LZ
             character.isPerformingAction = isPerformingAction;
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
-            
-            // 告诉服务器/主机我们播放了一个动画，并为在场的每个人播放这个动画
-            character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId,
-                targetAnimation, applyRootMotion);
+            character.characterLocomotionManager.canRun = canRun;
+            //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
+            character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
         }
         
         public virtual void PlayTargetActionAnimationInstantly(
@@ -193,7 +193,8 @@ namespace LZ
             bool isPerformingAction,
             bool applyRootMotion = true,
             bool canRotate = false,
-            bool canMove = false)
+            bool canMove = false,
+            bool canRun = true)
         {
             this.applyRootMotion = applyRootMotion;
             character.animator.Play(targetAnimation);
@@ -204,6 +205,7 @@ namespace LZ
             character.isPerformingAction = isPerformingAction;
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
+            character.characterLocomotionManager.canRun = canRun;
 
             //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
             character.characterNetworkManager.NotifyTheServerOfInstantActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
@@ -232,10 +234,10 @@ namespace LZ
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
             character.characterNetworkManager.isAttacking.Value = true;
-            // 告诉服务器/主机我们播放了一个动画，并为在场的每个人播放这个动画
-            character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId,
-                targetAnimation, applyRootMotion);
-		}
+
+            //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
+            character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
+        }
 
         public void UpdateAnimatorController(AnimatorOverrideController weaponController)
         {

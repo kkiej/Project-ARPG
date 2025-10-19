@@ -16,6 +16,7 @@ namespace LZ
         [SerializeField] Image rightWeaponQuickSlotIcon;
         [SerializeField] Image leftWeaponQuickSlotIcon;
         [SerializeField] Image spellItemQuickSlotIcon;
+        [SerializeField] Image quickSlotItemQuickSlotIcon;
 
         [Header("Boss Health Bar")]
         public Transform bossHealthBarParent;
@@ -187,6 +188,33 @@ namespace LZ
 
             spellItemQuickSlotIcon.sprite = spell.itemIcon;
             spellItemQuickSlotIcon.enabled = true;
+        }
+
+        public void SetQuickSlotItemQuickSlotIcon(int itemID)
+        {
+            QuickSlotItem quickSlotItem = WorldItemDatabase.Instance.GetQuickSlotItemByID(itemID);
+
+            if (quickSlotItem == null)
+            {
+                Debug.Log("ITEM IS NULL");
+                quickSlotItemQuickSlotIcon.enabled = false;
+                quickSlotItemQuickSlotIcon.sprite = null;
+                return;
+            }
+
+            if (quickSlotItem.itemIcon == null)
+            {
+                Debug.Log("ITEM HAS NO ICON");
+                quickSlotItemQuickSlotIcon.enabled = false;
+                quickSlotItemQuickSlotIcon.sprite = null;
+                return;
+            }
+
+            //  TO DO, UPDATE QUANTITY LEFT, SHOW IN UI
+            //  FADE OUT ICON IF NONE REMAINING
+
+            quickSlotItemQuickSlotIcon.sprite = quickSlotItem.itemIcon;
+            quickSlotItemQuickSlotIcon.enabled = true;
         }
     }
 }

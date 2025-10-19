@@ -138,6 +138,9 @@ namespace LZ
 
             if (character.characterEffectsManager.activeDrawnProjectileFX != null)
                 Destroy(character.characterEffectsManager.activeDrawnProjectileFX);
+
+            if (character.characterEffectsManager.activeQuickSlotItemFX != null)
+                Destroy(character.characterEffectsManager.activeQuickSlotItemFX);
         }
 
         // 服务器RPC是一个从客户端调用到服务器（在我们的情况下是主机）的函数
