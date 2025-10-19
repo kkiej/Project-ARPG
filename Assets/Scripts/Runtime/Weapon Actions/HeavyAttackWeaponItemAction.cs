@@ -23,6 +23,10 @@ namespace LZ
             if (playerPerformingAction.playerNetworkManager.currentStamina.Value <= 0)
                 return;
 
+            //  IF WE ARE USING AN ITEM, DO NOT PROCEED
+            if (playerPerformingAction.playerCombatManager.isUsingItem)
+                return;
+
             //  IF WE ARE IN THE AIR, PERFORM A JUMPING/AERIAL ATTACK
             if (!playerPerformingAction.characterLocomotionManager.isGrounded)
             {

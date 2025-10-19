@@ -266,7 +266,7 @@ namespace LZ
 
         public void AttemptToPerformDodge()
         {
-            if (player.isPerformingAction)
+            if (!player.playerLocomotionManager.canRoll)
                 return;
 
             if (player.playerNetworkManager.currentStamina.Value <= 0)

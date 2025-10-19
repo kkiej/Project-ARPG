@@ -14,6 +14,10 @@ namespace LZ
             if (!playerPerformingAction.IsOwner)
                 return;
 
+            //  IF WE ARE USING AN ITEM, DO NOT PROCEED
+            if (playerPerformingAction.playerCombatManager.isUsingItem)
+                return;
+
             if (playerPerformingAction.playerNetworkManager.currentStamina.Value <= 0)
                 return;
 

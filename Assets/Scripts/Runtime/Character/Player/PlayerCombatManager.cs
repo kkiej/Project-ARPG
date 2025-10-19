@@ -15,8 +15,9 @@ namespace LZ
         private Vector3 projectileAimDirection;
 
         [Header("Flags")]
-        public bool canComboWithMainHandWeapon;
-        //public bool canComboWithOffHandWeapon;
+        public bool canComboWithMainHandWeapon = false;
+        //public bool canComboWithOffHandWeapon = false;
+        public bool isUsingItem = false;
 
         protected override void Awake()
         {
@@ -422,6 +423,13 @@ namespace LZ
                 return;
 
             player.playerInventoryManager.currentSpell.SuccessfullyCastSpellFullCharge(player);
+        }
+
+        //  QUICK SLOT
+        public void SuccessfullyUseQuickSlotItem()
+        {
+            if (player.playerInventoryManager.currentQuickSlotItem != null)
+                player.playerInventoryManager.currentQuickSlotItem.SuccessfullyUseItem(player);
         }
 
         //  ASH OF WAR

@@ -21,7 +21,11 @@ namespace LZ
             if (!playerPerformingAction.playerCombatManager.canBlock)
                 return;
 
-            // 检查攻击状态
+            //  IF WE ARE USING AN ITEM, DO NOT PROCEED
+            if (playerPerformingAction.playerCombatManager.isUsingItem)
+                return;
+
+            //  CHECK FOR ATTACK STATUS
             if (playerPerformingAction.playerNetworkManager.isAttacking.Value)
             {
                 // 禁用格挡（使用短矛/中矛时允许在轻攻击期间进行格挡反击。此逻辑由其他动作类处理）

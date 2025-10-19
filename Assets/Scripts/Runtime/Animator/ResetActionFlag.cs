@@ -10,9 +10,7 @@ namespace LZ
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (character == null)
-            {
                 character = animator.GetComponent<CharacterManager>();
-            }
 
             // 当一个动作结束时调用，并且状态重置为"Empty"
             character.isPerformingAction = false;
@@ -20,6 +18,7 @@ namespace LZ
             character.characterLocomotionManager.canRotate = true;
             character.characterLocomotionManager.canMove = true;
             character.characterLocomotionManager.canRun = true;
+            character.characterLocomotionManager.canRoll = true;
             character.characterLocomotionManager.isRolling = false;
             character.characterCombatManager.DisableCanDoCombo();
             character.characterCombatManager.DisableCanDoRollingAttack();

@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -248,6 +249,8 @@ namespace LZ
                     player.playerInventoryManager.currentQuickSlotItem.AttemptToUseItem(player);
 
                     //  SEND SERVER RPC SO OUR PLAYER PERFORMS ITEM ACTION ON OTHER CLIENTS GAME WINDOWS
+                    player.playerNetworkManager.NotifyServerOfQuickSlotItemActionServerRpc
+                        (NetworkManager.Singleton.LocalClientId, player.playerInventoryManager.currentQuickSlotItem.itemID);
                 }
             }
         }

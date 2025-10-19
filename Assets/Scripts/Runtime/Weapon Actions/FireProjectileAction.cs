@@ -19,6 +19,10 @@ namespace LZ
             if (playerPerformingAction.playerNetworkManager.currentStamina.Value <= 0)
                 return;
 
+            //  IF WE ARE USING AN ITEM, DO NOT PROCEED
+            if (playerPerformingAction.playerCombatManager.isUsingItem)
+                return;
+
             RangedProjectileItem projectileItem = null;
 
             //  1. Define which projectile we are using (Main projectile slot, Secondary projectile slot)

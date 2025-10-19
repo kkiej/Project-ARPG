@@ -27,6 +27,10 @@ namespace LZ
             if (playerPerformingAction.playerNetworkManager.isLockedOn.Value)
                 return;
 
+            //  IF WE ARE USING AN ITEM, DO NOT PROCEED
+            if (playerPerformingAction.playerCombatManager.isUsingItem)
+                return;
+
             if (playerPerformingAction.IsOwner)
             {
                 //  TWO HAND THE WEAPON (BOW) BEFORE WE AIM

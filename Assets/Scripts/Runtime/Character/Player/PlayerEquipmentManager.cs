@@ -1186,5 +1186,15 @@ namespace LZ
                 leftWeaponManager.meleeDamageCollider.DisableDamageCollider();
             }
         }
+        
+        //  UNHIDE WEAPONS
+        public void UnHideWeapons()
+        {
+            if (player.playerEquipmentManager.rightHandWeaponModel != null)
+                player.playerEquipmentManager.rightHandWeaponModel.SetActive(false);
+
+            if (player.playerEquipmentManager.leftHandWeaponModel != null)
+                player.playerEquipmentManager.leftHandWeaponModel.SetActive(false);
+        }
     }
 }

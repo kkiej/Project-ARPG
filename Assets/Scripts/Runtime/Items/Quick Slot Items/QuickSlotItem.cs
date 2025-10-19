@@ -20,6 +20,11 @@ namespace LZ
             player.playerAnimatorManager.PlayTargetActionAnimation(useItemAnimation, true);
         }
 
+        public virtual void SuccessfullyUseItem(PlayerManager player)
+        {
+
+        }
+
         public virtual bool CanIUseThisItem(PlayerManager player)
         {
             return true;

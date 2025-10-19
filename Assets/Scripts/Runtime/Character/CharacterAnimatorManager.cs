@@ -171,7 +171,8 @@ namespace LZ
             bool applyRootMotion = true, 
             bool canRotate = false, 
             bool canMove = false,
-            bool canRun = true)
+            bool canRun = true,
+            bool canRoll = false)
         {
             //Debug.Log("Playing Animation: " + targetAnimation);
             this.applyRootMotion = applyRootMotion;
@@ -184,6 +185,8 @@ namespace LZ
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
             character.characterLocomotionManager.canRun = canRun;
+            character.characterLocomotionManager.canRoll = canRoll;
+
             //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
             character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
         }
@@ -194,7 +197,8 @@ namespace LZ
             bool applyRootMotion = true,
             bool canRotate = false,
             bool canMove = false,
-            bool canRun = true)
+            bool canRun = true,
+            bool canRoll = false)
         {
             this.applyRootMotion = applyRootMotion;
             character.animator.Play(targetAnimation);
@@ -206,6 +210,7 @@ namespace LZ
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
             character.characterLocomotionManager.canRun = canRun;
+            character.characterLocomotionManager.canRoll = canRoll;
 
             //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
             character.characterNetworkManager.NotifyTheServerOfInstantActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
@@ -218,7 +223,8 @@ namespace LZ
             bool isPerformingAction,
             bool applyRootMotion = true,
             bool canRotate = false,
-            bool canMove = false)
+            bool canMove = false,
+            bool canRoll = false)
         {
             // 跟踪上次执行的攻击（用于连招）
             // 跟踪当前攻击类型（轻攻击、重攻击等）
@@ -234,6 +240,7 @@ namespace LZ
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
             character.characterNetworkManager.isAttacking.Value = true;
+            character.characterLocomotionManager.canRoll = canRoll;
 
             //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
             character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
