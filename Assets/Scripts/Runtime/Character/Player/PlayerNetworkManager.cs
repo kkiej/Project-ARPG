@@ -175,10 +175,14 @@ namespace LZ
             if (newQuickSlotItem != null)
             {
                 player.playerInventoryManager.currentQuickSlotItem = newQuickSlotItem;
-
-                if (player.IsOwner)
-                    PlayerUIManager.instance.playerUIHudManager.SetQuickSlotItemQuickSlotIcon(newID);
             }
+            else
+            {
+                player.playerInventoryManager.currentQuickSlotItem = null;
+            }
+
+            if (player.IsOwner)
+                PlayerUIManager.instance.playerUIHudManager.SetQuickSlotItemQuickSlotIcon(newID);
         }
 
         public void OnMainProjectileIDChange(int oldID, int newID)

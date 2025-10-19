@@ -133,5 +133,18 @@ namespace LZ
             Instantiate(WorldCharacterEffectsManager.instance.healingFlaskVFX, player.transform);
             player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.instance.healingFlaskSFX);
         }
+
+        public override int GetCurrentAmount(PlayerManager player)
+        {
+            int currentAmount = 0;
+
+            if (healthFlask)
+                currentAmount = player.playerNetworkManager.remainingHealthFlasks.Value;
+
+            if (!healthFlask)
+                currentAmount = player.playerNetworkManager.remainingFocusPointsFlasks.Value;
+
+            return currentAmount;
+        }
     }
 }

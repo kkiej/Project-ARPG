@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.Netcode;
 
 namespace LZ
 {
@@ -18,6 +19,7 @@ namespace LZ
         [SerializeField] Image leftWeaponQuickSlotIcon;
         [SerializeField] Image spellItemQuickSlotIcon;
         [SerializeField] Image quickSlotItemQuickSlotIcon;
+        [SerializeField] TextMeshProUGUI quickSlotItemCount;
         [SerializeField] GameObject projectileQuickSlotsGameObject;
         [SerializeField] Image mainProjectileQuickSlotIcon;
         [SerializeField] TextMeshProUGUI mainProjectileCount;
@@ -205,6 +207,7 @@ namespace LZ
                 Debug.Log("ITEM IS NULL");
                 quickSlotItemQuickSlotIcon.enabled = false;
                 quickSlotItemQuickSlotIcon.sprite = null;
+                quickSlotItemCount.enabled = false;
                 return;
             }
 
@@ -213,6 +216,7 @@ namespace LZ
                 Debug.Log("ITEM HAS NO ICON");
                 quickSlotItemQuickSlotIcon.enabled = false;
                 quickSlotItemQuickSlotIcon.sprite = null;
+                quickSlotItemCount.enabled = false;
                 return;
             }
 
@@ -221,6 +225,17 @@ namespace LZ
 
             quickSlotItemQuickSlotIcon.sprite = quickSlotItem.itemIcon;
             quickSlotItemQuickSlotIcon.enabled = true;
+
+            if (quickSlotItem.isConsumable)
+            {
+                PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+                quickSlotItemCount.text = quickSlotItem.GetCurrentAmount(player).ToString();
+                quickSlotItemCount.enabled = true;
+            }
+            else
+            {
+                quickSlotItemCount.enabled = false;
+            }
         }
 
         public void ToggleProjectileQuickSlotsVisibility(bool status)

@@ -261,7 +261,16 @@
                     "name": "Switch Left Weapon",
                     "type": "Button",
                     "id": "47ed97f6-0002-4e5b-a037-5e22698ae3d0",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Switch Quick Slot Item",
+                    "type": "Button",
+                    "id": "2610c5d4-63e1-4f12-912d-7ad5af254fcd",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -270,7 +279,7 @@
                     "name": "Seek Left Lock On Target",
                     "type": "Button",
                     "id": "fc323db6-9dc1-4890-9d41-80beafaa3c7f",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -536,6 +545,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Switch Left Weapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba64420e-192a-4ecb-8807-f12d268d9b52",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Switch Quick Slot Item",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

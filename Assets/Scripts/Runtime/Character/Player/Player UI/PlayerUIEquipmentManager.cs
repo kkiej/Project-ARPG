@@ -25,6 +25,8 @@ namespace LZ
         private Button leftHandSlot02Button;
         [SerializeField] Image leftHandSlot03;
         private Button leftHandSlot03Button;
+
+        [Header("Armor Slots")]
         [SerializeField] Image headEquipmentSlot;
         private Button headEquipmentSlotButton;
         [SerializeField] Image bodyEquipmentSlot;
@@ -33,12 +35,25 @@ namespace LZ
         private Button legEquipmentSlotButton;
         [SerializeField] Image handEquipmentSlot;
         private Button handEquipmentSlotButton;
+
+        [Header("Projectile Slots")]
         [SerializeField] Image mainProjectileEquipmentSlot;
         [SerializeField] TextMeshProUGUI mainProjectileCount;
         private Button mainProjectileEquipmentSlotButton;
         [SerializeField] Image secondaryProjectileEquipmentSlot;
         [SerializeField] TextMeshProUGUI secondaryProjectileCount;
         private Button secondaryProjectileEquipmentSlotButton;
+
+        [Header("Quick Slots")]
+        [SerializeField] Image quickSlot01EquipmentSlot;
+        [SerializeField] TextMeshProUGUI quickSlot01Count;
+        private Button quickSlot01Button;
+        [SerializeField] Image quickSlot02EquipmentSlot;
+        [SerializeField] TextMeshProUGUI quickSlot02Count;
+        private Button quickSlot02Button;
+        [SerializeField] Image quickSlot03EquipmentSlot;
+        [SerializeField] TextMeshProUGUI quickSlot03Count;
+        private Button quickSlot03Button;
 
         //  THIS INVENTORY POPULATES WITH RELATED ITEMS WHEN CHANGING EQUIPMENT
         [Header("Equipment Inventory")]
@@ -65,6 +80,10 @@ namespace LZ
 
             mainProjectileEquipmentSlotButton = mainProjectileEquipmentSlot.GetComponentInParent<Button>(true);
             secondaryProjectileEquipmentSlotButton = secondaryProjectileEquipmentSlot.GetComponentInParent<Button>(true);
+
+            quickSlot01Button = quickSlot01EquipmentSlot.GetComponentInParent<Button>(true);
+            quickSlot02Button = quickSlot02EquipmentSlot.GetComponentInParent<Button>(true);
+            quickSlot03Button = quickSlot03EquipmentSlot.GetComponentInParent<Button>(true);
         }
 
         public void OpenEquipmentManagerMenu()
@@ -100,6 +119,10 @@ namespace LZ
 
             mainProjectileEquipmentSlotButton.enabled = isEnabled;
             secondaryProjectileEquipmentSlotButton.enabled = isEnabled;
+
+            quickSlot01Button.enabled = isEnabled;
+            quickSlot02Button.enabled = isEnabled;
+            quickSlot03Button.enabled = isEnabled;
         }
 
         //  THIS FUNCTION SIMPLY RETURNS YOU TO THE LAST SELECTED BUTTON WHEN YOU ARE FINISHED EQUIPPING A NEW ITEM
@@ -146,6 +169,15 @@ namespace LZ
                     break;
                 case EquipmentType.SecondaryProjectile:
                     lastSelectedButton = secondaryProjectileEquipmentSlotButton;
+                    break;
+                case EquipmentType.QuickSlot01:
+                    lastSelectedButton = quickSlot01Button;
+                    break;
+                case EquipmentType.QuickSlot02:
+                    lastSelectedButton = quickSlot02Button;
+                    break;
+                case EquipmentType.QuickSlot03:
+                    lastSelectedButton = quickSlot03Button;
                     break;
                 default:
                     break;
@@ -330,6 +362,77 @@ namespace LZ
                 secondaryProjectileEquipmentSlot.enabled = false;
                 secondaryProjectileCount.enabled = false;
             }
+
+            //  QUICK SLOTS
+
+            QuickSlotItem quickSlotEquipment01 = player.playerInventoryManager.quickSlotItemsInQuickSlots[0];
+
+            if (quickSlotEquipment01 != null)
+            {
+                quickSlot01EquipmentSlot.enabled = true;
+                quickSlot01EquipmentSlot.sprite = quickSlotEquipment01.itemIcon;
+
+                if (quickSlotEquipment01.isConsumable)
+                {
+                    quickSlot01Count.enabled = true;
+                    quickSlot01Count.text = quickSlotEquipment01.GetCurrentAmount(player).ToString();
+                }
+                else
+                {
+                    quickSlot01Count.enabled = false;
+                }
+            }
+            else
+            {
+                quickSlot01EquipmentSlot.enabled = false;
+                quickSlot01Count.enabled = false;
+            }
+
+            QuickSlotItem quickSlotEquipment02 = player.playerInventoryManager.quickSlotItemsInQuickSlots[1];
+
+            if (quickSlotEquipment02 != null)
+            {
+                quickSlot02EquipmentSlot.enabled = true;
+                quickSlot02EquipmentSlot.sprite = quickSlotEquipment02.itemIcon;
+
+                if (quickSlotEquipment02.isConsumable)
+                {
+                    quickSlot02Count.enabled = true;
+                    quickSlot02Count.text = quickSlotEquipment02.GetCurrentAmount(player).ToString();
+                }
+                else
+                {
+                    quickSlot02Count.enabled = false;
+                }
+            }
+            else
+            {
+                quickSlot02EquipmentSlot.enabled = false;
+                quickSlot02Count.enabled = false;
+            }
+
+            QuickSlotItem quickSlotEquipment03 = player.playerInventoryManager.quickSlotItemsInQuickSlots[2];
+
+            if (quickSlotEquipment03 != null)
+            {
+                quickSlot03EquipmentSlot.enabled = true;
+                quickSlot03EquipmentSlot.sprite = quickSlotEquipment03.itemIcon;
+
+                if (quickSlotEquipment03.isConsumable)
+                {
+                    quickSlot03Count.enabled = true;
+                    quickSlot03Count.text = quickSlotEquipment03.GetCurrentAmount(player).ToString();
+                }
+                else
+                {
+                    quickSlot03Count.enabled = false;
+                }
+            }
+            else
+            {
+                quickSlot03EquipmentSlot.enabled = false;
+                quickSlot03Count.enabled = false;
+            }
         }
 
         private void ClearEquipmentInventory()
@@ -382,6 +485,15 @@ namespace LZ
                     break;
                 case EquipmentType.SecondaryProjectile:
                     LoadProjectileInventory();
+                    break;
+                case EquipmentType.QuickSlot01:
+                    LoadQuickSlotInventory();
+                    break;
+                case EquipmentType.QuickSlot02:
+                    LoadQuickSlotInventory();
+                    break;
+                case EquipmentType.QuickSlot03:
+                    LoadQuickSlotInventory();
                     break;
                 default:
                     break;
@@ -646,6 +758,49 @@ namespace LZ
             }
         }
 
+        private void LoadQuickSlotInventory()
+        {
+            PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+
+            List<QuickSlotItem> quickSlotItemsInInventory = new List<QuickSlotItem>();
+
+            //  SEARCH OUR ENTIRE INVENTORY, AND OUT OF ALL OF THE ITEMS IN OUR INVENTORY IF THE ITEM IS A WEAPON ADD IT TO OUR WEAPONS LIST
+            for (int i = 0; i < player.playerInventoryManager.itemsInInventory.Count; i++)
+            {
+                QuickSlotItem quickSlotItem = player.playerInventoryManager.itemsInInventory[i] as QuickSlotItem;
+
+                if (quickSlotItem != null)
+                    quickSlotItemsInInventory.Add(quickSlotItem);
+            }
+
+            if (quickSlotItemsInInventory.Count <= 0)
+            {
+                //  TO DO SEND A PLAYER A MESSAGE THAT HE HAS NONE OF ITEM TYPE IN INVENTORY
+                equipmentInventoryWindow.SetActive(false);
+                ToggleEquipmentButtons(true);
+                RefreshMenu();
+                return;
+            }
+
+            bool hasSelectedFirstInventorySlot = false;
+
+            for (int i = 0; i < quickSlotItemsInInventory.Count; i++)
+            {
+                GameObject inventorySlotGameObject = Instantiate(equipmentInventorySlotPrefab, equipmentInventoryContentWindow);
+                UI_EquipmentInventorySlot equipmentInventorySlot = inventorySlotGameObject.GetComponent<UI_EquipmentInventorySlot>();
+                equipmentInventorySlot.AddItem(quickSlotItemsInInventory[i]);
+
+                //  THIS WILL SELECT THE FIRST BUTTON IN THE LIST
+                if (!hasSelectedFirstInventorySlot)
+                {
+                    hasSelectedFirstInventorySlot = true;
+                    Button inventorySlotButton = inventorySlotGameObject.GetComponent<Button>();
+                    inventorySlotButton.Select();
+                    inventorySlotButton.OnSelect(null);
+                }
+            }
+        }
+
         public void SelectEquipmentSlot(int equipmentSlot)
         {
             currentSelectedEquipmentSlot = (EquipmentType)equipmentSlot;
@@ -818,6 +973,45 @@ namespace LZ
 
                     player.playerInventoryManager.secondaryProjectile = null;
                     player.playerEquipmentManager.LoadSecondaryProjectileEquipment(player.playerInventoryManager.secondaryProjectile);
+
+                    break;
+                case EquipmentType.QuickSlot01:
+
+                    unequippedItem = player.playerInventoryManager.quickSlotItemsInQuickSlots[0];
+
+                    if (unequippedItem != null)
+                        player.playerInventoryManager.AddItemToInventory(unequippedItem);
+
+                    player.playerInventoryManager.quickSlotItemsInQuickSlots[0] = null;
+
+                    if (player.playerInventoryManager.quickSlotItemIndex == 0)
+                        player.playerNetworkManager.currentQuickSlotItemID.Value = -1;
+
+                    break;
+                case EquipmentType.QuickSlot02:
+
+                    unequippedItem = player.playerInventoryManager.quickSlotItemsInQuickSlots[1];
+
+                    if (unequippedItem != null)
+                        player.playerInventoryManager.AddItemToInventory(unequippedItem);
+
+                    player.playerInventoryManager.quickSlotItemsInQuickSlots[1] = null;
+
+                    if (player.playerInventoryManager.quickSlotItemIndex == 1)
+                        player.playerNetworkManager.currentQuickSlotItemID.Value = -1;
+
+                    break;
+                case EquipmentType.QuickSlot03:
+
+                    unequippedItem = player.playerInventoryManager.quickSlotItemsInQuickSlots[2];
+
+                    if (unequippedItem != null)
+                        player.playerInventoryManager.AddItemToInventory(unequippedItem);
+
+                    player.playerInventoryManager.quickSlotItemsInQuickSlots[2] = null;
+
+                    if (player.playerInventoryManager.quickSlotItemIndex == 2)
+                        player.playerNetworkManager.currentQuickSlotItemID.Value = -1;
 
                     break;
                 default:
