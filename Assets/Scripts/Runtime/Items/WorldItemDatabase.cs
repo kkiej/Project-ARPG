@@ -156,5 +156,39 @@ namespace LZ
         {
             return quickSlotItems.FirstOrDefault(item => item.itemID == ID);
         }
+
+        //  ITEM SERIALIZATION
+        
+        public WeaponItem GetWeaponFromSerializedData(SerializableWeapon serializableWeapon)
+        {
+            WeaponItem weapon = null;
+
+            if (GetWeaponByID(serializableWeapon.itemID))
+                weapon = Instantiate(GetWeaponByID(serializableWeapon.itemID));
+
+            if (weapon == null)
+                return Instantiate(unarmedWeapon);
+
+            if (GetAshOfWarByID(serializableWeapon.ashOfWarID))
+            {
+                AshOfWar ashOfWar = Instantiate(GetAshOfWarByID(serializableWeapon.ashOfWarID));
+                weapon.ashOfWarAction = ashOfWar;
+            }
+
+            return weapon;
+        }
+
+        public RangedProjectileItem GetRangedProjectileFromSerializedData(SerializableRangedProjectile serializableProjectile)
+        {
+            RangedProjectileItem rangedProjectile = null;
+
+            if (GetProjectileByID(serializableProjectile.itemID))
+            {
+                rangedProjectile = Instantiate(GetProjectileByID(serializableProjectile.itemID));
+                rangedProjectile.currentAmmoAmount = serializableProjectile.itemAmount;
+            }
+
+            return rangedProjectile;
+        }
     }
 }

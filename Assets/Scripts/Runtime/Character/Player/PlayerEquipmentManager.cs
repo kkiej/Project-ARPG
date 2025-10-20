@@ -1014,11 +1014,13 @@ namespace LZ
                 {
                     player.playerInventoryManager.rightHandWeaponIndex = -1;
                     selectedWeapon = WorldItemDatabase.Instance.unarmedWeapon;
+                    player.playerInventoryManager.currentRightHandWeapon = selectedWeapon;
                     player.playerNetworkManager.currentRightHandWeaponID.Value = selectedWeapon.itemID;
                 }
                 else
                 {
                     player.playerInventoryManager.rightHandWeaponIndex = firstWeaponPosition;
+                    player.playerInventoryManager.currentRightHandWeapon = selectedWeapon;
                     player.playerNetworkManager.currentRightHandWeaponID.Value = firstWeapon.itemID;
                 }
 
@@ -1027,13 +1029,13 @@ namespace LZ
 
             foreach (WeaponItem weapon in player.playerInventoryManager.weaponsInRightHandSlots)
             {
-                // 检查看看这是不是“非武装”武器
-                // 如果下一个可能的武器不是空手
+                //  IF THE NEXT POTENTIAL WEAPON DOES NOT EQUAL THE UNARMED WEAPON
                 if (player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex].itemID != WorldItemDatabase.Instance.unarmedWeapon.itemID)
                 {
                     selectedWeapon = player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex];
                     //  ASSIGN THE NETWORK WEAPON ID SO IT SWITCHES FOR ALL CONNECTED CLIENTS
-                    player.playerNetworkManager.currentRightHandWeaponID.Value = player.playerInventoryManager.weaponsInRightHandSlots[player.playerInventoryManager.rightHandWeaponIndex].itemID;
+                    player.playerInventoryManager.currentRightHandWeapon = selectedWeapon;
+                    player.playerNetworkManager.currentRightHandWeaponID.Value = selectedWeapon.itemID;
                     return;
                 }
             }
@@ -1110,11 +1112,13 @@ namespace LZ
                 {
                     player.playerInventoryManager.leftHandWeaponIndex = -1;
                     selectedWeapon = WorldItemDatabase.Instance.unarmedWeapon;
+                    player.playerInventoryManager.currentLeftHandWeapon = selectedWeapon;
                     player.playerNetworkManager.currentLeftHandWeaponID.Value = selectedWeapon.itemID;
                 }
                 else
                 {
                     player.playerInventoryManager.leftHandWeaponIndex = firstWeaponPosition;
+                    player.playerInventoryManager.currentLeftHandWeapon = selectedWeapon;
                     player.playerNetworkManager.currentLeftHandWeaponID.Value = firstWeapon.itemID;
                 }
 
@@ -1129,7 +1133,8 @@ namespace LZ
                 {
                     selectedWeapon = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex];
                     //  ASSIGN THE NETWORK WEAPON ID SO IT SWITCHES FOR ALL CONNECTED CLIENTS
-                    player.playerNetworkManager.currentLeftHandWeaponID.Value = player.playerInventoryManager.weaponsInLeftHandSlots[player.playerInventoryManager.leftHandWeaponIndex].itemID;
+                    player.playerInventoryManager.currentLeftHandWeapon = selectedWeapon;
+                    player.playerNetworkManager.currentLeftHandWeaponID.Value = selectedWeapon.itemID;
                     return;
                 }
             }

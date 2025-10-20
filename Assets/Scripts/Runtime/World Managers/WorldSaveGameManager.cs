@@ -368,5 +368,44 @@ namespace LZ
         {
             return worldSceneIndex;
         }
+
+        public SerializableWeapon GetSerializableWeaponFromWeaponItem(WeaponItem weapon)
+        {
+            SerializableWeapon serializedWeapon = new SerializableWeapon();
+
+            //  GET WEAPON I.D
+            serializedWeapon.itemID = weapon.itemID;
+            
+            //  GET ASH OF WAR I.D IF ONE IS PRESENT (THERE SHOULD ALWAYS BE ONE BY DEFAULT)
+            if (weapon.ashOfWarAction != null)
+            {
+                serializedWeapon.ashOfWarID = weapon.ashOfWarAction.itemID;
+            }
+            else
+            {
+                //  WE USE AN INVALID ID IF THERE IS NO ASH OF WAR, SO THE VALUE WILL BE NULL IF IT TRIES TO SEARCH FOR ONE USING THE I.D
+                serializedWeapon.ashOfWarID = -1;
+            }
+
+            return serializedWeapon;
+        }
+
+        public SerializableRangedProjectile GetSerializableRangedProjectileFromRangedProjectileItem(RangedProjectileItem projectile)
+        {
+            SerializableRangedProjectile serializedProjectile = new SerializableRangedProjectile();
+
+            if (projectile != null)
+            {
+                //  GET WEAPON I.D
+                serializedProjectile.itemID = projectile.itemID;
+                serializedProjectile.itemAmount = projectile.currentAmmoAmount;
+            }
+            else
+            {
+                serializedProjectile.itemID = -1;
+            }
+
+            return serializedProjectile;
+        }
     }
 }
