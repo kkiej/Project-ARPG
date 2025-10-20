@@ -932,6 +932,28 @@ namespace LZ
                 player.playerNetworkManager.secondaryProjectileID.Value = equipment.itemID;
         }
 
+        //  QUICK SLOT
+        public void LoadQuickSlotEquipment(QuickSlotItem equipment)
+        {
+            //  1. IF EQUIPMENT IS NULL SIMPLY SET EQUIPMENT IN INVENTORY TO NULL AND RETURN
+            if (equipment == null)
+            {
+                if (player.IsOwner)
+                    player.playerNetworkManager.currentQuickSlotItemID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
+
+                player.playerInventoryManager.currentQuickSlotItem = null;
+                return;
+            }
+
+            //  2. IF YOU HAVE AN "ONITEMEQUIPPED" CALL ON YOUR EQUIPMENT, RUN IT NOW
+
+            //  3. SET CURRENT PROJECTILE EQUIPMENT IN PLAYER INVENTORY TO THE EQUIPMENT THAT IS PASSED TO THIS FUNCTION
+            player.playerInventoryManager.currentQuickSlotItem = equipment;
+
+            if (player.IsOwner)
+                player.playerNetworkManager.currentQuickSlotItemID.Value = equipment.itemID;
+        }
+
         //  WEAPONS
         private void InitializeWeaponSlots()
         {
