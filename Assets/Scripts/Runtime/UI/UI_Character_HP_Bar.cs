@@ -15,7 +15,7 @@ namespace LZ
         [SerializeField] bool displayCharacterNameOnDamage = false;
         [SerializeField] float defaultTimeBeforeBarHides = 3;
         [SerializeField] float hideTimer = 0;
-        [SerializeField] int currentDamageTaken = 0;
+        public int currentDamageTaken = 0;
         [SerializeField] TextMeshProUGUI characterName;
         [SerializeField] TextMeshProUGUI characterDamage;
         [HideInInspector] public int oldHealthValue = 0;

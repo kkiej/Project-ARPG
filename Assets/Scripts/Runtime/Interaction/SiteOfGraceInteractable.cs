@@ -147,9 +147,13 @@ namespace LZ
             PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
 
             //  ENABLE LOADING SCREEN
+            PlayerUIManager.instance.playerUILoadingScreenManager.ActivateLoadingScreen();
 
             //  TELEPORT PLAYER
             player.transform.position = teleportTransform.position;
+
+            //  DISABLE LOADING SCREEN
+            PlayerUIManager.instance.playerUILoadingScreenManager.DeactivateLoadingScreen(1);
         }
     }
 }

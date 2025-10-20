@@ -16,6 +16,7 @@ namespace LZ
         [HideInInspector] public PlayerUIEquipmentManager playerUIEquipmentManager;
         [HideInInspector] public PlayerUISiteOfGraceManager playerUISiteOfGraceManager;
         [HideInInspector] public PlayerUITeleportLocationManager playerUITeleportLocationManager;
+        [HideInInspector] public PlayerUILoadingScreenManager playerUILoadingScreenManager;
 
         [Header("UI Flags")]
         public bool menuWindowIsOpen = false;       // 物品栏界面、装备菜单、铁匠菜单等
@@ -38,6 +39,7 @@ namespace LZ
             playerUIEquipmentManager = GetComponentInChildren<PlayerUIEquipmentManager>();
             playerUISiteOfGraceManager = GetComponentInChildren<PlayerUISiteOfGraceManager>();
             playerUITeleportLocationManager = GetComponentInChildren<PlayerUITeleportLocationManager>();
+            playerUILoadingScreenManager = GetComponentInChildren<PlayerUILoadingScreenManager>();
         }
 
         private void Start()
