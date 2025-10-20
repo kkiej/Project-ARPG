@@ -23,7 +23,7 @@ namespace LZ
         {
             base.Awake();
             
-            // Do more stuff, only for the player
+            // 执行仅适用于玩家的额外逻辑
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
             playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
             playerNetworkManager = GetComponent<PlayerNetworkManager>();
@@ -76,7 +76,7 @@ namespace LZ
             base.OnNetworkSpawn();
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
             
-            // if this is the player object owned by this client
+            // 若当前对象是由本客户端拥有的玩家对象
             if (IsOwner)
             {
                 PlayerCamera.instance.player = this;
@@ -94,7 +94,7 @@ namespace LZ
                 playerNetworkManager.currentFocusPoints.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewFocusPointValue;
                 playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegenTimer;
 
-                //  RESETS CAMERA ROTATION TO STANDARD WHEN AIMING IS DISABLED
+                // 当取消瞄准状态时，将相机旋转重置为标准值
                 playerNetworkManager.isAiming.OnValueChanged += playerNetworkManager.OnIsAimingChanged;
             }
             
@@ -168,7 +168,7 @@ namespace LZ
                 playerNetworkManager.currentFocusPoints.OnValueChanged -= PlayerUIManager.instance.playerUIHudManager.SetNewFocusPointValue;
                 playerNetworkManager.currentStamina.OnValueChanged -= playerStatsManager.ResetStaminaRegenTimer;
 
-                //  RESETS CAMERA ROTATION TO STANDARD WHEN AIMING IS DISABLED
+                // 当取消瞄准状态时，将相机旋转重置为标准值
                 playerNetworkManager.isAiming.OnValueChanged -= playerNetworkManager.OnIsAimingChanged;
             }
             
@@ -308,7 +308,7 @@ namespace LZ
             if (playerInventoryManager.currentSpell != null)
                 currentCharacterData.currentSpell = playerInventoryManager.currentSpell.itemID;
 
-            //  CLEAR LISTS BEFORE SAVE
+            // 保存前清空列表
             currentCharacterData.weaponsInInventory = new List<SerializableWeapon>();
             currentCharacterData.projectilesInInventory = new List<SerializableRangedProjectile>();
             currentCharacterData.quickSlotItemsInInventory = new List<SerializableQuickSlotItem>();
@@ -357,7 +357,7 @@ namespace LZ
         {
             playerNetworkManager.characterName.Value = currentCharacterData.characterName;
             playerNetworkManager.isMale.Value = currentCharacterData.isMale;
-            playerBodyManager.ToggleBodyType(currentCharacterData.isMale); //   TOGGLE INCASE THE VALUE IS THE SAME AS DEFAULT (ONVALUECHANGED ONLY WORKS WHEN VALUE IS CHANGED)
+            playerBodyManager.ToggleBodyType(currentCharacterData.isMale); // 切换逻辑：当数值与默认值相同时也需要触发（因OnValueChanged仅在数值变更时生效）
             Vector3 myPosition = new Vector3(currentCharacterData.xPosition, currentCharacterData.yPosition, currentCharacterData.zPosition);
             transform.position = myPosition;
 

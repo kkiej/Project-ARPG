@@ -11,19 +11,20 @@ namespace LZ
         public static TitleScreenManager instance;
         
         [Header("Menus")]
-        [SerializeField] private GameObject titleScreenMainMenu;
-        [SerializeField] private GameObject titleScreenLoadMenu;
+        [SerializeField] GameObject titleScreenMainMenu;
+        [SerializeField] GameObject titleScreenLoadMenu;
+        [SerializeField] GameObject titleScreenCharacterCreationMenu;
 
         [Header("Buttons")]
-        [SerializeField] private Button loadMenuReturnButton;
-        [SerializeField] private Button mainMenuLoadGameButton;
-        [SerializeField] private Button mainMenuNewGameButton;
-        [SerializeField] private Button deleteCharacterPopUpConfirmButton;
+        [SerializeField] Button loadMenuReturnButton;
+        [SerializeField] Button mainMenuLoadGameButton;
+        [SerializeField] Button mainMenuNewGameButton;
+        [SerializeField] Button deleteCharacterPopUpConfirmButton;
 
         [Header("Pop Ups")]
-        [SerializeField] private GameObject noCharacterSlotsPopUp;
-        [SerializeField] private Button noCharacterSlotsOkayButton;
-        [SerializeField] private GameObject deleteCharacterSlotPopUp;
+        [SerializeField] GameObject noCharacterSlotsPopUp;
+        [SerializeField] Button noCharacterSlotsOkayButton;
+        [SerializeField] GameObject deleteCharacterSlotPopUp;
 
         [Header("Character Slots")]
         public CharacterSlot currentSelectedSlot = CharacterSlot.NO_SLOT;
@@ -43,6 +44,19 @@ namespace LZ
         public void StartNetworkAsHost()
         {
             NetworkManager.Singleton.StartHost();
+        }
+
+        public void AttemptToCreateNewCharacter()
+        {
+            if (WorldSaveGameManager.instance.HasFreeCharacterSlot())
+            {
+                OpenCharacterCreationMenu();
+            }
+            else
+            {
+                //  若所有槽位均已占用，则向玩家发送提示信息
+                DisplayNoFreeCharacterSlotsPopUp();
+            }
         }
 
         public void StartNewGame()
@@ -72,6 +86,16 @@ namespace LZ
             
             // 选择加载按钮
             mainMenuLoadGameButton.Select();
+        }
+
+        public void OpenCharacterCreationMenu()
+        {
+            titleScreenCharacterCreationMenu.SetActive(true);
+        }
+
+        public void CloseCharacterCreationMenu()
+        {
+            titleScreenCharacterCreationMenu.SetActive(false);
         }
 
         public void DisplayNoFreeCharacterSlotsPopUp()

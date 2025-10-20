@@ -14,11 +14,11 @@ namespace LZ
         public PlayerManager player;
 
         [Header("SAVE/LOAD")]
-        [SerializeField] private bool saveGame;
-        [SerializeField] private bool loadGame;
+        [SerializeField] bool saveGame;
+        [SerializeField] bool loadGame;
 
         [Header("World Scene Index")]
-        [SerializeField] private int worldSceneIndex = 1;
+        [SerializeField] int worldSceneIndex = 1;
 
         [Header("Save Data Writer")]
         private SaveFileDataWriter saveFileDataWriter;
@@ -72,6 +72,74 @@ namespace LZ
                 loadGame = false;
                 LoadGame();
             }
+        }
+
+        public bool HasFreeCharacterSlot()
+        {
+            saveFileDataWriter = new SaveFileDataWriter();
+            saveFileDataWriter.saveDataDirectoryPath = Application.persistentDataPath;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_01);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_02);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_03);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_04);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_05);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_06);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_07);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_08);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_09);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            // 检查是否能够创建新存档文件（需先检测其他已存在的文件）
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_10);
+
+            if (!saveFileDataWriter.CheckToSeeIfFileExists())
+                return true;
+
+            return false;
         }
 
         public string DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot characterSlot)
