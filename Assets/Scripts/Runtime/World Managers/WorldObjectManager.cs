@@ -16,6 +16,9 @@ namespace LZ
         [Header("Fog Walls")]
         public List<FogWallInteractable> fogWalls;
 
+        [Header("Sites Of Grace")]
+        public List<SiteOfGraceInteractable> sitesOfGrace;
+
         // 4. When the fog walls are spawned, add them to the world fog wall list
         // 5. Grab the correct fogwall from the list on the boss manager when the boss is being initialized
 
@@ -53,6 +56,22 @@ namespace LZ
             if (fogWalls.Contains(fogWall))
             {
                 fogWalls.Remove(fogWall);
+            }
+        }
+
+        public void AddSiteOfGraceToList(SiteOfGraceInteractable siteOfGrace)
+        {
+            if (!sitesOfGrace.Contains(siteOfGrace))
+            {
+                sitesOfGrace.Add(siteOfGrace);
+            }
+        }
+
+        public void RemoveSiteOfGraceFromList(SiteOfGraceInteractable siteOfGrace)
+        {
+            if (sitesOfGrace.Contains(siteOfGrace))
+            {
+                sitesOfGrace.Remove(siteOfGrace);
             }
         }
     }

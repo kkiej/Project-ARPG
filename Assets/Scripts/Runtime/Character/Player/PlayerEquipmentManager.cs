@@ -970,6 +970,8 @@ namespace LZ
             if (!player.IsOwner)
                 return;
 
+            player.playerNetworkManager.isTwoHandingWeapon.Value = false;
+
             player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Right_Weapon_01", false, false, true, true);
             
             // 艾尔登法环武器切换
@@ -1063,6 +1065,8 @@ namespace LZ
         {
             if (!player.IsOwner)
                 return;
+
+            player.playerNetworkManager.isTwoHandingWeapon.Value = false;
 
             player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Left_Weapon_01", false, false, true, true);
             

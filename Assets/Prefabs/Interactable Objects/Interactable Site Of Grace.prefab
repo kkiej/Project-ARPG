@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6526296625094573092}
   - component: {fileID: 3404010990200081507}
   - component: {fileID: 1206767424914957371}
-  - component: {fileID: 875824842804190782}
+  - component: {fileID: 3117559946127354148}
   - component: {fileID: 792481113804814407}
   m_Layer: 0
   m_Name: Interactable Site Of Grace
@@ -33,8 +33,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5125786079527647804}
   - {fileID: 9016575455120085108}
   - {fileID: 8747985026519715925}
+  - {fileID: 1560202269614500194}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3404010990200081507
@@ -49,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1921679556
+  GlobalObjectIdHash: 1443615224
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -79,8 +81,9 @@ MonoBehaviour:
   activatedParticles: {fileID: 8452378313700393682}
   unactivatedInteractionText: Restore Site Of Grace
   activatedInteractionText: Rest
---- !u!64 &875824842804190782
-MeshCollider:
+  teleportTransform: {fileID: 1560202269614500194}
+--- !u!136 &3117559946127354148
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -97,10 +100,11 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3447627243977740663, guid: 778e4cd1a1e1d4d4ea20bf47edb671b5, type: 3}
+  serializedVersion: 2
+  m_Radius: 0.44
+  m_Height: 1.01
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.36, z: 0}
 --- !u!54 &792481113804814407
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -128,6 +132,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!1 &2940270304730854653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1560202269614500194}
+  m_Layer: 0
+  m_Name: Teleport Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1560202269614500194
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2940270304730854653}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.031}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6526296625094573092}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4247890603170773463
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,7 +222,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 9016575455120085108}
+    m_TransformParent: {fileID: 6526296625094573092}
     m_Modifications:
     - target: {fileID: 5614172790849761035, guid: 7460ff906944fc749b6caeee737212bb,
         type: 3}
@@ -202,7 +237,7 @@ PrefabInstance:
     - target: {fileID: 5614172790849761035, guid: 7460ff906944fc749b6caeee737212bb,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5614172790849761035, guid: 7460ff906944fc749b6caeee737212bb,
         type: 3}
@@ -212,7 +247,7 @@ PrefabInstance:
     - target: {fileID: 5614172790849761035, guid: 7460ff906944fc749b6caeee737212bb,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.000000021855694
       objectReference: {fileID: 0}
     - target: {fileID: 5614172790849761035, guid: 7460ff906944fc749b6caeee737212bb,
         type: 3}
@@ -331,11 +366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 778e4cd1a1e1d4d4ea20bf47edb671b5,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5125786079527647804}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 778e4cd1a1e1d4d4ea20bf47edb671b5, type: 3}
 --- !u!4 &9016575455120085108 stripped

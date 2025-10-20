@@ -8,7 +8,7 @@ namespace LZ
     public class SiteOfGraceInteractable : Interactable
     {
         [Header("Site Of Grace Info")]
-        [SerializeField] int siteOfGraceID;
+        public int siteOfGraceID;
         public NetworkVariable<bool> isActivated = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("VFX")]
@@ -17,6 +17,9 @@ namespace LZ
         [Header("Interaction Text")]
         [SerializeField] string unactivatedInteractionText = "Restore Site Of Grace";
         [SerializeField] string activatedInteractionText = "Rest";
+
+        [Header("Teleport Transform")]
+        [SerializeField] Transform teleportTransform;
 
         protected override void Start()
         {
@@ -53,6 +56,8 @@ namespace LZ
                 OnIsActivatedChanged(false, isActivated.Value);
 
             isActivated.OnValueChanged += OnIsActivatedChanged;
+
+            WorldObjectManager.instance.AddSiteOfGraceToList(this);
         }
 
         public override void OnNetworkDespawn()
@@ -83,7 +88,7 @@ namespace LZ
 
         private void RestAtSiteOfGrace(PlayerManager player)
         {
-            Debug.Log("RESTING");
+            PlayerUIManager.instance.playerUISiteOfGraceManager.OpenSiteOfGraceManagerMenu();
 
             // 临时代码段
             interactableCollider.enabled = true; // 此处临时重新启用碰撞体（待正式菜单添加后将移除），以便实现无限刷怪功能
@@ -134,6 +139,17 @@ namespace LZ
             {
                 RestAtSiteOfGrace(player);
             }
+        }
+
+        public void TeleportToSiteOfGrace()
+        {
+            //  THE PLAYER IS ONLY ABLE TO TELEPORT WHEN NOT IN A CO-OP GAME SO WE CAN GRAB THE LOCAL PLAYER FROM THE NETWORK MANAGER
+            PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+
+            //  ENABLE LOADING SCREEN
+
+            //  TELEPORT PLAYER
+            player.transform.position = teleportTransform.position;
         }
     }
 }
