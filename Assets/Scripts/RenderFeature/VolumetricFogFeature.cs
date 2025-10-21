@@ -90,6 +90,7 @@ public class VolumetricFogFeature : ScriptableRendererFeature
     }
 }
 
+[Obsolete("Obsolete")]
 public class VolumetricFogPass : ScriptableRenderPass
 {
     const string profilerTag = "VolumetricFogPass";

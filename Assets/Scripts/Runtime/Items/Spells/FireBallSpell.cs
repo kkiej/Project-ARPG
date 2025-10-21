@@ -119,7 +119,7 @@ namespace LZ
             Vector3 upwardVelocityVector = instantiatedReleasedSpellFX.transform.up * upwardVelocity;
             Vector3 forwardVelocityVector = instantiatedReleasedSpellFX.transform.forward * forwardVelocity;
             Vector3 totalVelocity = upwardVelocityVector + forwardVelocityVector;
-            spellRigidbody.velocity = totalVelocity;
+            spellRigidbody.linearVelocity = totalVelocity;
         }
 
         public override void SuccessfullyChargeSpell(PlayerManager player)
@@ -219,7 +219,7 @@ namespace LZ
             Vector3 upwardVelocityVector = instantiatedReleasedSpellFX.transform.up * upwardVelocity;
             Vector3 forwardVelocityVector = instantiatedReleasedSpellFX.transform.forward * forwardVelocity;
             Vector3 totalVelocity = upwardVelocityVector + forwardVelocityVector;
-            spellRigidbody.velocity = totalVelocity;
+            spellRigidbody.linearVelocity = totalVelocity;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -5,6 +6,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.Profiling;
 using Unity.Collections;
 using Unity.Mathematics;
+using Object = UnityEngine.Object;
 
 public class PerObjectShadowFeature : ScriptableRendererFeature
 {
@@ -58,6 +60,7 @@ public class PerObjectShadowFeature : ScriptableRendererFeature
             m_ShadowManager = shadowManager;
         }
         
+        [Obsolete("Obsolete")]
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             if (m_ShadowManager.shadowMap == null)

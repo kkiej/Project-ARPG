@@ -1,10 +1,12 @@
 // Gavin_KG presents
 
+using System;
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering;
 using UnityEngine;
 
+[Obsolete("Obsolete")]
 public class PerObjectShadowPass : ScriptableRenderPass {
 
     // RT lifecycle are taken care of by this pass, not resolve pass.

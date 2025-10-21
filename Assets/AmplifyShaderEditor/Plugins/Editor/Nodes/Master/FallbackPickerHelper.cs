@@ -38,6 +38,7 @@ namespace AmplifyShaderEditor
 			EditorGUILayout.EndHorizontal();
 		}
 
+		[Obsolete("Obsolete")]
 		private void DisplayShaderContext( ParentNode node, Rect r )
 		{
 			if ( m_dummyCommand == null )

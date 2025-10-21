@@ -84,10 +84,10 @@ namespace UnityEditor
             {
                 if (!((UnityEngine.Object)this.m_AnimEditor != (UnityEngine.Object)null))
                     return;
-                if (value)
-                    this.m_AnimEditor.state.StartPreview();
-                else
-                    this.m_AnimEditor.state.StopPreview();
+                //if (value)
+                //    this.m_AnimEditor.state.StartPreview();
+                //else
+                //    this.m_AnimEditor.state.StopPreview();
             }
         }
 
@@ -108,10 +108,10 @@ namespace UnityEditor
             {
                 if (!((UnityEngine.Object)this.m_AnimEditor != (UnityEngine.Object)null))
                     return;
-                if (value)
-                    this.m_AnimEditor.state.StartRecording();
-                else
-                    this.m_AnimEditor.state.StopRecording();
+                //if (value)
+                //    this.m_AnimEditor.state.StartRecording();
+                //else
+                //    this.m_AnimEditor.state.StopRecording();
             }
         }
 
@@ -131,10 +131,10 @@ namespace UnityEditor
             {
                 if (!((UnityEngine.Object)this.m_AnimEditor != (UnityEngine.Object)null))
                     return;
-                if (value)
-                    this.m_AnimEditor.state.StartPlayback();
-                else
-                    this.m_AnimEditor.state.StopPlayback();
+                //if (value)
+                //    this.m_AnimEditor.state.StartPlayback();
+                //else
+                //    this.m_AnimEditor.state.StopPlayback();
             }
         }
 

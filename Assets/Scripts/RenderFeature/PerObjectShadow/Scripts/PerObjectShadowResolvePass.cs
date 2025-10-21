@@ -1,5 +1,6 @@
 // Gavin_KG presents
 
+using System;
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering;
@@ -23,6 +24,7 @@ public class PerObjectShadowResolveSettings {
 }
 
 
+[Obsolete("Obsolete")]
 public class PerObjectShadowResolvePass : ScriptableRenderPass {
 
     PerObjectShadowImpl Impl {

@@ -24,9 +24,9 @@ namespace LZ
 
         private void FixedUpdate()
         {
-            if (rigidBody.velocity != Vector3.zero)
+            if (rigidBody.linearVelocity != Vector3.zero)
             {
-                rigidBody.rotation = Quaternion.LookRotation(rigidBody.velocity);
+                rigidBody.rotation = Quaternion.LookRotation(rigidBody.linearVelocity);
             }
         }
 

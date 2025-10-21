@@ -2137,6 +2137,7 @@ public class ShaderUtils : ShaderFunctions
     /// 设置ShadowMap质量
     /// </summary>
     /// <param name="level"></param>
+    [Obsolete("Obsolete")]
     public static void SetShadowMapQuality(int size)
     {
         if (GlobalAsset == null)

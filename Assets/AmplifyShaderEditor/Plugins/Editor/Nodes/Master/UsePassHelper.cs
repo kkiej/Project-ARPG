@@ -204,6 +204,7 @@ namespace AmplifyShaderEditor
 			owner.ContainerGraph.ParentWindow.InnerWindowVariables.ExpandedUsePass = foldoutValue;
 		}
 		
+		[Obsolete("Obsolete")]
 		private void DisplayShaderContext( UndoParentNode node, Rect r )
 		{
 			if( m_dummyCommand == null )
