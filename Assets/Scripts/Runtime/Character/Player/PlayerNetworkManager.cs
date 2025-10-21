@@ -468,7 +468,14 @@ namespace LZ
         [ClientRpc]
         public override void DestroyAllCurrentActionFXClientRpc()
         {
-            base.DestroyAllCurrentActionFXClientRpc();
+            if (player.characterEffectsManager.activeSpellWarmUpFX != null)
+                Destroy(player.characterEffectsManager.activeSpellWarmUpFX);
+
+            if (player.characterEffectsManager.activeDrawnProjectileFX != null)
+                Destroy(player.characterEffectsManager.activeDrawnProjectileFX);
+
+            if (player.characterEffectsManager.activeQuickSlotItemFX != null)
+                Destroy(player.characterEffectsManager.activeQuickSlotItemFX);
 
             if (hasArrowNotched.Value)
             {

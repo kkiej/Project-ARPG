@@ -1,8 +1,9 @@
-using System;
-using Unity.Netcode;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Unity.Netcode;
 using UnityEngine.UI;
+using TMPro;
 
 namespace LZ
 {
@@ -33,6 +34,8 @@ namespace LZ
         [SerializeField] Button characterClassButton;
         [SerializeField] Button characterHairButton;
         [SerializeField] Button characterHairColorButton;
+        [SerializeField] Button characterSexButton;
+        [SerializeField] TextMeshProUGUI characterSexText;
         [SerializeField] Button startGameButton;
 
         [Header("Character Creation Class Panel Buttons")]
@@ -44,6 +47,8 @@ namespace LZ
         [SerializeField] GameObject characterClassMenu;
         [SerializeField] GameObject characterHairMenu;
         [SerializeField] GameObject characterHairColorMenu;
+        [SerializeField] GameObject characterNameMenu;
+        [SerializeField] TMP_InputField characterNameInputField;
 
         [Header("Color Sliders")]
         [SerializeField] Slider redSlider;
@@ -118,14 +123,49 @@ namespace LZ
             mainMenuLoadGameButton.Select();
         }
 
+        public void ToggleBodyType()
+        {
+            PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+
+            player.playerNetworkManager.isMale.Value = !player.playerNetworkManager.isMale.Value;
+
+            if (player.playerNetworkManager.isMale.Value)
+            {
+                characterSexText.text = "MALE";
+            }
+            else
+            {
+                characterSexText.text = "FEMALE";
+            }
+        }
+
+        public void OpenTitleScreenMainMenu()
+        {
+            titleScreenMainMenu.SetActive(true);
+        }
+
+        public void CloseTitleScreenMainMenu()
+        {
+            titleScreenMainMenu.SetActive(false);
+        }
+
         public void OpenCharacterCreationMenu()
         {
+            CloseTitleScreenMainMenu();
+
             titleScreenCharacterCreationMenu.SetActive(true);
+
+            PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+
+            //  SETS DEFAULT BODY TYPE
+            player.playerBodyManager.ToggleBodyType(true);
         }
 
         public void CloseCharacterCreationMenu()
         {
             titleScreenCharacterCreationMenu.SetActive(false);
+
+            OpenTitleScreenMainMenu();
         }
 
         public void OpenChooseCharacterClassSubMenu()
@@ -249,12 +289,45 @@ namespace LZ
             player.playerEquipmentManager.EquipArmor();
         }
 
+        public void OpenChooseNameSubMenu()
+        {
+            PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+
+            //  1. DISABLE ALL MAIN MENU BUTTONS (SO YOU CANT ACCIDENTALLY HIT ONE)
+            ToggleCharacterCreationScreenMainMenuButtons(false);
+
+            //  2. DISABLE NAME BUTTON GAMEOBJECT, AND REPLACE IT WITH NAME FIELD GAME OBJECT
+            characterNameButton.gameObject.SetActive(false);
+            characterNameMenu.SetActive(true);
+
+            //  3. SELECT NAME FIELD OBJECT
+            characterNameInputField.Select();
+        }
+
+        public void CloseChooseNameSubMenu()
+        {
+            PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
+
+            //  1. RE-ENABLE ALL MAIN MENU BUTTONS
+            ToggleCharacterCreationScreenMainMenuButtons(true);
+
+            //  2. ENABLE NAME BUTTON GAMEOBJECT, AND DISABLE NAME FIELD GAME OBJECT
+            characterNameMenu.SetActive(false);
+            characterNameButton.gameObject.SetActive(true);
+
+            //  3. SELECT NAME BUTTON
+            characterNameButton.Select();
+
+            player.playerNetworkManager.characterName.Value = characterNameInputField.text;
+        }
+
         private void ToggleCharacterCreationScreenMainMenuButtons(bool status)
         {
             characterNameButton.enabled = status;
             characterClassButton.enabled = status;
             characterHairButton.enabled = status;
             characterHairColorButton.enabled = status;
+            characterSexButton.enabled = status;
             startGameButton.enabled = status;
         }
 
@@ -269,6 +342,8 @@ namespace LZ
             noCharacterSlotsPopUp.SetActive(false);
             mainMenuNewGameButton.Select();
         }
+
+        //  CHARACTER SLOTS
 
         public void SelectCharacterSlot(CharacterSlot characterSlot)
         {
