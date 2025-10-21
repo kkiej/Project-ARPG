@@ -81,11 +81,6 @@ namespace LZ
             base.Update();
             
             aiCharacterCombatManager.HandleActionRecovery(this);
-        }
-
-        protected override void FixedUpdate()
-        {
-            base.FixedUpdate();
 
             if (IsOwner)
                 ProcessStateMachine();

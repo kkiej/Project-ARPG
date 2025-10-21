@@ -15,6 +15,10 @@ namespace LZ
 
         [Header("Body Type")]
         public bool isMale = true;
+        public int hairStyleID;
+        public float hairColorRed;
+        public float hairColorGreen;
+        public float hairColorBlue;
 
         [Header("Time Played")]
         public float secondsPlayed;

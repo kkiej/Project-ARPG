@@ -104,6 +104,9 @@ namespace LZ
 
             //  BODY TYPE
             playerNetworkManager.isMale.OnValueChanged += playerNetworkManager.OnIsMaleChanged;
+            playerNetworkManager.hairColorRed.OnValueChanged += playerNetworkManager.OnHairColorRedChanged;
+            playerNetworkManager.hairColorGreen.OnValueChanged += playerNetworkManager.OnHairColorGreenChanged;
+            playerNetworkManager.hairColorBlue.OnValueChanged += playerNetworkManager.OnHairColorBlueChanged;
 
             //  STATS
             playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
@@ -112,7 +115,10 @@ namespace LZ
             playerNetworkManager.isLockedOn.OnValueChanged += playerNetworkManager.OnIsLockedOnChanged;
             playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged += playerNetworkManager.OnLockOnTargetIDChange;
 
-            // 装备
+            //  BODY
+            playerNetworkManager.hairStyleID.OnValueChanged += playerNetworkManager.OnHairStyleIDChanged;
+
+            //  EQUIPMENT
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
             playerNetworkManager.currentLeftHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
             playerNetworkManager.currentWeaponBeingUsed.OnValueChanged += playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
@@ -185,7 +191,13 @@ namespace LZ
             playerNetworkManager.isLockedOn.OnValueChanged -= playerNetworkManager.OnIsLockedOnChanged;
             playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged -= playerNetworkManager.OnLockOnTargetIDChange;
 
-            // 装备
+            //  BODY
+            playerNetworkManager.hairStyleID.OnValueChanged -= playerNetworkManager.OnHairStyleIDChanged;
+            playerNetworkManager.hairColorRed.OnValueChanged -= playerNetworkManager.OnHairColorRedChanged;
+            playerNetworkManager.hairColorGreen.OnValueChanged -= playerNetworkManager.OnHairColorGreenChanged;
+            playerNetworkManager.hairColorBlue.OnValueChanged -= playerNetworkManager.OnHairColorBlueChanged;
+
+            //  EQUIPMENT
             playerNetworkManager.currentRightHandWeaponID.OnValueChanged -= playerNetworkManager.OnCurrentRightHandWeaponIDChange;
             playerNetworkManager.currentLeftHandWeaponID.OnValueChanged -= playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
             playerNetworkManager.currentWeaponBeingUsed.OnValueChanged -= playerNetworkManager.OnCurrentWeaponBeingUsedIDChange;
@@ -277,6 +289,12 @@ namespace LZ
             currentCharacterData.vitality = playerNetworkManager.vitality.Value;
             currentCharacterData.endurance = playerNetworkManager.endurance.Value;
             currentCharacterData.mind = playerNetworkManager.mind.Value;
+
+            //  BODY
+            currentCharacterData.hairStyleID = playerNetworkManager.hairStyleID.Value;
+            currentCharacterData.hairColorRed = playerNetworkManager.hairColorRed.Value;
+            currentCharacterData.hairColorGreen = playerNetworkManager.hairColorGreen.Value;
+            currentCharacterData.hairColorBlue = playerNetworkManager.hairColorBlue.Value;
 
             currentCharacterData.currentHealthFlasksRemaining = playerNetworkManager.remainingHealthFlasks.Value;
             currentCharacterData.currentFocusPointsFlaskRemaining = playerNetworkManager.remainingFocusPointsFlasks.Value;
@@ -374,6 +392,12 @@ namespace LZ
 
             playerNetworkManager.remainingHealthFlasks.Value = currentCharacterData.currentHealthFlasksRemaining;
             playerNetworkManager.remainingFocusPointsFlasks.Value = currentCharacterData.currentFocusPointsFlaskRemaining;
+
+            //  BODY
+            playerNetworkManager.hairStyleID.Value = currentCharacterData.hairStyleID;
+            playerNetworkManager.hairColorRed.Value = currentCharacterData.hairColorRed;
+            playerNetworkManager.hairColorGreen.Value = currentCharacterData.hairColorGreen;
+            playerNetworkManager.hairColorBlue.Value = currentCharacterData.hairColorBlue;
 
             //  EQUIPMENT
             if (WorldItemDatabase.Instance.GetHeadEquipmentByID(currentCharacterData.headEquipment))
@@ -516,6 +540,10 @@ namespace LZ
         {
             //  SYNC BODY TYPE
             playerNetworkManager.OnIsMaleChanged(false, playerNetworkManager.isMale.Value);
+            playerNetworkManager.OnHairStyleIDChanged(0, playerNetworkManager.hairStyleID.Value);
+            playerNetworkManager.OnHairColorRedChanged(0, playerNetworkManager.hairColorRed.Value);
+            playerNetworkManager.OnHairColorGreenChanged(0, playerNetworkManager.hairColorGreen.Value);
+            playerNetworkManager.OnHairColorBlueChanged(0, playerNetworkManager.hairColorBlue.Value);
 
             //  SYNC WEAPONS
             playerNetworkManager.OnCurrentRightHandWeaponIDChange(0, playerNetworkManager.currentRightHandWeaponID.Value);
