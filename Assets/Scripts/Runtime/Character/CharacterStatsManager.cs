@@ -93,11 +93,31 @@ namespace LZ
             return Mathf.RoundToInt(focusPoints);
         }
 
-        public int CalculateCharacterLevelBasedOnAttributes()
+        public int CalculateCharacterLevelBasedOnAttributes(bool calculateProjectedLevel = false)
         {
             //  IN ELDEN RING & SOULS YOU GET 10 X FREE LEVELS PER ATTRIBUTE BEFORE IT STARTS TO ADD ONTO YOUR PLAYER LEVEL
             //  FOR EX
             //  WE HAVE VIGOR, MIND, ENDURANCE, STRENGTH, DEXTERITY, INTELLIGENCE AND FAITH. (7 ATTRIBUTES) THIS EQUATES TO 70 LEVELS BEFORE YOU COULD PAST LEVEL 1
+
+
+            if (calculateProjectedLevel)
+            {
+                int totalProjectedAttributes = 
+                    Mathf.RoundToInt(PlayerUIManager.instance.playerUILevelUpManager.vigorSlider.value) +
+                    Mathf.RoundToInt(PlayerUIManager.instance.playerUILevelUpManager.mindSlider.value) +
+                    Mathf.RoundToInt(PlayerUIManager.instance.playerUILevelUpManager.enduranceSlider.value) +
+                    Mathf.RoundToInt(PlayerUIManager.instance.playerUILevelUpManager.strengthSlider.value) +
+                    Mathf.RoundToInt(PlayerUIManager.instance.playerUILevelUpManager.dexteritySlider.value) +
+                    Mathf.RoundToInt(PlayerUIManager.instance.playerUILevelUpManager.intelligenceSlider.value) +
+                    Mathf.RoundToInt(PlayerUIManager.instance.playerUILevelUpManager.faithSlider.value);
+
+                int projectedCharacterLevel = totalProjectedAttributes - 70 + 1;
+
+                if (projectedCharacterLevel < 1)
+                    projectedCharacterLevel = 1;
+
+                return projectedCharacterLevel;
+            }
 
             int totalAttributes = character.characterNetworkManager.vigor.Value +
                 character.characterNetworkManager.mind.Value +

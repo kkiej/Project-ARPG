@@ -6,6 +6,11 @@ namespace LZ
 {
     public class PlayerUILevelUpManager : PlayerUIMenu
     {
+        [Header("Levels")]
+        [SerializeField] int[] playerLevels = new int[100];
+        [SerializeField] int baseLevelCost = 83;
+        [SerializeField] int totalLevelUpCost = 0;
+
         [Header("Character Stats")]
         [SerializeField] TextMeshProUGUI characterLevelText;
         [SerializeField] TextMeshProUGUI runesHeldText;
@@ -31,13 +36,21 @@ namespace LZ
 
         [Header("Sliders")]
         public CharacterAttribute currentSelectedAttribute;
-        [SerializeField] Slider vigorSlider;
-        [SerializeField] Slider mindSlider;
-        [SerializeField] Slider enduranceSlider;
-        [SerializeField] Slider strengthSlider;
-        [SerializeField] Slider dexteritySlider;
-        [SerializeField] Slider intelligenceSlider;
-        [SerializeField] Slider faithSlider;
+        public Slider vigorSlider;
+        public Slider mindSlider;
+        public Slider enduranceSlider;
+        public Slider strengthSlider;
+        public Slider dexteritySlider;
+        public Slider intelligenceSlider;
+        public Slider faithSlider;
+
+        [Header("Buttons")]
+        [SerializeField] Button confirmLevelsButton;
+
+        private void Awake()
+        {
+            SetAllLevelsCost();
+        }
 
         public override void OpenMenu()
         {
@@ -93,6 +106,8 @@ namespace LZ
 
         public void UpdateSliderBasedOnCurrentlySelectedAttribute()
         {
+            PlayerManager player = PlayerUIManager.instance.localPlayer;
+
             switch (currentSelectedAttribute)
             {
                 case CharacterAttribute.Vigor:
@@ -119,6 +134,27 @@ namespace LZ
                 default:
                     break;
             }
+
+            //  PASSES OUR CURRENT LEVEL AND OUR PROJECTED LEVEL TO SET OUR COST FOR LEVELING UP
+            CalculateLevelCost(
+                player.characterStatsManager.CalculateCharacterLevelBasedOnAttributes(),
+                player.characterStatsManager.CalculateCharacterLevelBasedOnAttributes(true));
+
+            projectedCharacterLevelText.text = player.characterStatsManager.CalculateCharacterLevelBasedOnAttributes(true).ToString();
+            runesNeededText.text = totalLevelUpCost.ToString();
+
+            //  CHECK COST
+            if (totalLevelUpCost > player.playerStatsManager.runes)
+            {
+                //  DISABLE CONFIRM BUTTON SO YOU CANT LEVEL UP
+                confirmLevelsButton.interactable = false;
+
+                //  OPTIONALLY CHANGE LEVEL UP FIELDS TEXT TO RED
+            }
+            else
+            {
+                confirmLevelsButton.interactable = true;
+            }
         }
 
         public void ConfirmLevels()
@@ -132,6 +168,10 @@ namespace LZ
             //  4. SET NEW STATS
             PlayerManager player = PlayerUIManager.instance.localPlayer;
 
+            //  DEDUCT COST FROM TOTAL RUNES
+            player.playerStatsManager.runes -= totalLevelUpCost;
+
+            //  SET NEW STATS
             player.playerNetworkManager.vigor.Value = Mathf.RoundToInt(vigorSlider.value);
             player.playerNetworkManager.mind.Value = Mathf.RoundToInt(mindSlider.value);
             player.playerNetworkManager.endurance.Value = Mathf.RoundToInt(enduranceSlider.value);
@@ -141,6 +181,46 @@ namespace LZ
             player.playerNetworkManager.faith.Value = Mathf.RoundToInt(faithSlider.value);
 
             SetCurrentStats();
+        }
+
+        private void SetAllLevelsCost()
+        {
+            for (int i = 0; i < playerLevels.Length; i++)
+            {
+                //  LEVEL 0 HAS NO COST
+                if (i == 0)
+                    continue;
+
+                playerLevels[i] = baseLevelCost + (50 * i);
+            }
+        }
+
+        private void CalculateLevelCost(int currentLevel, int projectedLevel)
+        {
+            int totalCost = 0;
+
+            //  WE DONT WANT TO CHARGE FOR LEVELS WE ALREADY PAID FOR
+            //  EX, IF YOU ARE LEVEL 21 WE DONT ADD THE COST OF THE FIRST 21 LEVELS
+            for (int i = 0; i < projectedLevel; i++)
+            {
+                if (i < currentLevel)
+                    continue;
+
+                totalCost += playerLevels[i];
+            }
+
+            totalLevelUpCost = totalCost;
+
+            projectedRunesHeldText.text = (PlayerUIManager.instance.localPlayer.playerStatsManager.runes - totalCost).ToString();
+
+            if (totalCost > PlayerUIManager.instance.localPlayer.playerStatsManager.runes)
+            {
+                projectedRunesHeldText.color = Color.red;
+            }
+            else
+            {
+                projectedRunesHeldText.color = Color.white;
+            }
         }
     }
 }
