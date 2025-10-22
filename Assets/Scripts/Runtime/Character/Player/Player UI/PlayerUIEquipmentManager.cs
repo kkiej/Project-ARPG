@@ -7,11 +7,8 @@ using Unity.Netcode;
 
 namespace LZ
 {
-    public class PlayerUIEquipmentManager : MonoBehaviour
+    public class PlayerUIEquipmentManager : PlayerUIMenu
     {
-        [Header("Menu")]
-        [SerializeField] GameObject menu;
-
         [Header("Weapon Slots")]
         [SerializeField] Image rightHandSlot01;
         private Button rightHandSlot01Button;
@@ -86,11 +83,11 @@ namespace LZ
             quickSlot03Button = quickSlot03EquipmentSlot.GetComponentInParent<Button>(true);
         }
 
-        public void OpenEquipmentManagerMenu()
+        public override void OpenMenu()
         {
-            PlayerUIManager.instance.menuWindowIsOpen = true;
+            base.OpenMenu();
+
             ToggleEquipmentButtons(true);
-            menu.SetActive(true);
             equipmentInventoryWindow.SetActive(false);
             ClearEquipmentInventory();
             RefreshEquipmentSlotIcons();
@@ -190,12 +187,6 @@ namespace LZ
             }
 
             equipmentInventoryWindow.SetActive(false);
-        }
-
-        public void CloseEquipmentManagerMenu()
-        {
-            PlayerUIManager.instance.menuWindowIsOpen = false;
-            menu.SetActive(false);
         }
 
         private void RefreshEquipmentSlotIcons()

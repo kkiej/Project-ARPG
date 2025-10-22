@@ -5,25 +5,16 @@ using UnityEngine.UI;
 
 namespace LZ
 {
-    public class PlayerUITeleportLocationManager : MonoBehaviour
+    public class PlayerUITeleportLocationManager : PlayerUIMenu
     {
-        [Header("Menu")]
-        [SerializeField] GameObject menu;
-
+        [Header("Teleport Locations")]
         [SerializeField] GameObject[] teleportLocations;
 
-        public void OpenTeleportLocationManagerMenu()
+        public override void OpenMenu()
         {
-            PlayerUIManager.instance.menuWindowIsOpen = true;
-            menu.SetActive(true);
+            base.OpenMenu();
 
             CheckForUnlockedTeleports();
-        }
-
-        public void CloseTeleportLocationManagerMenu()
-        {
-            PlayerUIManager.instance.menuWindowIsOpen = false;
-            menu.SetActive(false);
         }
 
         private void CheckForUnlockedTeleports()

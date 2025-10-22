@@ -469,7 +469,9 @@ namespace LZ
                 dodgeInput = false;
                 
                 // 未来注意：如果菜单或用户界面窗口打开，则返回（不做任何操作）
-                
+                if (PlayerUIManager.instance.menuWindowIsOpen)
+                    return;
+
                 player.playerLocomotionManager.AttemptToPerformDodge();
             }
         }
@@ -738,7 +740,7 @@ namespace LZ
 
                 PlayerUIManager.instance.playerUIPopUpManager.CloseAllPopUpWindows();
                 PlayerUIManager.instance.CloseAllMenuWindows();
-                PlayerUIManager.instance.playerUICharacterMenuManager.OpenCharacterMenu();
+                PlayerUIManager.instance.playerUICharacterMenuManager.OpenMenu();
             }
         }
 

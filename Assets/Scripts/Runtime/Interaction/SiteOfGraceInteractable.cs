@@ -88,7 +88,7 @@ namespace LZ
 
         private void RestAtSiteOfGrace(PlayerManager player)
         {
-            PlayerUIManager.instance.playerUISiteOfGraceManager.OpenSiteOfGraceManagerMenu();
+            PlayerUIManager.instance.playerUISiteOfGraceManager.OpenMenu();
 
             // 临时代码段
             interactableCollider.enabled = true; // 此处临时重新启用碰撞体（待正式菜单添加后将移除），以便实现无限刷怪功能

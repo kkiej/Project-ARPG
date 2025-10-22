@@ -18,6 +18,7 @@ namespace LZ
         [HideInInspector] public PlayerUISiteOfGraceManager playerUISiteOfGraceManager;
         [HideInInspector] public PlayerUITeleportLocationManager playerUITeleportLocationManager;
         [HideInInspector] public PlayerUILoadingScreenManager playerUILoadingScreenManager;
+        [HideInInspector] public PlayerUILevelUpManager playerUILevelUpManager;
 
         [Header("UI Flags")]
         public bool menuWindowIsOpen = false;       // 物品栏界面、装备菜单、铁匠菜单等
@@ -41,6 +42,7 @@ namespace LZ
             playerUISiteOfGraceManager = GetComponentInChildren<PlayerUISiteOfGraceManager>();
             playerUITeleportLocationManager = GetComponentInChildren<PlayerUITeleportLocationManager>();
             playerUILoadingScreenManager = GetComponentInChildren<PlayerUILoadingScreenManager>();
+            playerUILevelUpManager = GetComponentInChildren<PlayerUILevelUpManager>();
         }
 
         private void Start()
@@ -62,10 +64,11 @@ namespace LZ
 
         public void CloseAllMenuWindows()
         {
-            playerUICharacterMenuManager.CloseCharacterMenu();
-            playerUIEquipmentManager.CloseEquipmentManagerMenu();
-            playerUISiteOfGraceManager.CloseSiteOfGraceManagerMenu();
-            playerUITeleportLocationManager.CloseTeleportLocationManagerMenu();
+            playerUICharacterMenuManager.CloseMenuAfterFixedFrame();
+            playerUIEquipmentManager.CloseMenuAfterFixedFrame();
+            playerUISiteOfGraceManager.CloseMenuAfterFixedFrame();
+            playerUITeleportLocationManager.CloseMenuAfterFixedFrame();
+            playerUILevelUpManager.CloseMenuAfterFixedFrame();
         }
     }
 }

@@ -4,27 +4,18 @@ using UnityEngine;
 
 namespace LZ
 {
-    public class PlayerUISiteOfGraceManager : MonoBehaviour
+    public class PlayerUISiteOfGraceManager : PlayerUIMenu
     {
-        [Header("Menu")]
-        [SerializeField] GameObject menu;
-
-        public void OpenSiteOfGraceManagerMenu()
-        {
-            PlayerUIManager.instance.menuWindowIsOpen = true;
-            menu.SetActive(true);
-        }
-
-        public void CloseSiteOfGraceManagerMenu()
-        {
-            PlayerUIManager.instance.menuWindowIsOpen = false;
-            menu.SetActive(false);
-        }
-
         public void OpenTeleportLocationMenu()
         {
-            CloseSiteOfGraceManagerMenu();
-            PlayerUIManager.instance.playerUITeleportLocationManager.OpenTeleportLocationManagerMenu();
+            CloseMenu();
+            PlayerUIManager.instance.playerUITeleportLocationManager.OpenMenu();
+        }
+
+        public void OpenLevelUpMenu()
+        {
+            CloseMenu();
+            PlayerUIManager.instance.playerUILevelUpManager.OpenMenu();
         }
     }
 }
