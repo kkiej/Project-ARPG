@@ -104,6 +104,7 @@ namespace LZ
             vigorSlider.OnSelect(null);
         }
 
+        //  THIS IS CALLED EVERY TIME A LEVEL SLIDER IS CHANGED
         public void UpdateSliderBasedOnCurrentlySelectedAttribute()
         {
             PlayerManager player = PlayerUIManager.instance.localPlayer;
@@ -155,17 +156,13 @@ namespace LZ
             {
                 confirmLevelsButton.interactable = true;
             }
+
+            //  CHANGES PROJECTED STATS TEXT COLORS TO REFLECT FEED BACK DEPENDING ON IF WE CAN AFFORD THE LEVELS OR NOT
+            ChangeTextColorsDependingOnCosts();
         }
 
         public void ConfirmLevels()
         {
-            //  1. CALCULATE COST
-
-            //  2. CHANGE STAT TEXTS TO COLORS DEPENDING ON IF PLAYER CAN AFFORD IT OR NOT, AND IF LEVELS ARE HIGHER
-
-            //  3. DEDUCT COST FROM TOTAL RUNES
-
-            //  4. SET NEW STATS
             PlayerManager player = PlayerUIManager.instance.localPlayer;
 
             //  DEDUCT COST FROM TOTAL RUNES
@@ -181,6 +178,10 @@ namespace LZ
             player.playerNetworkManager.faith.Value = Mathf.RoundToInt(faithSlider.value);
 
             SetCurrentStats();
+            ChangeTextColorsDependingOnCosts();
+
+            //  SAVE GAME AFTER SETTING STATS
+            WorldSaveGameManager.instance.SaveGame();
         }
 
         private void SetAllLevelsCost()
@@ -206,6 +207,11 @@ namespace LZ
                 if (i < currentLevel)
                     continue;
 
+                //  THIS IS A SAFEGUARD TO STOP ADDING COST IF THE PLAYERS LEVEL SOME HOW EXCEEDS THE SIZE OF THE ARRAY WE HAVE CREATED
+                //  YOU CAN OPTIONALLY ADD A CHECK FOR A TOTAL LEVEL AND PREVENT ADVANCES BEYOND THAT OR ALLOW THE MAX VALUE OF YOUR SLIDERS TO DETERMINE THE MAX LEVEL (LIKE ELDEN/SOULS)
+                if (i > playerLevels.Length)
+                    continue;
+
                 totalCost += playerLevels[i];
             }
 
@@ -220,6 +226,95 @@ namespace LZ
             else
             {
                 projectedRunesHeldText.color = Color.white;
+            }
+        }
+
+        //  THIS WILL CHANGE THE COLORS OF THE PROJECTED LEVELS...
+        //  TO RED (IF YOU CANT AFFORD AND THE STATE IS HIGHER THAN THE CURRENT LEVEL) - YOU COULD OPTIONALLY TURN ALL PROJECTED STATS RED IF YOU ENTER A STATE WHERE YOU CANT AFFORD
+        //  TO BLUE (IF THE STAT IS HIGHER CAN YOU CAN AFFORD IT)
+        //  TO WHITE (IF THE STAT IS UNCHANGED)
+        private void ChangeTextColorsDependingOnCosts()
+        {
+            PlayerManager player = PlayerUIManager.instance.localPlayer;
+
+            int projectedVigorLevel = Mathf.RoundToInt(vigorSlider.value);
+            int projectedMindLevel = Mathf.RoundToInt(mindSlider.value);
+            int projectedEnduranceLevel = Mathf.RoundToInt(enduranceSlider.value);
+            int projectedStrengthLevel = Mathf.RoundToInt(strengthSlider.value);
+            int projectedDexterityLevel = Mathf.RoundToInt(dexteritySlider.value);
+            int projectedIntelligenceLevel = Mathf.RoundToInt(intelligenceSlider.value);
+            int projectedFaithLevel = Mathf.RoundToInt(faithSlider.value);
+
+            ChangeTextFieldToSpecificColorBasedOnStat(player, projectedVigorLevelText, player.playerNetworkManager.vigor.Value, projectedVigorLevel);
+            ChangeTextFieldToSpecificColorBasedOnStat(player, projectedMindLevelText, player.playerNetworkManager.mind.Value, projectedMindLevel);
+            ChangeTextFieldToSpecificColorBasedOnStat(player, projectedEnduranceLevelText, player.playerNetworkManager.endurance.Value, projectedEnduranceLevel);
+            ChangeTextFieldToSpecificColorBasedOnStat(player, projectedStrengthLevelText, player.playerNetworkManager.strength.Value, projectedStrengthLevel);
+            ChangeTextFieldToSpecificColorBasedOnStat(player, projectedDexterityLevelText, player.playerNetworkManager.dexterity.Value, projectedDexterityLevel);
+            ChangeTextFieldToSpecificColorBasedOnStat(player, projectedIntelligenceLevelText, player.playerNetworkManager.intelligence.Value, projectedIntelligenceLevel);
+            ChangeTextFieldToSpecificColorBasedOnStat(player, projectedFaithLevelText, player.playerNetworkManager.faith.Value, projectedFaithLevel);
+
+            int projectedPlayerLevel = player.characterStatsManager.CalculateCharacterLevelBasedOnAttributes(true);
+            int playerLevel = player.characterStatsManager.CalculateCharacterLevelBasedOnAttributes();
+
+            if (projectedPlayerLevel == playerLevel)
+            {
+                projectedCharacterLevelText.color = Color.white;
+                projectedRunesHeldText.color = Color.white;
+                runesNeededText.color = Color.white;
+            }
+
+            //  WE CAN AFFORD IT!
+            if (totalLevelUpCost <= player.playerStatsManager.runes)
+            {
+                runesNeededText.color = Color.white;
+
+                if (projectedPlayerLevel > playerLevel)
+                {
+                    projectedRunesHeldText.color = Color.red;
+                    projectedCharacterLevelText.color = Color.blue;
+                }
+            }
+            else
+            {
+                runesNeededText.color = Color.red;
+
+                if (projectedPlayerLevel > playerLevel)
+                    projectedCharacterLevelText.color = Color.red;
+            }
+        }
+
+        private void ChangeTextFieldToSpecificColorBasedOnStat(PlayerManager player, TextMeshProUGUI textField, int stat, int projectedStat)
+        {
+            if (projectedStat == stat)
+                textField.color = Color.white;
+
+            //  WE CAN AFFORD IT!
+            if (totalLevelUpCost <= player.playerStatsManager.runes)
+            {
+                //  IF OUR PROJECTED STAT IS HIGHER, GIVE THE PLAYER VISUAL FEEDBACK BY CHANGING ITS COLOR INDICATING ITS NEW POTENTIAL
+                if (projectedStat > stat)
+                {
+                    textField.color = Color.blue;
+                }
+                //  IF OUR PROJECTED STAT IS THE SAME, KEEP THE TEXT COLOR AS DEFAULT
+                else
+                {
+                    textField.color = Color.white;
+                }
+            }
+            //  WE CANT AFFORD IT
+            else
+            {
+                //  IF OUR PROJECTED STAT IS HIGHER, GIVE THE PLAYER VISUAL FEEDBACK BY CHANGING ITS COLOR INDICATING ITS NEW POTENTIAL
+                if (projectedStat > stat)
+                {
+                    textField.color = Color.red;
+                }
+                //  IF OUR PROJECTED STAT IS THE SAME, KEEP THE TEXT COLOR AS DEFAULT
+                else
+                {
+                    textField.color = Color.white;
+                }
             }
         }
     }

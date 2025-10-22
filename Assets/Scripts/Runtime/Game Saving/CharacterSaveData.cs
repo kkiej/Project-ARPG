@@ -34,11 +34,16 @@ namespace LZ
         public int currentHealth;
         public float currentStamina;
         public int currentFocusPoints;
+        public int runes;
 
         [Header("Stats")]
         public int vitality;
-        public int endurance;
         public int mind;
+        public int endurance;
+        public int strength;
+        public int dexterity;
+        public int intelligence;
+        public int faith;
 
         [Header("Sites Of Grace")]
         public SerializableDictionary<int, bool> sitesOfGrace;      //  THE INT IS THE SITE OF GRACE I.D, THE BOOL IS THE "ACTIVATED" STATUS

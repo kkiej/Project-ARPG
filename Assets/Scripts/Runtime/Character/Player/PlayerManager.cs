@@ -290,6 +290,12 @@ namespace LZ
             currentCharacterData.vitality = playerNetworkManager.vigor.Value;
             currentCharacterData.endurance = playerNetworkManager.endurance.Value;
             currentCharacterData.mind = playerNetworkManager.mind.Value;
+            currentCharacterData.strength = playerNetworkManager.strength.Value;
+            currentCharacterData.dexterity = playerNetworkManager.dexterity.Value;
+            currentCharacterData.intelligence = playerNetworkManager.intelligence.Value;
+            currentCharacterData.faith = playerNetworkManager.faith.Value;
+
+            currentCharacterData.runes = playerStatsManager.runes;
 
             //  BODY
             currentCharacterData.hairStyleID = playerNetworkManager.hairStyleID.Value;
@@ -383,6 +389,10 @@ namespace LZ
             playerNetworkManager.vigor.Value = currentCharacterData.vitality;
             playerNetworkManager.endurance.Value = currentCharacterData.endurance;
             playerNetworkManager.mind.Value = currentCharacterData.mind;
+            playerNetworkManager.strength.Value = currentCharacterData.strength;
+            playerNetworkManager.dexterity.Value = currentCharacterData.dexterity;
+            playerNetworkManager.intelligence.Value = currentCharacterData.intelligence;
+            playerNetworkManager.faith.Value = currentCharacterData.faith;
 
             playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vigor.Value);
             playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
@@ -390,6 +400,7 @@ namespace LZ
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
             playerNetworkManager.currentFocusPoints.Value = currentCharacterData.currentFocusPoints;
+            playerStatsManager.AddRunes(currentCharacterData.runes);
 
             playerNetworkManager.remainingHealthFlasks.Value = currentCharacterData.currentHealthFlasksRemaining;
             playerNetworkManager.remainingFocusPointsFlasks.Value = currentCharacterData.currentFocusPointsFlaskRemaining;
