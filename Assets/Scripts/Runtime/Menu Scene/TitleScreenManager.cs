@@ -414,7 +414,7 @@ namespace LZ
             hiddenHelmet = null;
 
             // 1. Set the stats
-            player.playerNetworkManager.vitality.Value = vitality;
+            player.playerNetworkManager.vigor.Value = vitality;
             player.playerNetworkManager.endurance.Value = endurance;
             player.playerNetworkManager.mind.Value = mind;
             player.playerNetworkManager.strength.Value = strength;

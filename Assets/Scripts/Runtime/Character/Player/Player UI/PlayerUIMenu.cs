@@ -23,6 +23,9 @@ namespace LZ
 
         public virtual void CloseMenuAfterFixedFrame()
         {
+            if (!menu.activeInHierarchy)
+                return;
+
             StartCoroutine(WaitThenCloseMenu());
         }
 

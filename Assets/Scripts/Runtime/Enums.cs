@@ -28,6 +28,18 @@ public enum CharacterGroup
     Team02
 }
 
+//  USED TO TAG SLIDERS FOR LEVEL UP UI
+public enum CharacterAttribute
+{
+    Vigor,
+    Mind,
+    Endurance,
+    Strength,
+    Dexterity,
+    Intelligence,
+    Faith
+}
+
 //  USED AS A TAG FOR EACH WEAPON MODEL INSTANTIATION SLOT
 public enum WeaponModelSlot
 {

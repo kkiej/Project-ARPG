@@ -12,10 +12,10 @@ namespace LZ
         public int runesDroppedOnDeath = 50;
 
         [Header("Stamina Regeneration")]
-        [SerializeField] private float staminaRegenerationAmount = 2;
+        [SerializeField] float staminaRegenerationAmount = 2;
         private float staminaRegenerationTimer = 0;
         private float staminaTickTimer = 0;
-        [SerializeField] private float staminaRegenerationDelay = 2;
+        [SerializeField] float staminaRegenerationDelay = 2;
 
         [Header("Blocking Absorptions")]
         public float blockingPhysicalAbsorption;
@@ -91,6 +91,28 @@ namespace LZ
             focusPoints = mind * 10;
 
             return Mathf.RoundToInt(focusPoints);
+        }
+
+        public int CalculateCharacterLevelBasedOnAttributes()
+        {
+            //  IN ELDEN RING & SOULS YOU GET 10 X FREE LEVELS PER ATTRIBUTE BEFORE IT STARTS TO ADD ONTO YOUR PLAYER LEVEL
+            //  FOR EX
+            //  WE HAVE VIGOR, MIND, ENDURANCE, STRENGTH, DEXTERITY, INTELLIGENCE AND FAITH. (7 ATTRIBUTES) THIS EQUATES TO 70 LEVELS BEFORE YOU COULD PAST LEVEL 1
+
+            int totalAttributes = character.characterNetworkManager.vigor.Value +
+                character.characterNetworkManager.mind.Value +
+                character.characterNetworkManager.endurance.Value +
+                character.characterNetworkManager.strength.Value +
+                character.characterNetworkManager.dexterity.Value +
+                character.characterNetworkManager.intelligence.Value +
+                character.characterNetworkManager.faith.Value;
+
+            int characterLevel = totalAttributes - 70 + 1;
+
+            if (characterLevel < 1)
+                characterLevel = 1;
+
+            return characterLevel;
         }
 
         public virtual void RegenerateStamina()

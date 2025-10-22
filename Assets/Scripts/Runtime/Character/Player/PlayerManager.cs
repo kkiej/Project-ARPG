@@ -85,7 +85,7 @@ namespace LZ
                 WorldSaveGameManager.instance.player = this;
 
                 // 当与生命值或体力相关的属性发生变化时，更新其总量
-                playerNetworkManager.vitality.OnValueChanged += playerNetworkManager.SetNewMaxHealthValue;
+                playerNetworkManager.vigor.OnValueChanged += playerNetworkManager.SetNewMaxHealthValue;
                 playerNetworkManager.endurance.OnValueChanged += playerNetworkManager.SetNewMaxStaminaValue;
                 playerNetworkManager.mind.OnValueChanged += playerNetworkManager.SetNewMaxFocusPointsValue;
 
@@ -165,7 +165,7 @@ namespace LZ
             if (IsOwner)
             {
                 // 当与生命值或体力相关的属性发生变化时，更新其总量
-                playerNetworkManager.vitality.OnValueChanged -= playerNetworkManager.SetNewMaxHealthValue;
+                playerNetworkManager.vigor.OnValueChanged -= playerNetworkManager.SetNewMaxHealthValue;
                 playerNetworkManager.endurance.OnValueChanged -= playerNetworkManager.SetNewMaxStaminaValue;
                 playerNetworkManager.mind.OnValueChanged -= playerNetworkManager.SetNewMaxFocusPointsValue;
 
@@ -287,7 +287,7 @@ namespace LZ
             currentCharacterData.currentStamina = playerNetworkManager.currentStamina.Value;
             currentCharacterData.currentFocusPoints = playerNetworkManager.currentFocusPoints.Value;
 
-            currentCharacterData.vitality = playerNetworkManager.vitality.Value;
+            currentCharacterData.vitality = playerNetworkManager.vigor.Value;
             currentCharacterData.endurance = playerNetworkManager.endurance.Value;
             currentCharacterData.mind = playerNetworkManager.mind.Value;
 
@@ -380,11 +380,11 @@ namespace LZ
             Vector3 myPosition = new Vector3(currentCharacterData.xPosition, currentCharacterData.yPosition, currentCharacterData.zPosition);
             transform.position = myPosition;
 
-            playerNetworkManager.vitality.Value = currentCharacterData.vitality;
+            playerNetworkManager.vigor.Value = currentCharacterData.vitality;
             playerNetworkManager.endurance.Value = currentCharacterData.endurance;
             playerNetworkManager.mind.Value = currentCharacterData.mind;
 
-            playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vitality.Value);
+            playerNetworkManager.maxHealth.Value = playerStatsManager.CalculateHealthBasedOnVitalityLevel(playerNetworkManager.vigor.Value);
             playerNetworkManager.maxStamina.Value = playerStatsManager.CalculateStaminaBasedOnEnduranceLevel(playerNetworkManager.endurance.Value);
             playerNetworkManager.maxFocusPoints.Value = playerStatsManager.CalculateFocusPointsBasedOnMindLevel(playerNetworkManager.mind.Value);
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
