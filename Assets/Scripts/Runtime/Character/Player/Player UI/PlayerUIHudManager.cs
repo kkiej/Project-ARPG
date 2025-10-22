@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Unity.Netcode;
+using TMPro;
 
 namespace LZ
 {
@@ -13,6 +15,13 @@ namespace LZ
         [SerializeField] UI_StatBar healthBar;
         [SerializeField] UI_StatBar staminaBar;
         [SerializeField] UI_StatBar focusPointBar;
+
+        [Header("Runes")]
+        [SerializeField] float runeUpdateCountDelayTimer = 2.5f;
+        private int pendingRunesToAdd = 0;
+        private Coroutine waitThenAddRunesCoroutine;
+        [SerializeField] TextMeshProUGUI runesToAddText;
+        [SerializeField] TextMeshProUGUI runesCountText;
 
         [Header("Quick Slots")]
         [SerializeField] Image rightWeaponQuickSlotIcon;
@@ -61,6 +70,48 @@ namespace LZ
             staminaBar.gameObject.SetActive(true);
             focusPointBar.gameObject.SetActive(false);
             focusPointBar.gameObject.SetActive(true);
+        }
+
+        public void SetRunesCount(int runesToAdd)
+        {
+            // 1. ADD THE RUNES WE JUST GOT TO OUR "PENDING" RUNE COUNT (IT CAN GET ADDED ONTO MULTIPLE TIMES)
+            pendingRunesToAdd += runesToAdd;
+
+            // 2. WAIT FOR POTENTIALLY MORE RUNES, THEN ADD THEM ALL AFTER X TIME
+            if (waitThenAddRunesCoroutine != null)
+                StopCoroutine(waitThenAddRunesCoroutine);
+
+            waitThenAddRunesCoroutine = StartCoroutine(WaitThenUpdateRuneCount());
+        }
+
+        private IEnumerator WaitThenUpdateRuneCount()
+        {
+            //  1. WAIT FOR TIMER TO REACH 0 INCASE MORE RUNES ARE QUED UP
+            float timer = runeUpdateCountDelayTimer;
+            int runesToAdd = pendingRunesToAdd;
+            runesToAddText.text = "+ " + runesToAdd.ToString();
+            runesToAddText.enabled = true;
+
+            while (timer > 0)
+            {
+                timer -= Time.deltaTime;
+
+                //  2. IF MORE RUNES ARE QUED UP, RE-UPDATE TOTAL NEW RUNE COUNT
+                if (runesToAdd != pendingRunesToAdd)
+                {
+                    runesToAdd = pendingRunesToAdd;
+                    runesToAddText.text = "+ " + runesToAdd.ToString();
+                }
+
+                yield return null;
+            }
+
+            //  3. UPDATE RUNE COUNT, RESET PENDING RUNES AND HIDE PENDING RUNES
+            runesToAddText.enabled = false;
+            pendingRunesToAdd = 0;
+            runesCountText.text = PlayerUIManager.instance.localPlayer.playerStatsManager.runes.ToString();
+
+            yield return null;
         }
 
         public void SetNewHealthValue(int oldValue, int newValue)
@@ -226,8 +277,7 @@ namespace LZ
 
             if (quickSlotItem.isConsumable)
             {
-                PlayerManager player = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerManager>();
-                quickSlotItemCount.text = quickSlotItem.GetCurrentAmount(player).ToString();
+                quickSlotItemCount.text = quickSlotItem.GetCurrentAmount(PlayerUIManager.instance.localPlayer).ToString();
                 quickSlotItemCount.enabled = true;
             }
             else

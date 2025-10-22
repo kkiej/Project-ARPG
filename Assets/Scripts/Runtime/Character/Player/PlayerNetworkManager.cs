@@ -415,7 +415,7 @@ namespace LZ
             if (IsOwner)
                 return;
 
-            HandEquipmentItem equipment = WorldItemDatabase.Instance.GetHandEquipmentByID(headEquipmentID.Value);
+            HandEquipmentItem equipment = WorldItemDatabase.Instance.GetHandEquipmentByID(handEquipmentID.Value);
 
             if (equipment != null)
             {

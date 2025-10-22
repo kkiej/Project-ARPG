@@ -1,11 +1,16 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
     public class CharacterStatsManager : MonoBehaviour
     {
-        private CharacterManager character;
-        
+        CharacterManager character;
+
+        [Header("Runes")]
+        public int runesDroppedOnDeath = 50;
+
         [Header("Stamina Regeneration")]
         [SerializeField] private float staminaRegenerationAmount = 2;
         private float staminaRegenerationTimer = 0;

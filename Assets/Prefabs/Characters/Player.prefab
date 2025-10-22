@@ -169,6 +169,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -190,6 +195,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -296,6 +302,11 @@ SkinnedMeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 3
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -317,6 +328,7 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -695,6 +707,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -716,6 +733,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -4441,7 +4459,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -4464893832920623198}
+      addedObject: {fileID: -4290961738236676684}
     - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
       insertIndex: -1
@@ -4900,8 +4918,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 260631240
+  GlobalObjectIdHash: 167461833
   InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -4909,7 +4929,9 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-4464893832920623198
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &-4290961738236676684
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4921,6 +4943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a5cc8f48ad408b965f12b32cabbf38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   isActive:
     m_InternalValue: 1
   networkPosition:
@@ -4967,9 +4990,9 @@ MonoBehaviour:
   maxHealth:
     m_InternalValue: 400
   currentStamina:
-    m_InternalValue: 0
+    m_InternalValue: 400
   maxStamina:
-    m_InternalValue: 0
+    m_InternalValue: 400
   currentFocusPoints:
     m_InternalValue: 400
   maxFocusPoints:
@@ -5131,6 +5154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed4b0ba37fd1427292ace3210980e864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   isDead:
     m_InternalValue: 0
   characterController: {fileID: 0}
@@ -5167,6 +5191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ab03045e4854dd184d1eb72e63cc52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   lastAttackAnimationPerformed: 
   previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
@@ -5194,6 +5219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d19251d94282480b87778f56657b29b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runesDroppedOnDeath: 50
   staminaRegenerationAmount: 2
   staminaRegenerationDelay: 2
   blockingPhysicalAbsorption: 0
@@ -5216,6 +5242,7 @@ MonoBehaviour:
   basePoiseDefense: 0
   defaultPoiseResetTime: 8
   poiseResetTimer: 0
+  runes: 0
 --- !u!114 &-2411027463883404281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5555,7 +5582,6 @@ CharacterController:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -5573,10 +5599,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 688345335358352327}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5604,6 +5630,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

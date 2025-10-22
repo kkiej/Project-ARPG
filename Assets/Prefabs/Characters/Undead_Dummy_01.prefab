@@ -1510,7 +1510,7 @@ GameObject:
   - component: {fileID: 4766040796072325485}
   - component: {fileID: 1496404602421308183}
   - component: {fileID: 3760200560797180119}
-  - component: {fileID: -6592084906487769012}
+  - component: {fileID: 8348514583813340773}
   - component: {fileID: 2116567760773868245}
   - component: {fileID: 2563438246709438731}
   - component: {fileID: -4410606119701210936}
@@ -1553,7 +1553,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: -34.199, z: 0}
 --- !u!95 &1496404602421308183
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1567,6 +1567,7 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -1586,6 +1587,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 1284131268
   InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -1593,7 +1596,9 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-6592084906487769012
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &8348514583813340773
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1605,6 +1610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9183b1a81b6a42ceae37411d9ef9716f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   isActive:
     m_InternalValue: 1
   networkPosition:
@@ -1647,18 +1653,30 @@ MonoBehaviour:
   isBeingCriticallyDamaged:
     m_InternalValue: 0
   currentHealth:
-    m_InternalValue: 0
+    m_InternalValue: 400
   maxHealth:
-    m_InternalValue: 0
+    m_InternalValue: 400
   currentStamina:
-    m_InternalValue: 0
+    m_InternalValue: 400
   maxStamina:
-    m_InternalValue: 0
+    m_InternalValue: 400
+  currentFocusPoints:
+    m_InternalValue: 400
+  maxFocusPoints:
+    m_InternalValue: 400
   vitality:
     m_InternalValue: 1
   endurance:
     m_InternalValue: 1
+  mind:
+    m_InternalValue: 1
   strength:
+    m_InternalValue: 1
+  dexterity:
+    m_InternalValue: 1
+  intelligence:
+    m_InternalValue: 1
+  faith:
     m_InternalValue: 1
   strengthModifier:
     m_InternalValue: 1
@@ -1686,6 +1704,8 @@ MonoBehaviour:
   isRolling: 0
   canRotate: 1
   canMove: 1
+  canRun: 1
+  canRoll: 1
   isGrounded: 1
 --- !u!114 &2563438246709438731
 MonoBehaviour:
@@ -1699,6 +1719,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2be5cb2f2ec2c4daf43d9e1e444036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   lastAttackAnimationPerformed: 
   previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
@@ -1743,6 +1764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fc4474e6f8b4a5cac300ccc7f7c0153, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   isDead:
     m_InternalValue: 0
   characterController: {fileID: 0}
@@ -1834,6 +1856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4eed4d44380b48cbb647a768f74acf6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runesDroppedOnDeath: 50
   staminaRegenerationAmount: 2
   staminaRegenerationDelay: 2
   blockingPhysicalAbsorption: 0
@@ -1880,6 +1903,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578e28ae3e4e468787a5b553cd465f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeQuickSlotItemFX: {fileID: 0}
+  activeSpellWarmUpFX: {fileID: 0}
+  activeDrawnProjectileFX: {fileID: 0}
   bloodSplatterVFX: {fileID: 0}
   criticalBloodSplatterVFX: {fileID: 0}
   staticEffects: []
@@ -1923,10 +1949,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5291642110726466519}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1958,7 +1984,6 @@ CharacterController:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1980,6 +2005,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -3053,6 +3079,11 @@ SkinnedMeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 3
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3074,6 +3105,7 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0

@@ -1,5 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.Serialization;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.Netcode;
 
 namespace LZ
 {
@@ -28,7 +30,7 @@ namespace LZ
 
         [Header("Stance Settings")]
         public float maxStance = 150;
-        public float currentStance = 150;
+        public float currentStance;
         [SerializeField] float stanceRegeneratedPersecond = 15;
         [SerializeField] bool ignoreStanceBreak = false;
 
@@ -49,6 +51,22 @@ namespace LZ
         private void FixedUpdate()
         {
             HandleStanceBreak();
+        }
+
+        public void AwardRunesOnDeath(PlayerManager player)
+        {
+            // 1. CHECK IF PLAYER IS FRIENDLY TO HOST (NOT AN INVADER)
+            if (player.characterGroup == CharacterGroup.Team02)
+                return;
+
+            // 2. IF YOU WANT TO GIVE LESS OR MORE RUNES TO A CLIENT VS A HOST, DO IT HERE
+            //if (NetworkManager.Singleton.IsHost)
+            //{
+
+            //}
+
+            // 3. AWARD RUNES (CONSIDER RUNE ALTERING ITEMS HERE OR EFFECTS THAT GIVE MORE OR LESS RUNES
+            player.playerStatsManager.AddRunes(aiCharacter.characterStatsManager.runesDroppedOnDeath);
         }
 
         private void HandleStanceBreak()
@@ -120,8 +138,7 @@ namespace LZ
             if (currentTarget != null)
                 return;
 
-            Collider[] colliders = Physics.OverlapSphere(aiCharacter.transform.position, detectionRadius,
-                WorldUtilityManager.Instance.GetCharacterLayers());
+            Collider[] colliders = Physics.OverlapSphere(aiCharacter.transform.position, detectionRadius, WorldUtilityManager.Instance.GetCharacterLayers());
 
             for (int i = 0; i < colliders.Length; i++)
             {
@@ -150,8 +167,7 @@ namespace LZ
                                 targetCharacter.characterCombatManager.lockOnTransform.position,
                                 WorldUtilityManager.Instance.GetEnvironLayers()))
                         {
-                            Debug.DrawLine(aiCharacter.characterCombatManager.lockOnTransform.position,
-                                targetCharacter.characterCombatManager.lockOnTransform.position);
+                            Debug.DrawLine(aiCharacter.characterCombatManager.lockOnTransform.position, targetCharacter.characterCombatManager.lockOnTransform.position);
                         }
                         else
                         {

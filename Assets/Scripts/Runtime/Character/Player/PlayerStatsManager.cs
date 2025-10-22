@@ -4,7 +4,10 @@ namespace LZ
 {
     public class PlayerStatsManager : CharacterStatsManager
     {
-        private PlayerManager player;
+        PlayerManager player;
+
+        [Header("Runes")]
+        public int runes = 0;
 
         protected override void Awake()
         {
@@ -117,6 +120,12 @@ namespace LZ
                 //  POISE
                 basePoiseDefense += player.playerInventoryManager.handEquipment.poise;
             }
+        }
+
+        public void AddRunes(int runesToAdd)
+        {
+            runes += runesToAdd;
+            PlayerUIManager.instance.playerUIHudManager.SetRunesCount(runesToAdd);
         }
     }
 }

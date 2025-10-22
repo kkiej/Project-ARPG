@@ -81,6 +81,7 @@ namespace LZ
             {
                 PlayerCamera.instance.player = this;
                 PlayerInputManager.instance.player = this;
+                PlayerUIManager.instance.localPlayer = this;
                 WorldSaveGameManager.instance.player = this;
 
                 // 当与生命值或体力相关的属性发生变化时，更新其总量

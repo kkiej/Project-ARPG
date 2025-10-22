@@ -6,9 +6,10 @@ namespace LZ
     public class PlayerUIManager : MonoBehaviour
     {
         public static PlayerUIManager instance;
-        
+        [HideInInspector] public PlayerManager localPlayer;
+
         [Header("NETWORK JOIN")]
-        [SerializeField] private bool startGameAsClient;
+        [SerializeField] bool startGameAsClient;
 
         [HideInInspector] public PlayerUIHudManager playerUIHudManager;
         [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;
