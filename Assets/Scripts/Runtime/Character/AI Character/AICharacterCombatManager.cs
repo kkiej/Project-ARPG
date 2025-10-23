@@ -21,7 +21,7 @@ namespace LZ
         public Vector3 targetsDirection;
         
         [Header("Detection")]
-        [SerializeField] private float detectionRadius = 15;
+        [SerializeField] float detectionRadius = 15;
         public float minimumFOV = -35;
         public float maximumFOV = 35;
 
@@ -39,9 +39,9 @@ namespace LZ
         private float stanceTickTimer = 0; 
         [SerializeField] float defaultTimeUntilStanceRegenerationBegins = 15;
 
-        [Header("DEBUG DELETE LATER")]
-        [SerializeField] bool investigateSound = false;
-        [SerializeField] Vector3 positionOfSound = Vector3.zero;
+        [Header("Activation Range")]
+        public List<PlayerManager> playersWithinActivationRange = new List<PlayerManager>();
+
 
         protected override void Awake()
         {
@@ -54,11 +54,33 @@ namespace LZ
         private void Update()
         {
             HandleStanceBreak();
+        }
 
-            if (investigateSound)
+        public void AddPlayerToPlayersWithinRange(PlayerManager player)
+        {
+            if (playersWithinActivationRange.Contains(player))
+                return;
+
+            playersWithinActivationRange.Add(player);
+
+            for (int i = 0; i < playersWithinActivationRange.Count; i++)
             {
-                investigateSound = false;
-                AlertCharacterToSound(positionOfSound);
+                if (playersWithinActivationRange[i] == null)
+                    playersWithinActivationRange.RemoveAt(i);
+            }
+        }
+
+        public void RemovePlayerFromPlayersWithinRange(PlayerManager player)
+        {
+            if (!playersWithinActivationRange.Contains(player))
+                return;
+
+            playersWithinActivationRange.Remove(player);
+
+            for (int i = 0; i < playersWithinActivationRange.Count; i++)
+            {
+                if (playersWithinActivationRange[i] == null)
+                    playersWithinActivationRange.RemoveAt(i);
             }
         }
 

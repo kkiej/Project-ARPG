@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Netcode;
 
 namespace LZ
 {
@@ -27,6 +28,9 @@ namespace LZ
         public CombatStanceState combatStance;
         public AttackState attack;
         public InvestigateSoundState investigateSound;
+
+        [Header("Activation Beacon")]
+        protected AIActivationBeacon beacon;
 
         protected override void Awake()
         {
@@ -70,6 +74,8 @@ namespace LZ
 
             if (isDead.Value)
                 animator.Play("Dead_01");
+
+            CreateActivationBeacon();
         }
 
         public override void OnNetworkDespawn()
@@ -93,6 +99,14 @@ namespace LZ
             
             if (characterUIManager.hasFloatingHPBar)
                 characterNetworkManager.currentHealth.OnValueChanged -= characterUIManager.OnHPChanged;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (beacon != null)
+                Destroy(beacon);
         }
 
         protected override void Update()
@@ -153,6 +167,78 @@ namespace LZ
             else
             {
                 aiCharacterNetworkManager.isMoving.Value = false;
+            }
+        }
+
+        //  ACTIVATION
+        public void ActivateCharacter(PlayerManager player)
+        {
+            aiCharacterCombatManager.AddPlayerToPlayersWithinRange(player);
+
+            if (player.IsLocalPlayer)
+            {
+                //  ENABLE RENDERERS (Optionally)
+                //  RENDERERS CAN BE DISABLED FOR OTHER PLAYERS NOT NEAR THIS A.I, THIS WILL SAVE ON MEMORY
+            }
+
+            if (!NetworkManager.Singleton.IsHost)
+                return;
+
+            if (aiCharacterCombatManager.playersWithinActivationRange.Count > 0)
+            {
+                aiCharacterNetworkManager.isActive.Value = true;
+            }
+            else
+            {
+                aiCharacterNetworkManager.isActive.Value = false;
+            }
+        }
+
+        public void DeactivateCharacter(PlayerManager player)
+        {
+            aiCharacterCombatManager.RemovePlayerFromPlayersWithinRange(player);
+
+            if (player.IsLocalPlayer)
+            {
+                //  DISABLE RENDERERS (Optionally)
+                //  RENDERERS CAN BE DISABLED FOR OTHER PLAYERS NOT NEAR THIS A.I, THIS WILL SAVE ON MEMORY
+            }
+
+            //  DROP A BEACON ON THIS TRANSFORM (WHEN COMING INTO CONTACT WITH IT, IT WILL RE-ENABLE THE A.I)
+            if (beacon != null)
+            {
+                beacon.gameObject.transform.position = transform.position;
+                beacon.gameObject.SetActive(true);
+            }
+
+            if (!NetworkManager.Singleton.IsHost)
+                return;
+
+            if (aiCharacterCombatManager.playersWithinActivationRange.Count > 0)
+            {
+                aiCharacterNetworkManager.isActive.Value = true;
+            }
+            else
+            {
+                aiCharacterCombatManager.SetTarget(null);
+                aiCharacterNetworkManager.isActive.Value = false;
+            }
+        }
+
+        public void CreateActivationBeacon()
+        {
+            if (beacon == null)
+            {
+                GameObject beaconGameObject = Instantiate(WorldAIManager.instance.beaconGameObject);
+                beaconGameObject.transform.position = transform.position;
+
+                beacon = beaconGameObject.GetComponent<AIActivationBeacon>();
+                beacon.SetOwnerOfBeacon(this);
+            }
+            else
+            {
+                beacon.transform.position = transform.position;
+                beacon.gameObject.SetActive(true);
             }
         }
     }
