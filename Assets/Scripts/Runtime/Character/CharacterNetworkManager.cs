@@ -66,7 +66,7 @@ namespace LZ
             character = GetComponent<CharacterManager>();
         }
 
-        public virtual void CheckHP(int oldValue, int newValue)
+        public virtual void OnHpChanged(int oldValue, int newValue)
         {
             if (currentHealth.Value <= 0)
             {

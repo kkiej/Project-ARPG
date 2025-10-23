@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace LZ
 {
@@ -77,6 +78,34 @@ namespace LZ
 
             bossIntroPlayer.Stop();
             bossLoopPlayer.Stop();
+        }
+
+        public void AlertNearbyCharactersToSound(Vector3 positionOfSound, float rangeOfSound)
+        {
+            if (!NetworkManager.Singleton.IsServer)
+                return;
+
+            Collider[] characterColliders = Physics.OverlapSphere(positionOfSound, rangeOfSound);
+
+            List<AICharacterManager> charactersToAlert = new List<AICharacterManager>();
+
+            for (int i = 0; i < characterColliders.Length; i++)
+            {
+                AICharacterManager aiCharacter = characterColliders[i].GetComponent<AICharacterManager>();
+
+                if (aiCharacter == null)
+                    continue;
+
+                if (charactersToAlert.Contains(aiCharacter))
+                    continue;
+
+                charactersToAlert.Add(aiCharacter);
+            }
+
+            for (int i = 0; i < charactersToAlert.Count; i++)
+            {
+                charactersToAlert[i].aiCharacterCombatManager.AlertCharacterToSound(positionOfSound);
+            }
         }
     }
 }

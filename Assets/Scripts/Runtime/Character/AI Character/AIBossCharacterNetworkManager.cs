@@ -15,9 +15,9 @@ namespace LZ
             aiBossCharacter = GetComponent<AIBossCharacterManager>();
         }
 
-        public override void CheckHP(int oldValue, int newValue)
+        public override void OnHpChanged(int oldValue, int newValue)
         {
-            base.CheckHP(oldValue, newValue);
+            base.OnHpChanged(oldValue, newValue);
 
             if (aiBossCharacter.IsOwner)
             {

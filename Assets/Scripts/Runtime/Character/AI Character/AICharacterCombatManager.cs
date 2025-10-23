@@ -39,6 +39,9 @@ namespace LZ
         private float stanceTickTimer = 0; 
         [SerializeField] float defaultTimeUntilStanceRegenerationBegins = 15;
 
+        [Header("DEBUG DELETE LATER")]
+        [SerializeField] bool investigateSound = false;
+        [SerializeField] Vector3 positionOfSound = Vector3.zero;
 
         protected override void Awake()
         {
@@ -48,9 +51,15 @@ namespace LZ
             lockOnTransform = GetComponentInChildren<LockOnTransform>().transform;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             HandleStanceBreak();
+
+            if (investigateSound)
+            {
+                investigateSound = false;
+                AlertCharacterToSound(positionOfSound);
+            }
         }
 
         public void AwardRunesOnDeath(PlayerManager player)
@@ -133,6 +142,29 @@ namespace LZ
             currentStance -= stanceDamage;
         }
 
+        public virtual void AlertCharacterToSound(Vector3 positionOfSound)
+        {
+            if (!aiCharacter.IsOwner)
+                return;
+
+            if (aiCharacter.isDead.Value)
+                return;
+
+            if (aiCharacter.idle == null)
+                return;
+
+            if (aiCharacter.investigateSound == null)
+                return;
+
+            if (!aiCharacter.idle.willInvestigateSound)
+                return;
+
+            //  IF THEY ARE SLEEPING, HERE IS WHERE YOU WAKE THEM UP
+
+            aiCharacter.investigateSound.positionOfSound = positionOfSound;
+            aiCharacter.currentState = aiCharacter.currentState.SwitchState(aiCharacter, aiCharacter.investigateSound);
+        }
+
         public virtual void FindATargetViaLineOfSight(AICharacterManager aiCharacter)
         {
             if (currentTarget != null)
@@ -188,6 +220,49 @@ namespace LZ
             // 根据目标的可视角度播放枢轴动画
             if (aiCharacter.isPerformingAction)
                 return;
+
+            if (viewableAngle >= 20 && viewableAngle <= 60)
+            {
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_45", true);
+            }
+            else if (viewableAngle <= -20 && viewableAngle >= -60)
+            {
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_45", true);
+            }
+            else if (viewableAngle >= 61 && viewableAngle <= 110)
+            {
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_90", true);
+            }
+            else if (viewableAngle <= -61 && viewableAngle >= -110)
+            {
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_90", true);
+            }
+            if (viewableAngle >= 110 && viewableAngle <= 145)
+            {
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_135", true);
+            }
+            else if (viewableAngle <= -110 && viewableAngle >= -145)
+            {
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_135", true);
+            }
+            if (viewableAngle >= 146 && viewableAngle <= 180)
+            {
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_180", true);
+            }
+            else if (viewableAngle <= -146 &&viewableAngle >= -180)
+            {
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_180", true);
+            }
+        }
+
+        public virtual void PivotTowardsPosition(AICharacterManager aiCharacter, Vector3 position)
+        {
+            //  PLAY A PIVOT ANIMATION DEPENDING ON VIEWABLE ANGLE OF TARGET
+            if (aiCharacter.isPerformingAction)
+                return;
+
+            Vector3 targetsDirection = position - aiCharacter.transform.position;
+            float viewableAngle = WorldUtilityManager.Instance.GetAngleOfTarget(aiCharacter.transform, targetsDirection);
 
             if (viewableAngle >= 20 && viewableAngle <= 60)
             {

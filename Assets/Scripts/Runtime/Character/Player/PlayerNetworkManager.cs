@@ -255,6 +255,18 @@ namespace LZ
                 PlayerUIManager.instance.playerUIHudManager.SetSecondaryProjectileQuickSlotIcon(player.playerInventoryManager.secondaryProjectile);
         }
 
+        public void OnMaxFocusPointsChanged(int oldFP, int newFP)
+        {
+            if (player.IsOwner)
+                PlayerUIManager.instance.playerUIHudManager.SetMaxFocusPointValue(newFP);
+        }
+
+        public void OnFocusPointsChanged(int oldFP, int newFP)
+        {
+            if (player.IsOwner)
+                PlayerUIManager.instance.playerUIHudManager.SetNewFocusPointValue(oldFP, newFP);
+        }
+
         public void OnIsHoldingArrowChanged(bool oldStatus, bool newStatus)
         {
             player.animator.SetBool("isHoldingArrow", isHoldingArrow.Value);

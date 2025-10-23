@@ -34,6 +34,8 @@ namespace LZ
         {
             CreatePenetrationIntoObject(collision);
 
+            WorldSoundFXManager.instance.AlertNearbyCharactersToSound(transform.position, 3);
+
             CharacterManager potentialTarget = collision.transform.gameObject.GetComponent<CharacterManager>();
 
             //  (TODO) CHECK FOR SHIELD OBJECT AND PERFORM BLOCK

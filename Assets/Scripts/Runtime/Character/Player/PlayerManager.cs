@@ -110,9 +110,11 @@ namespace LZ
             playerNetworkManager.hairColorBlue.OnValueChanged += playerNetworkManager.OnHairColorBlueChanged;
 
             //  STATS
-            playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.CheckHP;
-            
-            // 锁定
+            playerNetworkManager.currentHealth.OnValueChanged += playerNetworkManager.OnHpChanged;
+            playerNetworkManager.currentFocusPoints.OnValueChanged += playerNetworkManager.OnFocusPointsChanged;
+            playerNetworkManager.maxFocusPoints.OnValueChanged += playerNetworkManager.OnMaxFocusPointsChanged;
+
+            //  LOCK ON
             playerNetworkManager.isLockedOn.OnValueChanged += playerNetworkManager.OnIsLockedOnChanged;
             playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged += playerNetworkManager.OnLockOnTargetIDChange;
 
@@ -186,9 +188,11 @@ namespace LZ
             playerNetworkManager.isMale.OnValueChanged -= playerNetworkManager.OnIsMaleChanged;
 
             //  STATS
-            playerNetworkManager.currentHealth.OnValueChanged -= playerNetworkManager.CheckHP;
-            
-            // 锁定
+            playerNetworkManager.currentHealth.OnValueChanged -= playerNetworkManager.OnHpChanged;
+            playerNetworkManager.currentFocusPoints.OnValueChanged -= playerNetworkManager.OnFocusPointsChanged;
+            playerNetworkManager.maxFocusPoints.OnValueChanged -= playerNetworkManager.OnMaxFocusPointsChanged;
+
+            //  LOCK ON
             playerNetworkManager.isLockedOn.OnValueChanged -= playerNetworkManager.OnIsLockedOnChanged;
             playerNetworkManager.currentTargetNetworkObjectID.OnValueChanged -= playerNetworkManager.OnLockOnTargetIDChange;
 

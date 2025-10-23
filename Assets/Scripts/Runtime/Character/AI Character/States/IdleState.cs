@@ -23,6 +23,9 @@ namespace LZ
         [SerializeField] float timeBetweenPatrols = 15;              //  MINIMUM TIME BEFORE STARTING A NEW PATROL
         [SerializeField] float restTimer = 0;                       //  ACTIVE TIMER COUNTING THE TIME RESTED
 
+        [Header("Sleep Options")]
+        public bool willInvestigateSound = true;
+
         public override AIState Tick(AICharacterManager aiCharacter)
         {
             aiCharacter.aiCharacterCombatManager.FindATargetViaLineOfSight(aiCharacter);

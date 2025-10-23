@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
@@ -16,6 +18,13 @@ namespace LZ
         public override void PlayBlockSoundFX()
         {
             PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerCombatManager.currentWeaponBeingUsed.blocking));
+        }
+
+        public override void PlayFootStepSoundFX()
+        {
+            base.PlayFootStepSoundFX();
+
+            WorldSoundFXManager.instance.AlertNearbyCharactersToSound(transform.position, 2);
         }
     }
 }

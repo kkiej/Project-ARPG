@@ -19,13 +19,14 @@ namespace LZ
         public NavMeshAgent navMeshAgent;
         
         [Header("Current State")]
-        [SerializeField] protected AIState currentState;
+        public AIState currentState;
 
         [Header("States")]
         public IdleState idle;
         public PursueTargetState pursueTarget;
         public CombatStanceState combatStance;
         public AttackState attack;
+        public InvestigateSoundState investigateSound;
 
         protected override void Awake()
         {
@@ -49,17 +50,18 @@ namespace LZ
                 pursueTarget = Instantiate(pursueTarget);
                 combatStance = Instantiate(combatStance);
                 attack = Instantiate(attack);
+                investigateSound = Instantiate(investigateSound);
                 currentState = idle;
             }
 
-            aiCharacterNetworkManager.currentHealth.OnValueChanged += aiCharacterNetworkManager.CheckHP;
+            aiCharacterNetworkManager.currentHealth.OnValueChanged += aiCharacterNetworkManager.OnHpChanged;
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
-            
-            aiCharacterNetworkManager.currentHealth.OnValueChanged -= aiCharacterNetworkManager.CheckHP;
+
+            aiCharacterNetworkManager.currentHealth.OnValueChanged -= aiCharacterNetworkManager.OnHpChanged;
         }
 
         protected override void OnEnable()

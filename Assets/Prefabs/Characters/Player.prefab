@@ -4576,6 +4576,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6292631328772342839}
+    - targetCorrespondingSourceObject: {fileID: 1352343783096026, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2214091143184175522}
     - targetCorrespondingSourceObject: {fileID: 1423455852810112, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
       insertIndex: -1
@@ -4588,6 +4592,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 746379601716506545}
+    - targetCorrespondingSourceObject: {fileID: 1620438952089352, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1815010402397137225}
   m_SourcePrefab: {fileID: 100100000, guid: 3f581b8f5dacdc54b8e405d2157e1d8b, type: 3}
 --- !u!4 &685720303394535247 stripped
 Transform:
@@ -4997,7 +5005,7 @@ MonoBehaviour:
     m_InternalValue: 400
   maxFocusPoints:
     m_InternalValue: 400
-  vitality:
+  vigor:
     m_InternalValue: 1
   endurance:
     m_InternalValue: 1
@@ -6027,6 +6035,19 @@ CapsuleCollider:
   m_Height: 0.29
   m_Direction: 0
   m_Center: {x: 0.03, y: 0.03, z: 0}
+--- !u!114 &1815010402397137225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688634759356580189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9191c7bdd5828449ce0d4c74a735cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.CharacterFootStepSFXMaker
+  distanceToGround: 0.05
 --- !u!1 &688638300520286321 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1632290950913572, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
@@ -6241,6 +6262,19 @@ CapsuleCollider:
   m_Height: 0.29
   m_Direction: 0
   m_Center: {x: -0.03, y: -0.03, z: 0}
+--- !u!114 &2214091143184175522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688920582019819663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9191c7bdd5828449ce0d4c74a735cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.CharacterFootStepSFXMaker
+  distanceToGround: 0.05
 --- !u!1 &688923069719880171 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1354101640705982, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
@@ -6493,6 +6527,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7192104030002372144, guid: a2cb3fa20b550ad4b9738aac2815d5e8,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 8990816197557128188, guid: a2cb3fa20b550ad4b9738aac2815d5e8,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

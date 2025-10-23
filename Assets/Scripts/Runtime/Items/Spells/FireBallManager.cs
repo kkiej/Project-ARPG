@@ -74,6 +74,8 @@ namespace LZ
                 instantiatedDestructionFX = Instantiate(impactParticle, transform.position, Quaternion.identity);
             }
 
+            WorldSoundFXManager.instance.AlertNearbyCharactersToSound(transform.position, 8);
+
             Destroy(gameObject);
         }
 
