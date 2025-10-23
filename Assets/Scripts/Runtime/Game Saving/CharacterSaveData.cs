@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LZ
@@ -12,6 +13,13 @@ namespace LZ
         
         [Header("Character Name")]
         public string characterName = "Character";
+
+        [Header("Dead Spot")]
+        public bool hasDeadSpot = false;
+        public float deadSpotPositionX;
+        public float deadSpotPositionY;
+        public float deadSpotPositionZ;
+        public int deadSpotRuneCount;
 
         [Header("Body Type")]
         public bool isMale = true;
@@ -46,6 +54,7 @@ namespace LZ
         public int faith;
 
         [Header("Sites Of Grace")]
+        public int lastSiteOfGraceRestedAt = 0;
         public SerializableDictionary<int, bool> sitesOfGrace;      //  THE INT IS THE SITE OF GRACE I.D, THE BOOL IS THE "ACTIVATED" STATUS
         
         [Header("Bosses")]

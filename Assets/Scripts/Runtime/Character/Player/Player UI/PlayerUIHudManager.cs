@@ -89,7 +89,16 @@ namespace LZ
             //  1. WAIT FOR TIMER TO REACH 0 INCASE MORE RUNES ARE QUED UP
             float timer = runeUpdateCountDelayTimer;
             int runesToAdd = pendingRunesToAdd;
-            runesToAddText.text = "+ " + runesToAdd.ToString();
+
+            if (runesToAdd >= 0)
+            {
+                runesToAddText.text = "+ " + runesToAdd.ToString();
+            }
+            else
+            {
+                runesToAddText.text = "- " + Mathf.Abs(runesToAdd).ToString();
+            }
+
             runesToAddText.enabled = true;
 
             while (timer > 0)

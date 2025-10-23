@@ -65,6 +65,14 @@ namespace LZ
             player = GetComponent<PlayerManager>();
         }
 
+        public override void OnIsDeadChanged(bool oldStatus, bool newStatus)
+        {
+            base.OnIsDeadChanged(oldStatus, newStatus);
+
+            if (player.isDead.Value)
+                player.playerCombatManager.CreateDeadSpot(player.transform.position, player.playerStatsManager.runes);
+        }
+
         public void SetCharacterActionHand(bool rightHandedAction)
         {
             if (rightHandedAction)

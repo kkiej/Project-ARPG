@@ -248,13 +248,12 @@ namespace LZ
         public override IEnumerator ProcessDeathEvent(bool manuallySelectDeathAnimation = false)
         {
             if (IsOwner)
-            {
                 PlayerUIManager.instance.playerUIPopUpManager.SendYouDiedPopUp();
-            }
+
+            //  TODO KICK NON HOST PLAYERS FROM GAME IF HOST DIES
+            WorldGameSessionManager.instance.WaitThenReviveHost();
 
             return base.ProcessDeathEvent(manuallySelectDeathAnimation);
-            
-            // 检查玩家是否还活着，如果没有玩家活着就重生
         }
 
         public override void ReviveCharacter()
@@ -452,6 +451,7 @@ namespace LZ
                 playerInventoryManager.legEquipment = null;
             }
 
+            //  WEAPONS
             playerInventoryManager.rightHandWeaponIndex = currentCharacterData.rightWeaponIndex;
             playerInventoryManager.weaponsInRightHandSlots[0] = currentCharacterData.rightWeapon01.GetWeapon();
             playerInventoryManager.weaponsInRightHandSlots[1] = currentCharacterData.rightWeapon02.GetWeapon();

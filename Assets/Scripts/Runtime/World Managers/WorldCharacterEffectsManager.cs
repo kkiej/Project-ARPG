@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +12,7 @@ namespace LZ
         public GameObject bloodSplatterVFX;
         public GameObject criticalBloodSplatterVFX;
         public GameObject healingFlaskVFX;
+        public GameObject deadSpotVFX;
 
         [Header("Damage")]
         public TakeDamageEffect takeDamageEffect;

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +11,8 @@ namespace LZ
         [Header("Active Players In Session")]
         public List<PlayerManager> players = new List<PlayerManager>();
 
+        private Coroutine revivalCoroutien;
+
         private void Awake()
         {
             if (instance == null)
@@ -20,6 +22,33 @@ namespace LZ
             else
             {
                 Destroy(gameObject);
+            }
+        }
+
+        public void WaitThenReviveHost()
+        {
+            if (revivalCoroutien != null)
+                StopCoroutine(revivalCoroutien);
+
+            revivalCoroutien = StartCoroutine(ReviveHostCoroutine(5));
+        }
+
+        private IEnumerator ReviveHostCoroutine(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+
+            PlayerUIManager.instance.playerUILoadingScreenManager.ActivateLoadingScreen();
+
+            PlayerUIManager.instance.localPlayer.ReviveCharacter();
+
+            //  TODO SAVE LAST SITE OF GRACE VISITED, AND T.P THERE
+            for (int i = 0; i < WorldObjectManager.instance.sitesOfGrace.Count; i++)
+            {
+                if (WorldObjectManager.instance.sitesOfGrace[i].siteOfGraceID == WorldSaveGameManager.instance.currentCharacterData.lastSiteOfGraceRestedAt)
+                {
+                    WorldObjectManager.instance.sitesOfGrace[i].TeleportToSiteOfGrace();
+                    break;
+                }
             }
         }
 
