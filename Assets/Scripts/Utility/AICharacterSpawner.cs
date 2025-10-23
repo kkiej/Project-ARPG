@@ -1,4 +1,5 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -10,6 +11,10 @@ namespace LZ
         [SerializeField] GameObject characterGameObject;
         [SerializeField] GameObject instantiatedGameObject;
         private AICharacterManager aiCharacter;
+
+        [Header("Patrol")]
+        [SerializeField] bool hasPatrolPath = false;
+        [SerializeField] int patrolPathID = 0;
 
         private void Awake()
         {
@@ -32,8 +37,13 @@ namespace LZ
                 instantiatedGameObject.GetComponent<NetworkObject>().Spawn();
                 aiCharacter = instantiatedGameObject.GetComponent<AICharacterManager>();
 
-                if (aiCharacter != null)
-                    WorldAIManager.instance.AddCharacterToSpawnedCharactersList(aiCharacter);
+                if (aiCharacter == null)
+                    return;
+
+                WorldAIManager.instance.AddCharacterToSpawnedCharactersList(aiCharacter);
+
+                if (hasPatrolPath)
+                    aiCharacter.idle.aiPatrolPath = WorldAIManager.instance.GetAIPatrolPathByID(patrolPathID);
             }
         }
 

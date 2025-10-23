@@ -23,6 +23,9 @@ namespace LZ
         [Header("Bosses")]
         [SerializeField] List<AIBossCharacterManager> spawnedInBosses;
 
+        [Header("Patrol Paths")]
+        [SerializeField] List<AIPatrolPath> aiPatrolPaths = new List<AIPatrolPath>(); 
+
         private void Awake()
         {
             if (instance == null)
@@ -153,6 +156,28 @@ namespace LZ
             // 如果禁用状态为真，则在客户端连接时禁用游戏对象
             // 可以用来禁用远离玩家的角色以节省内存
             // 注册表可以被分割成区域（AREA_00_，AREA_01，AREA_02）等
+        }
+
+        //  PATROL PATHS
+        public void AddPatrolPathToList(AIPatrolPath patrolPath)
+        {
+            if (aiPatrolPaths.Contains(patrolPath))
+                return;
+
+            aiPatrolPaths.Add(patrolPath);
+        }
+
+        public AIPatrolPath GetAIPatrolPathByID(int patrolPathID)
+        {
+            AIPatrolPath patrolPath = null;
+
+            for (int i = 0; i < aiPatrolPaths.Count; i++)
+            {
+                if (aiPatrolPaths[i].patrolPathID == patrolPathID)
+                    patrolPath = aiPatrolPaths[i];
+            }
+
+            return patrolPath;
         }
     }
 }
