@@ -160,6 +160,11 @@ namespace LZ
                 return;
 
             //  IF THEY ARE SLEEPING, HERE IS WHERE YOU WAKE THEM UP
+            if (aiCharacter.idle.idleStateMode == IdleStateMode.Sleep && !aiCharacter.aiCharacterNetworkManager.isAwake.Value)
+            {
+                aiCharacter.aiCharacterNetworkManager.isAwake.Value = true;
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value.ToString(), true);
+            }
 
             aiCharacter.investigateSound.positionOfSound = positionOfSound;
             aiCharacter.currentState = aiCharacter.currentState.SwitchState(aiCharacter, aiCharacter.investigateSound);

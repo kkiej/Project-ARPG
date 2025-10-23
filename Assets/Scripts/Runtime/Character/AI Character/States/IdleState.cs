@@ -9,7 +9,7 @@ namespace LZ
     public class IdleState : AIState
     {
         [Header("Idle Options")]
-        [SerializeField] IdleStateMode idleStateMode;
+        public IdleStateMode idleStateMode;
 
         [Header("Patrol Options")]
         public AIPatrolPath aiPatrolPath;
@@ -25,15 +25,20 @@ namespace LZ
 
         [Header("Sleep Options")]
         public bool willInvestigateSound = true;
+        private bool sleepAnimationSet = false;
+        [SerializeField] string sleepAnimation = "Sleep_01";
+        [SerializeField] string wakingAnimation = "Wake_01";
 
         public override AIState Tick(AICharacterManager aiCharacter)
         {
-            aiCharacter.aiCharacterCombatManager.FindATargetViaLineOfSight(aiCharacter);
+            if (aiCharacter.aiCharacterNetworkManager.isAwake.Value)
+                aiCharacter.aiCharacterCombatManager.FindATargetViaLineOfSight(aiCharacter);
 
             switch (idleStateMode)
             {
                 case IdleStateMode.Idle: return Idle(aiCharacter);
                 case IdleStateMode.Patrol: return Patrol(aiCharacter);
+                case IdleStateMode.Sleep: return SleepUntilDisturbed(aiCharacter);
                 default:
                     break;
             }
@@ -154,6 +159,39 @@ namespace LZ
             aiCharacter.navMeshAgent.SetPath(path);
 
             return this;
+        }
+
+        protected virtual AIState SleepUntilDisturbed(AICharacterManager aiCharacter)
+        {
+            aiCharacter.navMeshAgent.enabled = false;
+
+            //  IF WE HAVENT SET OUR SLEEP ANIMATION, AND THE CHARACTER IS SLEEPING SET THE ANIMATION NOW
+            if (!sleepAnimationSet && !aiCharacter.aiCharacterNetworkManager.isAwake.Value)
+            {
+                sleepAnimationSet = true;
+                aiCharacter.aiCharacterNetworkManager.sleepingAnimation.Value = sleepAnimation;
+                aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value = wakingAnimation;
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(aiCharacter.aiCharacterNetworkManager.sleepingAnimation.Value.ToString(), true);
+            }
+
+            if (aiCharacter.characterCombatManager.currentTarget != null && !aiCharacter.aiCharacterNetworkManager.isAwake.Value)
+            {
+                aiCharacter.aiCharacterNetworkManager.isAwake.Value = true;
+
+                if (!aiCharacter.isPerformingAction && !aiCharacter.isDead.Value)
+                    aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value.ToString(), true);
+
+                return SwitchState(aiCharacter, aiCharacter.pursueTarget);
+            }
+
+            return this;
+        }
+
+        protected override void ResetStateFlags(AICharacterManager aiCharacter)
+        {
+            base.ResetStateFlags(aiCharacter);
+
+            sleepAnimationSet = false;
         }
     }
 }

@@ -183,7 +183,8 @@ public enum ItemPickUpType
 public enum IdleStateMode
 {
     Idle,
-    Patrol
+    Patrol,
+    Sleep
         //SLEEP
         //FOLLOW
         //WANDER

@@ -39,7 +39,16 @@ namespace LZ
 
             navMeshAgent = GetComponentInChildren<NavMeshAgent>();
         }
-        
+
+        protected override void Start()
+        {
+            base.Start();
+
+            //  IF THE ANIMATOR OR GAMEOBJECT BECOMES DISABLED, WE WILL KEEP OUR CURRENT ANIMATION WHEN RE-ENABLED
+            //  THIS IS ESPECIALLY USEFUL FOR DISABLING ENEMIES THAT ARE FAR AWAY, AND RE-ENABLING THEM LATER KEEPING THEM IN SPECIFIC STATES (LIKE SLEEP, OR DEAD)
+            animator.keepAnimatorStateOnDisable = true;
+        }
+
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -55,6 +64,12 @@ namespace LZ
             }
 
             aiCharacterNetworkManager.currentHealth.OnValueChanged += aiCharacterNetworkManager.OnHpChanged;
+
+            if (!aiCharacterNetworkManager.isAwake.Value)
+                animator.Play(aiCharacterNetworkManager.sleepingAnimation.Value.ToString());
+
+            if (isDead.Value)
+                animator.Play("Dead_01");
         }
 
         public override void OnNetworkDespawn()
