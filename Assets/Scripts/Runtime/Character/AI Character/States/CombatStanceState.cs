@@ -17,7 +17,8 @@ namespace LZ
 
         [Header("Combo")]
         [SerializeField] protected bool canPerformCombo; // 如果角色可以执行连击攻击，在初次攻击后
-        [SerializeField] protected int chanceToPerformCombo = 25; // 角色在下一次攻击时执行连击的几率（百分比）
+        [SerializeField] protected int percentageOfTimeWillPerformCombo = 25; // 角色在下一次攻击时执行连击的几率（百分比）
+        [SerializeField] public bool onlyPerformComboIfInitialAttackHits = false;
         protected bool hasRolledForComboChance; // 如果我们已经在这个状态下掷过几率了
         
         [Header("Engagement Distance")]
@@ -70,6 +71,13 @@ namespace LZ
             {
                 hasRolledForBlockChance = true;
                 willBlockDuringThisCombatRotation = RollForOutcomeChance(percentageOfTimeWillBlock);
+            }
+
+            //  ROLL FOR COMBO CHANCE
+            if (canPerformCombo && !hasRolledForComboChance)
+            {
+                hasRolledForComboChance = true;
+                aiCharacter.attack.willPerformCombo = RollForOutcomeChance(percentageOfTimeWillPerformCombo);
             }
 
             if (willBlockDuringThisCombatRotation)

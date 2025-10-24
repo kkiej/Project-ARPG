@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
@@ -29,18 +31,10 @@ namespace LZ
             
             // 设置移动值为0
             aiCharacter.characterAnimatorManager.UpdateAnimatorMovementParameters(0, 0, false);
-            
-            // 播放连击
-            if (willPerformCombo && !hasPerformedCombo)
-            {
-                if (currentAttack.comboAction != null)
-                {
-                    // 如果可以连击
-                    //hasPerformedCombo = true;
-                    //currentAttack.comboAction.AttemptToPerformAction(aiCharacter);
-                }
-            }
-            
+
+            //  PERFORM A COMBO
+            PerformCombo(aiCharacter);
+
             if (aiCharacter.isPerformingAction)
                 return this;
 
@@ -75,6 +69,39 @@ namespace LZ
 
             hasPerformedAttack = false;
             hasPerformedCombo = false;
+            willPerformCombo = false;
+        }
+
+        protected virtual void PerformCombo(AICharacterManager aiCharacter)
+        {
+            bool canPerformTheCombo = false;
+
+            if (!willPerformCombo)
+                return;
+
+            if (hasPerformedCombo)
+                return;
+
+            if (currentAttack.comboAction == null)
+                return;
+
+            //  IF WE DONT NEED TO HIT OUR CURRENT TARGET, WE WILL PERFORM THE COMBO ANYWAY
+            if (aiCharacter.aiCharacterCombatManager.canPerformCombo
+                && !aiCharacter.combatStance.onlyPerformComboIfInitialAttackHits)
+                canPerformTheCombo = true;
+
+            //  IF WE DO NEED TO HIT THE TARGET, AND WE HAVE HIT THE TARGET, PERFORM THE COMBO
+            if (aiCharacter.aiCharacterCombatManager.canPerformCombo
+                && aiCharacter.combatStance.onlyPerformComboIfInitialAttackHits
+                && aiCharacter.aiCharacterCombatManager.hasHitTargetDuringCombo)
+                canPerformTheCombo = true;
+
+            if (canPerformTheCombo)
+            {
+                hasPerformedCombo = true;
+                currentAttack.comboAction.AttemptToPerformAction(aiCharacter);
+            }
+
         }
     }
 }

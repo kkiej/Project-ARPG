@@ -28,7 +28,9 @@ namespace LZ
             // 所以我们将它们添加到一个列表中，在造成伤害之前进行检查
             if (charactersDamaged.Contains(damageTarget))
                 return;
-            
+
+            characterCausingDamage.aiCharacterCombatManager.hasHitTargetDuringCombo = true;
+
             charactersDamaged.Add(damageTarget);
 
             TakeDamageEffect damageEffect = Instantiate(WorldCharacterEffectsManager.instance.takeDamageEffect);

@@ -18,7 +18,13 @@ namespace LZ
 
         [Header("Pivot")]
         public bool enablePivot = true;
-        
+
+        [Header("Combo")]
+        public bool canPerformCombo = false;
+
+        [Header("Hit Check")]
+        public bool hasHitTargetDuringCombo = false;             //  THIS IS A FLAG TO DETERMINE WEATHER OR NOT WE HIT OUR TARGET DURING A COMBO
+
         [Header("Target Information")]
         public float distanceFromTarget;
         public float viewableAngle;
@@ -370,6 +376,19 @@ namespace LZ
                     actionRecoveryTimer -= Time.deltaTime;
                 }
             }
+        }
+
+        //  COMBO
+
+        public override void EnableCanDoCombo()
+        {
+            canPerformCombo = true;
+        }
+
+        public override void DisableCanDoCombo()
+        {
+            canPerformCombo = false;
+            hasHitTargetDuringCombo = false;
         }
     }
 }
