@@ -95,7 +95,11 @@ namespace LZ
                 playerNetworkManager.currentFocusPoints.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewFocusPointValue;
                 playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegenTimer;
 
-                // 当取消瞄准状态时，将相机旋转重置为标准值
+                playerNetworkManager.SetNewMaxHealthValue(0, playerNetworkManager.vigor.Value);
+                playerNetworkManager.SetNewMaxStaminaValue(0, playerNetworkManager.endurance.Value);
+                playerNetworkManager.SetNewMaxFocusPointsValue(0, playerNetworkManager.mind.Value);
+
+                //  RESETS CAMERA ROTATION TO STANDARD WHEN AIMING IS DISABLED
                 playerNetworkManager.isAiming.OnValueChanged += playerNetworkManager.OnIsAimingChanged;
             }
             

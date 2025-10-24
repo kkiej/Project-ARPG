@@ -1005,14 +1005,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2489f475d47ea824ba55f41d7312cb74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageCollider: {fileID: 0}
+  damageCollider: {fileID: 8774108614976264498}
   physicalDamage: 0
   magicDamage: 0
   fireDamage: 0
   lightningDamage: 0
   holyDamage: 0
   poiseDamage: 0
-  undeadCharacter: {fileID: 0}
+  characterCausingDamage: {fileID: -4410606119701210936}
 --- !u!135 &8774108614976264498
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1871,6 +1871,8 @@ MonoBehaviour:
   canBeBackstabbed: 1
   criticalAttackDistanceCheck: 0.7
   pendingCriticalDamage: 0
+  baseDamage: 25
+  basePoiseDamage: 25
   actionRecoveryTimer: 0
   enablePivot: 1
   distanceFromTarget: 0
@@ -1889,8 +1891,6 @@ MonoBehaviour:
   playersWithinActivationRange: []
   rightHandDamageCollider: {fileID: 2249998967884377560}
   leftHandDamageCollider: {fileID: 6209171135372363402}
-  baseDamage: 25
-  basePoiseDamage: 25
   attack01DamageModifier: 1
   attack02DamageModifier: 1.4
 --- !u!114 &-4410606119701210936
@@ -2658,14 +2658,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2489f475d47ea824ba55f41d7312cb74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageCollider: {fileID: 0}
+  damageCollider: {fileID: 4172673667579124973}
   physicalDamage: 0
   magicDamage: 0
   fireDamage: 0
   lightningDamage: 0
   holyDamage: 0
   poiseDamage: 0
-  undeadCharacter: {fileID: 0}
+  characterCausingDamage: {fileID: -4410606119701210936}
 --- !u!135 &4172673667579124973
 SphereCollider:
   m_ObjectHideFlags: 0

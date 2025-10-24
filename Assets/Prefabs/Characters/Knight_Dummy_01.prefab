@@ -2627,13 +2627,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9083167269115425503}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.90085447, y: 0.41987076, z: 0.10744681, w: 0.024998773}
-  m_LocalPosition: {x: -0.1633, y: -0.0756, z: -0.0169}
+  m_LocalRotation: {x: 0.25688305, y: -0.22015564, z: -0.9271375, w: 0.16111678}
+  m_LocalPosition: {x: -0.011999916, y: 0.028000005, z: -0.01000014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3412393657200054216}
   m_Father: {fileID: 3729086510785509805}
-  m_LocalEulerAnglesHint: {x: -2.59, y: -192.404, z: -229.697}
+  m_LocalEulerAnglesHint: {x: -18.993, y: 324.635, z: 205.822}
 --- !u!114 &512883899950446982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2701,7 +2702,7 @@ GameObject:
   - component: {fileID: 605160596341833299}
   - component: {fileID: 7787856112724921197}
   - component: {fileID: 5702189357165242003}
-  - component: {fileID: 1129886508134236913}
+  - component: {fileID: 2677919046479770755}
   - component: {fileID: 3413141271688343265}
   - component: {fileID: 6173294021211634938}
   - component: {fileID: 3174600439510094657}
@@ -3064,7 +3065,7 @@ MonoBehaviour:
   maximumFOV: 35
   attackRotationSpeed: 25
   maxStance: 150
-  currentStance: 0
+  currentStance: 150
   stanceRegeneratedPersecond: 15
   ignoreStanceBreak: 0
   stanceRegenerationTimer: 0
@@ -3181,12 +3182,12 @@ MonoBehaviour:
   runesDroppedOnDeath: 50
   staminaRegenerationAmount: 2
   staminaRegenerationDelay: 2
-  blockingPhysicalAbsorption: 0
-  blockingFireAbsorption: 0
-  blockingMagicAbsorption: 0
-  blockingLightningAbsorption: 0
-  blockingHolyAbsorption: 0
-  blockingStability: 0
+  blockingPhysicalAbsorption: 85
+  blockingFireAbsorption: 70
+  blockingMagicAbsorption: 70
+  blockingLightningAbsorption: 60
+  blockingHolyAbsorption: 60
+  blockingStability: 60
   armorPhysicalDamageAbsorption: 0
   armorMagicDamageAbsorption: 0
   armorFireDamageAbsorption: 0
@@ -3243,7 +3244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c812bf48634ed981739aee1152d687, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1129886508134236913
+--- !u!114 &2677919046479770755
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3252,9 +3253,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9116315882318417191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43765aa22b4b4806bed4d5dbfcdbe87b, type: 3}
+  m_Script: {fileID: 11500000, guid: 05a6ab9eb62caff4e86c2eb3ff9a5897, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.AICharacterSoundFXManager
   damageGrunts:
   - {fileID: 8300000, guid: e6d7943c246702d409020f0fe4bc5804, type: 3}
   - {fileID: 8300000, guid: abf3ba190bb024d43a9966a264f95e83, type: 3}
@@ -3263,7 +3264,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 01ef9136e8961ea43ab6a9b3f55ac208, type: 3}
   - {fileID: 8300000, guid: d26048c60bb6d6d4ab661e7caf663617, type: 3}
   - {fileID: 8300000, guid: 5447960e9c5eef643847106d3b29007b, type: 3}
-  footSteps: []
+  footSteps:
+  - {fileID: 8300000, guid: b993df4a93c1d304ab19d8b2eb88c9a5, type: 3}
+  - {fileID: 8300000, guid: 5c9bdbce37b06a24fa6ea793bcfd1907, type: 3}
+  - {fileID: 8300000, guid: 0909de896e9029541b92ae05fe15e4b6, type: 3}
+  blockingSFX:
+  - {fileID: 8300000, guid: 8178e08babc25d44abbaca9d80f967be, type: 3}
+  - {fileID: 8300000, guid: ff48f3287883dd64489fef13ac783e2b, type: 3}
+  - {fileID: 8300000, guid: 953a8d82656aa35468e5868ca23f9be1, type: 3}
 --- !u!54 &3413141271688343265
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3544,6 +3552,80 @@ MonoBehaviour:
   holyDamage: 0
   poiseDamage: 0
   characterCausingDamage: {fileID: 2629187950449359961}
+--- !u!1001 &2915886987144780125
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5482042142545606297}
+    m_Modifications:
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8028267614027943973, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+        type: 3}
+      propertyPath: m_Name
+      value: Weapon_Medium_Shield_01
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: da526c2f9a5467840ad7a3f0ed22a03b, type: 3}
+--- !u!4 &3412393657200054216 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 516803689089226389, guid: da526c2f9a5467840ad7a3f0ed22a03b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2915886987144780125}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2973157254500062496
 PrefabInstance:
   m_ObjectHideFlags: 0

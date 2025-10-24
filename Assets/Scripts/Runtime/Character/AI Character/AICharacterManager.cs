@@ -68,6 +68,7 @@ namespace LZ
             }
 
             aiCharacterNetworkManager.currentHealth.OnValueChanged += aiCharacterNetworkManager.OnHpChanged;
+            aiCharacterNetworkManager.isBlocking.OnValueChanged += aiCharacterNetworkManager.OnIsBlockingChanged;
 
             if (!aiCharacterNetworkManager.isAwake.Value)
                 animator.Play(aiCharacterNetworkManager.sleepingAnimation.Value.ToString());
@@ -83,6 +84,7 @@ namespace LZ
             base.OnNetworkDespawn();
 
             aiCharacterNetworkManager.currentHealth.OnValueChanged -= aiCharacterNetworkManager.OnHpChanged;
+            aiCharacterNetworkManager.isBlocking.OnValueChanged -= aiCharacterNetworkManager.OnIsBlockingChanged;
         }
 
         protected override void OnEnable()

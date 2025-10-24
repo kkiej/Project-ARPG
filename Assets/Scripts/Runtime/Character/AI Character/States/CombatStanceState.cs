@@ -28,6 +28,16 @@ namespace LZ
         private bool hasChoosenCirclePath = false;
         private float strafeMoveAmount;
 
+        [Header("Blocking")]
+        [SerializeField] bool canBlock = false;
+        [SerializeField] int percentageOfTimeWillBlock = 75;
+        private bool hasRolledForBlockChance = false;
+        private bool willBlockDuringThisCombatRotation = false;
+        //  YOU COULD HANDLE THIS MULTIPLE WAYS
+        //  1. YOU COULD HAVE A BLOCKING CHARACTER ALWAYS BLOCK DURING THE COMBAT STANCE STATE
+        //  2. YOU COULD "ROLL" FOR A BLOCK CHANCE AND HAVE THEM BLOCK A PERCENTAGE OF THE TIME
+        //  BONUS: YOU COULD CREATE SPECIFIC COMBAT STANCE STATES, WHERE BLOCKING CONDITIONS ARE DIFFERENT FOR EACH CREATURE (MAYBE SOME ONLY BLOCK ON % OF LIFE OR WHATEVER)
+
         public override AIState Tick(AICharacterManager aiCharacter)
         {
             if (aiCharacter.isPerformingAction)
@@ -55,6 +65,15 @@ namespace LZ
 
             if (willCircleTarget)
                 SetCirclePath(aiCharacter);
+
+            if (canBlock && !hasRolledForBlockChance)
+            {
+                hasRolledForBlockChance = true;
+                willBlockDuringThisCombatRotation = RollForOutcomeChance(percentageOfTimeWillBlock);
+            }
+
+            if (willBlockDuringThisCombatRotation)
+                aiCharacter.aiCharacterNetworkManager.isBlocking.Value = true;
 
             //  IF WE DO NOT HAVE AN ATTACK, GET ONE
             if (!hasAttack)
@@ -183,7 +202,9 @@ namespace LZ
 
             hasAttack = false;
             hasRolledForComboChance = false;
+            hasRolledForBlockChance = false;
             hasChoosenCirclePath = false;
+            willBlockDuringThisCombatRotation = false;
             strafeMoveAmount = 0;
         }
     }
