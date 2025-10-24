@@ -78,7 +78,7 @@ namespace LZ
 
         public void StartNetworkAsHost()
         {
-            NetworkManager.Singleton.StartHost();
+            WorldGameSessionManager.instance.StartGameAsHost();
         }
 
         public void AttemptToCreateNewCharacter()

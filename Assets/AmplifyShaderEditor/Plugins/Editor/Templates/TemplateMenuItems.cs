@@ -6,21 +6,6 @@ namespace AmplifyShaderEditor
 {
 	public class TemplateMenuItems
 	{
-		[MenuItem( "Assets/Create/Amplify Shader/BOXOPHOBIC/The Vegetation Engine/Simple Lit", false, 85 )]
-		public static void ApplyTemplateBOXOPHOBICTheVegetationEngineSimpleLit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "8ac73d31a0cb5ba44921c0a344e93e59" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/BOXOPHOBIC/The Vegetation Engine/Standard Lit", false, 85 )]
-		public static void ApplyTemplateBOXOPHOBICTheVegetationEngineStandardLit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "28cd5599e02859647ae1798e4fcaef6c" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/BOXOPHOBIC/The Vegetation Engine/Unlit", false, 85 )]
-		public static void ApplyTemplateBOXOPHOBICTheVegetationEngineUnlit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "9b6e5313c680dab43a13a292e0b6d88f" );
-		}
 		[MenuItem( "Assets/Create/Amplify Shader/Custom Render Texture/Initialize", false, 85 )]
 		public static void ApplyTemplateCustomRenderTextureInitialize()
 		{
@@ -30,46 +15,6 @@ namespace AmplifyShaderEditor
 		public static void ApplyTemplateCustomRenderTextureUpdate()
 		{
 			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "32120270d1b3a8746af2aca8bc749736" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/DE Environment/Universal/Decals", false, 85 )]
-		public static void ApplyTemplateDEEnvironmentUniversalDecals()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "2e7260dedc9bab444bfff053b4f77133" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/DE Environment/Universal/Lit", false, 85 )]
-		public static void ApplyTemplateDEEnvironmentUniversalLit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "0bc84675c7f70734a91bb8718bc6e7d7" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/DE Environment/Universal/Unlit", false, 85 )]
-		public static void ApplyTemplateDEEnvironmentUniversalUnlit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "b60e63b9cc475194db0669ad5aa2f774" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/HDRP/Decal", false, 85 )]
-		public static void ApplyTemplateHDRPDecal()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "d345501910c196f4a81c9eff8a0a5ad7" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/HDRP/Fabric", false, 85 )]
-		public static void ApplyTemplateHDRPFabric()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "41e04be03f2c20941bc749271be1c937" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/HDRP/Hair", false, 85 )]
-		public static void ApplyTemplateHDRPHair()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "e4fe21624ace6de4b9fbaabdda0c51de" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/HDRP/Lit", false, 85 )]
-		public static void ApplyTemplateHDRPLit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "53b46d85872c5b24c8f4f0a1c3fe4c87" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/HDRP/Unlit", false, 85 )]
-		public static void ApplyTemplateHDRPUnlit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "7f5cb9c3ea6481f469fdd856555439ef" );
 		}
 		[MenuItem( "Assets/Create/Amplify Shader/Legacy/Default Sprites", false, 85 )]
 		public static void ApplyTemplateLegacyDefaultSprites()
@@ -115,36 +60,6 @@ namespace AmplifyShaderEditor
 		public static void ApplyTemplateUIDefault()
 		{
 			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "5056123faa0c79b47ab6ad7e8bf059a4" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/Universal/2D Custom Lit", false, 85 )]
-		public static void ApplyTemplateUniversal2DCustomLit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "ece0159bad6633944bf6b818f4dd296c" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/Universal/2D Lit", false, 85 )]
-		public static void ApplyTemplateUniversal2DLit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "199187dac283dbe4a8cb1ea611d70c58" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/Universal/2D Unlit", false, 85 )]
-		public static void ApplyTemplateUniversal2DUnlit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "cf964e524c8e69742b1d21fbe2ebcc4a" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/Universal/Decal", false, 85 )]
-		public static void ApplyTemplateUniversalDecal()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "c2a467ab6d5391a4ea692226d82ffefd" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/Universal/Lit", false, 85 )]
-		public static void ApplyTemplateUniversalLit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "94348b07e5e8bab40bd6c8a1e3df54cd" );
-		}
-		[MenuItem( "Assets/Create/Amplify Shader/Universal/Unlit", false, 85 )]
-		public static void ApplyTemplateUniversalUnlit()
-		{
-			AmplifyShaderEditorWindow.CreateConfirmationTemplateShader( "2992e84f91cbeb14eab234972e07ea9d" );
 		}
 	}
 }
