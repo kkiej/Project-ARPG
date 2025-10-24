@@ -161,6 +161,17 @@ namespace LZ
             // 注册表可以被分割成区域（AREA_00_，AREA_01，AREA_02）等
         }
 
+        public void DisableAllBossFights()
+        {
+            for (int i = 0; i < spawnedInBosses.Count; i++)
+            {
+                if (spawnedInBosses[i] == null)
+                    continue;
+
+                spawnedInBosses[i].bossFightIsActive.Value = false;
+            }
+        }
+
         //  PATROL PATHS
         public void AddPatrolPathToList(AIPatrolPath patrolPath)
         {

@@ -1,13 +1,15 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace LZ
 {
     public class CharacterManager : NetworkBehaviour
     {
+        [Header("Flags")]
+        public bool isPerformingAction = false;
+
         [Header("Status")]
         public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
@@ -26,15 +28,11 @@ namespace LZ
         [Header("Character Group")]
         public CharacterGroup characterGroup;
 
-        [Header("Flags")]
-        public bool isPerformingAction;
-        
         protected virtual void Awake()
         {
-            DontDestroyOnLoad(this);
-
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
+
             characterNetworkManager = GetComponent<CharacterNetworkManager>();
             characterEffectsManager = GetComponent<CharacterEffectsManager>();
             characterAnimatorManager = GetComponent<CharacterAnimatorManager>();
@@ -63,13 +61,16 @@ namespace LZ
             // 如果这个角色是由其他地方控制的，那么将其位置通过网络变换的位置在本地赋值
             else
             {
-                transform.position = Vector3.SmoothDamp(transform.position,
-                    characterNetworkManager.networkPosition.Value,
-                    ref characterNetworkManager.networkPositionVelocity,
+                //  Position
+                transform.position = Vector3.SmoothDamp
+                    (transform.position, 
+                    characterNetworkManager.networkPosition.Value, 
+                    ref characterNetworkManager.networkPositionVelocity, 
                     characterNetworkManager.networkPositionSmoothTime);
-
-                transform.rotation = Quaternion.Slerp(transform.rotation,
-                    characterNetworkManager.networkRotation.Value,
+                //  Rotation
+                transform.rotation = Quaternion.Slerp
+                    (transform.rotation, 
+                    characterNetworkManager.networkRotation.Value, 
                     characterNetworkManager.networkRotationSmoothTime);
             }
         }

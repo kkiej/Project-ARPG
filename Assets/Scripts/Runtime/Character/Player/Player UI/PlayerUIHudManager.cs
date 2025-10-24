@@ -38,6 +38,7 @@ namespace LZ
         [Header("Boss Health Bar")]
         public Transform bossHealthBarParent;
         public GameObject bossHealthBarObject;
+        [HideInInspector] public UI_Boss_HP_Bar currentBossHealthBar;
 
         [Header("Crosshair")]
         public GameObject crossHair;

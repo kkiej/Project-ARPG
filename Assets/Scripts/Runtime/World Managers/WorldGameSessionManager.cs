@@ -199,6 +199,8 @@ namespace LZ
 
             PlayerUIManager.instance.localPlayer.ReviveCharacter();
 
+            WorldAIManager.instance.ResetAllCharacters();
+
             //  TODO SAVE LAST SITE OF GRACE VISITED, AND T.P THERE
             for (int i = 0; i < WorldObjectManager.instance.sitesOfGrace.Count; i++)
             {

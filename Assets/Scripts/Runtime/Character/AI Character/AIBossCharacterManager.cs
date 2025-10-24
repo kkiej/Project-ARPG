@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace LZ
 {
@@ -10,19 +10,16 @@ namespace LZ
         public int bossID = 0;
 
         [Header("Music")]
-        [SerializeField] private AudioClip bossIntroClip;
-        [SerializeField] private AudioClip bossBattleLoopClip;
+        [SerializeField] AudioClip bossIntroClip;
+        [SerializeField] AudioClip bossBattleLoopClip;
 
         [Header("Status")]
-        public NetworkVariable<bool> bossFightIsActive = new NetworkVariable<bool>(false,
-            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        public NetworkVariable<bool> hasBeenAwakened = new NetworkVariable<bool>(false,
-            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        public NetworkVariable<bool> hasBeenDefeated = new NetworkVariable<bool>(false,
-            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        [SerializeField] private List<FogWallInteractable> fogWalls;
-        [SerializeField] private string sleepAnimation;
-        [SerializeField] string awakeAnimation;
+        public NetworkVariable<bool> bossFightIsActive = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> hasBeenAwakened = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> hasBeenDefeated = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        [SerializeField] List<FogWallInteractable> fogWalls;
+        [SerializeField] string sleepAnimation;
+        [SerializeField] string awakenAnimation;
 
         [Header("Phase Shift")]
         public float minimumHealthPercentageToShift = 50f;
@@ -30,8 +27,8 @@ namespace LZ
         [SerializeField] CombatStanceState phase02CombatStanceState;
         
         [Header("States")]
-        [SerializeField] BossSleepState sleepState;
-        
+        public BossSleepState sleepState;
+
         //  WHEN THIS A.I IS SPAWNED, CHECK OUR SAVE FILE (DICTIONARY)
         //  IF THE SAVE FILE DOES NOT CONTAIN A BOSS MONSTER WITH THIS I.D ADD IT
         //  IF IT IS PRESENT, CHECK IF THE BOSS HAS BEEN DEFEATED
@@ -69,6 +66,7 @@ namespace LZ
                 {
                     hasBeenDefeated.Value = WorldSaveGameManager.instance.currentCharacterData.bossesDefeated[bossID];
                     hasBeenAwakened.Value = WorldSaveGameManager.instance.currentCharacterData.bossesAwakened[bossID];
+                    sleepState.hasBeenAwakened = hasBeenAwakened.Value;
                 }
                 
                 //  LOCATE FOG WALLS
@@ -143,9 +141,7 @@ namespace LZ
                 //  IF WE ARE NOT GROUNDED, PLAY AN AERIAL DEATH ANIMATION
 
                 if (!manuallySelectDeathAnimation)
-                {
                     characterAnimatorManager.PlayTargetActionAnimation("Dead_01", true);
-                }
 
                 hasBeenDefeated.Value = true;
                 //  IF OUR SAVE DATA DOES NOT CONTAIN INFORMATION ON THIS BOSS, ADD IT NOW
@@ -180,12 +176,11 @@ namespace LZ
             if (IsOwner)
             {
                 if (!hasBeenAwakened.Value)
-                {
-                    characterAnimatorManager.PlayTargetActionAnimation(awakeAnimation, true);
-                }
+                    characterAnimatorManager.PlayTargetActionAnimation(awakenAnimation, true);
 
                 bossFightIsActive.Value = true;
                 hasBeenAwakened.Value = true;
+                aiCharacterNetworkManager.isAwake.Value = true;
                 currentState = idle;
 
                 if (!WorldSaveGameManager.instance.currentCharacterData.bossesAwakened.ContainsKey(bossID))
@@ -201,7 +196,6 @@ namespace LZ
                 for (int i = 0; i < fogWalls.Count; i++)
                 {
                     fogWalls[i].isActive.Value = true;
-                    Debug.Log(fogWalls[i].name);
                 }
             }
         }
@@ -211,12 +205,13 @@ namespace LZ
             if (bossFightIsActive.Value)
             {
                 WorldSoundFXManager.instance.PlayBossTrack(bossIntroClip, bossBattleLoopClip);
-                
-                GameObject bossHealthBar = Instantiate(PlayerUIManager.instance.playerUIHudManager.bossHealthBarObject,
-                    PlayerUIManager.instance.playerUIHudManager.bossHealthBarParent);
+
+                GameObject bossHealthBar =
+                Instantiate(PlayerUIManager.instance.playerUIHudManager.bossHealthBarObject, PlayerUIManager.instance.playerUIHudManager.bossHealthBarParent);
 
                 UI_Boss_HP_Bar bossHPBar = bossHealthBar.GetComponentInChildren<UI_Boss_HP_Bar>();
                 bossHPBar.EnableBossHPBar(this);
+                PlayerUIManager.instance.playerUIHudManager.currentBossHealthBar = bossHPBar;
             }
             else
             {

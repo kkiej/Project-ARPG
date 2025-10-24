@@ -27,9 +27,7 @@ namespace LZ
                 float healthNeededForShift = maxHealth.Value * (aiBossCharacter.minimumHealthPercentageToShift / 100);
 
                 if (currentHealth.Value <= healthNeededForShift)
-                {
                     aiBossCharacter.PhaseShift();
-                }
             }
         }
     }

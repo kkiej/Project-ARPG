@@ -46,8 +46,11 @@ namespace LZ
 
             if (!aiCharacter.navMeshAgent.enabled)
                 aiCharacter.navMeshAgent.enabled = true;
-            
-            // 如果你希望AI角色在目标超出其视野范围时朝向并转向目标
+
+            if (aiCharacter.aiCharacterCombatManager.currentTarget.isDead.Value)
+                aiCharacter.aiCharacterCombatManager.SetTarget(null);
+
+            //  IF YOU WANT THE AI CHARACTER TO FACE AND TURN TOWARDS ITS TARGET WHEN ITS OUTSIDE IT'S FOV INCLUDE THIS
             if (aiCharacter.aiCharacterCombatManager.enablePivot)
             {
                 if (!aiCharacter.aiCharacterNetworkManager.isMoving.Value)

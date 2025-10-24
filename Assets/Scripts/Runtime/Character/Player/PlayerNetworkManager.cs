@@ -74,6 +74,18 @@ namespace LZ
 
             if (player.isDead.Value)
                 player.playerCombatManager.CreateDeadSpot(player.transform.position, player.playerStatsManager.runes);
+
+            if (player.isDead.Value && NetworkManager.Singleton.IsServer)
+            {
+                //  REMOVE THE BOSS HP BAR FROM THE UI
+                if (PlayerUIManager.instance.playerUIHudManager.currentBossHealthBar != null)
+                    PlayerUIManager.instance.playerUIHudManager.currentBossHealthBar.RemoveHPBar(1f);
+
+                //  IF YOU WANT THIS TO PLAY LIKE ELDEN RING, DISABLE ALL BOSS FIGHTS
+                WorldAIManager.instance.DisableAllBossFights();
+                //  ALSO KICK ALL OF YOUR CO-OP PLAYERS
+                //
+            }
         }
 
         public void SetCharacterActionHand(bool rightHandedAction)
