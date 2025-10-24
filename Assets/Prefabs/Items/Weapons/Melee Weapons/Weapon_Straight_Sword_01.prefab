@@ -105,6 +105,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -126,6 +131,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -214,8 +220,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.045600984, y: 0.81318194, z: 0.10357974}
-  m_Center: {x: 0.00020505318, y: 0.48993146, z: 0.0010611044}
+  m_Size: {x: 0.045600984, y: 1.1499633, z: 0.13527025}
+  m_Center: {x: 0.0002050373, y: 0.32501683, z: -0.0021260227}
 --- !u!114 &4670556827188741421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,11 +240,14 @@ MonoBehaviour:
   fireDamage: 0
   lightningDamage: 0
   holyDamage: 0
+  poiseDamage: 0
   characterCausingDamage: {fileID: 0}
   light_Attack_01_Modifier: 0
   light_Attack_02_Modifier: 0
+  light_Jump_Attack_01_Modifier: 0
   heavy_Attack_01_Modifier: 0
   heavy_Attack_02_Modifier: 0
+  heavy_Jump_Attack_01_Modifier: 0
   charge_Attack_01_Modifier: 0
   charge_Attack_02_Modifier: 0
   running_Attack_01_Modifier: 0

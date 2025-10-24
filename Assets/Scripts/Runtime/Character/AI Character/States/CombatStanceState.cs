@@ -1,18 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace LZ
 {
     [CreateAssetMenu(menuName = "A.I/States/Combat Stance")]
     public class CombatStanceState : AIState
     {
-        // 1. 根据目标与角色的距离和角度选择攻击状态的攻击方式
-        // 2. 在等待攻击时处理任何战斗逻辑（格挡、侧移、躲避等）
-        // 3. 如果目标移出战斗范围，切换到追击目标状态
-        // 4. 如果目标不再存在，切换到空闲状态
-
         [Header("Attacks")]
         public List<AICharacterAttackAction> aiCharacterAttacks; // 此角色可能进行的所有攻击的列表
         [SerializeField] protected List<AICharacterAttackAction> potentialAttacks; // 包含在此情境下所有可能的攻击（基于角度、距离等）
@@ -27,6 +22,11 @@ namespace LZ
         
         [Header("Engagement Distance")]
         [SerializeField] public float maximumEngagementDistance = 5; // 在我们进入追击状态前距离目标最远的距离
+
+        [Header("Circling")]
+        [SerializeField] bool willCircleTarget = false;
+        private bool hasChoosenCirclePath = false;
+        private float strafeMoveAmount;
 
         public override AIState Tick(AICharacterManager aiCharacter)
         {
@@ -52,8 +52,11 @@ namespace LZ
             // 如果我们的目标不存在了，切换回Idle
             if (aiCharacter.aiCharacterCombatManager.currentTarget == null)
                 return SwitchState(aiCharacter, aiCharacter.idle);
-            
-            // 如果没有攻击，就新建一个
+
+            if (willCircleTarget)
+                SetCirclePath(aiCharacter);
+
+            //  IF WE DO NOT HAVE AN ATTACK, GET ONE
             if (!hasAttack)
             {
                 GetNewAttack(aiCharacter);
@@ -70,8 +73,7 @@ namespace LZ
                 return SwitchState(aiCharacter, aiCharacter.pursueTarget);
             
             NavMeshPath path = new NavMeshPath();
-            aiCharacter.navMeshAgent.CalculatePath(
-                aiCharacter.aiCharacterCombatManager.currentTarget.transform.position, path);
+            aiCharacter.navMeshAgent.CalculatePath(aiCharacter.aiCharacterCombatManager.currentTarget.transform.position, path);
             aiCharacter.navMeshAgent.SetPath(path);
 
             return this;
@@ -93,8 +95,9 @@ namespace LZ
                 
                 if (potentialAttack.minimumAttackAngle > aiCharacter.aiCharacterCombatManager.viewableAngle)
                     continue;
-                
-                if (potentialAttack.maximumAttackAngle < aiCharacter.aiCharacterCombatManager.viewableAngle)
+
+                //  IF THE TARGET IS OUTSIDE MAXIMUM FIELD OF VIEW FOR THIS ATTACK, CHECK THE NEXT
+                if (potentialAttack.maximumAttackDistance < aiCharacter.aiCharacterCombatManager.viewableAngle)
                     continue;
                 
                 potentialAttacks.Add(potentialAttack);
@@ -139,12 +142,49 @@ namespace LZ
             return outcomeWillBePerformed;
         }
 
+        protected virtual void SetCirclePath(AICharacterManager aiCharacter)
+        {
+            if (Physics.CheckSphere(aiCharacter.aiCharacterCombatManager.lockOnTransform.position, aiCharacter.characterController.radius + 0.25f, WorldUtilityManager.Instance.GetEnvironLayers()))
+            {
+                //  STOP STRAFING/CIRCLING BECAUSE WE'VE HIT SOMETHING, INSTEAD PATH TOWARDS ENEMY (WE USE ABS INCASE ITS NEGATIVE, TO MAKE IT POSITIVE)
+                //  THIS WILL MAKE OUR CHARACTER FOLLOW THE NAVMESH AGENT AND PATH TOWARDS THE TARGET
+                Debug.Log("WE ARE COLLIDING WITH SOMETHING, ENDING STRAFE");
+                aiCharacter.characterAnimatorManager.SetAnimatorMovementParameters(0, Mathf.Abs(strafeMoveAmount));
+                return;
+            }
+
+            //  STRAFE
+            Debug.Log("STRAFING");
+            aiCharacter.characterAnimatorManager.SetAnimatorMovementParameters(strafeMoveAmount, 0);
+
+            if (hasChoosenCirclePath)
+                return;
+
+            hasChoosenCirclePath = true;
+
+            //  STRAFE LEFT? OR RIGHT?
+            int leftOrRightIndex = Random.Range(0, 100);
+
+            if (leftOrRightIndex >= 50)
+            {
+                //  LEFT
+                strafeMoveAmount = -0.5f;
+            }
+            else
+            {
+                //  RIGHT
+                strafeMoveAmount = 0.5f;
+            }
+        }
+
         protected override void ResetStateFlags(AICharacterManager aiCharacter)
         {
             base.ResetStateFlags(aiCharacter);
 
             hasAttack = false;
             hasRolledForComboChance = false;
+            hasChoosenCirclePath = false;
+            strafeMoveAmount = 0;
         }
     }
 }

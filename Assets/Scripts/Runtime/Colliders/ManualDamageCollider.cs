@@ -1,23 +1,24 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace LZ
 {
-    public class UndeadHandDamageCollider : DamageCollider
+    public class ManualDamageCollider : DamageCollider
     {
-        [SerializeField] private AICharacterManager undeadCharacter;
+        [SerializeField] AICharacterManager characterCausingDamage;
 
         protected override void Awake()
         {
             base.Awake();
 
             damageCollider = GetComponent<Collider>();
-            undeadCharacter = GetComponentInParent<AICharacterManager>();
+            characterCausingDamage = GetComponentInParent<AICharacterManager>();
         }
 
         protected override void GetBlockingDotValues(CharacterManager damageTarget)
         {
-            directionFromAttackToDamageTarget = undeadCharacter.transform.position - damageTarget.transform.position;
+            directionFromAttackToDamageTarget = characterCausingDamage.transform.position - damageTarget.transform.position;
             dotValueFromAttackToDamageTarget = Vector3.Dot(directionFromAttackToDamageTarget, damageTarget.transform.forward);
         }
 
@@ -38,8 +39,7 @@ namespace LZ
             damageEffect.holyDamage = holyDamage;
             damageEffect.poiseDamage = poiseDamage;
             damageEffect.contactPoint = contactPoint;
-            damageEffect.angleHitFrom = Vector3.SignedAngle(undeadCharacter.transform.forward,
-                damageTarget.transform.forward, Vector3.up);
+            damageEffect.angleHitFrom = Vector3.SignedAngle(characterCausingDamage.transform.forward, damageTarget.transform.forward, Vector3.up);
 
             // 方法1：
             // 如果AI在主机端击中目标，无论在其它客户端是什么表现，都会造成伤害
@@ -58,7 +58,7 @@ namespace LZ
             {
                 damageTarget.characterNetworkManager.NotifyTheServerOfCharacterDamageServerRpc(
                     damageTarget.NetworkObjectId,
-                    undeadCharacter.NetworkObjectId,
+                    characterCausingDamage.NetworkObjectId,
                     damageEffect.physicalDamage,
                     damageEffect.magicDamage,
                     damageEffect.fireDamage,
@@ -76,7 +76,7 @@ namespace LZ
             if (charactersDamaged.Contains(damageTarget))
                 return;
 
-            if (!undeadCharacter.characterNetworkManager.isParryable.Value)
+            if (!characterCausingDamage.characterNetworkManager.isParryable.Value)
                 return;
 
             if (!damageTarget.IsOwner)
@@ -85,7 +85,7 @@ namespace LZ
             if (damageTarget.characterNetworkManager.isParrying.Value)
             {
                 charactersDamaged.Add(damageTarget);
-                damageTarget.characterNetworkManager.NotifyServerOfParryServerRpc(undeadCharacter.NetworkObjectId);
+                damageTarget.characterNetworkManager.NotifyServerOfParryServerRpc(characterCausingDamage.NetworkObjectId);
                 damageTarget.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parry_Land_01", true);
             }
         }

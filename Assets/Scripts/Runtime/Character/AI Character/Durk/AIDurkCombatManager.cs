@@ -14,8 +14,8 @@ namespace LZ
         public float stompAttackAOERadius = 1.5f;
 
         [Header("Damage")]
-        [SerializeField] int baseDamage = 25;
-        [SerializeField] int basePoiseDamage = 25;
+        //[SerializeField] int baseDamage = 25;
+        //[SerializeField] int basePoiseDamage = 25;
         [SerializeField] float attack01DamageModifier = 1.0f;
         [SerializeField] float attack02DamageModifier = 1.4f;
         [SerializeField] float attack03DamageModifier = 1.6f;

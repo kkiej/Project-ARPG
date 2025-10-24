@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b304a84de357b1542809a061c503fbb2
+guid: 141678b2cd1de6944aadf559985aee92
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: straight_sword_main_light_attack_01
-      takeName: straight_sword_main_light_attack_01
-      internalID: 673659374932735726
+      name: straight_sword_main_light_attack_02
+      takeName: straight_sword_main_light_attack_02
+      internalID: -2746501166638713497
       firstFrame: 0
-      lastFrame: 38
+      lastFrame: 45
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -55,29 +55,22 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.27216306
-        functionName: DrainStaminaBasedOnAttack
+      - time: 0
+        functionName: SetAttack01Damage
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.29753742
-        functionName: OpenDamageCollider
+      - time: 0.17035536
+        functionName: OpenSwordDamageCollider
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.44867972
-        functionName: CloseDamageCollider
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.46052632
-        functionName: EnableCanDoCombo
+      - time: 0.39631063
+        functionName: CloseSwordDamageCollider
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

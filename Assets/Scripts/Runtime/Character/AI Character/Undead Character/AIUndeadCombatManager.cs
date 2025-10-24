@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LZ
@@ -5,12 +7,10 @@ namespace LZ
     public class AIUndeadCombatManager : AICharacterCombatManager
     {
         [Header("Damage Colliders")]
-        [SerializeField] private UndeadHandDamageCollider rightHandDamageCollider;
-        [SerializeField] private UndeadHandDamageCollider leftHandDamageCollider;
+        [SerializeField] ManualDamageCollider rightHandDamageCollider;
+        [SerializeField] ManualDamageCollider leftHandDamageCollider;
 
-        [Header("Damage")]
-        [SerializeField] int baseDamage = 25;
-        [SerializeField] int basePoiseDamage = 25;
+        [Header("Damage Modifiers")]
         [SerializeField] float attack01DamageModifier = 1.0f;
         [SerializeField] float attack02DamageModifier = 1.4f;
 
@@ -38,7 +38,7 @@ namespace LZ
             rightHandDamageCollider.EnableDamageCollider();
         }
 
-        public void DisableRightHandDamageCollider()
+        public void CloseRightHandDamageCollider()
         {
             rightHandDamageCollider.DisableDamageCollider();
         }
@@ -49,7 +49,7 @@ namespace LZ
             leftHandDamageCollider.EnableDamageCollider();
         }
 
-        public void DisableLeftHandDamageCollider()
+        public void CloseLeftHandDamageCollider()
         {
             leftHandDamageCollider.DisableDamageCollider();
         }

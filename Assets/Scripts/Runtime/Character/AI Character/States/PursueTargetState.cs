@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace LZ
@@ -10,9 +12,14 @@ namespace LZ
         {
             // 检查我们是否正在执行一个动作（如果是，则在动作完成前不做任何事情）
             if (aiCharacter.isPerformingAction)
+            {
+                aiCharacter.characterAnimatorManager.SetAnimatorMovementParameters(0, 0);
                 return this;
+            }
 
-            // 检查我们的目标是否为空，如果没有目标，则返回到空闲状态
+            aiCharacter.characterAnimatorManager.SetAnimatorMovementParameters(0, 1);
+
+            //  CHECK IF OUR TARGET IS NULL, IF WE DO NOT HAVE A TARGET, RETURN TO IDLE STATE
             if (aiCharacter.aiCharacterCombatManager.currentTarget == null)
                 return SwitchState(aiCharacter, aiCharacter.idle);
 
@@ -23,11 +30,9 @@ namespace LZ
             // 如果我们的目标在角色可视角度外，转向面对他们
             if (aiCharacter.aiCharacterCombatManager.enablePivot)
             {
-                if (aiCharacter.aiCharacterCombatManager.viewableAngle < aiCharacter.aiCharacterCombatManager.minimumFOV ||
-                    aiCharacter.aiCharacterCombatManager.viewableAngle > aiCharacter.aiCharacterCombatManager.maximumFOV)
-                {
+                if (aiCharacter.aiCharacterCombatManager.viewableAngle < aiCharacter.aiCharacterCombatManager.minimumFOV
+                    || aiCharacter.aiCharacterCombatManager.viewableAngle > aiCharacter.aiCharacterCombatManager.maximumFOV)
                     aiCharacter.aiCharacterCombatManager.PivotTowardsTarget(aiCharacter);
-                }
             }
             
             aiCharacter.aiCharacterLocomotionManager.RotateTowardsAgent(aiCharacter);
@@ -50,8 +55,7 @@ namespace LZ
             
             // 方法2
             NavMeshPath path = new NavMeshPath();
-            aiCharacter.navMeshAgent.CalculatePath(
-                aiCharacter.aiCharacterCombatManager.currentTarget.transform.position, path);
+            aiCharacter.navMeshAgent.CalculatePath(aiCharacter.aiCharacterCombatManager.currentTarget.transform.position, path);
             aiCharacter.navMeshAgent.SetPath(path);
 
             return this;

@@ -165,6 +165,13 @@ namespace LZ
             character.animator.SetFloat(vertical, snappedVertical, 0.1f, Time.deltaTime);
         }
 
+        //  THIS FUNCTION WILL JUST PASS THE RAW NUMBER
+        public void SetAnimatorMovementParameters(float horizontalMovement, float verticalMovement)
+        {
+            character.animator.SetFloat(vertical, verticalMovement, 0.1f, Time.deltaTime);
+            character.animator.SetFloat(horizontal, horizontalMovement, 0.1f, Time.deltaTime);
+        }
+
         public virtual void PlayTargetActionAnimation(
             string targetAnimation, 
             bool isPerformingAction, 
