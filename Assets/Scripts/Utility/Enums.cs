@@ -189,3 +189,14 @@ public enum IdleStateMode
         //FOLLOW
         //WANDER
 }
+
+//  SCENES
+public enum WorldSceneLocation
+{
+    Area01_Subarea00,
+    Area01_Subarea01,
+    Area01_Subarea02,
+    Area01_Subarea03,
+    Area01_Subarea04,
+    Area01_Subarea05
+}

@@ -47,6 +47,8 @@ namespace LZ
             {
                 Destroy(gameObject);
             }
+
+            DontDestroyOnLoad(gameObject);
         }
 
         public override void OnNetworkSpawn()
@@ -285,6 +287,28 @@ namespace LZ
 
             quedScenesToUnload = 0;
             unloadAdditiveScenesCoroutine = null;
+        }
+
+        public void CheckForUnRequiredScenes()
+        {
+            List<string> scenesToUnload = new List<string>();
+
+            //  GET ALL CURRENTLY LOADED SCENES
+            for (int i = 0; i < loadedScenes.Count; i++)
+            {
+                scenesToUnload.Add(loadedScenes[i].name);
+            }
+
+            doNotUnloadList = WorldSubsceneManager.instance.GenerateDoNotUnloadListBasedOnPlayerLocations();
+
+            //  COMPARE ALL LOADED SCENES TO THE DO NOT UNLOAD LIST, IF ANY ARE IN THE DO NOT UNLOAD LIST, REMOVE THEM FROM THE UNLOAD LIST
+            for (int i = 0; i < scenesToUnload.Count; i++)
+            {
+                if (doNotUnloadList.Contains(scenesToUnload[i]))
+                    scenesToUnload.Remove(scenesToUnload[i]);
+            }
+
+            UnloadAdditiveScenes(scenesToUnload);
         }
     }
 }
