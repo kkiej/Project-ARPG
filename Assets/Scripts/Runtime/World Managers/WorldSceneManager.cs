@@ -310,5 +310,31 @@ namespace LZ
 
             UnloadAdditiveScenes(scenesToUnload);
         }
+
+        //  SCENE I.DS
+        public string GetSceneIDFromWorldSceneLocation(WorldSceneLocation area)
+        {
+            string sceneID = "";
+
+            switch (area)
+            {
+                case WorldSceneLocation.Area01_Subarea00:
+                    return area_01_Subarea_00;
+                case WorldSceneLocation.Area01_Subarea01:
+                    return area_01_Subarea_01;
+                case WorldSceneLocation.Area01_Subarea02:
+                    return area_01_Subarea_02;
+                case WorldSceneLocation.Area01_Subarea03:
+                    return area_01_Subarea_03;
+                case WorldSceneLocation.Area01_Subarea04:
+                    return area_01_Subarea_04;
+                case WorldSceneLocation.Area01_Subarea05:
+                    return area_01_Subarea_05;
+                default:
+                    break;
+            }
+
+            return sceneID;
+        }
     }
 }

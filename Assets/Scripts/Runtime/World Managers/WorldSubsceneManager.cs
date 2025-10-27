@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace LZ
@@ -13,6 +15,9 @@ namespace LZ
         [SerializeField] private List<PlayerManager> playersIn_Area01_Subarea03 = new List<PlayerManager>();
         [SerializeField] private List<PlayerManager> playersIn_Area01_Subarea04 = new List<PlayerManager>();
         [SerializeField] private List<PlayerManager> playersIn_Area01_Subarea05 = new List<PlayerManager>();
+
+        [Header("Probe Volume Set")]
+        [SerializeField] ProbeVolumeBakingSet bakeSet;
 
         private void Awake()
         {
@@ -239,6 +244,10 @@ namespace LZ
 
         private void AddPlayerToNewLocation(WorldSceneLocation area, PlayerManager player)
         {
+            //  SET THE BAKING SET
+            if (player.IsOwner)
+                StartCoroutine(WaitThenSetActiveScene(area));
+
             switch (area)
             {
                 case WorldSceneLocation.Area01_Subarea00:
@@ -318,6 +327,28 @@ namespace LZ
                 return;
 
             WorldSceneManager.instance.LoadAdditiveScenes(scenesToLoad);
+        }
+
+        private IEnumerator WaitThenSetActiveScene(WorldSceneLocation area)
+        {
+            bool hasScene = false;
+
+            while (!hasScene)
+            {
+                for (int i = 0; i < WorldSceneManager.instance.loadedScenes.Count; i++)
+                {
+                    if (WorldSceneManager.instance.loadedScenes[i].name == WorldSceneManager.instance.GetSceneIDFromWorldSceneLocation(area))
+                    {
+                        hasScene = true;
+                        ProbeReferenceVolume.instance.SetActiveScene(WorldSceneManager.instance.loadedScenes[i]);
+                        ProbeReferenceVolume.instance.SetActiveBakingSet(bakeSet);
+                    }
+
+                    yield return null;
+                }
+            }
+
+            yield return null;
         }
     }
 }
