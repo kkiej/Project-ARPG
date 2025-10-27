@@ -390,5 +390,40 @@ namespace LZ
             canPerformCombo = false;
             hasHitTargetDuringCombo = false;
         }
+
+        //  EVASION
+        public virtual void PerformEvasion()
+        {
+            if (currentTarget == null)
+                return;
+
+            if (distanceFromTarget > 5)
+                return;
+
+            //  METHOD #1, A.I SIMPLY PLAYS AN ANIMATION
+            //aiCharacter.aiCharacterNetworkManager.isInvulnerable.Value = true;
+            //aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Evade_01", true);
+
+            //  METHOD #2, A.I ROLLS, ALWAYS AWAY FROM TARGET
+            //aiCharacter.aiCharacterNetworkManager.isInvulnerable.Value = true;
+            //aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Evade_01", true);
+            //Vector3 directionToDodge = -aiCharacter.transform.forward;
+            //directionToDodge.y = 0;
+            //directionToDodge.Normalize();
+            //  OPTIONALLY USE A COROUTINE TO APPLY THIS ROTATION SMOOTHLY OVER 0.2-1 SECONDS SO IT DOESNT LOOK AS SHARP
+            //aiCharacter.transform.rotation = Quaternion.LookRotation(directionToDodge);
+
+            //  METHOD #3, A.I CHOOSES A RANDOM DIRECTION AND ROLLS TOWARDS IT
+            aiCharacter.aiCharacterNetworkManager.isInvulnerable.Value = true;
+            aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Evade_01", true);
+            Vector3 directionToDodge = Random.insideUnitSphere.normalized;
+            directionToDodge.y = 0;
+            //  OPTIONALLY USE A COROUTINE TO APPLY THIS ROTATION SMOOTHLY OVER 0.2-1 SECONDS SO IT DOESNT LOOK AS SHARP
+            aiCharacter.transform.rotation = Quaternion.LookRotation(directionToDodge);
+
+            //  METHOD #4, USE A BLEND TREE AND SET RANDOM VALUES FOR "VERTICAL" AND "HORIZONTAL" OR USE STRAFING VALUES
+            // 1. SELECT VALUES AND UPDATE NETWORK VERT AND HORZ
+            // 2. PLAY ANIMATION
+        }
     }
 }

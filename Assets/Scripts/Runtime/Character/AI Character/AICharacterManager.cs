@@ -173,7 +173,7 @@ namespace LZ
         }
 
         //  ACTIVATION
-        public void ActivateCharacter(PlayerManager player)
+        public virtual void ActivateCharacter(PlayerManager player)
         {
             aiCharacterCombatManager.AddPlayerToPlayersWithinRange(player);
 
@@ -196,7 +196,7 @@ namespace LZ
             }
         }
 
-        public void DeactivateCharacter(PlayerManager player)
+        public virtual void DeactivateCharacter(PlayerManager player)
         {
             aiCharacterCombatManager.RemovePlayerFromPlayersWithinRange(player);
 

@@ -34,10 +34,13 @@ namespace LZ
         [SerializeField] int percentageOfTimeWillBlock = 75;
         private bool hasRolledForBlockChance = false;
         private bool willBlockDuringThisCombatRotation = false;
-        //  YOU COULD HANDLE THIS MULTIPLE WAYS
-        //  1. YOU COULD HAVE A BLOCKING CHARACTER ALWAYS BLOCK DURING THE COMBAT STANCE STATE
-        //  2. YOU COULD "ROLL" FOR A BLOCK CHANCE AND HAVE THEM BLOCK A PERCENTAGE OF THE TIME
-        //  BONUS: YOU COULD CREATE SPECIFIC COMBAT STANCE STATES, WHERE BLOCKING CONDITIONS ARE DIFFERENT FOR EACH CREATURE (MAYBE SOME ONLY BLOCK ON % OF LIFE OR WHATEVER)
+
+        [Header("Evasion")]
+        [SerializeField] bool canEvade = false;
+        [SerializeField] int percentageOfTimeWillEvade = 75;
+        private bool hasEvaded = false;
+        private bool hasRolledForEvasionChance = false;
+        private bool willEvadeDuringThisCombatRotation = false;
 
         public override AIState Tick(AICharacterManager aiCharacter)
         {
@@ -76,6 +79,13 @@ namespace LZ
                 willBlockDuringThisCombatRotation = RollForOutcomeChance(percentageOfTimeWillBlock);
             }
 
+            //  ROLL FOR EVASION CHANCE
+            if (canEvade && !hasRolledForEvasionChance)
+            {
+                hasRolledForEvasionChance = true;
+                willEvadeDuringThisCombatRotation = RollForOutcomeChance(percentageOfTimeWillEvade);
+            }
+
             //  ROLL FOR COMBO CHANCE
             if (canPerformCombo && !hasRolledForComboChance)
             {
@@ -85,6 +95,12 @@ namespace LZ
 
             if (willBlockDuringThisCombatRotation)
                 aiCharacter.aiCharacterNetworkManager.isBlocking.Value = true;
+
+            if (willEvadeDuringThisCombatRotation && aiCharacter.aiCharacterCombatManager.currentTarget.characterNetworkManager.isAttacking.Value && !hasEvaded)
+            {
+                hasEvaded = true;
+                aiCharacter.aiCharacterCombatManager.PerformEvasion();
+            }
 
             //  IF WE DO NOT HAVE AN ATTACK, GET ONE
             if (!hasAttack)
@@ -212,6 +228,8 @@ namespace LZ
             base.ResetStateFlags(aiCharacter);
 
             hasAttack = false;
+            hasEvaded = false;
+            hasRolledForEvasionChance = false;
             hasRolledForComboChance = false;
             hasRolledForBlockChance = false;
             hasChoosenCirclePath = false;

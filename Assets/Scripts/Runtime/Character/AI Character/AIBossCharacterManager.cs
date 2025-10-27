@@ -225,5 +225,34 @@ namespace LZ
             combatStance = Instantiate(phase02CombatStanceState);
             currentState = combatStance;
         }
+
+        public override void ActivateCharacter(PlayerManager player)
+        {
+            if (hasBeenDefeated.Value)
+            {
+                DeactivateCharacter(player);
+                return;
+            }
+
+            aiCharacterCombatManager.AddPlayerToPlayersWithinRange(player);
+
+            if (player.IsLocalPlayer)
+            {
+                //  ENABLE RENDERERS (Optionally)
+                //  RENDERERS CAN BE DISABLED FOR OTHER PLAYERS NOT NEAR THIS A.I, THIS WILL SAVE ON MEMORY
+            }
+
+            if (!NetworkManager.Singleton.IsHost)
+                return;
+
+            if (aiCharacterCombatManager.playersWithinActivationRange.Count > 0)
+            {
+                aiCharacterNetworkManager.isActive.Value = true;
+            }
+            else
+            {
+                aiCharacterNetworkManager.isActive.Value = false;
+            }
+        }
     }
 }
