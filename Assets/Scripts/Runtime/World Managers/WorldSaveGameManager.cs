@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.Netcode;
 
 namespace LZ
 {
@@ -332,7 +329,7 @@ namespace LZ
             player.playerNetworkManager.mind.Value = 10;
 
             SaveGame();
-            LoadWorldScene(worldSceneIndex);
+            WorldSceneManager.instance.LoadWorldScene(worldSceneIndex);
         }
         
         public void LoadGame()
@@ -346,7 +343,7 @@ namespace LZ
             saveFileDataWriter.saveFileName = saveFileName;
             currentCharacterData = saveFileDataWriter.LoadSaveFile();
 
-            LoadWorldScene(worldSceneIndex);
+            WorldSceneManager.instance.LoadWorldScene(worldSceneIndex);
         }
 
         public void SaveGame()
@@ -421,15 +418,6 @@ namespace LZ
             saveFileDataWriter.saveFileName =
                 DecideCharacterFileNameBasedOnCharacterSlotBeingUsed(CharacterSlot.CharacterSlot_10);
             characterSlot10 = saveFileDataWriter.LoadSaveFile();
-        }
-
-        public void LoadWorldScene(int buildIndex)
-        {
-            PlayerUIManager.instance.playerUILoadingScreenManager.ActivateLoadingScreen();
-            string worldScene = SceneUtility.GetScenePathByBuildIndex(buildIndex);
-            NetworkManager.Singleton.SceneManager.LoadScene(worldScene, LoadSceneMode.Single);
-
-            player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
         }
 
         public int GetWorldSceneIndex()
