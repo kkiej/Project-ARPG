@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LZ
@@ -8,9 +9,13 @@ namespace LZ
         public static WorldUtilityManager Instance;
 
         [Header("Layers")]
-        [SerializeField] private LayerMask characterLayers;
-        [SerializeField] private LayerMask environLayers;
-        
+        [SerializeField] LayerMask characterLayers;
+        [SerializeField] LayerMask enviroLayers;
+        [SerializeField] LayerMask slipperyEnviroLayers;
+
+        [Header("Forces")]
+        public float slopeSlideForce = -15;
+
         private void Awake()
         {
             if (Instance == null)
@@ -28,9 +33,14 @@ namespace LZ
             return characterLayers;
         }
 
-        public LayerMask GetEnvironLayers()
+        public LayerMask GetEnviroLayers()
         {
-            return environLayers;
+            return enviroLayers;
+        }
+
+        public LayerMask GetSlipperyEnviroLayers()
+        {
+            return slipperyEnviroLayers;
         }
 
         public bool CanIDamageThisTarget(CharacterGroup attackingCharacter, CharacterGroup targetCharacter)

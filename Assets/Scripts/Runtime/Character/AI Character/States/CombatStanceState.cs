@@ -190,7 +190,7 @@ namespace LZ
 
         protected virtual void SetCirclePath(AICharacterManager aiCharacter)
         {
-            if (Physics.CheckSphere(aiCharacter.aiCharacterCombatManager.lockOnTransform.position, aiCharacter.characterController.radius + 0.25f, WorldUtilityManager.Instance.GetEnvironLayers()))
+            if (Physics.CheckSphere(aiCharacter.aiCharacterCombatManager.lockOnTransform.position, aiCharacter.characterController.radius + 0.25f, WorldUtilityManager.Instance.GetEnviroLayers()))
             {
                 //  STOP STRAFING/CIRCLING BECAUSE WE'VE HIT SOMETHING, INSTEAD PATH TOWARDS ENEMY (WE USE ABS INCASE ITS NEGATIVE, TO MAKE IT POSITIVE)
                 //  THIS WILL MAKE OUR CHARACTER FOLLOW THE NAVMESH AGENT AND PATH TOWARDS THE TARGET

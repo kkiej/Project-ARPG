@@ -1827,7 +1827,7 @@ MonoBehaviour:
   gravityForce: -5.55
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 9
   groundCheckSphereRadius: 1
   yVelocity: {x: 0, y: 0, z: 0}
   groundedYVelocity: -20
@@ -1839,6 +1839,11 @@ MonoBehaviour:
   canRun: 1
   canRoll: 1
   isGrounded: 1
+  slopeSlideStartPositionYOffset: 1
+  slopeSlideSphereCastMaxDistance: 2
+  slopeSlideSpeed: -11
+  slopeSlideSpeedMultiplier: 3
+  slipperySurfaceMaxAngle: 15
 --- !u!114 &3632781919943384197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1863,8 +1868,12 @@ MonoBehaviour:
   canBeBackstabbed: 1
   criticalAttackDistanceCheck: 0.7
   pendingCriticalDamage: 0
+  baseDamage: 25
+  basePoiseDamage: 25
   actionRecoveryTimer: 0
   enablePivot: 1
+  canPerformCombo: 0
+  hasHitTargetDuringCombo: 0
   distanceFromTarget: 0
   viewableAngle: 0
   targetsDirection: {x: 0, y: 0, z: 0}
@@ -1878,13 +1887,10 @@ MonoBehaviour:
   ignoreStanceBreak: 0
   stanceRegenerationTimer: 0
   defaultTimeUntilStanceRegenerationBegins: 15
-  investigateSound: 0
-  positionOfSound: {x: 0, y: 0, z: 0}
+  playersWithinActivationRange: []
   clubDamageCollider: {fileID: 331951057629359738}
   stompCollider: {fileID: 5780664513750619873}
   stompAttackAOERadius: 1.5
-  baseDamage: 25
-  basePoiseDamage: 25
   attack01DamageModifier: 1
   attack02DamageModifier: 1.4
   attack03DamageModifier: 1.6
@@ -1904,6 +1910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  isPerformingAction: 0
   isDead:
     m_InternalValue: 0
   characterController: {fileID: 0}
@@ -1917,7 +1924,6 @@ MonoBehaviour:
   characterLocomotionManager: {fileID: 0}
   characterUIManager: {fileID: 0}
   characterGroup: 1
-  isPerformingAction: 0
   characterName: Durk, Guardian Of The Prototype Realms
   aiCharacterNetworkManager: {fileID: 0}
   aiCharacterCombatManager: {fileID: 0}
@@ -1941,7 +1947,7 @@ MonoBehaviour:
     m_InternalValue: 0
   fogWalls: []
   sleepAnimation: Sleep_01
-  awakeAnimation: Awaken_01
+  awakenAnimation: 
   minimumHealthPercentageToShift: 50
   phaseShiftAnimation: Phase_Change_01
   phase02CombatStanceState: {fileID: 11400000, guid: e24200ab43c1c1640a815cf76f52f33c,

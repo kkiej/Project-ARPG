@@ -5272,7 +5272,7 @@ MonoBehaviour:
   gravityForce: -40
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 9
   groundCheckSphereRadius: 0.3
   yVelocity: {x: 0, y: 0, z: 0}
   groundedYVelocity: -20
@@ -5284,6 +5284,11 @@ MonoBehaviour:
   canRun: 1
   canRoll: 1
   isGrounded: 1
+  slopeSlideStartPositionYOffset: 1
+  slopeSlideSphereCastMaxDistance: 2
+  slopeSlideSpeed: -11
+  slopeSlideSpeedMultiplier: 3
+  slipperySurfaceMaxAngle: 15
   verticalMovement: 0
   horizontalMovement: 0
   moveAmount: 0

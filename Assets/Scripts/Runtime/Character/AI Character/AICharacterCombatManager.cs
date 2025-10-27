@@ -234,7 +234,7 @@ namespace LZ
                         // 最后检查一下环境遮挡
                         if (Physics.Linecast(aiCharacter.characterCombatManager.lockOnTransform.position,
                                 targetCharacter.characterCombatManager.lockOnTransform.position,
-                                WorldUtilityManager.Instance.GetEnvironLayers()))
+                                WorldUtilityManager.Instance.GetEnviroLayers()))
                         {
                             Debug.DrawLine(aiCharacter.characterCombatManager.lockOnTransform.position, targetCharacter.characterCombatManager.lockOnTransform.position);
                         }

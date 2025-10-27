@@ -3017,7 +3017,7 @@ MonoBehaviour:
   gravityForce: -5.55
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 9
   groundCheckSphereRadius: 1
   yVelocity: {x: 0, y: 0, z: 0}
   groundedYVelocity: -20
@@ -3029,6 +3029,11 @@ MonoBehaviour:
   canRun: 1
   canRoll: 1
   isGrounded: 1
+  slopeSlideStartPositionYOffset: 1
+  slopeSlideSphereCastMaxDistance: 2
+  slopeSlideSpeed: -11
+  slopeSlideSpeedMultiplier: 3
+  slipperySurfaceMaxAngle: 15
 --- !u!114 &4666341949266627338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3057,6 +3062,8 @@ MonoBehaviour:
   basePoiseDamage: 25
   actionRecoveryTimer: 0
   enablePivot: 0
+  canPerformCombo: 0
+  hasHitTargetDuringCombo: 0
   distanceFromTarget: 0
   viewableAngle: 0
   targetsDirection: {x: 0, y: 0, z: 0}
@@ -3087,6 +3094,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  isPerformingAction: 0
   isDead:
     m_InternalValue: 0
   characterController: {fileID: 0}
@@ -3100,7 +3108,6 @@ MonoBehaviour:
   characterLocomotionManager: {fileID: 0}
   characterUIManager: {fileID: 0}
   characterGroup: 1
-  isPerformingAction: 0
   characterName: 
   aiCharacterNetworkManager: {fileID: 0}
   aiCharacterCombatManager: {fileID: 0}

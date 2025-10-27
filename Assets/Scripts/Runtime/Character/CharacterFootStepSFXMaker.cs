@@ -36,7 +36,7 @@ namespace LZ
 
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, character.transform.TransformDirection(Vector3.down), out hit, distanceToGround, WorldUtilityManager.Instance.GetEnvironLayers()))
+            if (Physics.Raycast(transform.position, character.transform.TransformDirection(Vector3.down), out hit, distanceToGround, WorldUtilityManager.Instance.GetEnviroLayers()))
             {
                 hasTouchedGround = true;
 

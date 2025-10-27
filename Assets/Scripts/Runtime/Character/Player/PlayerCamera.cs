@@ -251,7 +251,7 @@ namespace LZ
                         // TODO: 添加只有环境的LayerMask
                         if (Physics.Linecast(player.playerCombatManager.lockOnTransform.position,
                                 lockOnTarget.characterCombatManager.lockOnTransform.position, out hit,
-                                WorldUtilityManager.Instance.GetEnvironLayers()))
+                                WorldUtilityManager.Instance.GetEnviroLayers()))
                         {
                             // 我们击中某物，但是看不见
                             continue;
