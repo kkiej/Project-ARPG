@@ -13,14 +13,29 @@ namespace LZ
         //  LOADED SCENES
         public List<Scene> loadedScenes = new List<Scene>();
 
+        //  DO NOT UNLOAD
+        public List<string> doNotUnloadList = new List<string>();
+
         //  QUED SCENES
         private List<string> quedSceneIDs = new List<string>();
+        private List<string> quedUnloadSceneIDs = new List<string>();
+        private int quedScenesToUnload = 0;
         private int quedScenesToLoad = 0;
         private Coroutine loadingAdditiveScenesCoroutine;
+        private Coroutine unloadAdditiveScenesCoroutine;
 
         //  LOADING STATUS
         private bool sceneIsLoading = false;
         private bool sceneIsUnloading = false;
+
+        [Header("Scene I.Ds")]
+        public string world = "World_01";
+        public string area_01_Subarea_00 = "Area_01_Subarea_00";
+        public string area_01_Subarea_01 = "Area_01_Subarea_01";
+        public string area_01_Subarea_02 = "Area_01_Subarea_02";
+        public string area_01_Subarea_03 = "Area_01_Subarea_03";
+        public string area_01_Subarea_04 = "Area_01_Subarea_04";
+        public string area_01_Subarea_05 = "Area_01_Subarea_05";
 
         private void Awake()
         {
@@ -60,18 +75,24 @@ namespace LZ
                 case SceneEventType.Load:
                     sceneIsLoading = true;
                     break;
+
                 case SceneEventType.Unload:
                     sceneIsUnloading = true;
                     break;
+
                 case SceneEventType.Synchronize:
                     break;
+
                 case SceneEventType.ReSynchronize:
                     break;
+
                 case SceneEventType.LoadEventCompleted:
                     break;
+
                 case SceneEventType.UnloadEventCompleted:
                     sceneIsUnloading = false;
                     break;
+
                 case SceneEventType.LoadComplete:
 
                     //  CALLED WHEN THE SCENE IS FINISHED LOADING, ADDS OUR SCENE TO OUR LOADED SCENES LIST
@@ -90,18 +111,35 @@ namespace LZ
 
                     sceneIsLoading = false;
                     break;
+
                 case SceneEventType.UnloadComplete:
+                    if (quedScenesToUnload <= 0)
+                        quedUnloadSceneIDs.Clear();
+
+                    for (int i = 0; i < loadedScenes.Count; i++)
+                    {
+                        if (!loadedScenes[i].isLoaded)
+                            loadedScenes.RemoveAt(i);
+                    }
+
+                    sceneIsUnloading = false;
                     break;
+
                 case SceneEventType.SynchronizeComplete:
                     break;
+
                 case SceneEventType.ActiveSceneChanged:
                     break;
+
                 case SceneEventType.ObjectSceneChanged:
                     break;
+
                 default:
                     break;
             }
         }
+
+        //  SCENE LOADING
 
         //  USED TO LOAD OUR MAIN WORLD SCENE
         public void LoadWorldScene(int buildIndex)
@@ -182,6 +220,71 @@ namespace LZ
             loadingAdditiveScenesCoroutine = null;
 
             yield return null;
+        }
+
+        //  SCENE UNLOADING
+
+        //  USED TO UNLOAD ADDITIVE SCENES IN OUR MAIN WORLD SCENE
+        private void UnloadAdditiveScene(string sceneName)
+        {
+            if (!NetworkManager.Singleton.IsServer)
+                return;
+
+            //  CHECK THE DO NOT UNLOAD LIST, BECAUSE ANOTHER PLAYER MAY STILL NEED A SPECIFIC SCENE LOADED FROM THEIR POV
+            for (int i = 0; i < doNotUnloadList.Count; i++)
+            {
+                if (sceneName == doNotUnloadList[i])
+                    return;
+            }
+
+            for (int i = 0; i < loadedScenes.Count; i++)
+            {
+                if (loadedScenes[i] == null)
+                    continue;
+
+                if (loadedScenes[i].name == sceneName && loadedScenes[i].isLoaded)
+                {
+                    var sceneLoad = NetworkManager.SceneManager.UnloadScene(loadedScenes[i]);
+                    break;
+                }
+            }
+        }
+
+        public void UnloadAdditiveScenes(List<string> sceneList)
+        {
+            if (!NetworkManager.Singleton.IsServer)
+                return;
+
+            for (int i = 0; i < sceneList.Count; i++)
+            {
+                quedUnloadSceneIDs.Add(sceneList[i]);
+            }
+
+            quedScenesToUnload = quedUnloadSceneIDs.Count;
+
+            if (unloadAdditiveScenesCoroutine != null)
+                StopCoroutine(unloadAdditiveScenesCoroutine);
+
+            unloadAdditiveScenesCoroutine = StartCoroutine(UnloadAdditiveScenesCoroutine());
+        }
+
+        private IEnumerator UnloadAdditiveScenesCoroutine()
+        {
+            for (int i = 0; i < quedUnloadSceneIDs.Count; i++)
+            {
+                while (sceneIsLoading || sceneIsUnloading)
+                {
+                    yield return new WaitForFixedUpdate();
+                }
+
+                UnloadAdditiveScene(quedUnloadSceneIDs[i]);
+                quedScenesToUnload--;
+
+                yield return null;
+            }
+
+            quedScenesToUnload = 0;
+            unloadAdditiveScenesCoroutine = null;
         }
     }
 }
