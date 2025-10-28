@@ -7,15 +7,29 @@ namespace LZ
     [CreateAssetMenu(menuName = "Character Actions/Weapon Actions/Off Hand Melee Action")]
     public class OffHandMeleeAction : WeaponItemAction
     {
-        // 问：为何称其为“副手近战动作”而非“格挡动作”？
-
-        // 答：这是为了系统扩展性考虑。若角色将来同时装备主手与副手同类武器时，副手动作将不再是格挡，而是会转变为双武器协同攻击。
+        [Header("Attack Animations")]
+        [SerializeField] string dw_Attack_01 = "DW_Attack_01";
+        [SerializeField] string dw_Attack_02 = "DW_Attack_02";
+        [SerializeField] string dw_Jump_Attack_01 = "DW_Jump_Attack_01";
+        [SerializeField] string dw_Roll_Attack_01 = "DW_Roll_Attack_01";
+        [SerializeField] string dw_Backstep_Attack_01 = "DW_Backstep_Attack_01";
+        [SerializeField] string dw_Run_Attack_01 = "DW_Run_Attack_01";
 
         public override void AttemptToPerformAction(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
         {
             base.AttemptToPerformAction(playerPerformingAction, weaponPerformingAction);
 
             // 检查是否触发强力姿态动作（双武器攻击）
+            if (playerPerformingAction.playerNetworkManager.isUsingLeftHand.Value && !playerPerformingAction.playerNetworkManager.isTwoHandingWeapon.Value)
+            {
+                if (playerPerformingAction.playerInventoryManager.currentRightHandWeapon.weaponClass 
+                    == playerPerformingAction.playerInventoryManager.currentLeftHandWeapon.weaponClass)
+                {
+                    //  PERFORM A POWER STANCE ACTION
+                    PerformPowerStanceLeftHandAction(playerPerformingAction, weaponPerformingAction);
+                    return;
+                }
+            }
 
             // 检查是否可格挡
             if (!playerPerformingAction.playerCombatManager.canBlock)
@@ -40,6 +54,77 @@ namespace LZ
 
             if (playerPerformingAction.IsOwner)
                 playerPerformingAction.playerNetworkManager.isBlocking.Value = true;
+        }
+
+        private void PerformPowerStanceLeftHandAction(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
+        {
+            if (playerPerformingAction.playerNetworkManager.currentStamina.Value <= 0)
+                return;
+
+            //  PERFORM DUAL WIELD JUMPING ATTACK
+            if (!playerPerformingAction.playerLocomotionManager.isGrounded)
+            {
+                if (playerPerformingAction.isPerformingAction)
+                    return;
+
+                if (playerPerformingAction.IsOwner)
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualJumpAttack, dw_Jump_Attack_01, true);
+
+                return;
+            }
+
+            if (playerPerformingAction.playerNetworkManager.isJumping.Value)
+                return;
+
+            if (playerPerformingAction.playerCombatManager.canPerformRollingAttack)
+            {
+                playerPerformingAction.playerCombatManager.canPerformRollingAttack = false;
+
+                if (playerPerformingAction.IsOwner)
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualRollAttack, dw_Roll_Attack_01, true);
+
+                return;
+            }
+
+            if (playerPerformingAction.playerCombatManager.canPerformBackstepAttack)
+            {
+                playerPerformingAction.playerCombatManager.canPerformBackstepAttack = false;
+
+                if (playerPerformingAction.IsOwner)
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualBackstepAttack, dw_Backstep_Attack_01, true);
+
+                return;
+            }
+
+            if (playerPerformingAction.playerNetworkManager.isSprinting.Value)
+            {
+                if (playerPerformingAction.IsOwner)
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualRunAttack, dw_Run_Attack_01, true);
+
+                return;
+            }
+
+            if (playerPerformingAction.playerCombatManager.canComboWithOffHandWeapon && playerPerformingAction.isPerformingAction)
+            {
+                playerPerformingAction.playerCombatManager.canComboWithOffHandWeapon = false;
+
+                if (playerPerformingAction.playerCombatManager.lastAttackAnimationPerformed == dw_Attack_01)
+                {
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualAttack02, dw_Attack_02, true);
+                }
+                else if (playerPerformingAction.playerCombatManager.lastAttackAnimationPerformed == dw_Attack_02)
+                {
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualAttack01, dw_Attack_01, true);
+                }
+                else
+                {
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualAttack01, dw_Attack_01, true);
+                }
+            }
+            else if (!playerPerformingAction.playerCombatManager.canComboWithOffHandWeapon && !playerPerformingAction.isPerformingAction)
+            {
+                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualAttack01, dw_Attack_01, true);
+            }
         }
     }
 }

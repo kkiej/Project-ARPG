@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LZ
@@ -1307,16 +1308,42 @@ namespace LZ
         
         public void CloseDamageCollider()
         {
+            //  OPEN RIGHT WEAPON DAMAGE COLLIDER
             if (player.playerNetworkManager.isUsingRightHand.Value)
             {
                 rightWeaponManager.meleeDamageCollider.DisableDamageCollider();
             }
+            //  OPEN LEFT WEAPON DAMAGE COLLIDER
             else if (player.playerNetworkManager.isUsingLeftHand.Value)
             {
                 leftWeaponManager.meleeDamageCollider.DisableDamageCollider();
             }
         }
-        
+
+        public void OpenMainHandDamageCollider()
+        {
+            rightWeaponManager.meleeDamageCollider.EnableDamageCollider();
+            player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerInventoryManager.currentRightHandWeapon.whooshes));
+            //  PLAY WHOOSH SFX
+        }
+
+        public void CloseMainHandDamageCollider()
+        {
+            rightWeaponManager.meleeDamageCollider.DisableDamageCollider();
+        }
+
+        public void OpenOffHandDamageCollider()
+        {
+            leftWeaponManager.meleeDamageCollider.EnableDamageCollider();
+            player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(player.playerInventoryManager.currentLeftHandWeapon.whooshes));
+            //  PLAY WHOOSH SFX
+        }
+
+        public void CloseOffHandDamageCollider()
+        {
+            leftWeaponManager.meleeDamageCollider.DisableDamageCollider();
+        }
+
         //  UNHIDE WEAPONS
         public void UnHideWeapons()
         {

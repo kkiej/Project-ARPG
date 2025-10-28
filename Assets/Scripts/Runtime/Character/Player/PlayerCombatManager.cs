@@ -18,7 +18,7 @@ namespace LZ
 
         [Header("Flags")]
         public bool canComboWithMainHandWeapon = false;
-        //public bool canComboWithOffHandWeapon = false;
+        public bool canComboWithOffHandWeapon = false;
         public bool isUsingItem = false;
 
         protected override void Awake()
@@ -230,7 +230,7 @@ namespace LZ
             damageEffect.magicDamage *= backstabWeapon.backstab_Attack_01_Modifier;
             damageEffect.poiseDamage *= backstabWeapon.backstab_Attack_01_Modifier;
 
-            // 4. USING A SERVER RPC SEND THE RIPOSTE TO THE TARGET, WHERE THEY WILL PLAY THE PROPER ANIMATIONS ON THEIR END, AND TAKE THE DAMAGE
+            // 4. 通过服务器RPC将处决指令发送至目标客户端，由目标端播放相应受击动画并承受伤害
             targetCharacter.characterNetworkManager.NotifyTheServerOfBackstabServerRpc(
                 targetCharacter.NetworkObjectId,
                 character.NetworkObjectId,
@@ -288,6 +288,25 @@ namespace LZ
                 case AttackType.BackstepAttack01:
                     staminaDeducted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.backstepAttackStaminaCostMultiplier;
                     break;
+                // 双持攻击动画中，"基于攻击动作消耗耐力"事件会被调用两次（每只手臂各触发一次）
+                case AttackType.DualAttack01:
+                    staminaDeducted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.lightAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.DualAttack02:
+                    staminaDeducted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.lightAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.DualJumpAttack:
+                    staminaDeducted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.heavyAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.DualRunAttack:
+                    staminaDeducted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.runningAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.DualRollAttack:
+                    staminaDeducted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.rollingAttackStaminaCostMultiplier;
+                    break;
+                case AttackType.DualBackstepAttack:
+                    staminaDeducted = currentWeaponBeingUsed.baseStaminaCost * currentWeaponBeingUsed.backstepAttackStaminaCostMultiplier;
+                    break;
                 default:
                     break;
             }
@@ -314,14 +333,14 @@ namespace LZ
             }
             else
             {
-                // Enable off hand combo
+                player.playerCombatManager.canComboWithOffHandWeapon = true;
             }
         }
 
         public override void DisableCanDoCombo()
         {
             player.playerCombatManager.canComboWithMainHandWeapon = false;
-            //player.playerCombatManager.canComboWithOffHandWeapon = false;
+            player.playerCombatManager.canComboWithOffHandWeapon = false;
         }
 
         //  PROJECTILE

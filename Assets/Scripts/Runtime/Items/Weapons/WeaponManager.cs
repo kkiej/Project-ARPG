@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LZ
@@ -37,6 +38,13 @@ namespace LZ
             meleeDamageCollider.running_Attack_01_Modifier = weapon.running_Attack_01_Modifier;
             meleeDamageCollider.rolling_Attack_01_Modifier = weapon.rolling_Attack_01_Modifier;
             meleeDamageCollider.backstep_Attack_01_Modifier = weapon.backstep_Attack_01_Modifier;
+
+            meleeDamageCollider.dw_Attack_01_Modifier = weapon.dw_Attack_01_Modifier;
+            meleeDamageCollider.dw_Attack_02_Modifier = weapon.dw_Attack_02_Modifier;
+            meleeDamageCollider.dw_Jump_Attack_01_Modifier = weapon.dw_Jump_Attack_01_Modifier;
+            meleeDamageCollider.dw_Run_Attack_01_Modifier = weapon.dw_Run_Attack_01_Modifier;
+            meleeDamageCollider.dw_Roll_Attack_01_Modifier = weapon.dw_Roll_Attack_01_Modifier;
+            meleeDamageCollider.dw_Backstep_Attack_01_Modifier = weapon.dw_Backstep_Attack_01_Modifier;
         }
     }
 }

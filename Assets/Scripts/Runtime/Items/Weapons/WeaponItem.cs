@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
@@ -47,6 +49,12 @@ namespace LZ
         public float running_Attack_01_Modifier = 1.1f;
         public float rolling_Attack_01_Modifier = 1.1f;
         public float backstep_Attack_01_Modifier = 1.1f;
+        public float dw_Attack_01_Modifier = 0.77f;
+        public float dw_Attack_02_Modifier = 0.87f;
+        public float dw_Jump_Attack_01_Modifier = 1.27f;
+        public float dw_Run_Attack_01_Modifier = 0.75f;
+        public float dw_Roll_Attack_01_Modifier = 0.72f;
+        public float dw_Backstep_Attack_01_Modifier = 0.77f;
 
         [Header("Stamina Cost Modifiers")]
         public int baseStaminaCost = 20;
@@ -70,7 +78,6 @@ namespace LZ
         public WeaponItemAction oh_RT_Action;
 		public WeaponItemAction oh_LB_Action;   // ONE HAND LEFT BUMPER ACTION
         public AshOfWar ashOfWarAction;
-        // 格挡声音
 
         [Header("SFX")]
         public AudioClip[] whooshes;

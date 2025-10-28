@@ -19,6 +19,12 @@ namespace LZ
         public float running_Attack_01_Modifier;
         public float rolling_Attack_01_Modifier;
         public float backstep_Attack_01_Modifier;
+        public float dw_Attack_01_Modifier;
+        public float dw_Attack_02_Modifier;
+        public float dw_Jump_Attack_01_Modifier;
+        public float dw_Run_Attack_01_Modifier;
+        public float dw_Roll_Attack_01_Modifier;
+        public float dw_Backstep_Attack_01_Modifier;
 
         protected override void Awake()
         {
@@ -137,6 +143,24 @@ namespace LZ
                     break;
                 case AttackType.BackstepAttack01:
                     ApplyAttackDamageModifiers(backstep_Attack_01_Modifier, damageEffect);
+                    break;
+                case AttackType.DualAttack01:
+                    ApplyAttackDamageModifiers(dw_Attack_01_Modifier, damageEffect);
+                    break;
+                case AttackType.DualAttack02:
+                    ApplyAttackDamageModifiers(dw_Attack_02_Modifier, damageEffect);
+                    break;
+                case AttackType.DualJumpAttack:
+                    ApplyAttackDamageModifiers(dw_Jump_Attack_01_Modifier, damageEffect);
+                    break;
+                case AttackType.DualRunAttack:
+                    ApplyAttackDamageModifiers(dw_Run_Attack_01_Modifier, damageEffect);
+                    break;
+                case AttackType.DualRollAttack:
+                    ApplyAttackDamageModifiers(dw_Roll_Attack_01_Modifier, damageEffect);
+                    break;
+                case AttackType.DualBackstepAttack:
+                    ApplyAttackDamageModifiers(dw_Backstep_Attack_01_Modifier, damageEffect);
                     break;
                 default:
                     break;
