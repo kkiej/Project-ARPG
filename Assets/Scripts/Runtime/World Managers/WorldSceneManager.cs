@@ -65,6 +65,7 @@ namespace LZ
             NetworkManager.SceneManager.OnSceneEvent -= OnSceneEvent;
 
             //  UNLOAD ALL SCENES
+            StartCoroutine(UnloadAllAdditiveScenesNonNetwork());
         }
 
         private void OnSceneEvent(SceneEvent sceneEvent)
@@ -287,6 +288,29 @@ namespace LZ
 
             quedScenesToUnload = 0;
             unloadAdditiveScenesCoroutine = null;
+        }
+
+        private IEnumerator UnloadAllAdditiveScenesNonNetwork()
+        {
+            for (int i = 0; i < loadedScenes.Count; i++)
+            {
+                if (loadedScenes[i] == null)
+                    continue;
+
+                if (!loadedScenes[i].IsValid())
+                    continue;
+
+                var loadingOperation = SceneManager.UnloadSceneAsync(loadedScenes[i].name);
+
+                yield return null;
+
+                while (loadingOperation != null && !loadingOperation.isDone)
+                {
+                    yield return null;
+                }
+            }
+
+            yield return null;
         }
 
         public void CheckForUnRequiredScenes()

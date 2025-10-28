@@ -4997,6 +4997,8 @@ MonoBehaviour:
     m_InternalValue: 0
   isBeingCriticallyDamaged:
     m_InternalValue: 0
+  isRolling:
+    m_InternalValue: 0
   currentHealth:
     m_InternalValue: 400
   maxHealth:
@@ -5220,6 +5222,7 @@ MonoBehaviour:
   currentWeaponBeingUsed: {fileID: 0}
   currentProjectileBeingUsed: 0
   canComboWithMainHandWeapon: 0
+  canComboWithOffHandWeapon: 0
   isUsingItem: 0
 --- !u!114 &-5474465599812946486
 MonoBehaviour:
@@ -5272,7 +5275,7 @@ MonoBehaviour:
   gravityForce: -40
   groundLayer:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 3145737
   groundCheckSphereRadius: 0.3
   yVelocity: {x: 0, y: 0, z: 0}
   groundedYVelocity: -20
@@ -5289,6 +5292,8 @@ MonoBehaviour:
   slopeSlideSpeed: -11
   slopeSlideSpeedMultiplier: 3
   slipperySurfaceMaxAngle: 15
+  characterSlideOffHeadCollisionMaxDistanceCheck: 5
+  characterCollisionCheckSphereMultiplier: 1.5
   verticalMovement: 0
   horizontalMovement: 0
   moveAmount: 0

@@ -1,12 +1,13 @@
-﻿using UnityEngine;
-using UnityEngine.Serialization;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
     public class PlayerLocomotionManager : CharacterLocomotionManager
     {
-        private PlayerManager player;
-        
+        PlayerManager player;
+
         [HideInInspector] public float verticalMovement;
         [HideInInspector] public float horizontalMovement;
         [HideInInspector] public float moveAmount;
@@ -14,23 +15,23 @@ namespace LZ
         [Header("Movement Settings")]
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
-        [SerializeField] private float walkingSpeed = 2f;
-        [SerializeField] private float runningSpeed = 5f;
-        [SerializeField] private float sprintingSpeed = 6.5f;
-        [SerializeField] private float rotationSpeed = 15f;
-        [SerializeField] private int sprintingStaminaCost = 2;
+        [SerializeField] float walkingSpeed = 2;
+        [SerializeField] float runningSpeed = 5;
+        [SerializeField] float sprintingSpeed = 6.5f;
+        [SerializeField] float rotationSpeed = 15;
+        [SerializeField] int sprintingStaminaCost = 2;
 
         [Header("Jump")]
-        [SerializeField] private float jumpStaminaCost = 25;
-        [SerializeField] private float jumpHeight = 4f;
-        [SerializeField] private float jumpForwardSpeed = 5f;
-        [SerializeField] private float freeFallSpeed = 2f;
+        [SerializeField] float jumpStaminaCost = 25;
+        [SerializeField] float jumpHeight = 4;
+        [SerializeField] float jumpForwardSpeed = 5;
+        [SerializeField] float freeFallSpeed = 2;
         private Vector3 jumpDirection;
         
         [Header("Dodge")]
         private Vector3 rollDirection;
-        [SerializeField] private float dodgeStaminaCost = 25;
-        
+        [SerializeField] float dodgeStaminaCost = 25;
+
         protected override void Awake()
         {
             base.Awake();
@@ -271,7 +272,10 @@ namespace LZ
 
             if (player.playerNetworkManager.currentStamina.Value <= 0)
                 return;
-            
+
+            if (player.IsOwner)
+                player.playerNetworkManager.isRolling.Value = true;
+
             // 如果我们在运动中尝试躲避，我们将播放翻滚动画
             if (PlayerInputManager.instance.moveAmount > 0)
             {
