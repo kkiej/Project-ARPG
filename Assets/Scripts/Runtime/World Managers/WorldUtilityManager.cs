@@ -26,6 +26,8 @@ namespace LZ
             {
                 Destroy(gameObject);
             }
+
+            DontDestroyOnLoad(gameObject);
         }
 
         public LayerMask GetCharacterLayers()

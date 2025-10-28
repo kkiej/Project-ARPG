@@ -34,7 +34,11 @@ namespace LZ
         [SerializeField] float slopeSlideSpeedMultiplier = 3;
         [SerializeField] float slipperySurfaceMaxAngle = 15;
         private bool isSliding = false;
+        private bool isSlidingOffCharacter = false;
+        private Coroutine slideOffCharacterCoroutine;
         private bool slideUntilGrounded = false;
+        [SerializeField] float characterSlideOffHeadCollisionMaxDistanceCheck = 5;
+        [SerializeField] float characterCollisionCheckSphereMultiplier = 1.5f;
 
 
         protected virtual void Awake()
@@ -76,9 +80,37 @@ namespace LZ
             character.characterController.Move(yVelocity * Time.deltaTime);
         }
 
+        protected void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            //  IF YOU HIT A COLLIDER WHILST IN THE AIR, YOU WILL "SLIDE" UNTIL GROUNDED ON ANY STEEP COLLIDERS
+            if (!isGrounded)
+                slideUntilGrounded = true;
+        }
+
         protected void HandleGroundCheck()
         {
-            isGrounded = Physics.CheckSphere(character.transform.position, groundCheckSphereRadius, groundLayer);
+            if (isGrounded)
+            {
+                isGrounded = Physics.CheckSphere(character.transform.position, groundCheckSphereRadius, groundLayer, QueryTriggerInteraction.Ignore);
+
+                if (!isGrounded)
+                    OnIsNotGrounded();
+            }
+            else
+            {   
+                // DEPENDING ON YOUR CHARACTER SETUP, SOMETIMES MAKING THE GROUND CHECK SPHERE RADIUS DIFFERENT WHILST NOT GROUNDED HAS BENEFITS
+                isGrounded = Physics.CheckSphere(character.transform.position, groundCheckSphereRadius, groundLayer, QueryTriggerInteraction.Ignore);
+
+                //  IF WE ARE JUMPING OR GAINING ALTITUDE, WE ARE NOT GROUNDED
+                if (yVelocity.y > 0)
+                {
+                    isGrounded = false;
+                    return;
+                }
+
+                if (isGrounded)
+                    OnIsGrounded();
+            }
         }
 
         //  DRAWS OUR GROUND CHECK SPHERE IN SCENE VIEW
@@ -181,9 +213,29 @@ namespace LZ
                 if (yVelocity.y <= 0 && !isSliding)
                     yVelocity.y = groundedYVelocity;
             }
-            else
+            else if (!isGrounded && !isSlidingOffCharacter)
             {
-                //  HANDLE SLIDING OFF A CHARACTER
+                Collider[] characterColliders = 
+                    Physics.OverlapSphere(transform.position, 
+                    groundCheckSphereRadius * characterCollisionCheckSphereMultiplier, 
+                    WorldUtilityManager.Instance.GetCharacterLayers());
+
+                for (int i = 0; i < characterColliders.Length; i++)
+                {
+                    if (characterColliders[i].gameObject.transform.root == character.gameObject.transform.root)
+                        continue;
+
+                    CharacterController controller = characterColliders[i].GetComponent<CharacterController>();
+
+                    if (controller == null)
+                        continue;
+
+                    if ((controller.collisionFlags & CollisionFlags.CollidedBelow) != 0)
+                    {
+                        isSlidingOffCharacter = true;
+                        SlideOffCharacter();
+                    }
+                }
             }
 
             if (!character.characterController.enabled)
@@ -200,6 +252,61 @@ namespace LZ
                     character.transform.position = character.characterNetworkManager.networkPosition.Value;
                 }
             }
+        }
+
+        //  CHARACTER SLIDING
+        protected virtual void SlideOffCharacter()
+        {
+            if (slideOffCharacterCoroutine != null)
+                StopCoroutine(slideOffCharacterCoroutine);
+
+            slideOffCharacterCoroutine = StartCoroutine(SlideOffCharacterCoroutine());
+        }
+
+        protected virtual IEnumerator SlideOffCharacterCoroutine()
+        {
+            while (!isGrounded)
+            {
+                if (Physics.SphereCast(character.transform.position, 
+                    groundCheckSphereRadius, Vector3.down, out RaycastHit hitInfo, 
+                    characterSlideOffHeadCollisionMaxDistanceCheck, 
+                    WorldUtilityManager.Instance.GetCharacterLayers()))
+                {
+                    Vector3 characterSlideVelocity = Vector3.ProjectOnPlane(new Vector3(0, yVelocity.y, 0), hitInfo.normal);
+                    yVelocity.y += WorldUtilityManager.Instance.slopeSlideForce * Time.deltaTime;
+                    Vector3 slideVelocity = characterSlideVelocity;
+
+                    if (character.characterController.enabled)
+                        character.characterController.Move(slideVelocity * Time.deltaTime);
+
+                    yield return null;
+                }
+
+                yield return null;
+            }
+
+            isSlidingOffCharacter = false;
+
+            yield return null;
+        }
+
+        //  ON IS/NOT GROUNDED
+        protected virtual void OnIsGrounded()
+        {
+            //  FALL DAMAGE
+            //  YOU COULD DETERMINE HOW HIGH YOU FELL BY SAVING A POSITION WHEN YOU LEAVE THE GROUND, AND SAVING ONE WHEN YOU LAND
+            //  COMPARE THE Y LEVEL OF THESE POSITIONS AND IF YOU WERE IGNORING GRAVITY OR NOT
+            //  IF THE Y LEVEL IS TOO GREAT, APPLY DAMAGE ACCORDINGLY
+
+            //  PLAYING AN IMPACT/LANDING ANIMATION
+            //  UPON LEAVING THE GROUND, USE A RAYCAST, OR AGAIN USE THE Y VALUE OF YOUR FALL. DEPENDING ON ITS LEVEL, PLAY A LANDING ANIMATION.
+
+            slideUntilGrounded = false;
+        }
+
+        protected virtual void OnIsNotGrounded()
+        {
+
         }
     }
 }
