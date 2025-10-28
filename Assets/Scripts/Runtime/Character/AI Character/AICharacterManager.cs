@@ -10,7 +10,8 @@ namespace LZ
     {
         [Header("Character Name")]
         public string characterName = "";
-        
+
+        [HideInInspector] public AICharacterSoundFXManager aiCharacterSoundFXManager;
         [HideInInspector] public AICharacterNetworkManager aiCharacterNetworkManager;
         [HideInInspector] public AICharacterCombatManager aiCharacterCombatManager;
         [HideInInspector] public AICharacterLocomotionManager aiCharacterLocomotionManager;
@@ -37,6 +38,7 @@ namespace LZ
             base.Awake();
 
             aiCharacterNetworkManager = GetComponent<AICharacterNetworkManager>();
+            aiCharacterSoundFXManager = GetComponent<AICharacterSoundFXManager>();
             aiCharacterCombatManager = GetComponent<AICharacterCombatManager>();
             aiCharacterLocomotionManager = GetComponent<AICharacterLocomotionManager>();
             aiCharacterInventoryManager = GetComponent<AICharacterInventoryManager>();

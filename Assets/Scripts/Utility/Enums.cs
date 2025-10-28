@@ -40,6 +40,13 @@ public enum CharacterAttribute
     Faith
 }
 
+//  USED TO GIVE CHARACTERS PROPER DIALOGUE SETS
+public enum CharacterDialogueID
+{
+    NoDialogueID, //    USED FOR MAJORITY OF CHARACTERS
+    NamelessKnightDialogueID
+}
+
 //  USED AS A TAG FOR EACH WEAPON MODEL INSTANTIATION SLOT
 public enum WeaponModelSlot
 {
