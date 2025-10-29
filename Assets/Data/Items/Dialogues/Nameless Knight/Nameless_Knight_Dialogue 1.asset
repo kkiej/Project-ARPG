@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8387d741516b084bac0bdfa198e75d4, type: 3}
+  m_Name: Nameless_Knight_Dialogue 1
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.CharacterDialogue
+  requiredStageID: 0
+  greetingDialogueString:
+  - '"Hello there!"'
+  greetingDialogueAudio:
+  - {fileID: 8300000, guid: 93964f7a40765604a8fc3a157531fc66, type: 3}
+  dialogueString:
+  - '"Why are you speaking to me?"'
+  - '"Please, leave me alone."'
+  dialogueAudio:
+  - {fileID: 8300000, guid: e182ef08b055ea741aba96be1bcc4f14, type: 3}
+  - {fileID: 8300000, guid: cac74074633fd174386b2fb72934192f, type: 3}
+  dialogueIndex: 0
+  farewellDialogueString:
+  - '"Okay then, goodbye."'
+  farewellDialogueAudio:
+  - {fileID: 8300000, guid: 93964f7a40765604a8fc3a157531fc66, type: 3}
+  setStageIndex: 1
+  stageID: 5
+  playFarewell: 1

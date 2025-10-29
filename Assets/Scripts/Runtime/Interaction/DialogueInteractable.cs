@@ -26,10 +26,7 @@ namespace LZ
             }
 
             if (NetworkManager.Singleton.IsServer)
-            {
                 WorldSaveGameManager.instance.SaveGame();
-                //  CLOSE ALL POP UP WINDOWS
-            }
 
             //  1. PLAY CURRENT DIALOGUE
             aiCharacter.aiCharacterSoundFXManager.PlayCurrentDialogueEvent();

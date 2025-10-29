@@ -116,8 +116,11 @@ namespace LZ
             if (dialogueCoroutine != null)
                 StopCoroutine(dialogueCoroutine);
 
-            dialogueCoroutine = StartCoroutine(dialogue.PlayDialogueCoroutine(aiCharacter));
+            //  CLOSE ALL POP UP WINDOWS
+            PlayerUIManager.instance.playerUIPopUpManager.CloseAllPopUpWindows();
             PlayerUIManager.instance.popUpWindowIsOpen = true;
+
+            dialogueCoroutine = StartCoroutine(dialogue.PlayDialogueCoroutine(aiCharacter));
         }
 
         public void SendNextDialoguePopUpInIndex(CharacterDialogue dialogue, AICharacterManager aiCharacter)
@@ -129,6 +132,10 @@ namespace LZ
 
             if (aiCharacter.aiCharacterSoundFXManager.dialogueIsPlaying)
                 aiCharacter.aiCharacterSoundFXManager.audioSource.Stop();
+
+            //  CLOSE ALL POP UP WINDOWS
+            PlayerUIManager.instance.playerUIPopUpManager.CloseAllPopUpWindows();
+            PlayerUIManager.instance.popUpWindowIsOpen = true;
 
             currentDialogue.dialogueIndex++;
             dialogueCoroutine = StartCoroutine(dialogue.PlayDialogueCoroutine(aiCharacter));

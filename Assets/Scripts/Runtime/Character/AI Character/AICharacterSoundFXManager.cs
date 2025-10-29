@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 
 namespace LZ
 {
@@ -13,7 +14,7 @@ namespace LZ
         public CharacterDialogueID characterDialogueID;
         public GameObject interactableDialogueCollider;
         public CharacterDialogue currentDialogue;
-        public CharacterDialogue farewellDialogue;
+        public GameObject interactableDialogueObject;
         public bool dialogueIsPlaying = false;
         //  OPTIONAL CONVERSATION TARGET TO LOOK AT WITH IK
 
@@ -28,8 +29,14 @@ namespace LZ
         {
             base.Start();
 
-            currentDialogue = WorldSaveGameManager.instance.GetCharacterDialogueByEnum(characterDialogueID);
-            farewellDialogue = WorldSaveGameManager.instance.GetCharacterFarewellDialogueByEnum(characterDialogueID);
+            if (characterDialogueID != CharacterDialogueID.NoDialogueID)
+            {
+                currentDialogue = WorldSaveGameManager.instance.GetCharacterDialogueByEnum(characterDialogueID);
+                interactableDialogueObject = Instantiate(WorldAIManager.instance.dialogueInteractable, transform);
+                NetworkObject networkObject = interactableDialogueObject.GetComponent<NetworkObject>();
+                networkObject.Spawn();
+                networkObject.TrySetParent(gameObject, true);
+            }
         }
 
         public override void PlayBlockSoundFX()
@@ -53,22 +60,6 @@ namespace LZ
             else
             {
                 PlayerUIManager.instance.playerUIPopUpManager.SendNextDialoguePopUpInIndex(currentDialogue, aiCharacter);
-            }
-        }
-
-        //  GENERIC FAREWELL DIALOGUE THAT CAN BE CHANGED WITH DIFFERENT FAREWELL SETS
-        public void PlayFarewellDialogueEvent()
-        {
-            if (farewellDialogue == null)
-                return;
-
-            if (!dialogueIsPlaying)
-            {
-                farewellDialogue.PlayDialogueEvent(aiCharacter);
-            }
-            else
-            {
-                PlayerUIManager.instance.playerUIPopUpManager.SendNextDialoguePopUpInIndex(farewellDialogue, aiCharacter);
             }
         }
 

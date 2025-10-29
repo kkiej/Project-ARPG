@@ -89,12 +89,10 @@ namespace LZ
             character.animator.SetBool("isDead", character.isDead.Value);
         }
 
-        public void OnLockOnTargetIDChange(ulong oldID, ulong newID)
+        public virtual void OnLockOnTargetIDChange(ulong oldID, ulong newID)
         {
             if (!IsOwner)
-            {
                 character.characterCombatManager.currentTarget = NetworkManager.Singleton.SpawnManager.SpawnedObjects[newID].gameObject.GetComponent<CharacterManager>();
-            }
         }
 
         public void OnIsLockedOnChanged(bool old, bool isLockedOn)

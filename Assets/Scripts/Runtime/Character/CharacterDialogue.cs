@@ -20,6 +20,11 @@ namespace LZ
         public List<AudioClip> dialogueAudio = new List<AudioClip>();
         public int dialogueIndex = 0;
 
+        [Header("Farewell Dialogue")]
+        [TextArea] public List<string> farewellDialogueString = new List<string>();
+        public List<AudioClip> farewellDialogueAudio = new List<AudioClip>();
+        private bool farewellHasPlayed = false;
+
         //  OPTIONAL SETTINGS
         //  FACE CHARACTER
         //  KILL ON CANCEL
@@ -29,6 +34,7 @@ namespace LZ
         [Header("End Triggers")]
         [SerializeField] bool setStageIndex = false;    //  THIS WILL BE USED TO "SET STAGE ID" AFTER SETTING AN ID, NEW DIALOGUE WILL BE SELECTED DEPENDING ON ID
         [SerializeField] int stageID = 0;
+        [SerializeField] bool playFarewell = true;
 
         public void PlayDialogueEvent(AICharacterManager aiCharacter)
         {
@@ -58,8 +64,18 @@ namespace LZ
             {
                 PlayerUIManager.instance.playerUIPopUpManager.SetDialoguePopUpSubtitles(dialogueString[dialogueIndex]);
                 aiCharacter.aiCharacterSoundFXManager.PlaySoundFX(dialogueAudio[dialogueIndex]);
-                dialogueIndex++;
                 yield return new WaitForSeconds(dialogueAudio[dialogueIndex].length + 1);
+                dialogueIndex++;
+            }
+
+            //  PLAY A RANDOM FAREWELL DIALOGUE, THEN WAIT THE LENGTH OF THAT AUDIO CLIP + A SECOND
+            if (farewellDialogueAudio.Count != 0 && !farewellHasPlayed)
+            {
+                farewellHasPlayed = true;
+                int randomFarewellDialogueIndex = Random.Range(0, farewellDialogueAudio.Count);
+                PlayerUIManager.instance.playerUIPopUpManager.SetDialoguePopUpSubtitles(farewellDialogueString[randomFarewellDialogueIndex]);
+                aiCharacter.aiCharacterSoundFXManager.PlaySoundFX(farewellDialogueAudio[randomFarewellDialogueIndex]);
+                yield return new WaitForSeconds(farewellDialogueAudio[randomFarewellDialogueIndex].length + 1);
             }
 
             OnDialogueEnded(aiCharacter);
@@ -72,6 +88,7 @@ namespace LZ
         {
             //  DO STUFF WITH CHARACTER DIALOGUE SCRIPTABLE IF DESIRED
             greetingHasPlayed = false;
+            farewellHasPlayed= false;
             dialogueIndex = 0;
 
             if (setStageIndex)

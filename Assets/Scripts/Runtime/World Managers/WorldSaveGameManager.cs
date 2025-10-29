@@ -43,7 +43,6 @@ namespace LZ
 
         [Header("Dialogues")]
         [SerializeField] List<CharacterDialogue> namelessKnightDialogues = new List<CharacterDialogue>();
-        [SerializeField] List<CharacterDialogue> namelessKnightFarewellDialogues = new List<CharacterDialogue>();
 
         private void Awake()
         {
@@ -350,7 +349,7 @@ namespace LZ
             saveFileDataWriter.saveDataDirectoryPath = Application.persistentDataPath;
             saveFileDataWriter.saveFileName = saveFileName;
             currentCharacterData = saveFileDataWriter.LoadSaveFile();
-
+            GetStageIDsOnLoad();
             WorldSceneManager.instance.LoadWorldScene(worldSceneIndex);
         }
 
@@ -516,29 +515,14 @@ namespace LZ
                 case CharacterDialogueID.NoDialogueID:
                     break;
                 case CharacterDialogueID.NamelessKnightDialogueID:
-                    FindDialogueByStageID(namelessKnightDialogueStageID, namelessKnightDialogues);
+                    dialogue = FindDialogueByStageID(namelessKnightDialogueStageID, namelessKnightDialogues);
                     break;
                 default:
                     break;
             }
 
-            return dialogue;
-        }
-
-        public CharacterDialogue GetCharacterFarewellDialogueByEnum(CharacterDialogueID characterDialogueID)
-        {
-            CharacterDialogue dialogue = null;
-
-            switch (characterDialogueID)
-            {
-                case CharacterDialogueID.NoDialogueID:
-                    break;
-                case CharacterDialogueID.NamelessKnightDialogueID:
-                    FindDialogueByStageID(namelessKnightDialogueStageID, namelessKnightFarewellDialogues);
-                    break;
-                default:
-                    break;
-            }
+            if (dialogue != null)
+                dialogue = Instantiate(dialogue);
 
             return dialogue;
         }
@@ -570,10 +554,16 @@ namespace LZ
                     break;
                 case CharacterDialogueID.NamelessKnightDialogueID:
                     namelessKnightDialogueStageID = stageIndex;
+                    currentCharacterData.namelessKnightStageID = namelessKnightDialogueStageID;
                     break;
                 default:
                     break;
             }
+        }
+
+        private void GetStageIDsOnLoad()
+        {
+            namelessKnightDialogueStageID = currentCharacterData.namelessKnightStageID;
         }
     }
 }

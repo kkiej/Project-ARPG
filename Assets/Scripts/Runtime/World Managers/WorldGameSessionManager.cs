@@ -140,7 +140,8 @@ namespace LZ
             }
         }
 
-        public async void StartGameAsHost()
+        //public async void StartGameAsHost()
+        public void StartGameAsHost()
         {
             NetworkManager.Singleton.StartHost();
 

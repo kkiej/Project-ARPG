@@ -8,7 +8,7 @@ namespace LZ
     {
         PlayerManager player;
 
-        private List<Interactable> currentInteractableActions; // 若使用 Unity 2022.3.11f1 版本请勿序列化，该版本在检视窗口中存在显示错误
+        [HideInInspector] public List<Interactable> currentInteractableActions; //   DO NOT SERIALIZE IF USING UNITY V 2022.3.11f1 IT CAUSES A BUG IN THE INSPECTOR
 
         private void Awake()
         {

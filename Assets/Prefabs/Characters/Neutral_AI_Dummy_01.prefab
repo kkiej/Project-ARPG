@@ -2767,8 +2767,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4076138460
-  InScenePlacedSourceGlobalObjectIdHash: 1284131268
+  GlobalObjectIdHash: 1608853177
+  InScenePlacedSourceGlobalObjectIdHash: 4076138460
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -3113,6 +3113,7 @@ MonoBehaviour:
   characterUIManager: {fileID: 0}
   characterGroup: 0
   characterName: 
+  aiCharacterSoundFXManager: {fileID: 0}
   aiCharacterNetworkManager: {fileID: 0}
   aiCharacterCombatManager: {fileID: 0}
   aiCharacterLocomotionManager: {fileID: 0}
@@ -3267,6 +3268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05a6ab9eb62caff4e86c2eb3ff9a5897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LZ.AICharacterSoundFXManager
+  audioSource: {fileID: 0}
   damageGrunts:
   - {fileID: 8300000, guid: e6d7943c246702d409020f0fe4bc5804, type: 3}
   - {fileID: 8300000, guid: abf3ba190bb024d43a9966a264f95e83, type: 3}
@@ -3283,6 +3285,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8178e08babc25d44abbaca9d80f967be, type: 3}
   - {fileID: 8300000, guid: ff48f3287883dd64489fef13ac783e2b, type: 3}
   - {fileID: 8300000, guid: 953a8d82656aa35468e5868ca23f9be1, type: 3}
+  characterDialogueID: 1
+  interactableDialogueCollider: {fileID: 0}
+  currentDialogue: {fileID: 0}
+  interactableDialogueObject: {fileID: 0}
+  dialogueIsPlaying: 0
 --- !u!54 &3413141271688343265
 Rigidbody:
   m_ObjectHideFlags: 0

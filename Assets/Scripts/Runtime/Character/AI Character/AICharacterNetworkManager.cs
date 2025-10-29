@@ -32,5 +32,18 @@ namespace LZ
                 aiCharacter.aiCharacterCombatManager.AwardRunesOnDeath(PlayerUIManager.instance.localPlayer);
             }
         }
+
+        public override void OnLockOnTargetIDChange(ulong oldID, ulong newID)
+        {
+            base.OnLockOnTargetIDChange(oldID, newID);
+
+            //  IF YOUR CHARACTER HAS A TARGET, DISABLE THE INTERACTABLE COLLIDER
+            if (aiCharacter.aiCharacterCombatManager.currentTarget != null && aiCharacter.aiCharacterSoundFXManager.interactableDialogueObject != null)
+                aiCharacter.aiCharacterSoundFXManager.interactableDialogueObject.SetActive(false);
+
+            //  OPTIONALLY RE-ENABLE IT WHEN THE TARGET IS GONE
+            if (aiCharacter.aiCharacterCombatManager.currentTarget == null && aiCharacter.aiCharacterSoundFXManager.interactableDialogueObject != null)
+                aiCharacter.aiCharacterSoundFXManager.interactableDialogueObject.SetActive(true);
+        }
     }
 }

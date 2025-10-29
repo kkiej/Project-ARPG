@@ -23,6 +23,9 @@ namespace LZ
         [Header("Beacon Prefab")]
         public GameObject beaconGameObject;
 
+        [Header("Dialogue Interactable Prefab")]
+        public GameObject dialogueInteractable;
+
         [Header("Bosses")]
         [SerializeField] List<AIBossCharacterManager> spawnedInBosses;
 
