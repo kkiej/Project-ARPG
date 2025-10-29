@@ -13,6 +13,11 @@ namespace LZ
 
         public GameObject pickUpItemPrefab;
 
+        [Header("Upgrade Stones")]
+        public UpgradeMaterial smallUpgradeStone;
+        public UpgradeMaterial mediumUpgradeStone;
+        public UpgradeMaterial largeUpgradeStone;
+
         [Header("Weapons")]
         [SerializeField] List<WeaponItem> weapons = new List<WeaponItem>();
 

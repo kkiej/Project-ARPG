@@ -41,8 +41,27 @@ namespace LZ
         public void RemoveItemFromInventory(Item item)
         {
             //  TO DO: CREATE AN RPC HERE THAT SPAWNS ITEM ON NETWORK WHEN DROPPED
+            bool isStackable = item.maxItemAmount > 1;
 
-            itemsInInventory.Remove(item);
+            //  IF THE ITEM IS STACKABLE, ATTEMPT TO REMOVE FROM THE STACK FIRST
+            if (isStackable)
+            {
+                for (int i = itemsInInventory.Count - 1; i > -1; i--)
+                {
+                    if (itemsInInventory[i].itemID == item.itemID)
+                    {
+                        itemsInInventory[i].currentItemAmount -= item.currentItemAmount;
+                        
+                        if (itemsInInventory[i].currentItemAmount <= 0)
+                            itemsInInventory.Remove(item);
+                    }
+                }
+            }
+            // OTHERWISE SIMPLY REMOVE IT FROM THE INVENTORY
+            else
+            {
+                itemsInInventory.Remove(item);
+            }
 
             // CHECKS FOR NULL LIST SLOTS AND REMOVES THEM
             for (int i = itemsInInventory.Count - 1; i > -1; i--)
