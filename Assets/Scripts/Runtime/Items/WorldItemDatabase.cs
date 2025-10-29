@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace LZ
 {
@@ -13,8 +14,8 @@ namespace LZ
         public GameObject pickUpItemPrefab;
 
         [Header("Weapons")]
-        [SerializeField] private List<WeaponItem> weapons = new List<WeaponItem>();
-        
+        [SerializeField] List<WeaponItem> weapons = new List<WeaponItem>();
+
         [Header("Head Equipment")]
         [SerializeField] List<HeadEquipmentItem> headEquipment = new List<HeadEquipmentItem>();
 
@@ -107,6 +108,8 @@ namespace LZ
             }
         }
 
+        //  ITEM DATABASE
+
         public Item GetItemByID(int ID)
         {
             return items.FirstOrDefault(item => item.itemID == ID);
@@ -174,6 +177,8 @@ namespace LZ
                 AshOfWar ashOfWar = Instantiate(GetAshOfWarByID(serializableWeapon.ashOfWarID));
                 weapon.ashOfWarAction = ashOfWar;
             }
+
+            weapon.upgradeLevel = (UpgradeLevel)serializableWeapon.upgradeLevel;
 
             return weapon;
         }

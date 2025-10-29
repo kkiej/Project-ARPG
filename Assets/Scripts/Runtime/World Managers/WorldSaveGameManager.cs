@@ -438,6 +438,7 @@ namespace LZ
 
             //  GET WEAPON I.D
             serializedWeapon.itemID = weapon.itemID;
+            serializedWeapon.upgradeLevel = (int)weapon.upgradeLevel;
             
             //  GET ASH OF WAR I.D IF ONE IS PRESENT (THERE SHOULD ALWAYS BE ONE BY DEFAULT)
             if (weapon.ashOfWarAction != null)

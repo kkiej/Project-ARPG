@@ -10,22 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8387d741516b084bac0bdfa198e75d4, type: 3}
-  m_Name: Nameless_Knight_Dialogue 2
+  m_Name: Nameless_Knight_Dialogue 1
   m_EditorClassIdentifier: Assembly-CSharp::LZ.CharacterDialogue
-  requiredStageID: 5
+  requiredStageID: 0
   greetingDialogueString:
-  - '"You again?"'
+  - '"Hello there!"'
   greetingDialogueAudio:
-  - {fileID: 8300000, guid: 93964f7a40765604a8fc3a157531fc66, type: 3}
+  - {fileID: 8300000, guid: 5cab43fe9a7175641b0fc7f0838556db, type: 3}
   dialogueString:
-  - '"I don''t want to talk to you."'
+  - '"Why are you speaking to me?"'
+  - '"Please, leave me alone."'
   dialogueAudio:
-  - {fileID: 8300000, guid: e182ef08b055ea741aba96be1bcc4f14, type: 3}
+  - {fileID: 8300000, guid: 965bc9d1e29c87f41927b3f5abccf4f2, type: 3}
+  - {fileID: 8300000, guid: 5de32b1c099731d4cb4291782d0d9902, type: 3}
   dialogueIndex: 0
   farewellDialogueString:
-  - '"Goodbye, again."'
+  - '"Okay then, goodbye."'
   farewellDialogueAudio:
-  - {fileID: 8300000, guid: cac74074633fd174386b2fb72934192f, type: 3}
-  setStageIndex: 0
-  stageID: 0
+  - {fileID: 8300000, guid: 5699ed2b1dfe65d46bffc61934a54cc4, type: 3}
+  setStageIndex: 1
+  stageID: 5
   playFarewell: 1

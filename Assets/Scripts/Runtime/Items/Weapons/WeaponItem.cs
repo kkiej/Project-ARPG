@@ -18,6 +18,9 @@ namespace LZ
         [Header("Weapon Class")]
         public WeaponClass weaponClass;
 
+        [Header("Upgrade Level")]
+        public UpgradeLevel upgradeLevel;
+
         [Header("Weapon Requirements")]
         public int strengthREQ = 0;
         public int dexREQ = 0;
@@ -74,9 +77,9 @@ namespace LZ
         public float stability = 50;    // REDUCES STAMINA LOST FROM BLOCK
 
         [Header("Actions")]
-        public WeaponItemAction oh_RB_Action;
-        public WeaponItemAction oh_RT_Action;
-		public WeaponItemAction oh_LB_Action;   // ONE HAND LEFT BUMPER ACTION
+        public WeaponItemAction oh_RB_Action;   // ONE HAND RIGHT BUMPER ACTION
+        public WeaponItemAction oh_RT_Action;   // ONE HAND RIGHT TRIGGER ACTION
+        public WeaponItemAction oh_LB_Action;   // ONE HAND LEFT BUMPER ACTION
         public AshOfWar ashOfWarAction;
 
         [Header("SFX")]

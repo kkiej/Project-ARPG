@@ -18,12 +18,47 @@ namespace LZ
             if (meleeDamageCollider == null)
                 return;
 
+            int upgradeLevel = (int)weapon.upgradeLevel;
+            int upgradeDamage = 0;
+
+            //  11 DAMAGE ADDED TO WEAPON PER UPGRADE LEVEL
+            for (int i = 0; i < upgradeLevel; i++)
+            {
+                if (i >= 1)
+                    upgradeDamage += 11;
+            }
+
+            //  TO DO, EFFECT SCALING MULTIPLIERS
+
+
             meleeDamageCollider.characterCausingDamage = characterWieldingWeapon;
-            meleeDamageCollider.physicalDamage = weapon.physicalDamage;
-            meleeDamageCollider.magicDamage = weapon.magicDamage;
-            meleeDamageCollider.fireDamage = weapon.fireDamage;
-            meleeDamageCollider.lightningDamage = weapon.lightningDamage;
-            meleeDamageCollider.holyDamage = weapon.holyDamage;
+
+            //  IF THE BASE DAMAGE IS ABOVE 0, APPLY UPGRADED DAMAGE TO THE DAMAGE TYPE
+            int physicalDamage = weapon.physicalDamage;
+            if (physicalDamage > 0)
+                physicalDamage += upgradeDamage;
+            meleeDamageCollider.physicalDamage = physicalDamage;
+
+            int magicDamage = weapon.magicDamage;
+            if (magicDamage > 0)
+                magicDamage += upgradeDamage;
+            meleeDamageCollider.magicDamage = magicDamage;
+
+            int fireDamage = weapon.fireDamage;
+            if (fireDamage > 0)
+                fireDamage += upgradeDamage;
+            meleeDamageCollider.fireDamage = fireDamage;
+
+            int lightningDamage = weapon.lightningDamage;
+            if (lightningDamage > 0)
+                lightningDamage += upgradeDamage;
+            meleeDamageCollider.lightningDamage = lightningDamage;
+
+            int holyDamage = weapon.holyDamage;
+            if (holyDamage > 0)
+                holyDamage += upgradeDamage;
+            meleeDamageCollider.holyDamage = holyDamage;
+
             meleeDamageCollider.poiseDamage = weapon.poiseDamage;
 
             meleeDamageCollider.light_Attack_01_Modifier = weapon.light_Attack_01_Modifier;
