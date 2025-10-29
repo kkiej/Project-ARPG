@@ -40,6 +40,9 @@ namespace LZ
         [Header("Quick Slot")]
         [SerializeField] List<QuickSlotItem> quickSlotItems = new List<QuickSlotItem>();
 
+        [Header("Upgrade Materials")]
+        [SerializeField] List<UpgradeMaterial> upgradeMaterials = new List<UpgradeMaterial>();
+
         //  A LIST OF EVERY ITEM WE HAVE IN THE GAME
         [Header("Items")]
         private List<Item> items = new List<Item>();
@@ -101,6 +104,11 @@ namespace LZ
                 items.Add(item);
             }
 
+            foreach (var item in upgradeMaterials)
+            {
+                items.Add(item);
+            }
+
             //  ASSIGN ALL OF OUR ITEMS A UNIQUE ITEM ID
             for (int i = 0; i < items.Count; i++)
             {
@@ -158,6 +166,11 @@ namespace LZ
         public QuickSlotItem GetQuickSlotItemByID(int ID)
         {
             return quickSlotItems.FirstOrDefault(item => item.itemID == ID);
+        }
+
+        public UpgradeMaterial GetUpgradeMaterialByID(int ID)
+        {
+            return upgradeMaterials.FirstOrDefault(item => item.itemID == ID);
         }
 
         //  ITEM SERIALIZATION

@@ -92,6 +92,13 @@ public enum UpgradeLevel
     Ten
 }
 
+public enum UpgradeStone
+{
+    small,
+    medium,
+    large
+}
+
 //  USED TO DETERMINE WHICH ITEM (CATALYST) IS NEEDED TO CAST SPELL
 public enum SpellClass
 {

@@ -9,6 +9,7 @@ namespace LZ
     {
         public static PlayerUIManager instance;
         [HideInInspector] public PlayerManager localPlayer;
+        private AudioSource audioSource;
 
         [Header("NETWORK JOIN")]
         [SerializeField] bool startGameAsClient;
@@ -36,6 +37,8 @@ namespace LZ
             {
                 Destroy(gameObject);
             }
+
+            audioSource = GetComponent<AudioSource>();
 
             playerUIHudManager = GetComponentInChildren<PlayerUIHudManager>();
             playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>();
@@ -71,6 +74,31 @@ namespace LZ
             playerUISiteOfGraceManager.CloseMenuAfterFixedFrame();
             playerUITeleportLocationManager.CloseMenuAfterFixedFrame();
             playerUILevelUpManager.CloseMenuAfterFixedFrame();
+        }
+
+        //  UI SFX
+        public void PlayUnableToContinueSFX()
+        {
+            if (WorldSoundFXManager.instance.unableToContinueUISFX == null)
+                return;
+
+            audioSource.PlayOneShot(WorldSoundFXManager.instance.unableToContinueUISFX);
+        }
+
+        public void PlayConfirmSFX()
+        {
+            if (WorldSoundFXManager.instance.confirmUISFX == null)
+                return;
+
+            audioSource.PlayOneShot(WorldSoundFXManager.instance.confirmUISFX);
+        }
+
+        public void PlayHoverSFX()
+        {
+            if (WorldSoundFXManager.instance.hoverUISFX == null)
+                return;
+
+            audioSource.PlayOneShot(WorldSoundFXManager.instance.hoverUISFX);
         }
     }
 }
