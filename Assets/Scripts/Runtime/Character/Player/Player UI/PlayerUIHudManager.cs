@@ -63,6 +63,20 @@ namespace LZ
             }
         }
 
+        public void ToggleHUDWithOutPopUps(bool status)
+        {
+            //  TO DO FADE IN AND OUT OVER TIME
+
+            if (status)
+            {
+                canvasGroup[0].alpha = 1;
+            }
+            else
+            {
+                canvasGroup[0].alpha = 0;
+            }
+        }
+
         public void RefreshHUD()
         {
             healthBar.gameObject.SetActive(false);
@@ -143,7 +157,6 @@ namespace LZ
         {
             staminaBar.SetMaxStat(maxStamina);
         }
-
 
         public void SetNewFocusPointValue(int oldValue, int newValue)
         {

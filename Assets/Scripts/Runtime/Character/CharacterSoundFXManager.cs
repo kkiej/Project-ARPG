@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace LZ
 {
     public class CharacterSoundFXManager : MonoBehaviour
     {
-        private AudioSource audioSource;
+        public AudioSource audioSource;
 
         [Header("Damage Grunts")]
         [SerializeField] protected AudioClip[] damageGrunts;
@@ -20,6 +22,11 @@ namespace LZ
         protected virtual void Awake()
         {
             audioSource = GetComponent<AudioSource>();
+        }
+
+        protected virtual void Start()
+        {
+
         }
 
         public void PlaySoundFX(AudioClip soundFX, float volume = 1, bool randomizePitch = true, float pitchRandom = 0.1f)
