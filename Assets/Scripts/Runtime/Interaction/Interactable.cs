@@ -24,8 +24,6 @@ namespace LZ
 
         public virtual void Interact(PlayerManager player)
         {
-            Debug.Log("YOU HAVE INTERACTED!");
-
             if (!player.IsOwner)
                 return;
 

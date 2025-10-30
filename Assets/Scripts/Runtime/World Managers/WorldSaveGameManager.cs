@@ -40,9 +40,11 @@ namespace LZ
 
         [Header("Stage IDs")]
         public int namelessKnightDialogueStageID = 0;
+        public int blacksmithDialogueStageID = 0;
 
         [Header("Dialogues")]
         [SerializeField] List<CharacterDialogue> namelessKnightDialogues = new List<CharacterDialogue>();
+        [SerializeField] List<CharacterDialogue> blacksmithDialogues = new List<CharacterDialogue>();
 
         private void Awake()
         {
@@ -518,6 +520,9 @@ namespace LZ
                 case CharacterDialogueID.NamelessKnightDialogueID:
                     dialogue = FindDialogueByStageID(namelessKnightDialogueStageID, namelessKnightDialogues);
                     break;
+                case CharacterDialogueID.BlacksmithDialogueID:
+                    dialogue = FindDialogueByStageID(blacksmithDialogueStageID, blacksmithDialogues);
+                    break;
                 default:
                     break;
             }
@@ -557,6 +562,10 @@ namespace LZ
                     namelessKnightDialogueStageID = stageIndex;
                     currentCharacterData.namelessKnightStageID = namelessKnightDialogueStageID;
                     break;
+                case CharacterDialogueID.BlacksmithDialogueID:
+                    blacksmithDialogueStageID = stageIndex;
+                    currentCharacterData.blacksmithStageID = blacksmithDialogueStageID;
+                    break;
                 default:
                     break;
             }
@@ -565,6 +574,7 @@ namespace LZ
         private void GetStageIDsOnLoad()
         {
             namelessKnightDialogueStageID = currentCharacterData.namelessKnightStageID;
+            blacksmithDialogueStageID = currentCharacterData.blacksmithStageID;
         }
     }
 }

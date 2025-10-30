@@ -25,16 +25,11 @@ namespace LZ
         public List<AudioClip> farewellDialogueAudio = new List<AudioClip>();
         private bool farewellHasPlayed = false;
 
-        //  OPTIONAL SETTINGS
-        //  FACE CHARACTER
-        //  KILL ON CANCEL
-        //  OPEN MENU ON CANCEL
-        //  ECT
-
         [Header("End Triggers")]
         [SerializeField] bool setStageIndex = false;    //  THIS WILL BE USED TO "SET STAGE ID" AFTER SETTING AN ID, NEW DIALOGUE WILL BE SELECTED DEPENDING ON ID
         [SerializeField] int stageID = 0;
         [SerializeField] bool playFarewell = true;
+        [SerializeField] DialogueEndEvents endEvent;
 
         public void PlayDialogueEvent(AICharacterManager aiCharacter)
         {
@@ -96,11 +91,35 @@ namespace LZ
 
             //  DO STUFF WITH AI CHARACTER IF DESIRED
             aiCharacter.aiCharacterSoundFXManager.OnCurrentDialogueEnded();
+
+            if (endEvent != DialogueEndEvents.None)
+            {
+                switch (endEvent)
+                {
+                    case DialogueEndEvents.None:
+                        break;
+                    case DialogueEndEvents.Blacksmith:
+                        PlayerUIManager.instance.playerUIWeaponUpgradeManager.OpenMenuAfterFixedFrame();
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
+        // CALLED WHEN WE LEAVE THE INTERACTION RADIUS
         public void OnDialogueCancelled(AICharacterManager aiCharacter)
         {
-
+            switch (endEvent)
+            {
+                case DialogueEndEvents.None:
+                    break;
+                case DialogueEndEvents.Blacksmith:
+                    PlayerUIManager.instance.playerUIWeaponUpgradeManager.CloseMenu();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

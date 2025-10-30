@@ -13,6 +13,21 @@ namespace LZ
             PlayerUIManager.instance.menuWindowIsOpen = true;
             menu.SetActive(true);
         }
+        
+        public virtual void OpenMenuAfterFixedFrame()
+        {
+            if (menu.activeInHierarchy)
+                return;
+
+            StartCoroutine(WaitThenOpenMenu());
+        }
+        
+        protected virtual IEnumerator WaitThenOpenMenu()
+        {
+            yield return new WaitForFixedUpdate();
+
+            OpenMenu();
+        }
 
         //  THIS IS FINE, BUT IF YOU'RE USING THE "A" BUTTON TO CLOSE MENUS YOU WILL JUMP AS YOU CLOSE THE MENU
         public virtual void CloseMenu()
@@ -33,8 +48,7 @@ namespace LZ
         {
             yield return new WaitForFixedUpdate();
 
-            PlayerUIManager.instance.menuWindowIsOpen = false;
-            menu.SetActive(false);
+            CloseMenu();
         }
     }
 }

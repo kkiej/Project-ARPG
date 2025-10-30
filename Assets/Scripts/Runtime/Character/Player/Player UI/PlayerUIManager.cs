@@ -22,6 +22,7 @@ namespace LZ
         [HideInInspector] public PlayerUITeleportLocationManager playerUITeleportLocationManager;
         [HideInInspector] public PlayerUILoadingScreenManager playerUILoadingScreenManager;
         [HideInInspector] public PlayerUILevelUpManager playerUILevelUpManager;
+        [HideInInspector] public PlayerUIWeaponUpgradeManager playerUIWeaponUpgradeManager;
 
         [Header("UI Flags")]
         public bool menuWindowIsOpen = false;       // 物品栏界面、装备菜单、铁匠菜单等
@@ -48,6 +49,7 @@ namespace LZ
             playerUITeleportLocationManager = GetComponentInChildren<PlayerUITeleportLocationManager>();
             playerUILoadingScreenManager = GetComponentInChildren<PlayerUILoadingScreenManager>();
             playerUILevelUpManager = GetComponentInChildren<PlayerUILevelUpManager>();
+            playerUIWeaponUpgradeManager = GetComponentInChildren<PlayerUIWeaponUpgradeManager>();
         }
 
         private void Start()
@@ -74,6 +76,7 @@ namespace LZ
             playerUISiteOfGraceManager.CloseMenuAfterFixedFrame();
             playerUITeleportLocationManager.CloseMenuAfterFixedFrame();
             playerUILevelUpManager.CloseMenuAfterFixedFrame();
+            playerUIWeaponUpgradeManager.CloseMenuAfterFixedFrame();
         }
 
         //  UI SFX

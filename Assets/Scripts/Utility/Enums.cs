@@ -44,7 +44,14 @@ public enum CharacterAttribute
 public enum CharacterDialogueID
 {
     NoDialogueID, //    USED FOR MAJORITY OF CHARACTERS
-    NamelessKnightDialogueID
+    NamelessKnightDialogueID,
+    BlacksmithDialogueID
+}
+
+public enum DialogueEndEvents
+{
+    None,
+    Blacksmith
 }
 
 //  USED AS A TAG FOR EACH WEAPON MODEL INSTANTIATION SLOT
