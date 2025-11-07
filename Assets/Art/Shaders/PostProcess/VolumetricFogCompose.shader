@@ -19,39 +19,26 @@ Shader "Athena/VolumetricFog/Compose"
             Blend One SrcAlpha
 
             HLSLPROGRAM
-            #pragma vertex Vertex
-            #pragma fragment Fragment
-
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-            struct Attributes
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+    
+            #pragma vertex Vert
+            #pragma fragment Frag
+    
+            // Out frag function takes as input a struct that contains the screen space coordinate we are going to use to sample our texture. It also writes to SV_Target0, this has to match the index set in the UseTextureFragment(sourceTexture, 0, …) we defined in our render pass script.   
+            float4 Frag(Varyings input) : SV_Target0
             {
-                float4 positionOS : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct Varyings
-            {
-                float4 positionCS : SV_POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
-
-            Varyings Vertex(Attributes input)
-            {
-                Varyings output;
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-                output.uv = input.uv;
-                return output;
+                // this is needed so we account XR platform differences in how they handle texture arrays
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+    
+                // sample the texture using the SAMPLE_TEXTURE2D_X_LOD
+                float2 uv = input.texcoord.xy;
+                half4 color = SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_LinearRepeat, uv, _BlitMipLevel);
+                
+                // Modify the sampled color
+                return color;
             }
-
-            half4 Fragment(Varyings input) : SV_Target
-            {
-                half4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
-                return col;
-            }
+    
             ENDHLSL
         }
     }

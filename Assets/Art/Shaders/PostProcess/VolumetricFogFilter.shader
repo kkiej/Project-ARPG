@@ -2,34 +2,52 @@ Shader "Athena/VolumetricFog/Filter"
 {
     Properties
     {
-        [MainTexture] _MainTex("MainTex", 2D) = "white" {}
     }
     SubShader
     {
-        Tags
-        {
-            "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline"
-        }
+        Tags {"RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
 
         Pass
         {
-            ZTest Always
-            ZWrite Off
+        	Name "VolumetricFog Filter"
+            ZTest Off
             Cull Off
 
             HLSLPROGRAM
-            #pragma vertex Vertex
-            #pragma fragment Fragment
+            #pragma vertex Vert
+            #pragma fragment Frag
             #pragma shader_feature _ _FilterMode_Gaussian _FilterMode_Bilateral _FilterMode_Box4x4
             #pragma multi_compile_local _ _DepthClamp
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
-
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DynamicScaling.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/GlobalSamplers.hlsl"
+			
+			#ifdef USE_FULL_PRECISION_BLIT_TEXTURE
+			TEXTURE2D_X_FLOAT(_BlitTexture);
+			#else
+			TEXTURE2D_X(_BlitTexture);
+			#endif
+			TEXTURECUBE(_BlitCubeTexture);
+			
+			uniform float4 _BlitScaleBias;
+			uniform float4 _BlitScaleBiasRt;
+			uniform float4 _BlitTexture_TexelSize;
+			uniform float _BlitMipLevel;
+			uniform float2 _BlitTextureSize;
+			uniform uint _BlitPaddingSize;
+			uniform int _BlitTexArraySlice;
+			uniform float4 _BlitDecodeInstructions;
+			
             struct Attributes
             {
                 float4 positionOS : POSITION;
                 float2 uv : TEXCOORD0;
+				uint vertexID : SV_VertexID;
+			    UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct Varyings
@@ -37,10 +55,11 @@ Shader "Athena/VolumetricFog/Filter"
                 float4 positionCS : SV_POSITION;
                 float2 uv : TEXCOORD0;
             	float3 viewDir: TEXCOORD01;
+            	UNITY_VERTEX_OUTPUT_STEREO
             };
 
             CBUFFER_START(UnityPerMaterial)
-            half4 _MainTex_TexelSize;
+            //half4 _BlitTexture_TexelSize;
             CBUFFER_END
 
             half4 _TemporalFilterParam;
@@ -54,8 +73,8 @@ Shader "Athena/VolumetricFog/Filter"
             #define _DepthTexelSize _DepthClampParam.zw
             #define _DepthOffsetScale 1
 
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
+            //TEXTURE2D(_BlitTexture);
+            SAMPLER(sampler_BlitTexture);
             TEXTURE2D(_HistoryFogTexture);
             SAMPLER(sampler_HistoryFogTexture);
             TEXTURE2D_FLOAT(_CameraDepthTexture);
@@ -63,12 +82,21 @@ Shader "Athena/VolumetricFog/Filter"
             TEXTURE2D_FLOAT(_LastDepthTexture);
             SAMPLER(sampler_LastDepthTexture);
 
-            Varyings Vertex(Attributes input)
+            Varyings Vert(Attributes input)
             {
                 Varyings output;
+            	UNITY_SETUP_INSTANCE_ID(input);
+			    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
+            	float4 pos = GetFullScreenTriangleVertexPosition(input.vertexID);
+			    float2 uv  = GetFullScreenTriangleTexCoord(input.vertexID);
+			
+			    output.positionCS = pos;
+			    output.uv = DYNAMIC_SCALING_APPLY_SCALEBIAS(uv);
+            	
 				VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-                output.positionCS = vertexInput.positionCS;
-                output.uv = input.uv;
+                //output.positionCS = vertexInput.positionCS;
+                //output.uv = input.uv;
             	output.viewDir = GetCameraPositionWS() - vertexInput.positionWS;
                 return output;
             }
@@ -85,10 +113,10 @@ Shader "Athena/VolumetricFog/Filter"
                 half4 res;
                 #if _FilterMode_Box4x4
 					// Use a 4x4 box filter because the random texture is tiled 4x4
-					res =  SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
-					res += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + TexelSize * float2(2, 0));
-					res += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + TexelSize * float2(0, 2));
-					res += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + TexelSize * float2(2, 2));
+					res =  SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uv);
+					res += SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uv + TexelSize * float2(2, 0));
+					res += SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uv + TexelSize * float2(0, 2));
+					res += SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uv + TexelSize * float2(2, 2));
 					res *= 0.25;
                 #else
                 float2 uvR = uv + TexelSize * float2(1, 0);
@@ -99,15 +127,15 @@ Shader "Athena/VolumetricFog/Filter"
                 float2 uvB = uv + TexelSize * float2(0, -1);
                 float2 uvRB = uv + TexelSize * float2(1, -1);
                 float2 uvLB = uv + TexelSize * float2(-1, -1);
-                float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
-                float4 colorR = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvR);
-                float4 colorT = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvT);
-                float4 colorRT = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvRT);
-                float4 colorLT = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvLT);
-                float4 colorL = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvL);
-                float4 colorB = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvB);
-                float4 colorRB = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvRB);
-                float4 colorLB = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvLB);
+                float4 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uv);
+                float4 colorR = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uvR);
+                float4 colorT = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uvT);
+                float4 colorRT = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uvRT);
+                float4 colorLT = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uvLT);
+                float4 colorL = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uvL);
+                float4 colorB = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uvB);
+                float4 colorRB = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uvRB);
+                float4 colorLB = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uvLB);
                 #if _FilterMode_Gaussian
 						res = (color * 0.147761 +
 		 					   colorR * 0.118318 +
@@ -139,7 +167,7 @@ Shader "Athena/VolumetricFog/Filter"
 						 	   colorLB * WLB );
 						res /= W + WR + WT + WRT + WLT + WL + WB + WRB + WLB;
                 #else
-                res = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+                res = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture, uv);
                 #endif
                 #endif
                 return res;
@@ -212,20 +240,35 @@ Shader "Athena/VolumetricFog/Filter"
                 return history;
             }
 
-            half4 Fragment(Varyings input) : SV_Target
+            float4 Frag(Varyings input) : SV_Target0
             {
-                float2 uv = input.uv;
-                float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
-                half4 col = Filter(uv, _MainTex_TexelSize.xy);
-                if (_HistoryWeight > 0)
+                //float2 uv = input.uv;
+                //float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
+                //half4 col = Filter(uv, _BlitTexture_TexelSize.xy);
+                //if (_HistoryWeight > 0)
+                //{
+                //    float2 lastUV = GetHistoryUV(uv, depth, input.positionCS.z);
+                //    half4 historyCol = SAMPLE_TEXTURE2D(_HistoryFogTexture, sampler_HistoryFogTexture, lastUV);
+                //    half history = HistoryClamp(lastUV, uv, depth, input.viewDir);
+                //    col = lerp(col, historyCol, history);
+                //}
+            	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+
+                //return col;
+            	float2 uv = input.uv.xy;
+            	float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
+            	half4 col = Filter(uv, _BlitTexture_TexelSize.xy);
+            	if (_HistoryWeight > 0)
                 {
                     float2 lastUV = GetHistoryUV(uv, depth, input.positionCS.z);
                     half4 historyCol = SAMPLE_TEXTURE2D(_HistoryFogTexture, sampler_HistoryFogTexture, lastUV);
                     half history = HistoryClamp(lastUV, uv, depth, input.viewDir);
                     col = lerp(col, historyCol, history);
                 }
-
-                return col;
+				half4 color = SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_LinearRepeat, uv, _BlitMipLevel);
+               
+               	// Modify the sampled color
+               	return col;
             }
             ENDHLSL
         }

@@ -13,10 +13,10 @@ float3 CalculatePos01(float3 pos, float3 center, float3 scale)
     return saturate((pos - center) / scale + 0.5);
 }
 
-float Remap(float original_value, float original_min, float original_max, float new_min, float new_max)
-{
-    return new_min + (original_value - original_min) / (original_max - original_min) * (new_max - new_min);
-}
+//float Remap(float original_value, float original_min, float original_max, float new_min, float new_max)
+//{
+//    return new_min + (original_value - original_min) / (original_max - original_min) * (new_max - new_min);
+//}
 
 float RemapClamped(float original_value, float original_min, float original_max, float new_min,
                    float new_max)

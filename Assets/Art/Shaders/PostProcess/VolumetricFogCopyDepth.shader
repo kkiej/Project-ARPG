@@ -23,27 +23,36 @@ Shader "Athena/VolumetricFog/CopyDepth"
 
             struct Attributes
             {
-                float4 positionOS : POSITION;
-                float2 uv : TEXCOORD0;
+                uint vertexID : SV_VertexID;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
-
+            
             struct Varyings
             {
                 float4 positionCS : SV_POSITION;
-                float2 uv : TEXCOORD0;
+                float2 texcoord   : TEXCOORD0;
+                UNITY_VERTEX_OUTPUT_STEREO
             };
-
+            
             Varyings vert(Attributes input)
             {
                 Varyings output;
-                output.uv = input.uv;
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+            
+                float4 pos = GetFullScreenTriangleVertexPosition(input.vertexID);
+                float2 uv  = GetFullScreenTriangleTexCoord(input.vertexID);
+            
+                output.positionCS = pos;
+                output.texcoord   = uv;
+            
                 return output;
             }
 
             float frag(Varyings input) : SV_Depth
             {
-                return SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, input.uv);
+                //return 1;
+                return SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, input.texcoord);
             }
             ENDHLSL
         }
