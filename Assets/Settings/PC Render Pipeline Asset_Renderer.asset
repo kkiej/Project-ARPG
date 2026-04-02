@@ -31,24 +31,6 @@ MonoBehaviour:
     filterShader: {fileID: 4800000, guid: 11b88289fe75b3d44b5a64b3346d1f2d, type: 3}
     composeShader: {fileID: 4800000, guid: 3aa49f3cd10b3cd4488860a863a9c278, type: 3}
     copyDepthShader: {fileID: 4800000, guid: 6d247ded287dbe745b13a5913606dc83, type: 3}
---- !u!114 &-4559238968539961181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33cc082f71c590946a88691cac2dfa25, type: 3}
-  m_Name: DepthBlitFeature
-  m_EditorClassIdentifier: Assembly-CSharp::DepthBlitFeature
-  m_Active: 1
-  evt_Depth: 300
-  evt_Edge: 450
-  rendererDataAsset: {fileID: 11400000}
-  copyDepthShader: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
-  m_DepthEdgeMaterial: {fileID: 2100000, guid: 872101a632e94b3439452c0b632b8e1e, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,8 +59,7 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: 1990818708164889212}
-  - {fileID: -4559238968539961181}
-  m_RendererFeatureMap: 7cca5e3811cfa01ba3a80e625054bac0
+  m_RendererFeatureMap: 7cca5e3811cfa01b
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -119,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9662f51de66491c48afd718b40d6b012, type: 3}
   m_Name: VolumetricFogRenderFeature
   m_EditorClassIdentifier: Assembly-CSharp::VolumetricFogRenderFeature
-  m_Active: 1
+  m_Active: 0
   settings:
     enable: 1
     scale: 0.6
