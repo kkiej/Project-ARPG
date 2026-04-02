@@ -20,7 +20,6 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
         public RenderPassEvent Event = RenderPassEvent.AfterRenderingTransparents;
         [Header("是否启用噪声滤波")] public bool spatialFilter = true;
         public EFilterMode spatialFilterMode = EFilterMode.Bilateral;
-        //public Texture2D noiseTexture;
         public bool useNoiseTexture;
         [HideInInspector] [Range(0f, 2f)] public float noiseScale = 1f;
         [Header("是否启用TAA滤波")] public bool temporalFilter = true;
@@ -49,21 +48,24 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
 
     public override void Create()
     {
+        if (settings == null) return;
         _volumetricFogRenderPass?.Dispose();
         _volumetricFogRenderPass = new VolumetricFogRenderPass(settings)
         {
             renderPassEvent = settings.Event
         };
     }
-    
-    private void OnDestroy()
+
+    protected override void Dispose(bool disposing)
     {
         _volumetricFogRenderPass?.Dispose();
+        _volumetricFogRenderPass = null;
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if (!settings.enable) return;
+        if (settings == null || !settings.enable) return;
+        if (_volumetricFogRenderPass == null) return;
         renderer.EnqueuePass(_volumetricFogRenderPass);
     }
 
@@ -71,14 +73,11 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
     {
         ProfilingSampler _profilingSampler = new ProfilingSampler("VolumetricFogPass_RayMarch");
         readonly VolumetricFogSettings settings;
-        private TextureHandle fogRT;
-        private TextureHandle finalFogTexture;
-        private TextureHandle lastDepthTexture;
         Material _composeMaterial;
         Material _filterMaterial;
         Material _copyDepthMaterial;
         
-        private Dictionary<Camera, FogCameraData> _cacheData = new Dictionary<Camera, FogCameraData>();
+        private Dictionary<int, FogCameraData> _cacheData = new Dictionary<int, FogCameraData>();
     
         private class FogCameraData
         {
@@ -116,6 +115,10 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
         {
             public RendererListHandle rendererList;
             public Vector4 fogTextureSize;
+            public Matrix4x4 invViewProjMatrix;
+            public bool noiseEnable;
+            public bool highQuality;
+            public Vector4 fogParam;
         }
 
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
@@ -130,15 +133,17 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
             var fogRTDesc = resourceData.activeColorTexture.GetDescriptor(renderGraph);
             fogRTDesc.width = (int)(fogRTDesc.width * settings.scale);
             fogRTDesc.height = (int)(fogRTDesc.height * settings.scale);
-            //fogRTDesc.colorFormat = (GraphicsFormat)RenderTextureFormat.ARGB32;
             fogRTDesc.name = "FogTexture";
-            fogRT = renderGraph.CreateTexture(fogRTDesc);
+            TextureHandle fogRT = renderGraph.CreateTexture(fogRTDesc);
             
+            if (!fogRT.IsValid()) return;
+
             var camera = cameraData.camera;
-            if (!_cacheData.TryGetValue(camera, out var fogData))
+            int cameraId = camera.GetInstanceID();
+            if (!_cacheData.TryGetValue(cameraId, out var fogData))
             {
                 fogData = new FogCameraData();
-                _cacheData.Add(camera, fogData);
+                _cacheData.Add(cameraId, fogData);
             }
             
             var desc = cameraData.cameraTargetDescriptor;
@@ -176,7 +181,14 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
             };
 
             var rendererListHandle = renderGraph.CreateRendererList(rld);
-            
+
+            // --- RayMarch pass ---
+            Matrix4x4 projMatrix = GL.GetGPUProjectionMatrix(camera.projectionMatrix, false);
+            Matrix4x4 viewMatrix = camera.worldToCameraMatrix;
+            Matrix4x4 viewProjMatrix = projMatrix * viewMatrix;
+            Matrix4x4 invViewProjMatrix = Matrix4x4.Inverse(viewProjMatrix);
+            var jitter = settings.temporalFilter ? Halton(Time.frameCount) * settings.jitterScale : 1f;
+
             using (var builder = renderGraph.AddRasterRenderPass<RayMarchData>("VolumetricFog Pass", out var passData))
             {
                 builder.AllowPassCulling(false);
@@ -185,6 +197,11 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
                 builder.UseRendererList(rendererListHandle);
 
                 passData.rendererList = rendererListHandle;
+                passData.fogTextureSize = new Vector4(desc.width, desc.height, 0, 0);
+                passData.invViewProjMatrix = invViewProjMatrix;
+                passData.noiseEnable = settings.spatialFilter && settings.useNoiseTexture;
+                passData.highQuality = settings.highQuality;
+                passData.fogParam = new Vector4(jitter, settings.stepCount, settings.noiseScale, 0f);
 
                 builder.SetRenderAttachment(fogRT, 0);
 
@@ -193,74 +210,62 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
                     var cmd = context.cmd;
                     using (new ProfilingScope(cmd, _profilingSampler))
                     {
-                        // set global size and invViewProj
-                        cmd.SetGlobalVector(FogTextureSize, new Vector4(desc.width, desc.height, 0, 0));
-    
-                        Matrix4x4 projMatrix = GL.GetGPUProjectionMatrix(camera.projectionMatrix, false);
-                        Matrix4x4 viewMatrix = camera.worldToCameraMatrix;
-                        Matrix4x4 viewProjMatrix = projMatrix * viewMatrix;
-                        Matrix4x4 invViewProjMatrix = Matrix4x4.Inverse(viewProjMatrix);
-                        cmd.SetGlobalMatrix(MyInvViewProjMatrix, invViewProjMatrix);
+                        cmd.SetGlobalVector(FogTextureSize, data.fogTextureSize);
+                        cmd.SetGlobalMatrix(MyInvViewProjMatrix, data.invViewProjMatrix);
                         
-                        if (settings.spatialFilter && settings.useNoiseTexture)
-                        {
-                            Shader.EnableKeyword("_NoiseEnable");
-                        }
+                        if (data.noiseEnable)
+                            cmd.EnableKeyword(GlobalKeyword.Create("_NoiseEnable"));
                         else
-                        {
-                            Shader.DisableKeyword("_NoiseEnable");
-                        }
+                            cmd.DisableKeyword(GlobalKeyword.Create("_NoiseEnable"));
     
-                        if (settings.highQuality) Shader.EnableKeyword("_HighQuality");
-                        else Shader.DisableKeyword("_HighQuality");
+                        if (data.highQuality)
+                            cmd.EnableKeyword(GlobalKeyword.Create("_HighQuality"));
+                        else
+                            cmd.DisableKeyword(GlobalKeyword.Create("_HighQuality"));
     
-                        var jitter = settings.temporalFilter ? Halton(Time.frameCount) * settings.jitterScale : 1f;
-                        cmd.SetGlobalVector(FogParam, new Vector4(jitter, settings.stepCount, settings.noiseScale, 0f));
+                        cmd.SetGlobalVector(FogParam, data.fogParam);
                         
-                        context.cmd.DrawRendererList(data.rendererList);
+                        cmd.DrawRendererList(data.rendererList);
                     }
                 });
             }
             
-            // ---------- Filter pass: use RenderGraphUtils.AddBlitPass ----------
+            // --- Filter pass ---
             if (_filterMaterial == null && settings.filterShader != null)
                 _filterMaterial = CoreUtils.CreateEngineMaterial(settings.filterShader);
     
-            if (_filterMaterial != null)
+            if (_filterMaterial == null) return;
+
+            switch (settings.spatialFilter ? settings.spatialFilterMode : EFilterMode.Point)
             {
-                // set CPU-side keywords
-                switch (settings.spatialFilter ? settings.spatialFilterMode : EFilterMode.Point)
-                {
-                    case EFilterMode.Point:
-                        _filterMaterial.DisableKeyword("_FilterMode_Gaussian");
-                        _filterMaterial.DisableKeyword("_FilterMode_Bilateral");
-                        _filterMaterial.DisableKeyword("_FilterMode_Box4x4");
-                        break;
-                    case EFilterMode.Gaussian:
-                        _filterMaterial.DisableKeyword("_FilterMode_Bilateral");
-                        _filterMaterial.DisableKeyword("_FilterMode_Box4x4");
-                        _filterMaterial.EnableKeyword("_FilterMode_Gaussian");
-                        break;
-                    case EFilterMode.Bilateral:
-                        _filterMaterial.DisableKeyword("_FilterMode_Gaussian");
-                        _filterMaterial.DisableKeyword("_FilterMode_Box4x4");
-                        _filterMaterial.EnableKeyword("_FilterMode_Bilateral");
-                        break;
-                    case EFilterMode.Box4X4:
-                        _filterMaterial.DisableKeyword("_FilterMode_Gaussian");
-                        _filterMaterial.DisableKeyword("_FilterMode_Bilateral");
-                        _filterMaterial.EnableKeyword("_FilterMode_Box4x4");
-                        break;
-                }
+                case EFilterMode.Point:
+                    _filterMaterial.DisableKeyword("_FilterMode_Gaussian");
+                    _filterMaterial.DisableKeyword("_FilterMode_Bilateral");
+                    _filterMaterial.DisableKeyword("_FilterMode_Box4x4");
+                    break;
+                case EFilterMode.Gaussian:
+                    _filterMaterial.DisableKeyword("_FilterMode_Bilateral");
+                    _filterMaterial.DisableKeyword("_FilterMode_Box4x4");
+                    _filterMaterial.EnableKeyword("_FilterMode_Gaussian");
+                    break;
+                case EFilterMode.Bilateral:
+                    _filterMaterial.DisableKeyword("_FilterMode_Gaussian");
+                    _filterMaterial.DisableKeyword("_FilterMode_Box4x4");
+                    _filterMaterial.EnableKeyword("_FilterMode_Bilateral");
+                    break;
+                case EFilterMode.Box4X4:
+                    _filterMaterial.DisableKeyword("_FilterMode_Gaussian");
+                    _filterMaterial.DisableKeyword("_FilterMode_Bilateral");
+                    _filterMaterial.EnableKeyword("_FilterMode_Box4x4");
+                    break;
             }
             
             var finalRTs = fogData.rts;
     
-            // Temporal globals: we set only matrix & TemporalFilterParam here (we avoid using ctx.GetTexture with TextureHandle)
             if (settings.temporalFilter && fogData.hasLastColor)
             {
-                Matrix4x4 projMatrix = GL.GetGPUProjectionMatrix(cameraData.GetProjectionMatrix(), false);
-                var viewProj = projMatrix * cameraData.GetViewMatrix();
+                Matrix4x4 proj = GL.GetGPUProjectionMatrix(cameraData.GetProjectionMatrix(), false);
+                var viewProj = proj * cameraData.GetViewMatrix();
                 _filterMaterial.SetMatrix(ClipToLastClip, fogData.lastViewProj * viewProj.inverse);
                 fogData.lastViewProj = viewProj;
                 var historyIndex = (fogData.curRtIndex + finalRTs.Length - 1) % finalRTs.Length;
@@ -288,12 +293,14 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
                 _filterMaterial.SetVector(TemporalFilterParam, Vector4.zero);
             }
 
-            finalFogTexture = renderGraph.ImportTexture(finalRTs[fogData.curRtIndex]);
+            TextureHandle finalFogTexture = renderGraph.ImportTexture(finalRTs[fogData.curRtIndex]);
             
+            if (!finalFogTexture.IsValid()) return;
+
             var filterBlitParams = new RenderGraphUtils.BlitMaterialParameters(fogRT, finalFogTexture, _filterMaterial, 0);
             renderGraph.AddBlitPass(filterBlitParams, "VolumetricFog_Filter");
     
-            // ---------- Copy depth (if temporal) using AddBlitPass with copyDepthMaterial ----------
+            // --- Copy depth (if temporal) ---
             if (settings.temporalFilter)
             {
                 if (_copyDepthMaterial == null && settings.copyDepthShader != null)
@@ -301,14 +308,15 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
     
                 if (_copyDepthMaterial != null)
                 {
-                    // resourceData.cameraDepth is typically a TextureHandle already; if not, import appropriately.
-                    // Here we pass it as-is (RenderGraph will handle if it's a TextureHandle).
-                    var srcDepthHandle = resourceData.cameraDepth;
-                    lastDepthTexture = renderGraph.ImportTexture(fogData.lastDepth);
-                    var blitParams = new RenderGraphUtils.BlitMaterialParameters(TextureHandle.nullHandle, lastDepthTexture, _copyDepthMaterial, 0);
-                    renderGraph.AddBlitPass(blitParams, "VolumetricFog_CopyDepth");
-                    fogData.hasLastDepth = true;
-                    fogData.lastCameraPos = camera.transform.position;
+                    TextureHandle srcDepthHandle = resourceData.cameraDepth;
+                    TextureHandle lastDepthTexture = renderGraph.ImportTexture(fogData.lastDepth);
+                    if (srcDepthHandle.IsValid() && lastDepthTexture.IsValid())
+                    {
+                        var blitParams = new RenderGraphUtils.BlitMaterialParameters(srcDepthHandle, lastDepthTexture, _copyDepthMaterial, 0);
+                        renderGraph.AddBlitPass(blitParams, "VolumetricFog_CopyDepth");
+                        fogData.hasLastDepth = true;
+                        fogData.lastCameraPos = camera.transform.position;
+                    }
                 }
             }
             else
@@ -316,17 +324,17 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
                 fogData.hasLastDepth = false;
             }
     
-            // ---------- Compose pass: add blit from fog RT -> camera color (resourceData.activeColorTexture) ----------
-            var finalIndex = fogData.curRtIndex < 0 ? 0 : fogData.curRtIndex;
-            var src = fogData.rts[finalIndex];
-    
+            // --- Compose pass ---
             if (_composeMaterial == null && settings.composeShader != null)
                 _composeMaterial = CoreUtils.CreateEngineMaterial(settings.composeShader);
     
             if (_composeMaterial != null)
             {
-                var blitParams = new RenderGraphUtils.BlitMaterialParameters(finalFogTexture, resourceData.activeColorTexture, _composeMaterial, 0);
-                renderGraph.AddBlitPass(blitParams, "VolumetricFog_Compose");
+                if (finalFogTexture.IsValid() && resourceData.activeColorTexture.IsValid())
+                {
+                    var blitParams = new RenderGraphUtils.BlitMaterialParameters(finalFogTexture, resourceData.activeColorTexture, _composeMaterial, 0);
+                    renderGraph.AddBlitPass(blitParams, "VolumetricFog_Compose");
+                }
             }
     
             if (settings.temporalFilter)
@@ -359,6 +367,14 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
             {
                 fogData?.Dispose();
             }
+            _cacheData.Clear();
+            
+            CoreUtils.Destroy(_filterMaterial);
+            CoreUtils.Destroy(_composeMaterial);
+            CoreUtils.Destroy(_copyDepthMaterial);
+            _filterMaterial = null;
+            _composeMaterial = null;
+            _copyDepthMaterial = null;
         }
         
         // Shader property IDs
@@ -367,8 +383,6 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
         private static readonly int ClipToLastClip = Shader.PropertyToID("_ClipToLastClip");
         private static readonly int HistoryFogTexture = Shader.PropertyToID("_HistoryFogTexture");
         private static readonly int TemporalFilterParam = Shader.PropertyToID("_TemporalFilterParam");
-        //private static readonly int NoiseMap = Shader.PropertyToID("_NoiseMap");
-        //private static readonly int NoiseMapTexelSize = Shader.PropertyToID("_NoiseMap_TexelSize");
         private static readonly string[] FogTexNames = {"FogFinalTexture1", "FogFinalTexture2"};
         private static readonly int LastDepthTexture = Shader.PropertyToID("_LastDepthTexture");
         private static readonly int DepthClampParam = Shader.PropertyToID("_DepthClampParam");
