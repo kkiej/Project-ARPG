@@ -160,7 +160,7 @@ Shader "Water"
 			CBUFFER_END
 
 			sampler2D _PlanarReflectionTexture;
-			uniform float4 _CameraDepthTexture_TexelSize;
+			//uniform float4 _CameraDepthTexture_TexelSize;
 			sampler2D _NormalTexture;
 			sampler2D _GradientTexture;
 			sampler2D _SurfaceFoamTexture;

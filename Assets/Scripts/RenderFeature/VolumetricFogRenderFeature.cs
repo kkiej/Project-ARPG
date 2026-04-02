@@ -94,18 +94,12 @@ public class VolumetricFogRenderFeature : ScriptableRendererFeature
             {
                 for (var i = 0; i < rts.Length; i++)
                 {
-                    if (rts[i] != null)
-                    {
-                        RenderTexture.ReleaseTemporary(rts[i]);
-                        rts[i] = null;
-                    }
+                    rts[i]?.Release();
+                    rts[i] = null;
                 }
 
-                if (lastDepth != null)
-                {
-                    RenderTexture.ReleaseTemporary(lastDepth);
-                    lastDepth = null;
-                }
+                lastDepth?.Release();
+                lastDepth = null;
 
                 curRtIndex = -1;
                 hasLastDepth = false;
