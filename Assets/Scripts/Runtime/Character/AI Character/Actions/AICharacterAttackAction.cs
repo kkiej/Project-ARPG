@@ -6,7 +6,7 @@ namespace LZ
     public class AICharacterAttackAction : ScriptableObject
     {
         [Header("Attack")]
-        [SerializeField] private string attackAnimation;
+        [SerializeField] private AnimationClip attackAnimation;
         [SerializeField] bool isParryable = true;
 
         [Header("Combo Action")]

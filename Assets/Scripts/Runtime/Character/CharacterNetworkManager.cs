@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -86,7 +86,7 @@ namespace LZ
 
         public virtual void OnIsDeadChanged(bool oldStatus, bool newStatus)
         {
-            character.animator.SetBool("isDead", character.isDead.Value);
+            character.SetAnimBool("isDead", character.isDead.Value);
         }
 
         public virtual void OnLockOnTargetIDChange(ulong oldID, ulong newID)
@@ -105,12 +105,12 @@ namespace LZ
 
         public void OnIsChargingAttackChanged(bool oldStatus, bool newStatus)
         {
-            character.animator.SetBool("isChargingAttack", isChargingAttack.Value);
+            character.SetAnimBool("isChargingAttack", isChargingAttack.Value);
         }
 
         public void OnIsMovingChanged(bool oldStatus, bool newStatus)
         {
-            character.animator.SetBool("isMoving", isMoving.Value);
+            character.SetAnimBool("isMoving", isMoving.Value);
         }
 
         public virtual void OnIsActiveChanged(bool oldStatus, bool newStatus)
@@ -120,7 +120,7 @@ namespace LZ
         
         public virtual void OnIsBlockingChanged(bool oldStatus, bool newStatus)
         {
-            character.animator.SetBool("isBlocking", isBlocking.Value);
+            character.SetAnimBool("isBlocking", isBlocking.Value);
         }
 
         //  USED TO CANCEL FX WHEN POISE BROKEN
@@ -171,7 +171,7 @@ namespace LZ
         private void PerformActionAnimationFromServer(string animationID, bool applyRootMotion)
         {
             character.characterAnimatorManager.applyRootMotion = applyRootMotion;
-            character.animator.CrossFade(animationID, 0.2f);
+            PlayAnimationByName(animationID, false);
         }
 
         //  A SERVER RPC IS A FUNCTION CALLED FROM A CLIENT, TO THE SERVER (IN OUR CASE THE HOST)
@@ -199,7 +199,7 @@ namespace LZ
         private void PerformInstantActionAnimationFromServer(string animationID, bool applyRootMotion)
         {
             character.characterAnimatorManager.applyRootMotion = applyRootMotion;
-            character.animator.Play(animationID);
+            PlayAnimationByName(animationID, true);
         }
 
         //  ATTACK ANIMATION
@@ -227,7 +227,30 @@ namespace LZ
         private void PerformAttackActionAnimationFromServer(string animationID, bool applyRootMotion)
         {
             character.characterAnimatorManager.applyRootMotion = applyRootMotion;
-            character.animator.CrossFade(animationID, 0.2f);
+            PlayAnimationByName(animationID, false);
+        }
+
+        /// <summary>
+        /// 优先从 AnimationClipRegistry 查找 clip 直接通过 Animancer 播放；
+        /// 找不到则 fallback 到 ControllerState 内的状态名。
+        /// </summary>
+        private void PlayAnimationByName(string animationID, bool instant)
+        {
+            var clip = AnimationClipRegistry.Instance != null
+                ? AnimationClipRegistry.Instance.GetClipByName(animationID)
+                : null;
+
+            if (clip != null)
+            {
+                character.characterAnimatorManager.PlayClipOnRemote(clip, instant ? 0f : 0.2f);
+            }
+            else
+            {
+                if (instant)
+                    character.characterAnimatorManager.PlayOnController(animationID);
+                else
+                    character.characterAnimatorManager.CrossFadeOnController(animationID);
+            }
         }
 
         //  DAMAGE

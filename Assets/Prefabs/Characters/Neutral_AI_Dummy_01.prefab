@@ -2691,6 +2691,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4243580124596978116}
   - component: {fileID: 3253081840201800260}
+  - component: {fileID: -8534289869207734134}
   - component: {fileID: 3292839509563473029}
   - component: {fileID: 8241910983610716397}
   - component: {fileID: 8730930324850780075}
@@ -2755,6 +2756,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-8534289869207734134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9116315882318417191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kybernetik.Animancer::Animancer.AnimancerComponent
+  _Animator: {fileID: 3253081840201800260}
+  _Transitions: {fileID: 0}
+  _ActionOnDisable: 0
 --- !u!114 &3292839509563473029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2767,7 +2783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1608853177
+  GlobalObjectIdHash: 4076138460
   InScenePlacedSourceGlobalObjectIdHash: 4076138460
   DeferredDespawnTick: 0
   Ownership: 1
@@ -3103,6 +3119,7 @@ MonoBehaviour:
     m_InternalValue: 0
   characterController: {fileID: 0}
   animator: {fileID: 0}
+  animancer: {fileID: 0}
   characterNetworkManager: {fileID: 0}
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +8,7 @@ namespace LZ
     {
         [Header("Animations")]
         public AnimatorOverrideController weaponAnimator;
+        public WeaponAnimationSet weaponAnimationSet;
 
         [Header("Model Instantiation")]
         public WeaponModelType weaponModelType;

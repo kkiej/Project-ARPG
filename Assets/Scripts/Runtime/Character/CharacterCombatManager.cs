@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -10,6 +10,7 @@ namespace LZ
         protected CharacterManager character;
 
         [Header("Last Attack Animation Performed")]
+        public AnimationClip lastAttackClipPerformed;
         public string lastAttackAnimationPerformed;
 
         [Header("Previous Poise Damage Taken")]

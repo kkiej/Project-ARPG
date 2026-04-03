@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -10,7 +10,10 @@ namespace LZ
 
         [Header("Weapon Item Actions")]
         public WeaponItemAction[] weaponItemActions;
-        
+
+        [Header("Animation")]
+        public AnimationClipRegistry animationClipRegistry;
+
         private void Awake()
         {
             if (instance == null)
@@ -23,6 +26,9 @@ namespace LZ
             }
             
             DontDestroyOnLoad(gameObject);
+
+            if (animationClipRegistry != null)
+                animationClipRegistry.Initialize();
         }
 
         private void Start()

@@ -618,6 +618,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a673272e5ccad794b9676574b8b8c88a,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: -8161376614129287219}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a673272e5ccad794b9676574b8b8c88a,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 195369846981905178}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a673272e5ccad794b9676574b8b8c88a,
         type: 3}
@@ -1049,6 +1053,12 @@ CapsuleCollider:
   m_Height: 1.62
   m_Direction: 0
   m_Center: {x: 0.04, y: 0, z: 0}
+--- !u!95 &3752264344261242105 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a673272e5ccad794b9676574b8b8c88a,
+    type: 3}
+  m_PrefabInstance: {fileID: 7311643625879671144}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4268988253227984578 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2430163615715248214, guid: a673272e5ccad794b9676574b8b8c88a,
@@ -1565,6 +1575,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7311643625879671144}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &-8161376614129287219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7618196052738550841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kybernetik.Animancer::Animancer.AnimancerComponent
+  _Animator: {fileID: 3752264344261242105}
+  _Transitions: {fileID: 0}
+  _ActionOnDisable: 0
 --- !u!114 &195369846981905178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1643,6 +1668,8 @@ MonoBehaviour:
   isRipostable:
     m_InternalValue: 0
   isBeingCriticallyDamaged:
+    m_InternalValue: 0
+  isRolling:
     m_InternalValue: 0
   currentHealth:
     m_InternalValue: 785
@@ -1844,6 +1871,8 @@ MonoBehaviour:
   slopeSlideSpeed: -11
   slopeSlideSpeedMultiplier: 3
   slipperySurfaceMaxAngle: 15
+  characterSlideOffHeadCollisionMaxDistanceCheck: 5
+  characterCollisionCheckSphereMultiplier: 1.5
 --- !u!114 &3632781919943384197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1915,6 +1944,7 @@ MonoBehaviour:
     m_InternalValue: 0
   characterController: {fileID: 0}
   animator: {fileID: 0}
+  animancer: {fileID: 0}
   characterNetworkManager: {fileID: 0}
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}
@@ -1925,6 +1955,7 @@ MonoBehaviour:
   characterUIManager: {fileID: 0}
   characterGroup: 1
   characterName: Durk, Guardian Of The Prototype Realms
+  aiCharacterSoundFXManager: {fileID: 0}
   aiCharacterNetworkManager: {fileID: 0}
   aiCharacterCombatManager: {fileID: 0}
   aiCharacterLocomotionManager: {fileID: 0}
@@ -2096,6 +2127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a3b05559c978af4ab4f3a50ec15de00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
   damageGrunts:
   - {fileID: 8300000, guid: e6d7943c246702d409020f0fe4bc5804, type: 3}
   - {fileID: 8300000, guid: abf3ba190bb024d43a9966a264f95e83, type: 3}

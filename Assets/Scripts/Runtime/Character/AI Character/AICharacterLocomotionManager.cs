@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,13 +29,13 @@ namespace LZ
 
             if (aiCharacter.IsOwner)
             {
-                aiCharacter.characterNetworkManager.verticalMovement.Value = aiCharacter.animator.GetFloat("Vertical");
-                aiCharacter.characterNetworkManager.horizontalMovement.Value = aiCharacter.animator.GetFloat("Horizontal");
+                aiCharacter.characterNetworkManager.verticalMovement.Value = aiCharacter.GetAnimFloat("Vertical");
+                aiCharacter.characterNetworkManager.horizontalMovement.Value = aiCharacter.GetAnimFloat("Horizontal");
             }
             else
             {
-                aiCharacter.animator.SetFloat("Vertical", aiCharacter.aiCharacterNetworkManager.verticalMovement.Value, 0.1f, Time.deltaTime);
-                aiCharacter.animator.SetFloat("Horizontal", aiCharacter.aiCharacterNetworkManager.horizontalMovement.Value, 0.1f, Time.deltaTime);
+                aiCharacter.SetAnimFloat("Vertical", aiCharacter.aiCharacterNetworkManager.verticalMovement.Value, 0.1f, Time.deltaTime);
+                aiCharacter.SetAnimFloat("Horizontal", aiCharacter.aiCharacterNetworkManager.horizontalMovement.Value, 0.1f, Time.deltaTime);
             }
         }
     }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LZ
@@ -7,14 +5,6 @@ namespace LZ
     [CreateAssetMenu(menuName = "Character Actions/Weapon Actions/Off Hand Melee Action")]
     public class OffHandMeleeAction : WeaponItemAction
     {
-        [Header("Attack Animations")]
-        [SerializeField] string dw_Attack_01 = "DW_Attack_01";
-        [SerializeField] string dw_Attack_02 = "DW_Attack_02";
-        [SerializeField] string dw_Jump_Attack_01 = "DW_Jump_Attack_01";
-        [SerializeField] string dw_Roll_Attack_01 = "DW_Roll_Attack_01";
-        [SerializeField] string dw_Backstep_Attack_01 = "DW_Backstep_Attack_01";
-        [SerializeField] string dw_Run_Attack_01 = "DW_Run_Attack_01";
-
         public override void AttemptToPerformAction(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
         {
             base.AttemptToPerformAction(playerPerformingAction, weaponPerformingAction);
@@ -56,8 +46,10 @@ namespace LZ
                 playerPerformingAction.playerNetworkManager.isBlocking.Value = true;
         }
 
-        private void PerformPowerStanceLeftHandAction(PlayerManager playerPerformingAction, WeaponItem weaponPerformingAction)
+        private void PerformPowerStanceLeftHandAction(PlayerManager playerPerformingAction, WeaponItem weapon)
         {
+            var clips = weapon.weaponAnimationSet;
+
             if (playerPerformingAction.playerNetworkManager.currentStamina.Value <= 0)
                 return;
 
@@ -68,7 +60,11 @@ namespace LZ
                     return;
 
                 if (playerPerformingAction.IsOwner)
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualJumpAttack, dw_Jump_Attack_01, true);
+                {
+                    playerPerformingAction.playerAnimatorManager.PlayJumpAttackSequenceAnimation(
+                        weapon, AttackType.DualJumpAttack,
+                        clips.dw_JumpAttack01, clips.dw_JumpAttackIdle, clips.dw_JumpAttackEnd, true);
+                }
 
                 return;
             }
@@ -81,7 +77,7 @@ namespace LZ
                 playerPerformingAction.playerCombatManager.canPerformRollingAttack = false;
 
                 if (playerPerformingAction.IsOwner)
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualRollAttack, dw_Roll_Attack_01, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weapon, AttackType.DualRollAttack, clips.dw_RollAttack01, true);
 
                 return;
             }
@@ -91,7 +87,7 @@ namespace LZ
                 playerPerformingAction.playerCombatManager.canPerformBackstepAttack = false;
 
                 if (playerPerformingAction.IsOwner)
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualBackstepAttack, dw_Backstep_Attack_01, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weapon, AttackType.DualBackstepAttack, clips.dw_BackstepAttack01, true);
 
                 return;
             }
@@ -99,7 +95,7 @@ namespace LZ
             if (playerPerformingAction.playerNetworkManager.isSprinting.Value)
             {
                 if (playerPerformingAction.IsOwner)
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualRunAttack, dw_Run_Attack_01, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weapon, AttackType.DualRunAttack, clips.dw_RunAttack01, true);
 
                 return;
             }
@@ -108,22 +104,22 @@ namespace LZ
             {
                 playerPerformingAction.playerCombatManager.canComboWithOffHandWeapon = false;
 
-                if (playerPerformingAction.playerCombatManager.lastAttackAnimationPerformed == dw_Attack_01)
+                if (playerPerformingAction.characterCombatManager.lastAttackClipPerformed == clips.dw_Attack01)
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualAttack02, dw_Attack_02, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weapon, AttackType.DualAttack02, clips.dw_Attack02, true);
                 }
-                else if (playerPerformingAction.playerCombatManager.lastAttackAnimationPerformed == dw_Attack_02)
+                else if (playerPerformingAction.characterCombatManager.lastAttackClipPerformed == clips.dw_Attack02)
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualAttack01, dw_Attack_01, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weapon, AttackType.DualAttack01, clips.dw_Attack01, true);
                 }
                 else
                 {
-                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualAttack01, dw_Attack_01, true);
+                    playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weapon, AttackType.DualAttack01, clips.dw_Attack01, true);
                 }
             }
             else if (!playerPerformingAction.playerCombatManager.canComboWithOffHandWeapon && !playerPerformingAction.isPerformingAction)
             {
-                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weaponPerformingAction, AttackType.DualAttack01, dw_Attack_01, true);
+                playerPerformingAction.playerAnimatorManager.PlayTargetAttackActionAnimation(weapon, AttackType.DualAttack01, clips.dw_Attack01, true);
             }
         }
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Animancer;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -15,6 +16,7 @@ namespace LZ
 
         [HideInInspector] public CharacterController characterController;
         [HideInInspector] public Animator animator;
+        [HideInInspector] public AnimancerComponent animancer;
 
         [HideInInspector] public CharacterNetworkManager characterNetworkManager;
         [HideInInspector] public CharacterEffectsManager characterEffectsManager;
@@ -28,10 +30,14 @@ namespace LZ
         [Header("Character Group")]
         public CharacterGroup characterGroup;
 
+        // AnimatorController 在 Animancer 中的状态，由 CharacterAnimatorManager 初始化
+        internal ControllerState controllerState;
+
         protected virtual void Awake()
         {
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
+            animancer = GetComponent<AnimancerComponent>();
 
             characterNetworkManager = GetComponent<CharacterNetworkManager>();
             characterEffectsManager = GetComponent<CharacterEffectsManager>();
@@ -50,7 +56,7 @@ namespace LZ
 
         protected virtual void Update()
         {
-            animator.SetBool("isGrounded", characterLocomotionManager.isGrounded);
+            SetAnimBool("isGrounded", characterLocomotionManager.isGrounded);
             
             // 如果这个角色是由我们控制的，那么将其网络位置赋值为我们变换的位置
             if (IsOwner)
@@ -99,7 +105,7 @@ namespace LZ
         {
             base.OnNetworkSpawn();
 
-            animator.SetBool("isMoving", characterNetworkManager.isMoving.Value);
+            SetAnimBool("isMoving", characterNetworkManager.isMoving.Value);
             characterNetworkManager.OnIsActiveChanged(false, characterNetworkManager.isActive.Value);
 
             isDead.OnValueChanged += characterNetworkManager.OnIsDeadChanged;
@@ -147,6 +153,47 @@ namespace LZ
         {
             
         }
+
+        #region ControllerState 参数代理
+
+        private bool IsControllerReady => controllerState != null && controllerState.IsValid();
+
+        public void SetAnimBool(string name, bool value)
+        {
+            if (IsControllerReady)
+                controllerState.Playable.SetBool(name, value);
+        }
+
+        public void SetAnimFloat(string name, float value)
+        {
+            if (IsControllerReady)
+                controllerState.Playable.SetFloat(name, value);
+        }
+
+        public void SetAnimFloat(int id, float value, float dampTime, float deltaTime)
+        {
+            if (!IsControllerReady) return;
+            float current = controllerState.Playable.GetFloat(id);
+            float damped = Mathf.Lerp(current, value, dampTime > 0f ? 1f - Mathf.Exp(-deltaTime / dampTime) : 1f);
+            controllerState.Playable.SetFloat(id, damped);
+        }
+
+        public void SetAnimFloat(string name, float value, float dampTime, float deltaTime)
+        {
+            if (!IsControllerReady) return;
+            float current = controllerState.Playable.GetFloat(name);
+            float damped = Mathf.Lerp(current, value, dampTime > 0f ? 1f - Mathf.Exp(-deltaTime / dampTime) : 1f);
+            controllerState.Playable.SetFloat(name, damped);
+        }
+
+        public float GetAnimFloat(string name)
+        {
+            if (IsControllerReady)
+                return controllerState.Playable.GetFloat(name);
+            return 0f;
+        }
+
+        #endregion
 
         protected virtual void IgnoreMyOwnColliders()
         {

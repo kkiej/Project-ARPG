@@ -4459,6 +4459,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: -2552413861452538327}
+    - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: -4556187158404802337}
     - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
@@ -4601,6 +4605,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1815010402397137225}
   m_SourcePrefab: {fileID: 100100000, guid: 3f581b8f5dacdc54b8e405d2157e1d8b, type: 3}
+--- !u!95 &638041259724511147 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95001415476118014, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
+    type: 3}
+  m_PrefabInstance: {fileID: 687718605654136405}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &685720303394535247 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4343715181863194, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
@@ -4918,6 +4928,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 687718605654136405}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &-2552413861452538327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688345335358352327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kybernetik.Animancer::Animancer.AnimancerComponent
+  _Animator: {fileID: 638041259724511147}
+  _Transitions: {fileID: 0}
+  _ActionOnDisable: 0
 --- !u!114 &-4556187158404802337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5176,6 +5201,7 @@ MonoBehaviour:
     m_InternalValue: 0
   characterController: {fileID: 0}
   animator: {fileID: 0}
+  animancer: {fileID: 0}
   characterNetworkManager: {fileID: 0}
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}
@@ -5208,6 +5234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  lastAttackClipPerformed: {fileID: 0}
   lastAttackAnimationPerformed: 
   previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
@@ -5446,6 +5473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78529eea569e4684be3d7d84e163db6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animData: {fileID: 11400000, guid: b5e955bf16be9674681c57e88defbc1d, type: 2}
   applyRootMotion: 0
   lastDamageAnimationPlayed: 
   hit_Forward_Ping_01: Hit_Forward_Ping_01
@@ -5484,6 +5512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f88081b8bec49a99cf639431302eeb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
   damageGrunts:
   - {fileID: 8300000, guid: 5319d335f47c30c45a098c3b7207d360, type: 3}
   - {fileID: 8300000, guid: a118b77559d9f764cbc3b30b4be64c29, type: 3}
@@ -5603,6 +5632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347a70890aa45b84b85e5a61ef7a3a61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentInteractableActions: []
 --- !u!143 &-5654157579870011388
 CharacterController:
   m_ObjectHideFlags: 0

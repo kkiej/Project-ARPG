@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace LZ
@@ -12,6 +12,11 @@ namespace LZ
             base.Awake();
 
             player = GetComponent<PlayerManager>();
+        }
+
+        protected override bool GetIsTwoHanding()
+        {
+            return player != null && player.playerNetworkManager.isTwoHandingWeapon.Value;
         }
 
         private void OnAnimatorMove()

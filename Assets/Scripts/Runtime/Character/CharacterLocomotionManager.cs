@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -72,7 +72,7 @@ namespace LZ
                 }
 
                 inAirTimer += Time.deltaTime;
-                character.animator.SetFloat("InAirTimer", inAirTimer);
+                character.SetAnimFloat("InAirTimer", inAirTimer);
                 yVelocity.y += gravityForce * Time.deltaTime;
             }
             

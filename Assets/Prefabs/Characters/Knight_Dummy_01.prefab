@@ -2691,6 +2691,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4243580124596978116}
   - component: {fileID: 3253081840201800260}
+  - component: {fileID: -5287894481919912232}
   - component: {fileID: 3292839509563473029}
   - component: {fileID: 8241910983610716397}
   - component: {fileID: 8730930324850780075}
@@ -2755,6 +2756,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-5287894481919912232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9116315882318417191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Kybernetik.Animancer::Animancer.AnimancerComponent
+  _Animator: {fileID: 3253081840201800260}
+  _Transitions: {fileID: 0}
+  _ActionOnDisable: 0
 --- !u!114 &3292839509563473029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2833,6 +2849,8 @@ MonoBehaviour:
   isRipostable:
     m_InternalValue: 0
   isBeingCriticallyDamaged:
+    m_InternalValue: 0
+  isRolling:
     m_InternalValue: 0
   currentHealth:
     m_InternalValue: 400
@@ -3034,6 +3052,8 @@ MonoBehaviour:
   slopeSlideSpeed: -11
   slopeSlideSpeedMultiplier: 3
   slipperySurfaceMaxAngle: 15
+  characterSlideOffHeadCollisionMaxDistanceCheck: 5
+  characterCollisionCheckSphereMultiplier: 1.5
 --- !u!114 &4666341949266627338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3099,6 +3119,7 @@ MonoBehaviour:
     m_InternalValue: 0
   characterController: {fileID: 0}
   animator: {fileID: 0}
+  animancer: {fileID: 0}
   characterNetworkManager: {fileID: 0}
   characterEffectsManager: {fileID: 0}
   characterAnimatorManager: {fileID: 0}
@@ -3109,6 +3130,7 @@ MonoBehaviour:
   characterUIManager: {fileID: 0}
   characterGroup: 1
   characterName: 
+  aiCharacterSoundFXManager: {fileID: 0}
   aiCharacterNetworkManager: {fileID: 0}
   aiCharacterCombatManager: {fileID: 0}
   aiCharacterLocomotionManager: {fileID: 0}
@@ -3263,6 +3285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05a6ab9eb62caff4e86c2eb3ff9a5897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LZ.AICharacterSoundFXManager
+  audioSource: {fileID: 0}
   damageGrunts:
   - {fileID: 8300000, guid: e6d7943c246702d409020f0fe4bc5804, type: 3}
   - {fileID: 8300000, guid: abf3ba190bb024d43a9966a264f95e83, type: 3}
@@ -3279,6 +3302,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8178e08babc25d44abbaca9d80f967be, type: 3}
   - {fileID: 8300000, guid: ff48f3287883dd64489fef13ac783e2b, type: 3}
   - {fileID: 8300000, guid: 953a8d82656aa35468e5868ca23f9be1, type: 3}
+  characterDialogueID: 0
+  interactableDialogueCollider: {fileID: 0}
+  currentDialogue: {fileID: 0}
+  interactableDialogueObject: {fileID: 0}
+  dialogueIsPlaying: 0
 --- !u!54 &3413141271688343265
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -284,7 +284,7 @@ namespace LZ
 
         public void OnIsHoldingArrowChanged(bool oldStatus, bool newStatus)
         {
-            player.animator.SetBool("isHoldingArrow", isHoldingArrow.Value);
+            player.SetAnimBool("isHoldingArrow", isHoldingArrow.Value);
         }
 
         public void OnIsAimingChanged(bool oldStatus, bool newStatus)
@@ -310,12 +310,12 @@ namespace LZ
 
         public void OnIsChargingRightSpellChanged(bool oldStatus, bool newStatus)
         {
-            player.animator.SetBool("isChargingRightSpell", isChargingRightSpell.Value);
+            player.SetAnimBool("isChargingRightSpell", isChargingRightSpell.Value);
         }
 
         public void OnIsChargingLeftSpellChanged(bool oldStatus, bool newStatus)
         {
-            player.animator.SetBool("isChargingLeftSpell", isChargingLeftSpell.Value);
+            player.SetAnimBool("isChargingLeftSpell", isChargingLeftSpell.Value);
         }
 
         public override void OnIsBlockingChanged(bool oldStatus, bool newStatus)
@@ -352,7 +352,7 @@ namespace LZ
                 player.playerEffectsManager.AddStaticEffect(twoHandEffect);
             }
 
-            player.animator.SetBool("isTwoHandingWeapon", isTwoHandingWeapon.Value);
+            player.SetAnimBool("isTwoHandingWeapon", isTwoHandingWeapon.Value);
         }
 
         public void OnIsTwoHandingRightWeaponChanged(bool oldStatus, bool newStatus)
@@ -387,7 +387,7 @@ namespace LZ
 
         public void OnIsChuggingChanged(bool oldStatus, bool newStatus)
         {
-            player.animator.SetBool("isChuggingFlask", isChugging.Value);
+            player.SetAnimBool("isChuggingFlask", isChugging.Value);
         }
 
         public void OnHeadEquipmentChanged(int oldValue, int newValue)
