@@ -38,7 +38,12 @@ namespace LZ
             player.transform.rotation = targetRotation;
 
             AllowPlayerThroughFogWallCollidersServerRpc(player.NetworkObjectId);
-            player.playerAnimatorManager.PlayTargetActionAnimation("Pass_Through_Fog_01", true);
+
+            var ad = player.playerAnimatorManager.animData;
+            if (ad != null && ad.passThroughFog != null)
+                player.playerAnimatorManager.PlayTargetActionAnimation(ad.passThroughFog, true);
+            else
+                player.playerAnimatorManager.PlayTargetActionAnimation("Pass_Through_Fog_01", true);
         }
         
         public override void OnNetworkSpawn()

@@ -10,6 +10,7 @@ namespace LZ
         [SerializeField] protected GameObject itemModel;
 
         [Header("Animation")]
+        [SerializeField] protected AnimationClip useItemClip;
         [SerializeField] protected string useItemAnimation;
 
         //  NOT ALL QUICK SLOT ITEMS ARE CONSUMABLES
@@ -22,7 +23,10 @@ namespace LZ
             if (!CanIUseThisItem(player))
                 return;
 
-            player.playerAnimatorManager.PlayTargetActionAnimation(useItemAnimation, true);
+            if (useItemClip != null)
+                player.playerAnimatorManager.PlayTargetActionAnimation(useItemClip, true);
+            else
+                player.playerAnimatorManager.PlayTargetActionAnimation(useItemAnimation, true);
         }
 
         public virtual void SuccessfullyUseItem(PlayerManager player)

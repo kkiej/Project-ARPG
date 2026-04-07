@@ -71,26 +71,12 @@ namespace LZ
 
         public override void PivotTowardsTarget(AICharacterManager aiCharacter)
         {
-            //  PLAY A PIVOT ANIMATION DEPENDING ON VIEWABLE ANGLE OF TARGET
             if (aiCharacter.isPerformingAction)
                 return;
 
-            if (viewableAngle >= 61 && viewableAngle <= 110)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_90", true);
-            }
-            else if (viewableAngle <= -61 && viewableAngle >= -110)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_90", true);
-            }
-            else if (viewableAngle >= 146 && viewableAngle <= 180)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_180", true);
-            }
-            else if (viewableAngle <= -146 && viewableAngle >= -180)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_180", true);
-            }
+            var clip = GetTurnClipForAngle(aiCharacter, viewableAngle);
+            if (clip != null)
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(clip, true);
         }
     }
 }

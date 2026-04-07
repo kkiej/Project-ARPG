@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace LZ
 {
     public class AICharacterAnimatorManager : CharacterAnimatorManager
     {
+        protected override bool useControllerState => false;
+
         private AICharacterManager aiCharacter;
 
         protected override void Awake()

@@ -168,8 +168,8 @@ namespace LZ
             playerPerformingAction.playerAnimatorManager.PlayJumpAttackSequenceAnimation(
                 weapon, AttackType.LightJumpingAttack01,
                 weapon.weaponAnimationSet.th_lightJumpAttack01,
-                animData != null ? animData.jumpIdle : null,
-                animData != null ? animData.jumpEnd : null,
+                animData != null ? (animData.jumpIdle2H ?? animData.jumpIdle) : null,
+                animData != null ? (animData.jumpEnd2H ?? animData.jumpEnd) : null,
                 true);
         }
     }

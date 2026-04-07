@@ -30,7 +30,7 @@ namespace LZ
         [Header("Character Group")]
         public CharacterGroup characterGroup;
 
-        // AnimatorController 在 Animancer 中的状态，由 CharacterAnimatorManager 初始化
+        // AnimatorController 在 Animancer 中的状态（仅 AI 角色使用，Player 已完全切换到 Animancer clip）
         internal ControllerState controllerState;
 
         protected virtual void Awake()
@@ -56,7 +56,6 @@ namespace LZ
 
         protected virtual void Update()
         {
-            SetAnimBool("isGrounded", characterLocomotionManager.isGrounded);
             
             // 如果这个角色是由我们控制的，那么将其网络位置赋值为我们变换的位置
             if (IsOwner)
@@ -105,7 +104,6 @@ namespace LZ
         {
             base.OnNetworkSpawn();
 
-            SetAnimBool("isMoving", characterNetworkManager.isMoving.Value);
             characterNetworkManager.OnIsActiveChanged(false, characterNetworkManager.isActive.Value);
 
             isDead.OnValueChanged += characterNetworkManager.OnIsDeadChanged;
@@ -136,7 +134,11 @@ namespace LZ
 
                 if (!manuallySelectDeathAnimation && !characterNetworkManager.isBeingCriticallyDamaged.Value)
                 {
-                    characterAnimatorManager.PlayTargetActionAnimation("Dead_01", true);
+                    var ad = characterAnimatorManager.animData;
+                    if (ad != null && ad.dead != null)
+                        characterAnimatorManager.PlayTargetActionAnimation(ad.dead, true);
+                    else
+                        Debug.LogWarning($"{name}: dead clip 未配置", this);
                 }
             }
             

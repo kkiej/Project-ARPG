@@ -231,14 +231,12 @@ namespace LZ
         }
 
         /// <summary>
-        /// 优先从 AnimationClipRegistry 查找 clip 直接通过 Animancer 播放；
-        /// 找不到则 fallback 到 ControllerState 内的状态名。
+        /// 优先从 per-character clip 字典查找，其次 AnimationClipRegistry，
+        /// 最后 fallback 到 ControllerState（仅 AI 仍需要）。
         /// </summary>
         private void PlayAnimationByName(string animationID, bool instant)
         {
-            var clip = AnimationClipRegistry.Instance != null
-                ? AnimationClipRegistry.Instance.GetClipByName(animationID)
-                : null;
+            var clip = character.characterAnimatorManager.LookupClipByName(animationID);
 
             if (clip != null)
             {
@@ -251,6 +249,64 @@ namespace LZ
                 else
                     character.characterAnimatorManager.CrossFadeOnController(animationID);
             }
+        }
+
+        //  UPPERBODY LAYER ANIMATION
+        [ServerRpc]
+        public void NotifyTheServerOfUpperbodyAnimationServerRpc(ulong clientID, string animationID)
+        {
+            if (IsServer)
+            {
+                PlayUpperbodyAnimationForAllClientsClientRpc(clientID, animationID);
+            }
+        }
+
+        [ClientRpc]
+        public void PlayUpperbodyAnimationForAllClientsClientRpc(ulong clientID, string animationID)
+        {
+            if (clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformUpperbodyAnimationFromServer(animationID);
+            }
+        }
+
+        private void PerformUpperbodyAnimationFromServer(string animationID)
+        {
+            var clip = character.characterAnimatorManager.LookupClipByName(animationID);
+
+            if (clip != null)
+                character.characterAnimatorManager.PlayUpperbodyClipOnRemote(clip, 0.2f);
+            else
+                character.characterAnimatorManager.CrossFadeOnController(animationID);
+        }
+
+        //  PING DAMAGE LAYER ANIMATION
+        [ServerRpc]
+        public void NotifyTheServerOfPingDamageAnimationServerRpc(ulong clientID, string animationID)
+        {
+            if (IsServer)
+            {
+                PlayPingDamageAnimationForAllClientsClientRpc(clientID, animationID);
+            }
+        }
+
+        [ClientRpc]
+        public void PlayPingDamageAnimationForAllClientsClientRpc(ulong clientID, string animationID)
+        {
+            if (clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformPingDamageAnimationFromServer(animationID);
+            }
+        }
+
+        private void PerformPingDamageAnimationFromServer(string animationID)
+        {
+            var clip = character.characterAnimatorManager.LookupClipByName(animationID);
+
+            if (clip != null)
+                character.characterAnimatorManager.PlayPingDamageClipOnRemote(clip, 0.2f);
+            else
+                character.characterAnimatorManager.CrossFadeOnController(animationID);
         }
 
         //  DAMAGE
@@ -398,7 +454,13 @@ namespace LZ
 
             damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
             if (damagedCharacter.IsOwner)
-                damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
+            {
+                var ad = damagedCharacter.characterAnimatorManager.animData;
+                if (ad != null && ad.riposted != null)
+                    damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.riposted, true);
+                else
+                    damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
+            }
 
             // MOVE THE ENEMY TO THE PROPER RIPOSTE POSITION
             StartCoroutine(damagedCharacter.characterCombatManager.ForceMoveEnemyCharacterToRipsotePosition
@@ -482,7 +544,13 @@ namespace LZ
             damageEffect.characterCausingDamage = characterCausingDamage;
 
             damagedCharacter.characterEffectsManager.ProcessInstantEffect(damageEffect);
-            damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
+            {
+                var ad = damagedCharacter.characterAnimatorManager.animData;
+                if (ad != null && ad.backstabbed != null)
+                    damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.backstabbed, true);
+                else
+                    damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
+            }
 
             // MOVE THE BACKSTAB TARGET TO THE POSITION OF THE BACK STABBER
             StartCoroutine(characterCausingDamage.characterCombatManager.ForceMoveEnemyCharacterToBackstabPosition
@@ -516,7 +584,11 @@ namespace LZ
 
             if (parriedCharacter.IsOwner)
             {
-                parriedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parried_01", true);
+                var ad = parriedCharacter.characterAnimatorManager.animData;
+                if (ad != null && ad.parried != null)
+                    parriedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.parried, true);
+                else
+                    parriedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parried_01", true);
             }
         }
     }

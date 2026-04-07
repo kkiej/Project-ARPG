@@ -70,13 +70,20 @@ namespace LZ
 
                 if (projectileItem.currentAmmoAmount <= 0)
                 {
-                    //  PLAY A SILLY ANIMATION HERE THAT INDICATES THEY ARE OUT OF AMMO
-                    playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Out_Of_Ammo_01", true);
+                    var ad = playerPerformingAction.playerAnimatorManager.animData;
+                    if (ad != null && ad.outOfAmmo != null)
+                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation(ad.outOfAmmo, true);
+                    else
+                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Out_Of_Ammo_01", true);
                     return;
                 }
 
                 playerPerformingAction.playerCombatManager.currentProjectileBeingUsed = projectileSlot;
-                playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Bow_Draw_01", true);
+                var animData = playerPerformingAction.playerAnimatorManager.animData;
+                if (animData != null && animData.bowDraw != null)
+                    playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation(animData.bowDraw, true);
+                else
+                    playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Bow_Draw_01", true);
                 playerPerformingAction.playerNetworkManager.NotifyServerOfDrawnProjectileServerRpc(projectileItem.itemID);
             }
         }

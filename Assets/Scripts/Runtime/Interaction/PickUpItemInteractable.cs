@@ -105,7 +105,11 @@ namespace LZ
             player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.instance.pickUpItemSFX);
 
             // 2. PLAY AN ANIMATION
-            player.playerAnimatorManager.PlayTargetActionAnimation("Pick_Up_Item_01", true);
+            var ad = player.playerAnimatorManager.animData;
+            if (ad != null && ad.pickUpItem != null)
+                player.playerAnimatorManager.PlayTargetActionAnimation(ad.pickUpItem, true);
+            else
+                player.playerAnimatorManager.PlayTargetActionAnimation("Pick_Up_Item_01", true);
 
             // 2. ADD ITEM TO INVENTORY
             player.playerInventoryManager.AddItemToInventory(item);

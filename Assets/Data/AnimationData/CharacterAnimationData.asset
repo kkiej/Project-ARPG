@@ -19,6 +19,14 @@ MonoBehaviour:
   jumpIdle: {fileID: 5252732915974851826, guid: 3269750ba5972884288ef4b83b4c9dc3,
     type: 3}
   jumpEnd: {fileID: 800205213175602759, guid: 3d4fc7495569b2a4caeb4f1dadcd1a22, type: 3}
+  jumpStart2H: {fileID: -2363476121145191689, guid: bd334e84440b10b4e935a64164d7601c,
+    type: 3}
+  jumpLift2H: {fileID: 5305798061947213112, guid: 68ecfb431eaf7254880a15e5b24c093b,
+    type: 3}
+  jumpIdle2H: {fileID: -2964549410791991528, guid: 3f49e17024e35474c9004d830afedb0c,
+    type: 3}
+  jumpEnd2H: {fileID: 540012376106351485, guid: f33f4a1f12ee83442ba4e8bc17ddac06,
+    type: 3}
   rollForward: {fileID: -7510004476302381493, guid: 316244d2030138147995d0a5460b0f95,
     type: 3}
   backstep: {fileID: -5558953238165532788, guid: e55ef2f4572af804f9745df51162dfe7,
@@ -132,6 +140,8 @@ MonoBehaviour:
     type: 3}
   spellOffFullRelease: {fileID: 4699992508429110885, guid: 3be2dd7a02cf0a849bac83c477b357d5,
     type: 3}
+  upperbodyMask: {fileID: 31900000, guid: 2d5b8204a6966ed4c976e32edc753ce0, type: 2}
+  pingDamageMask: {fileID: 31900000, guid: cf1ded12b1130114d98792f309da8fcc, type: 2}
   idle1H: {fileID: -81773759949406527, guid: 043a9bbfd7eba2b4ea869d7b06f60124, type: 3}
   locomotion1H:
     _FadeDuration: 0.25
@@ -181,7 +191,7 @@ MonoBehaviour:
     - {x: -1, y: 0}
     - {x: 0, y: 2}
     _DefaultParameter: {x: 0, y: 0}
-    _Type: 0
+    _Type: 1
     _ParameterNameX: {fileID: 0}
     _ParameterNameY: {fileID: 0}
   idle2H: {fileID: 8964600445696990181, guid: dc61eea41d3ebae40b48d1a626e54743, type: 3}
@@ -233,7 +243,7 @@ MonoBehaviour:
     - {x: -1, y: 0}
     - {x: 0, y: 2}
     _DefaultParameter: {x: 0, y: 0}
-    _Type: 0
+    _Type: 1
     _ParameterNameX: {fileID: 0}
     _ParameterNameY: {fileID: 0}
   blockingIdle1H: {fileID: 868872117000793397, guid: a5c8301bc2ba6aa44aecadebcb9c786a,
@@ -245,12 +255,48 @@ MonoBehaviour:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Animations: []
+    _Animations:
+    - {fileID: -7711208984772189803, guid: 89702d307aeef3f49ab1fcebca61c609, type: 3}
+    - {fileID: -7711208984772189803, guid: 89702d307aeef3f49ab1fcebca61c609, type: 3}
+    - {fileID: 5475579223948765360, guid: 491a059584edaa34b838d276a747b22a, type: 3}
+    - {fileID: 7123184558259744260, guid: 63535d2f2fd3c864781f66a031490dc2, type: 3}
+    - {fileID: -4949174913454021448, guid: 237df6b9c9d71c04988319f49c8441b8, type: 3}
+    - {fileID: 4711222363677307409, guid: 31ff375ba9b12114e98e47973d1021d4, type: 3}
+    - {fileID: -1415162407867310723, guid: 3f21240075ec64a4690da7685e668f3b, type: 3}
+    - {fileID: 8935784584526750980, guid: b487eac8e878f01428175654d8705946, type: 3}
+    - {fileID: -2458966347351686219, guid: 101e4fcb6d93e0e4595d072fdb835fb2, type: 3}
+    - {fileID: -6001421327331800250, guid: 600ea3686a35ece4a990b82ea3569f40, type: 3}
+    - {fileID: -8307596351160910394, guid: e47feb617e0b1ad4c8f2ee8ce650bed7, type: 3}
+    - {fileID: 3478444226165039872, guid: daea02018284e3547acfe3c855e1a1f4, type: 3}
+    - {fileID: -1019992755080785803, guid: 0764d817d93c1e04dbef95299073bbf2, type: 3}
+    - {fileID: 7482497104245302770, guid: 319e78f1437871b41873ee0fdf60cf5a, type: 3}
+    - {fileID: 9213885156265002330, guid: 17a64220e8e5ae34c9be0b67071df03b, type: 3}
+    - {fileID: 6938590584723732762, guid: 4779c566ec1d6b04a952bb1f2a2d5e02, type: 3}
+    - {fileID: -287527551360259413, guid: acdf5a5ac9c3d0344acb83ec76eec547, type: 3}
+    - {fileID: -5523166486226436846, guid: 43e8e5c76388a5648be748ec63a61f5b, type: 3}
     _Speeds: []
     _SynchronizeChildren: 
-    _Thresholds: []
+    _Thresholds:
+    - {x: 0, y: 0}
+    - {x: 0, y: 0.5}
+    - {x: 0.5, y: 0.5}
+    - {x: -0.5, y: 0.5}
+    - {x: 0, y: -0.5}
+    - {x: 0.5, y: -0.5}
+    - {x: -0.5, y: -0.5}
+    - {x: 0.5, y: 0}
+    - {x: -0.5, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: -1, y: 1}
+    - {x: 0, y: -1}
+    - {x: 1, y: -1}
+    - {x: -1, y: -1}
+    - {x: 1, y: 0}
+    - {x: -1, y: 0}
+    - {x: 0, y: 2}
     _DefaultParameter: {x: 0, y: 0}
-    _Type: 0
+    _Type: 1
     _ParameterNameX: {fileID: 0}
     _ParameterNameY: {fileID: 0}
   blockingIdle2H: {fileID: -7809700964517766319, guid: c9c36d95ba469324583eb44769249b09,
@@ -262,12 +308,48 @@ MonoBehaviour:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Animations: []
+    _Animations:
+    - {fileID: 2020037054592537271, guid: d614c48b4f0fed3459ef942f59262369, type: 3}
+    - {fileID: 2020037054592537271, guid: d614c48b4f0fed3459ef942f59262369, type: 3}
+    - {fileID: 4571218463301812019, guid: b4959e76486f35c4ead42eba50a0664b, type: 3}
+    - {fileID: -5802607759334906000, guid: e54b444d921feba4f9f895ad76586cce, type: 3}
+    - {fileID: -4351125541376634012, guid: 92845c80c13c8b3409cb179ee0adeccb, type: 3}
+    - {fileID: 861696381704339059, guid: 592541730c32b55469c4e34d575a0f64, type: 3}
+    - {fileID: -3429807120541365850, guid: 05af1a246046dff4d9ad23d3f81cf2ed, type: 3}
+    - {fileID: -451887393785880657, guid: cbd3298850f4b5343af135427900b870, type: 3}
+    - {fileID: 8039530570935195308, guid: 0e246be18db39054ab68c7e5d27161ea, type: 3}
+    - {fileID: -8525918490743824186, guid: 750e16cfed5385a40ad420ecd058e99a, type: 3}
+    - {fileID: 5087755517155756275, guid: 2e4b44cc46ef9394e8a2beacd608c6d2, type: 3}
+    - {fileID: -6859858057641433660, guid: 5e032c8a17978ed4b92b5e632c62abaf, type: 3}
+    - {fileID: 5493436521559776136, guid: 6b85ecc933ccd09478de5ae774b20b43, type: 3}
+    - {fileID: -5307843936783577037, guid: a2db869f60fdd3847971e90ce7ec998f, type: 3}
+    - {fileID: -6350139838790121308, guid: 412d8ce49202d6f4595e93abd7b8ac85, type: 3}
+    - {fileID: -8530428423255108791, guid: d621149f303d21f428bc59beab10ac27, type: 3}
+    - {fileID: 3994333169409000898, guid: 7f83a1c550802144daa8bd0185b7b77f, type: 3}
+    - {fileID: -3353737590023216956, guid: 38706a5e8522eb049b5bcdb12c428241, type: 3}
     _Speeds: []
     _SynchronizeChildren: 
-    _Thresholds: []
+    _Thresholds:
+    - {x: 0, y: 0}
+    - {x: 0, y: 0.5}
+    - {x: 0.5, y: 0.5}
+    - {x: -0.5, y: 0.5}
+    - {x: 0, y: -0.5}
+    - {x: 0.5, y: -0.5}
+    - {x: -0.5, y: -0.5}
+    - {x: 0.5, y: 0}
+    - {x: -0.5, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: -1, y: 1}
+    - {x: 0, y: -1}
+    - {x: 1, y: -1}
+    - {x: -1, y: -1}
+    - {x: 1, y: 0}
+    - {x: -1, y: 0}
+    - {x: 0, y: 2}
     _DefaultParameter: {x: 0, y: 0}
-    _Type: 0
+    _Type: 1
     _ParameterNameX: {fileID: 0}
     _ParameterNameY: {fileID: 0}
   references:

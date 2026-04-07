@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace LZ
 {
@@ -80,7 +80,11 @@ namespace LZ
             {
                 charactersDamaged.Add(damageTarget);
                 damageTarget.characterNetworkManager.NotifyServerOfParryServerRpc(characterCausingDamage.NetworkObjectId);
-                damageTarget.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parry_Land_01", true);
+                var ad = damageTarget.characterAnimatorManager.animData;
+                if (ad != null && ad.parryLand != null)
+                    damageTarget.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.parryLand, true);
+                else
+                    damageTarget.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parry_Land_01", true);
             }
         }
 

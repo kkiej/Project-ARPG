@@ -25,6 +25,8 @@ namespace LZ
         //  FULL CHARGE VERSION OF FX (TO DO)
 
         [Header("Animations")]
+        [SerializeField] protected AnimationClip mainHandSpellClip;
+        [SerializeField] protected AnimationClip offHandSpellClip;
         [SerializeField] protected string mainHandSpellAnimation;
         [SerializeField] protected string offHandSpellAnimation;
 

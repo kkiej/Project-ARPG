@@ -84,7 +84,7 @@ namespace LZ
             if (aiCharacter.isDead.Value)
             {
                 aiCharacter.isDead.Value = false;
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Empty", false, false, true, true, true, true);
+                aiCharacter.characterAnimatorManager.ReturnToController(0f);
                 aiCharacter.currentState.SwitchState(aiCharacter, aiCharacter.idle);
             }
 

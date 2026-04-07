@@ -16,11 +16,17 @@ namespace LZ
 
             if (player.playerNetworkManager.isUsingRightHand.Value)
             {
-                player.playerAnimatorManager.PlayTargetActionAnimation(mainHandSpellAnimation, true);
+                if (mainHandSpellClip != null)
+                    player.playerAnimatorManager.PlayTargetActionAnimation(mainHandSpellClip, true);
+                else
+                    player.playerAnimatorManager.PlayTargetActionAnimation(mainHandSpellAnimation, true);
             }
             else
             {
-                player.playerAnimatorManager.PlayTargetActionAnimation(offHandSpellAnimation, true);
+                if (offHandSpellClip != null)
+                    player.playerAnimatorManager.PlayTargetActionAnimation(offHandSpellClip, true);
+                else
+                    player.playerAnimatorManager.PlayTargetActionAnimation(offHandSpellAnimation, true);
             }
         }
 

@@ -8,7 +8,9 @@ namespace LZ
     {
         PlayerManager player;
 
-        // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
+        // Flask 的 chugging 逻辑已迁移到 PlayerAnimatorManager.FlaskSequenceCoroutine()。
+        // 此 SMB 仅作为 ControllerState 内部状态机的遗留 fallback。
+        // 当 Animancer Flask 序列处于激活状态时，此 SMB 不会触发。
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (player == null)
@@ -17,55 +19,6 @@ namespace LZ
             if (player == null)
                 return;
 
-            //  IF WE ARE OUT OF FLASKS PLAY THE EMPTY ANIMATION & HIDE WEAPONS (OWNER ONLY)
-            if (player.playerNetworkManager.isChugging.Value && player.IsOwner)
-            {
-                FlaskItem currentFlask = player.playerInventoryManager.currentQuickSlotItem as FlaskItem;
-
-                if (currentFlask.healthFlask)
-                {
-                    if (player.playerNetworkManager.remainingHealthFlasks.Value <= 0)
-                    {
-                        player.playerAnimatorManager.PlayTargetActionAnimation(currentFlask.emptyFlaskAnimation, false, false, true, true, false);
-                        player.playerNetworkManager.HideWeaponsServerRpc();
-                    }
-                }
-                else
-                {
-                    if (player.playerNetworkManager.remainingFocusPointsFlasks.Value <= 0)
-                    {
-                        player.playerAnimatorManager.PlayTargetActionAnimation(currentFlask.emptyFlaskAnimation, false, false, true, true, false);
-                        player.playerNetworkManager.HideWeaponsServerRpc();
-                    }
-                }
-            }
-
-            //  IF WE ARE OUT OF FLASKS, INSTANTIATE THE EMPTY FLASK
-            if (player.playerNetworkManager.isChugging.Value)
-            {
-                FlaskItem currentFlask = player.playerInventoryManager.currentQuickSlotItem as FlaskItem;
-
-                if (currentFlask.healthFlask)
-                {
-                    if (player.playerNetworkManager.remainingHealthFlasks.Value <= 0)
-                    {
-                        Destroy(player.playerEffectsManager.activeQuickSlotItemFX);
-                        GameObject emptyFlask = Instantiate(currentFlask.emptyFlaskItem, player.playerEquipmentManager.rightHandWeaponSlot.transform);
-                        player.playerEffectsManager.activeQuickSlotItemFX = emptyFlask;
-                    }
-                }
-                else
-                {
-                    if (player.playerNetworkManager.remainingFocusPointsFlasks.Value <= 0)
-                    {
-                        Destroy(player.playerEffectsManager.activeQuickSlotItemFX);
-                        GameObject emptyFlask = Instantiate(currentFlask.emptyFlaskItem, player.playerEquipmentManager.rightHandWeaponSlot.transform);
-                        player.playerEffectsManager.activeQuickSlotItemFX = emptyFlask;
-                    }
-                }
-            }
-
-            //  RESET IS CHUGGING
             if (player.IsOwner)
                 player.playerNetworkManager.isChugging.Value = false;
         }

@@ -12,11 +12,17 @@ namespace LZ
     [CreateAssetMenu(menuName = "Character/Character Animation Data")]
     public class CharacterAnimationData : ScriptableObject
     {
-        [Header("Jump Sequence")]
+        [Header("Jump Sequence — 1H")]
         public AnimationClip jumpStart;
         public AnimationClip jumpLift;
         public AnimationClip jumpIdle;
         public AnimationClip jumpEnd;
+
+        [Header("Jump Sequence — 2H")]
+        public AnimationClip jumpStart2H;
+        public AnimationClip jumpLift2H;
+        public AnimationClip jumpIdle2H;
+        public AnimationClip jumpEnd2H;
 
         [Header("Roll & Dodge")]
         public AnimationClip rollForward;
@@ -75,6 +81,23 @@ namespace LZ
         [Header("Death")]
         public AnimationClip dead;
 
+        [Header("Turn")]
+        public AnimationClip turnRight45;
+        public AnimationClip turnLeft45;
+        public AnimationClip turnRight90;
+        public AnimationClip turnLeft90;
+        public AnimationClip turnRight135;
+        public AnimationClip turnLeft135;
+        public AnimationClip turnRight180;
+        public AnimationClip turnLeft180;
+
+        [Header("Evade")]
+        public AnimationClip evade;
+
+        [Header("Sleep / Wake")]
+        public AnimationClip sleep;
+        public AnimationClip wake;
+
         [Header("Misc Actions")]
         public AnimationClip passThroughFog;
         public AnimationClip activateSiteOfGrace;
@@ -113,6 +136,10 @@ namespace LZ
         //  每个 Mixer 添加 18 个 child 并按 (Horizontal, Vertical) 配置 Threshold：
         //      (0,0) idle, (±0.5,0/±0.5) walk, (±1,0/±1) run, (0,2) sprint
         // ─────────────────────────────────────────────
+
+        [Header("Layer Masks")]
+        public AvatarMask upperbodyMask;
+        public AvatarMask pingDamageMask;
 
         [Header("Locomotion — 1H Idle")]
         public AnimationClip idle1H;

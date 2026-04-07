@@ -78,7 +78,11 @@ namespace LZ
             // 然后以值为“true”（表示已激活）重新添加
             WorldSaveGameManager.instance.currentCharacterData.sitesOfGrace.Add(siteOfGraceID, true);
 
-            player.playerAnimatorManager.PlayTargetActionAnimation("Activate_Site_Of_Grace_01", true);
+            var ad = player.playerAnimatorManager.animData;
+            if (ad != null && ad.activateSiteOfGrace != null)
+                player.playerAnimatorManager.PlayTargetActionAnimation(ad.activateSiteOfGrace, true);
+            else
+                player.playerAnimatorManager.PlayTargetActionAnimation("Activate_Site_Of_Grace_01", true);
             // 播放动画时若需隐藏武器模型，可在此设置
 
             PlayerUIManager.instance.playerUIPopUpManager.SendGraceRestoredPopUp("SITE OF GRACE RESTORED");

@@ -43,7 +43,7 @@ namespace LZ
 
                 if (player.IsOwner)
                 {
-                    player.playerAnimatorManager.PlayTargetActionAnimation(emptyFlaskAnimation, false, false, true, true, false);
+                    player.playerAnimatorManager.PlayFlaskEmptyAnimation();
                     player.playerNetworkManager.HideWeaponsServerRpc();
                 }
 
@@ -63,7 +63,7 @@ namespace LZ
 
                 if (player.IsOwner)
                 {
-                    player.playerAnimatorManager.PlayTargetActionAnimation(emptyFlaskAnimation, false, false, true, true, false);
+                    player.playerAnimatorManager.PlayFlaskEmptyAnimation();
                     player.playerNetworkManager.HideWeaponsServerRpc();
                 }
 
@@ -88,7 +88,7 @@ namespace LZ
 
             if (player.IsOwner)
             {
-                player.playerAnimatorManager.PlayTargetActionAnimation(useItemAnimation, false, false, true, true, false);
+                player.playerAnimatorManager.PlayFlaskSequence();
                 player.playerNetworkManager.HideWeaponsServerRpc();
             }
         }

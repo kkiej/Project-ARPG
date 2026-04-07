@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -297,8 +297,7 @@ namespace LZ
                 playerNetworkManager.currentStamina.Value = playerNetworkManager.maxStamina.Value;
                 // 恢复注视点
                 
-                // 播放重生特效
-                playerAnimatorManager.PlayTargetActionAnimation("Empty", false);
+                playerAnimatorManager.ReturnToController(0f);
             }
         }
 

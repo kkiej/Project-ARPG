@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -162,7 +162,11 @@ namespace LZ
                 if (ignoreStanceBreak)
                     return;
 
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly("Stance_Break_01", true);
+                var ad = aiCharacter.characterAnimatorManager.animData;
+                if (ad != null && ad.stanceBreak != null)
+                    aiCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.stanceBreak, true);
+                else
+                    Debug.LogWarning($"{aiCharacter.name}: stanceBreak clip 未配置", aiCharacter);
             }
         }
 
@@ -195,7 +199,13 @@ namespace LZ
             if (aiCharacter.idle.idleStateMode == IdleStateMode.Sleep && !aiCharacter.aiCharacterNetworkManager.isAwake.Value)
             {
                 aiCharacter.aiCharacterNetworkManager.isAwake.Value = true;
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value.ToString(), true);
+                var wakeClip = aiCharacter.characterAnimatorManager.LookupClipByName(
+                    aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value.ToString());
+                if (wakeClip != null)
+                    aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(wakeClip, true);
+                else
+                    aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(
+                        aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value.ToString(), true);
             }
 
             aiCharacter.investigateSound.positionOfSound = positionOfSound;
@@ -254,85 +264,43 @@ namespace LZ
 
         public virtual void PivotTowardsTarget(AICharacterManager aiCharacter)
         {
-            // 根据目标的可视角度播放枢轴动画
             if (aiCharacter.isPerformingAction)
                 return;
 
-            if (viewableAngle >= 20 && viewableAngle <= 60)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_45", true);
-            }
-            else if (viewableAngle <= -20 && viewableAngle >= -60)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_45", true);
-            }
-            else if (viewableAngle >= 61 && viewableAngle <= 110)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_90", true);
-            }
-            else if (viewableAngle <= -61 && viewableAngle >= -110)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_90", true);
-            }
-            if (viewableAngle >= 110 && viewableAngle <= 145)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_135", true);
-            }
-            else if (viewableAngle <= -110 && viewableAngle >= -145)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_135", true);
-            }
-            if (viewableAngle >= 146 && viewableAngle <= 180)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_180", true);
-            }
-            else if (viewableAngle <= -146 &&viewableAngle >= -180)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_180", true);
-            }
+            var clip = GetTurnClipForAngle(aiCharacter, viewableAngle);
+            if (clip != null)
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(clip, true);
         }
 
         public virtual void PivotTowardsPosition(AICharacterManager aiCharacter, Vector3 position)
         {
-            //  PLAY A PIVOT ANIMATION DEPENDING ON VIEWABLE ANGLE OF TARGET
             if (aiCharacter.isPerformingAction)
                 return;
 
             Vector3 targetsDirection = position - aiCharacter.transform.position;
-            float viewableAngle = WorldUtilityManager.Instance.GetAngleOfTarget(aiCharacter.transform, targetsDirection);
+            float angle = WorldUtilityManager.Instance.GetAngleOfTarget(aiCharacter.transform, targetsDirection);
 
-            if (viewableAngle >= 20 && viewableAngle <= 60)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_45", true);
-            }
-            else if (viewableAngle <= -20 && viewableAngle >= -60)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_45", true);
-            }
-            else if (viewableAngle >= 61 && viewableAngle <= 110)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_90", true);
-            }
-            else if (viewableAngle <= -61 && viewableAngle >= -110)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_90", true);
-            }
-            if (viewableAngle >= 110 && viewableAngle <= 145)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_135", true);
-            }
-            else if (viewableAngle <= -110 && viewableAngle >= -145)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_135", true);
-            }
-            if (viewableAngle >= 146 && viewableAngle <= 180)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Right_180", true);
-            }
-            else if (viewableAngle <= -146 &&viewableAngle >= -180)
-            {
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Turn_Left_180", true);
-            }
+            var clip = GetTurnClipForAngle(aiCharacter, angle);
+            if (clip != null)
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(clip, true);
+        }
+
+        /// <summary>根据视角偏差选择对应的转身 clip。</summary>
+        protected AnimationClip GetTurnClipForAngle(AICharacterManager aiCharacter, float angle)
+        {
+            var ad = aiCharacter.characterAnimatorManager.animData;
+            if (ad == null) return null;
+
+            if (angle >= 20 && angle <= 60)        return ad.turnRight45;
+            if (angle <= -20 && angle >= -60)      return ad.turnLeft45;
+            if (angle >= 61 && angle <= 110)       return ad.turnRight90;
+            if (angle <= -61 && angle >= -110)     return ad.turnLeft90;
+            if (angle >= 110 && angle <= 145)      return ad.turnRight135;
+            if (angle <= -110 && angle >= -145)    return ad.turnLeft135;
+            if (angle >= 146 && angle <= 180)      return ad.turnRight180;
+            if (angle <= -146 && angle >= -180)    return ad.turnLeft180;
+
+            return null;
         }
 
         public void RotateTowardsAgent(AICharacterManager aiCharacter)
@@ -415,7 +383,11 @@ namespace LZ
 
             //  METHOD #3, A.I CHOOSES A RANDOM DIRECTION AND ROLLS TOWARDS IT
             aiCharacter.aiCharacterNetworkManager.isInvulnerable.Value = true;
-            aiCharacter.characterAnimatorManager.PlayTargetActionAnimation("Evade_01", true);
+            var ad = aiCharacter.characterAnimatorManager.animData;
+            if (ad != null && ad.evade != null)
+                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(ad.evade, true);
+            else
+                Debug.LogWarning($"{aiCharacter.name}: evade clip 未配置", aiCharacter);
             Vector3 directionToDodge = Random.insideUnitSphere.normalized;
             directionToDodge.y = 0;
             //  OPTIONALLY USE A COROUTINE TO APPLY THIS ROTATION SMOOTHLY OVER 0.2-1 SECONDS SO IT DOESNT LOOK AS SHARP

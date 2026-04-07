@@ -18,12 +18,12 @@ namespace LZ
         public NetworkVariable<bool> hasBeenAwakened = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> hasBeenDefeated = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         [SerializeField] List<FogWallInteractable> fogWalls;
-        [SerializeField] string sleepAnimation;
-        [SerializeField] string awakenAnimation;
+        [SerializeField] AnimationClip sleepClip;
+        [SerializeField] AnimationClip awakenClip;
 
         [Header("Phase Shift")]
         public float minimumHealthPercentageToShift = 50f;
-        [SerializeField] string phaseShiftAnimation = "Phase_Change_01";
+        [SerializeField] AnimationClip phaseShiftClip;
         [SerializeField] CombatStanceState phase02CombatStanceState;
         
         [Header("States")]
@@ -93,9 +93,9 @@ namespace LZ
                 }
             }
 
-            if (!hasBeenAwakened.Value)
+            if (!hasBeenAwakened.Value && sleepClip != null)
             {
-                animator.Play(sleepAnimation);
+                characterAnimatorManager.PlayTargetActionAnimation(sleepClip, true, applyRootMotion: false);
             }
         }
 
@@ -141,7 +141,13 @@ namespace LZ
                 //  IF WE ARE NOT GROUNDED, PLAY AN AERIAL DEATH ANIMATION
 
                 if (!manuallySelectDeathAnimation)
-                    characterAnimatorManager.PlayTargetActionAnimation("Dead_01", true);
+                {
+                    var ad = characterAnimatorManager.animData;
+                    if (ad != null && ad.dead != null)
+                        characterAnimatorManager.PlayTargetActionAnimation(ad.dead, true);
+                    else
+                        Debug.LogWarning($"{name}: dead clip 未配置", this);
+                }
 
                 hasBeenDefeated.Value = true;
                 //  IF OUR SAVE DATA DOES NOT CONTAIN INFORMATION ON THIS BOSS, ADD IT NOW
@@ -175,8 +181,8 @@ namespace LZ
         {
             if (IsOwner)
             {
-                if (!hasBeenAwakened.Value)
-                    characterAnimatorManager.PlayTargetActionAnimation(awakenAnimation, true);
+                if (!hasBeenAwakened.Value && awakenClip != null)
+                    characterAnimatorManager.PlayTargetActionAnimation(awakenClip, true);
 
                 bossFightIsActive.Value = true;
                 hasBeenAwakened.Value = true;
@@ -221,7 +227,8 @@ namespace LZ
         
         public void PhaseShift()
         {
-            characterAnimatorManager.PlayTargetActionAnimation(phaseShiftAnimation, true);
+            if (phaseShiftClip != null)
+                characterAnimatorManager.PlayTargetActionAnimation(phaseShiftClip, true);
             combatStance = Instantiate(phase02CombatStanceState);
             currentState = combatStance;
         }

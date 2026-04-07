@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -287,13 +287,21 @@ namespace LZ
                 Quaternion playerRotation = Quaternion.LookRotation(rollDirection);
                 player.transform.rotation = playerRotation;
 
-                player.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_01", true, true);
+                var ad = player.playerAnimatorManager.animData;
+                if (ad != null && ad.rollForward != null)
+                    player.playerAnimatorManager.PlayTargetActionAnimation(ad.rollForward, true, true);
+                else
+                    player.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_01", true, true);
                 player.playerLocomotionManager.isRolling = true;
             }
             // 如果我们处于静止状态，我们执行一个后撤步
             else
             {
-                player.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
+                var ad = player.playerAnimatorManager.animData;
+                if (ad != null && ad.backstep != null)
+                    player.playerAnimatorManager.PlayTargetActionAnimation(ad.backstep, true, true);
+                else
+                    player.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
             }
 
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
@@ -322,8 +330,11 @@ namespace LZ
             if (!player.characterLocomotionManager.isGrounded)
                 return;
             
-            // To Do : 如果双持武器，播放双持条约动画，否则播放单手动画
-            player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_01", false);
+            var ad = player.playerAnimatorManager.animData;
+            if (ad != null && ad.jumpStart != null)
+                player.playerAnimatorManager.PlayJumpSequence();
+            else
+                player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_01", false);
 
             player.playerNetworkManager.isJumping.Value = true;
 

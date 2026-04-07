@@ -1,14 +1,44 @@
+using System;
 using UnityEngine;
 
 namespace LZ
 {
     /// <summary>
+    /// 原始 clip → 替换 clip 的映射对。
+    /// original 由 Sync 按钮自动填入，用户只需设置 replacement。
+    /// replacement 留空 = 使用默认 clip。
+    /// </summary>
+    [Serializable]
+    public struct ClipOverride
+    {
+        public AnimationClip original;
+        public AnimationClip replacement;
+    }
+
+    /// <summary>
     /// 每把武器一个，替代 AnimatorOverrideController。
-    /// 保存该武器所有攻击动画的 AnimationClip 引用。
+    /// 保存该武器所有攻击动画的 AnimationClip 引用，
+    /// 以及可选的移动 clip 覆盖。
+    /// <para/>
+    /// 工作流：
+    /// 1. 指定 baseAnimData（角色的 CharacterAnimationData）
+    /// 2. 点击 Inspector 中的 "Sync Override List From Animation Data" 按钮
+    /// 3. locomotionClipOverrides 自动填充所有 locomotion clip
+    /// 4. 只需把要覆盖的 replacement 拖进去，不覆盖的留空
     /// </summary>
     [CreateAssetMenu(menuName = "Items/Weapon Animation Set")]
     public class WeaponAnimationSet : ScriptableObject
     {
+        [HideInInspector]
+        public CharacterAnimationData baseAnimData;
+
+        [HideInInspector]
+        public ClipOverride[] locomotionClipOverrides;
+
+        // ─────────────────────────────────────────────
+        //  Attack Animations
+        // ─────────────────────────────────────────────
+
         [Header("Main Hand — Light Attacks")]
         public AnimationClip lightAttack01;
         public AnimationClip lightAttack02;

@@ -203,7 +203,10 @@ namespace LZ
                 return;
 
             if (player.playerCombatManager.currentWeaponBeingUsed != null)
+            {
                 player.playerAnimatorManager.UpdateAnimatorController(player.playerCombatManager.currentWeaponBeingUsed.weaponAnimator);
+                player.playerAnimatorManager.SetActiveWeaponAnimationSet(player.playerCombatManager.currentWeaponBeingUsed.weaponAnimationSet);
+            }
         }
 
         public void OnCurrentSpellIDChange(int oldID, int newID)
@@ -284,7 +287,6 @@ namespace LZ
 
         public void OnIsHoldingArrowChanged(bool oldStatus, bool newStatus)
         {
-            player.SetAnimBool("isHoldingArrow", isHoldingArrow.Value);
         }
 
         public void OnIsAimingChanged(bool oldStatus, bool newStatus)
@@ -310,12 +312,10 @@ namespace LZ
 
         public void OnIsChargingRightSpellChanged(bool oldStatus, bool newStatus)
         {
-            player.SetAnimBool("isChargingRightSpell", isChargingRightSpell.Value);
         }
 
         public void OnIsChargingLeftSpellChanged(bool oldStatus, bool newStatus)
         {
-            player.SetAnimBool("isChargingLeftSpell", isChargingLeftSpell.Value);
         }
 
         public override void OnIsBlockingChanged(bool oldStatus, bool newStatus)
@@ -352,7 +352,6 @@ namespace LZ
                 player.playerEffectsManager.AddStaticEffect(twoHandEffect);
             }
 
-            player.SetAnimBool("isTwoHandingWeapon", isTwoHandingWeapon.Value);
         }
 
         public void OnIsTwoHandingRightWeaponChanged(bool oldStatus, bool newStatus)
@@ -387,7 +386,6 @@ namespace LZ
 
         public void OnIsChuggingChanged(bool oldStatus, bool newStatus)
         {
-            player.SetAnimBool("isChuggingFlask", isChugging.Value);
         }
 
         public void OnHeadEquipmentChanged(int oldValue, int newValue)
@@ -514,21 +512,13 @@ namespace LZ
 
             if (hasArrowNotched.Value)
             {
-                // ANIMATE THE BOW
-                Animator bowAnimator;
+                var bowModel = player.playerNetworkManager.isTwoHandingLeftWeapon.Value
+                    ? player.playerEquipmentManager.leftHandWeaponModel
+                    : player.playerEquipmentManager.rightHandWeaponModel;
 
-                if (player.playerNetworkManager.isTwoHandingLeftWeapon.Value)
-                {
-                    bowAnimator = player.playerEquipmentManager.leftHandWeaponModel.GetComponentInChildren<Animator>();
-                }
-                else
-                {
-                    bowAnimator = player.playerEquipmentManager.rightHandWeaponModel.GetComponentInChildren<Animator>();
-                }
-
-                //  ANIMATE THE BOW
-                bowAnimator.SetBool("isDrawn", false);
-                bowAnimator.Play("Bow_Fire_01");
+                var bowAnim = bowModel.GetComponentInChildren<BowObjectAnimancer>();
+                if (bowAnim != null)
+                    bowAnim.PlayFire();
 
                 if (player.IsOwner)
                     hasArrowNotched.Value = false;
@@ -548,20 +538,13 @@ namespace LZ
         [ClientRpc]
         private void NotifyServerOfDrawnProjectileClientRpc(int projectileID)
         {
-            Animator bowAnimator;
+            var bowModel = isTwoHandingLeftWeapon.Value
+                ? player.playerEquipmentManager.leftHandWeaponModel
+                : player.playerEquipmentManager.rightHandWeaponModel;
 
-            if (isTwoHandingLeftWeapon.Value)
-            {
-                bowAnimator = player.playerEquipmentManager.leftHandWeaponModel.GetComponentInChildren<Animator>();
-            }
-            else
-            {
-                bowAnimator = player.playerEquipmentManager.rightHandWeaponModel.GetComponentInChildren<Animator>();
-            }
-
-            //  ANIMATE THE BOW
-            bowAnimator.SetBool("isDrawn", true);
-            bowAnimator.Play("Bow_Draw_01");
+            var bowAnim = bowModel.GetComponentInChildren<BowObjectAnimancer>();
+            if (bowAnim != null)
+                bowAnim.PlayDraw();
 
             //  INSTANTIATE THE ARROW
             GameObject arrow = Instantiate(WorldItemDatabase.Instance.GetProjectileByID(projectileID).drawProjectileModel, player.playerEquipmentManager.leftHandWeaponSlot.transform);

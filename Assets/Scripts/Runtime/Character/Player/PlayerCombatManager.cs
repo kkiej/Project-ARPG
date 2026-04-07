@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -132,8 +132,11 @@ namespace LZ
                 riposteCollider = player.playerEquipmentManager.rightWeaponManager.meleeDamageCollider;
             }
 
-            // 弹反处决动画将根据武器的动画控制器而变化，因此动画可在对应控制器中选择，但动画名称将始终保持一致
-            character.characterAnimatorManager.PlayTargetActionAnimationInstantly("Riposte_01", true);
+            var ad = character.characterAnimatorManager.animData;
+            if (ad != null && ad.riposte != null)
+                character.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.riposte, true);
+            else
+                character.characterAnimatorManager.PlayTargetActionAnimationInstantly("Riposte_01", true);
 
             //  WHILST PERFORMING A CRITICAL STRIKE, YOU CANNOT BE DAMAGED
             if (character.IsOwner)
@@ -204,8 +207,11 @@ namespace LZ
                 backstabCollider = player.playerEquipmentManager.rightWeaponManager.meleeDamageCollider;
             }
 
-            //  THE RIPSOTE ANIMATION WILL CHANGE DEPENDING ON THE WEAPON'S ANIMATOR CONTROLLER, SO THE ANIMATION CAN BE CHOOSEN THERE, THE NAME WILL ALWAYS BE THE SAME
-            character.characterAnimatorManager.PlayTargetActionAnimationInstantly("Backstab_01", true);
+            var ad = character.characterAnimatorManager.animData;
+            if (ad != null && ad.backstab != null)
+                character.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.backstab, true);
+            else
+                character.characterAnimatorManager.PlayTargetActionAnimationInstantly("Backstab_01", true);
 
             //  WHILST PERFORMING A CRITICAL STRIKE, YOU CANNOT BE DAMAGED
             if (character.IsOwner)
@@ -356,21 +362,13 @@ namespace LZ
             //  PLAY RELEASE ARROW SFX
             player.characterSoundFXManager.PlaySoundFX(WorldSoundFXManager.instance.ChooseRandomSFXFromArray(WorldSoundFXManager.instance.releaseArrowSFX));
 
-            // ANIMATE THE BOW
-            Animator bowAnimator;
+            var bowModel = player.playerNetworkManager.isTwoHandingLeftWeapon.Value
+                ? player.playerEquipmentManager.leftHandWeaponModel
+                : player.playerEquipmentManager.rightHandWeaponModel;
 
-            if (player.playerNetworkManager.isTwoHandingLeftWeapon.Value)
-            {
-                bowAnimator = player.playerEquipmentManager.leftHandWeaponModel.GetComponentInChildren<Animator>();
-            }
-            else
-            {
-                bowAnimator = player.playerEquipmentManager.rightHandWeaponModel.GetComponentInChildren<Animator>();
-            }
-
-            //  ANIMATE THE BOW
-            bowAnimator.SetBool("isDrawn", false);
-            bowAnimator.Play("Bow_Fire_01");
+            var bowAnim = bowModel.GetComponentInChildren<BowObjectAnimancer>();
+            if (bowAnim != null)
+                bowAnim.PlayFire();
 
             if (!player.IsOwner)
                 return;

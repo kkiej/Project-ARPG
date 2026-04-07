@@ -131,7 +131,11 @@ namespace LZ
 
             if (character.characterNetworkManager.currentStamina.Value <= 0)
             {
-                character.characterAnimatorManager.PlayTargetActionAnimation("Guard_Break_01", true);
+                var ad = character.characterAnimatorManager.animData;
+                if (ad != null && ad.guardBreak != null)
+                    character.characterAnimatorManager.PlayTargetActionAnimation(ad.guardBreak, true);
+                else
+                    Debug.LogWarning($"{character.name}: guardBreak clip 未配置", character);
                 character.characterNetworkManager.isBlocking.Value = false;
             }
         }
@@ -161,32 +165,40 @@ namespace LZ
                 return;
 
             DamageIntensity damageIntensity = WorldUtilityManager.Instance.GetDamageIntensityBasedOnPoiseDamage(poiseDamage);
-            // 2. 播放与攻击"强度"相匹配的格挡动画
+            var ad = character.characterAnimatorManager.animData;
 
-            // 待办：检查双手持握状态，若为双手持握则改用双手版本的格挡动画
-            switch (damageIntensity)
+            AnimationClip blockClip = null;
+            if (ad != null)
             {
-                case DamageIntensity.Ping:
-                    damageAnimation = "Block_Ping_01";
-                    break;
-                case DamageIntensity.Light:
-                    damageAnimation = "Block_Light_01";
-                    break;
-                case DamageIntensity.Medium:
-                    damageAnimation = "Block_Medium_01";
-                    break;
-                case DamageIntensity.Heavy:
-                    damageAnimation = "Block_Heavy_01";
-                    break;
-                case DamageIntensity.Colossal:
-                    damageAnimation = "Block_Colossal_01";
-                    break;
-                default:
-                    break;
+                switch (damageIntensity)
+                {
+                    case DamageIntensity.Ping:     blockClip = ad.blockPing;     break;
+                    case DamageIntensity.Light:    blockClip = ad.blockLight;    break;
+                    case DamageIntensity.Medium:   blockClip = ad.blockMedium;   break;
+                    case DamageIntensity.Heavy:    blockClip = ad.blockHeavy;    break;
+                    case DamageIntensity.Colossal: blockClip = ad.blockColossal; break;
+                }
             }
 
-            character.characterAnimatorManager.lastDamageAnimationPlayed = damageAnimation;
-            character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, true);
+            if (blockClip != null)
+            {
+                character.characterAnimatorManager.lastDamageClipPlayed = blockClip;
+                character.characterAnimatorManager.lastDamageAnimationPlayed = blockClip.name;
+                character.characterAnimatorManager.PlayTargetActionAnimation(blockClip, true);
+            }
+            else
+            {
+                switch (damageIntensity)
+                {
+                    case DamageIntensity.Ping:     damageAnimation = "Block_Ping_01";     break;
+                    case DamageIntensity.Light:    damageAnimation = "Block_Light_01";    break;
+                    case DamageIntensity.Medium:   damageAnimation = "Block_Medium_01";   break;
+                    case DamageIntensity.Heavy:    damageAnimation = "Block_Heavy_01";    break;
+                    case DamageIntensity.Colossal: damageAnimation = "Block_Colossal_01"; break;
+                }
+                character.characterAnimatorManager.lastDamageAnimationPlayed = damageAnimation;
+                character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, true);
+            }
         }
     }
 }

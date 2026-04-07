@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace LZ
 {
@@ -151,64 +151,110 @@ namespace LZ
 
             if (poiseIsBroken)
             {
-                if (angleHitFrom >= 145 && angleHitFrom <= 180)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.forward_Medium_Damage);
-                }
-                else if (angleHitFrom <= -145 && angleHitFrom >= -180)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.forward_Medium_Damage);
-                }
-                else if (angleHitFrom >= -45 && angleHitFrom <= 45)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.backward_Medium_Damage);
-                }
-                else if (angleHitFrom >= -144 && angleHitFrom <= -45)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.left_Medium_Damage);
-                }
-                else if (angleHitFrom >= 45 && angleHitFrom <= 144)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.right_Medium_Damage);
-                }
-            }
-            else
-            {
-                if (angleHitFrom >= 145 && angleHitFrom <= 180)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.forward_Ping_Damage);
-                }
-                else if (angleHitFrom <= -145 && angleHitFrom >= -180)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.forward_Ping_Damage);
-                }
-                else if (angleHitFrom >= -45 && angleHitFrom <= 45)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.backward_Ping_Damage);
-                }
-                else if (angleHitFrom >= -144 && angleHitFrom <= -45)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.left_Ping_Damage);
-                }
-                else if (angleHitFrom >= 45 && angleHitFrom <= 144)
-                {
-                    damageAnimation = character.characterAnimatorManager.GetRandomAnimationFromList(character.characterAnimatorManager.right_Ping_Damage);
-                }
-            }
+                AnimationClip mediumClip = GetDirectionalMediumDamageClip(character);
 
-            character.characterAnimatorManager.lastDamageAnimationPlayed = damageAnimation;
+                if (mediumClip != null)
+                {
+                    character.characterAnimatorManager.lastDamageClipPlayed = mediumClip;
+                    character.characterAnimatorManager.lastDamageAnimationPlayed = mediumClip.name;
+                    character.characterAnimatorManager.PlayTargetActionAnimation(mediumClip, true);
+                }
+                else
+                {
+                    damageAnimation = GetDirectionalMediumDamageString(character);
+                    character.characterAnimatorManager.lastDamageAnimationPlayed = damageAnimation;
+                    character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, true);
+                }
 
-            if (poiseIsBroken)
-            {
-                // 若处于破防状态，则限制角色的移动和行动能力
-                character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, true);
                 character.characterCombatManager.DestroyAllCurrentActionFX();
             }
             else
             {
-                // 若未处于破防状态，则仅播放上半身动画而不限制行动
-                character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, false, false, true, true);
+                AnimationClip pingClip = GetDirectionalPingDamageClip(character);
+
+                if (pingClip != null)
+                {
+                    character.characterAnimatorManager.PlayTargetPingDamageAnimation(pingClip);
+                }
+                else
+                {
+                    damageAnimation = GetDirectionalPingDamageString(character);
+                    character.characterAnimatorManager.lastDamageAnimationPlayed = damageAnimation;
+                    character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, false, false, true, true);
+                }
             }
+        }
+
+        private AnimationClip GetDirectionalPingDamageClip(CharacterManager character)
+        {
+            var mgr = character.characterAnimatorManager;
+
+            if (angleHitFrom >= 145 && angleHitFrom <= 180)
+                return mgr.GetRandomClipFromList(mgr.forward_Ping_Damage_Clips);
+            if (angleHitFrom <= -145 && angleHitFrom >= -180)
+                return mgr.GetRandomClipFromList(mgr.forward_Ping_Damage_Clips);
+            if (angleHitFrom >= -45 && angleHitFrom <= 45)
+                return mgr.GetRandomClipFromList(mgr.backward_Ping_Damage_Clips);
+            if (angleHitFrom >= -144 && angleHitFrom <= -45)
+                return mgr.GetRandomClipFromList(mgr.left_Ping_Damage_Clips);
+            if (angleHitFrom >= 45 && angleHitFrom <= 144)
+                return mgr.GetRandomClipFromList(mgr.right_Ping_Damage_Clips);
+
+            return null;
+        }
+
+        private AnimationClip GetDirectionalMediumDamageClip(CharacterManager character)
+        {
+            var mgr = character.characterAnimatorManager;
+
+            if (angleHitFrom >= 145 && angleHitFrom <= 180)
+                return mgr.GetRandomClipFromList(mgr.forward_Medium_Damage_Clips);
+            if (angleHitFrom <= -145 && angleHitFrom >= -180)
+                return mgr.GetRandomClipFromList(mgr.forward_Medium_Damage_Clips);
+            if (angleHitFrom >= -45 && angleHitFrom <= 45)
+                return mgr.GetRandomClipFromList(mgr.backward_Medium_Damage_Clips);
+            if (angleHitFrom >= -144 && angleHitFrom <= -45)
+                return mgr.GetRandomClipFromList(mgr.left_Medium_Damage_Clips);
+            if (angleHitFrom >= 45 && angleHitFrom <= 144)
+                return mgr.GetRandomClipFromList(mgr.right_Medium_Damage_Clips);
+
+            return null;
+        }
+
+        private string GetDirectionalMediumDamageString(CharacterManager character)
+        {
+            var mgr = character.characterAnimatorManager;
+
+            if (angleHitFrom >= 145 && angleHitFrom <= 180)
+                return mgr.GetRandomAnimationFromList(mgr.forward_Medium_Damage);
+            if (angleHitFrom <= -145 && angleHitFrom >= -180)
+                return mgr.GetRandomAnimationFromList(mgr.forward_Medium_Damage);
+            if (angleHitFrom >= -45 && angleHitFrom <= 45)
+                return mgr.GetRandomAnimationFromList(mgr.backward_Medium_Damage);
+            if (angleHitFrom >= -144 && angleHitFrom <= -45)
+                return mgr.GetRandomAnimationFromList(mgr.left_Medium_Damage);
+            if (angleHitFrom >= 45 && angleHitFrom <= 144)
+                return mgr.GetRandomAnimationFromList(mgr.right_Medium_Damage);
+
+            return mgr.GetRandomAnimationFromList(mgr.forward_Medium_Damage);
+        }
+
+        private string GetDirectionalPingDamageString(CharacterManager character)
+        {
+            var mgr = character.characterAnimatorManager;
+
+            if (angleHitFrom >= 145 && angleHitFrom <= 180)
+                return mgr.GetRandomAnimationFromList(mgr.forward_Ping_Damage);
+            if (angleHitFrom <= -145 && angleHitFrom >= -180)
+                return mgr.GetRandomAnimationFromList(mgr.forward_Ping_Damage);
+            if (angleHitFrom >= -45 && angleHitFrom <= 45)
+                return mgr.GetRandomAnimationFromList(mgr.backward_Ping_Damage);
+            if (angleHitFrom >= -144 && angleHitFrom <= -45)
+                return mgr.GetRandomAnimationFromList(mgr.left_Ping_Damage);
+            if (angleHitFrom >= 45 && angleHitFrom <= 144)
+                return mgr.GetRandomAnimationFromList(mgr.right_Ping_Damage);
+
+            return mgr.GetRandomAnimationFromList(mgr.forward_Ping_Damage);
         }
     }
 }

@@ -29,13 +29,15 @@ namespace LZ
 
             if (aiCharacter.IsOwner)
             {
-                aiCharacter.characterNetworkManager.verticalMovement.Value = aiCharacter.GetAnimFloat("Vertical");
-                aiCharacter.characterNetworkManager.horizontalMovement.Value = aiCharacter.GetAnimFloat("Horizontal");
+                var param = aiCharacter.characterAnimatorManager.GetCurrentMixerParameter();
+                aiCharacter.characterNetworkManager.horizontalMovement.Value = param.x;
+                aiCharacter.characterNetworkManager.verticalMovement.Value = param.y;
             }
             else
             {
-                aiCharacter.SetAnimFloat("Vertical", aiCharacter.aiCharacterNetworkManager.verticalMovement.Value, 0.1f, Time.deltaTime);
-                aiCharacter.SetAnimFloat("Horizontal", aiCharacter.aiCharacterNetworkManager.horizontalMovement.Value, 0.1f, Time.deltaTime);
+                aiCharacter.characterAnimatorManager.SetAnimatorMovementParameters(
+                    aiCharacter.aiCharacterNetworkManager.horizontalMovement.Value,
+                    aiCharacter.aiCharacterNetworkManager.verticalMovement.Value);
             }
         }
     }

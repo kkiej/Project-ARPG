@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -26,8 +26,8 @@ namespace LZ
         [Header("Sleep Options")]
         public bool willInvestigateSound = true;
         private bool sleepAnimationSet = false;
-        [SerializeField] string sleepAnimation = "Sleep_01";
-        [SerializeField] string wakingAnimation = "Wake_01";
+        [SerializeField] AnimationClip sleepClip;
+        [SerializeField] AnimationClip wakeClip;
 
         public override AIState Tick(AICharacterManager aiCharacter)
         {
@@ -165,21 +165,24 @@ namespace LZ
         {
             aiCharacter.navMeshAgent.enabled = false;
 
-            //  IF WE HAVENT SET OUR SLEEP ANIMATION, AND THE CHARACTER IS SLEEPING SET THE ANIMATION NOW
             if (!sleepAnimationSet && !aiCharacter.aiCharacterNetworkManager.isAwake.Value)
             {
                 sleepAnimationSet = true;
-                aiCharacter.aiCharacterNetworkManager.sleepingAnimation.Value = sleepAnimation;
-                aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value = wakingAnimation;
-                aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(aiCharacter.aiCharacterNetworkManager.sleepingAnimation.Value.ToString(), true);
+                if (sleepClip != null)
+                {
+                    aiCharacter.aiCharacterNetworkManager.sleepingAnimation.Value = sleepClip.name;
+                    aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(sleepClip, true);
+                }
+                if (wakeClip != null)
+                    aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value = wakeClip.name;
             }
 
             if (aiCharacter.characterCombatManager.currentTarget != null && !aiCharacter.aiCharacterNetworkManager.isAwake.Value)
             {
                 aiCharacter.aiCharacterNetworkManager.isAwake.Value = true;
 
-                if (!aiCharacter.isPerformingAction && !aiCharacter.isDead.Value)
-                    aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value.ToString(), true);
+                if (!aiCharacter.isPerformingAction && !aiCharacter.isDead.Value && wakeClip != null)
+                    aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(wakeClip, true);
 
                 return SwitchState(aiCharacter, aiCharacter.pursueTarget);
             }

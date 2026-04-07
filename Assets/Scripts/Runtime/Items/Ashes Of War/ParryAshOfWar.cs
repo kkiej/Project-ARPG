@@ -53,6 +53,8 @@ namespace LZ
         {
             WeaponItem weaponBeingUsed = playerPerformingAction.playerCombatManager.currentWeaponBeingUsed;
 
+            var ad = playerPerformingAction.playerAnimatorManager.animData;
+
             switch (weaponBeingUsed.weaponClass)
             {
                 case WeaponClass.StraightSword:
@@ -60,12 +62,18 @@ namespace LZ
                 case WeaponClass.Spear:
                     break;
                 case WeaponClass.MediumShield:
-                    playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Slow_Parry_01", true);
+                    if (ad != null && ad.slowParry != null)
+                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation(ad.slowParry, true);
+                    else
+                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Slow_Parry_01", true);
                     break;
                 case WeaponClass.Fist:
                     break;
                 case WeaponClass.LightShield:
-                    playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Fast_Parry_01", true);
+                    if (ad != null && ad.fastParry != null)
+                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation(ad.fastParry, true);
+                    else
+                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Fast_Parry_01", true);
                     break;
                 default:
                     break;

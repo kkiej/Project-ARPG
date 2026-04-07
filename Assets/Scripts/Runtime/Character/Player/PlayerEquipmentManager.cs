@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -995,7 +995,10 @@ namespace LZ
 
             player.playerNetworkManager.isTwoHandingWeapon.Value = false;
 
-            player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Right_Weapon_01", false, false, true, true);
+            if (player.playerAnimatorManager.animData != null && player.playerAnimatorManager.animData.swapRightWeapon != null)
+                player.playerAnimatorManager.PlayTargetUpperbodyAnimation(player.playerAnimatorManager.animData.swapRightWeapon);
+            else
+                player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Right_Weapon_01", false, false, true, true);
             
             // 艾尔登法环武器切换
             // 1. 检查我们是否有除了主武器以外的其他武器，如果有，永远不要切换到空手，而是在武器1和2之间切换
@@ -1082,6 +1085,7 @@ namespace LZ
                 rightWeaponManager = rightHandWeaponModel.GetComponent<WeaponManager>();
                 rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
                 player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentRightHandWeapon.weaponAnimator);
+                player.playerAnimatorManager.SetActiveWeaponAnimationSet(player.playerInventoryManager.currentRightHandWeapon.weaponAnimationSet);
             }
         }
 
@@ -1093,7 +1097,10 @@ namespace LZ
 
             player.playerNetworkManager.isTwoHandingWeapon.Value = false;
 
-            player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Left_Weapon_01", false, false, true, true);
+            if (player.playerAnimatorManager.animData != null && player.playerAnimatorManager.animData.swapLeftWeapon != null)
+                player.playerAnimatorManager.PlayTargetUpperbodyAnimation(player.playerAnimatorManager.animData.swapLeftWeapon);
+            else
+                player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Left_Weapon_01", false, false, true, true);
             
             // 艾尔登法环武器切换
             // 1. 检查我们是否有除了主武器以外的其他武器，如果有，永远不要切换到空手，而是在武器1和2之间切换
@@ -1204,6 +1211,7 @@ namespace LZ
         {
             //  UPDATE ANIMATOR CONTROLLER TO CURRENT MAIN HAND WEAPON
             player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentRightHandWeapon.weaponAnimator);
+            player.playerAnimatorManager.SetActiveWeaponAnimationSet(player.playerInventoryManager.currentRightHandWeapon.weaponAnimationSet);
 
             //  REMOVE THE STRENGTH BONUS (TWO HANDING A WEAPON MAKES YOUR STRENGTH LEVEL (STRENGTH + (STRENGTH * 0.5))
 
@@ -1244,6 +1252,7 @@ namespace LZ
 
             // UPDATE ANIMATOR
             player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentRightHandWeapon.weaponAnimator);
+            player.playerAnimatorManager.SetActiveWeaponAnimationSet(player.playerInventoryManager.currentRightHandWeapon.weaponAnimationSet);
 
             // PLACE THE NON-TWO HANDED WEAPON MODEL IN THE BACK SLOT OR HIP SLOT
             backSlot.PlaceWeaponModelInUnequippedSlot(leftHandWeaponModel, player.playerInventoryManager.currentLeftHandWeapon.weaponClass, player);
@@ -1274,6 +1283,7 @@ namespace LZ
 
             // UPDATE ANIMATOR
             player.playerAnimatorManager.UpdateAnimatorController(player.playerInventoryManager.currentLeftHandWeapon.weaponAnimator);
+            player.playerAnimatorManager.SetActiveWeaponAnimationSet(player.playerInventoryManager.currentLeftHandWeapon.weaponAnimationSet);
 
             // PLACE THE NON-TWO HANDED WEAPON MODEL IN THE BACK SLOT OR HIP SLOT
             backSlot.PlaceWeaponModelInUnequippedSlot(rightHandWeaponModel, player.playerInventoryManager.currentRightHandWeapon.weaponClass, player);
