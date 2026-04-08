@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Animancer;
+using KinematicCharacterController;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -14,7 +15,8 @@ namespace LZ
         [Header("Status")]
         public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        [HideInInspector] public CharacterController characterController;
+        [HideInInspector] public KinematicCharacterMotor motor;
+        [HideInInspector] public KCCCharacterController kcc;
         [HideInInspector] public Animator animator;
         [HideInInspector] public AnimancerComponent animancer;
 
@@ -30,12 +32,10 @@ namespace LZ
         [Header("Character Group")]
         public CharacterGroup characterGroup;
 
-        // AnimatorController 在 Animancer 中的状态（仅 AI 角色使用，Player 已完全切换到 Animancer clip）
-        internal ControllerState controllerState;
-
         protected virtual void Awake()
         {
-            characterController = GetComponent<CharacterController>();
+            motor = GetComponent<KinematicCharacterMotor>();
+            kcc = GetComponent<KCCCharacterController>();
             animator = GetComponent<Animator>();
             animancer = GetComponent<AnimancerComponent>();
 
@@ -66,17 +66,26 @@ namespace LZ
             // 如果这个角色是由其他地方控制的，那么将其位置通过网络变换的位置在本地赋值
             else
             {
-                //  Position
-                transform.position = Vector3.SmoothDamp
-                    (transform.position, 
-                    characterNetworkManager.networkPosition.Value, 
-                    ref characterNetworkManager.networkPositionVelocity, 
+                Vector3 smoothedPos = Vector3.SmoothDamp(
+                    transform.position,
+                    characterNetworkManager.networkPosition.Value,
+                    ref characterNetworkManager.networkPositionVelocity,
                     characterNetworkManager.networkPositionSmoothTime);
-                //  Rotation
-                transform.rotation = Quaternion.Slerp
-                    (transform.rotation, 
-                    characterNetworkManager.networkRotation.Value, 
+
+                Quaternion smoothedRot = Quaternion.Slerp(
+                    transform.rotation,
+                    characterNetworkManager.networkRotation.Value,
                     characterNetworkManager.networkRotationSmoothTime);
+
+                if (motor != null)
+                {
+                    motor.SetPositionAndRotation(smoothedPos, smoothedRot);
+                }
+                else
+                {
+                    transform.position = smoothedPos;
+                    transform.rotation = smoothedRot;
+                }
             }
         }
 
@@ -156,68 +165,37 @@ namespace LZ
             
         }
 
-        #region ControllerState 参数代理
-
-        private bool IsControllerReady => controllerState != null && controllerState.IsValid();
-
-        public void SetAnimBool(string name, bool value)
-        {
-            if (IsControllerReady)
-                controllerState.Playable.SetBool(name, value);
-        }
-
-        public void SetAnimFloat(string name, float value)
-        {
-            if (IsControllerReady)
-                controllerState.Playable.SetFloat(name, value);
-        }
-
-        public void SetAnimFloat(int id, float value, float dampTime, float deltaTime)
-        {
-            if (!IsControllerReady) return;
-            float current = controllerState.Playable.GetFloat(id);
-            float damped = Mathf.Lerp(current, value, dampTime > 0f ? 1f - Mathf.Exp(-deltaTime / dampTime) : 1f);
-            controllerState.Playable.SetFloat(id, damped);
-        }
-
-        public void SetAnimFloat(string name, float value, float dampTime, float deltaTime)
-        {
-            if (!IsControllerReady) return;
-            float current = controllerState.Playable.GetFloat(name);
-            float damped = Mathf.Lerp(current, value, dampTime > 0f ? 1f - Mathf.Exp(-deltaTime / dampTime) : 1f);
-            controllerState.Playable.SetFloat(name, damped);
-        }
-
-        public float GetAnimFloat(string name)
-        {
-            if (IsControllerReady)
-                return controllerState.Playable.GetFloat(name);
-            return 0f;
-        }
-
-        #endregion
-
         protected virtual void IgnoreMyOwnColliders()
         {
-            Collider characterControllerCollider = GetComponent<Collider>();
+            Collider primaryCollider = GetComponent<Collider>();
             Collider[] damageableCharacterColliders = GetComponentsInChildren<Collider>();
             List<Collider> ignoreColliders = new List<Collider>();
             
-            // 将我们所有的可造成伤害的角色碰撞体添加到将用于忽略碰撞的列表中
             foreach (var collider in damageableCharacterColliders)
             {
                 ignoreColliders.Add(collider);
             }
             
-            // 将我们的角色控制器碰撞体添加到将用于忽略碰撞的列表中
-            ignoreColliders.Add(characterControllerCollider);
+            if (primaryCollider != null && !ignoreColliders.Contains(primaryCollider))
+                ignoreColliders.Add(primaryCollider);
             
-            // 遍历列表中所有的碰撞体，互相忽略碰撞
+            // Unity 物理层面互相忽略（标准碰撞检测 / trigger 等）
             foreach (var collider in ignoreColliders)
             {
                 foreach (var otherCollider in ignoreColliders)
                 {
-                    Physics.IgnoreCollision(collider, otherCollider, true);
+                    if (collider != null && otherCollider != null)
+                        Physics.IgnoreCollision(collider, otherCollider, true);
+                }
+            }
+
+            // KCC 移动扫描层面忽略自身碰撞体（KCC 用 IsColliderValidForCollisions 过滤）
+            if (kcc != null)
+            {
+                foreach (var collider in ignoreColliders)
+                {
+                    if (collider != null && !kcc.ignoredColliders.Contains(collider))
+                        kcc.ignoredColliders.Add(collider);
                 }
             }
         }

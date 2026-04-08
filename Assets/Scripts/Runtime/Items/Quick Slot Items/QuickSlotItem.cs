@@ -26,7 +26,7 @@ namespace LZ
             if (useItemClip != null)
                 player.playerAnimatorManager.PlayTargetActionAnimation(useItemClip, true);
             else
-                player.playerAnimatorManager.PlayTargetActionAnimation(useItemAnimation, true);
+                Debug.LogWarning($"{player.name}: QuickSlotItem useItemClip 未配置", player);
         }
 
         public virtual void SuccessfullyUseItem(PlayerManager player)

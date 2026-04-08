@@ -18,8 +18,6 @@ namespace LZ
         public NetworkVariable<bool> hasBeenAwakened = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<bool> hasBeenDefeated = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         [SerializeField] List<FogWallInteractable> fogWalls;
-        [SerializeField] AnimationClip sleepClip;
-        [SerializeField] AnimationClip awakenClip;
 
         [Header("Phase Shift")]
         public float minimumHealthPercentageToShift = 50f;
@@ -93,9 +91,9 @@ namespace LZ
                 }
             }
 
-            if (!hasBeenAwakened.Value && sleepClip != null)
+            if (!hasBeenAwakened.Value && sleepState != null && sleepState.sleepClip != null)
             {
-                characterAnimatorManager.PlayTargetActionAnimation(sleepClip, true, applyRootMotion: false);
+                characterAnimatorManager.PlayTargetActionAnimationInstantly(sleepState.sleepClip, true, applyRootMotion: false);
             }
         }
 
@@ -181,8 +179,8 @@ namespace LZ
         {
             if (IsOwner)
             {
-                if (!hasBeenAwakened.Value && awakenClip != null)
-                    characterAnimatorManager.PlayTargetActionAnimation(awakenClip, true);
+                if (!hasBeenAwakened.Value && sleepState != null && sleepState.wakeClip != null)
+                    characterAnimatorManager.PlayTargetActionAnimation(sleepState.wakeClip, true);
 
                 bossFightIsActive.Value = true;
                 hasBeenAwakened.Value = true;

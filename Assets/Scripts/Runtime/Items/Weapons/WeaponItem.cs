@@ -7,7 +7,6 @@ namespace LZ
     public class WeaponItem : EquipmentItem
     {
         [Header("Animations")]
-        public AnimatorOverrideController weaponAnimator;
         public WeaponAnimationSet weaponAnimationSet;
 
         [Header("Model Instantiation")]

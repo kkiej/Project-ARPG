@@ -22,14 +22,14 @@ namespace LZ
                 if (mainHandSpellClip != null)
                     player.playerAnimatorManager.PlayTargetActionAnimation(mainHandSpellClip, true);
                 else
-                    player.playerAnimatorManager.PlayTargetActionAnimation(mainHandSpellAnimation, true);
+                    Debug.LogWarning($"{player.name}: mainHandSpellClip 未配置", player);
             }
             else
             {
                 if (offHandSpellClip != null)
                     player.playerAnimatorManager.PlayTargetActionAnimation(offHandSpellClip, true);
                 else
-                    player.playerAnimatorManager.PlayTargetActionAnimation(offHandSpellAnimation, true);
+                    Debug.LogWarning($"{player.name}: offHandSpellClip 未配置", player);
             }
         }
 

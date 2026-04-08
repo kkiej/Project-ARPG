@@ -7,8 +7,8 @@ namespace LZ
     [CreateAssetMenu(menuName = "A.I/States/Boss Sleep")]
     public class BossSleepState : AIState
     {
-        [SerializeField] AnimationClip sleepClip;
-        [SerializeField] AnimationClip wakeClip;
+        public AnimationClip sleepClip;
+        public AnimationClip wakeClip;
         private bool sleepAnimationSet = false;
 
         public bool hasBeenAwakened = false;

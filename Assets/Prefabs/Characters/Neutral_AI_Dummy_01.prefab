@@ -872,6 +872,7 @@ Transform:
   - {fileID: 510688083077881811}
   - {fileID: 5754591245834506535}
   - {fileID: 7801662370257549050}
+  - {fileID: 3675810139718540533}
   m_Father: {fileID: 6364263943592135296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4461994752186468036
@@ -2598,8 +2599,7 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: -4.440892e-18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3675810139718540533}
+  m_Children: []
   m_Father: {fileID: 2933356747534240056}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9083167269115425503
@@ -3067,6 +3067,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LZ.AIKnightCombatManager
   ShowTopMostFoldoutHeaderGroup: 1
+  lastAttackClipPerformed: {fileID: 0}
   lastAttackAnimationPerformed: 
   previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
@@ -3154,8 +3155,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bad65eb70da47c2a36102e64e9a321d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animData: {fileID: 11400000, guid: 1b1dd61f11b0c254b92b60b76d799b77, type: 2}
   applyRootMotion: 0
   lastDamageAnimationPlayed: 
+  lastDamageClipPlayed: {fileID: 0}
+  forward_Ping_Damage_Clips: []
+  backward_Ping_Damage_Clips: []
+  left_Ping_Damage_Clips: []
+  right_Ping_Damage_Clips: []
+  forward_Medium_Damage_Clips: []
+  backward_Medium_Damage_Clips: []
+  left_Medium_Damage_Clips: []
+  right_Medium_Damage_Clips: []
   hit_Forward_Ping_01: Hit_Forward_Ping_01
   hit_Forward_Ping_02: Hit_Forward_Ping_02
   hit_Backward_Ping_01: Hit_Backward_Ping_01
@@ -3476,7 +3487,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 5754591245834506535}
+    m_TransformParent: {fileID: 2933356747534240056}
     m_Modifications:
     - target: {fileID: 3974654675722782521, guid: 2b30fabbf6909a7468fbc0909afc518b,
         type: 3}
@@ -3506,17 +3517,17 @@ PrefabInstance:
     - target: {fileID: 4351356793138257283, guid: 2b30fabbf6909a7468fbc0909afc518b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.00000008153581
       objectReference: {fileID: 0}
     - target: {fileID: 4351356793138257283, guid: 2b30fabbf6909a7468fbc0909afc518b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4351356793138257283, guid: 2b30fabbf6909a7468fbc0909afc518b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.0000000131990685
       objectReference: {fileID: 0}
     - target: {fileID: 4351356793138257283, guid: 2b30fabbf6909a7468fbc0909afc518b,
         type: 3}

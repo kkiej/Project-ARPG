@@ -412,7 +412,10 @@ namespace LZ
             playerNetworkManager.isMale.Value = currentCharacterData.isMale;
             playerBodyManager.ToggleBodyType(currentCharacterData.isMale); // 切换逻辑：当数值与默认值相同时也需要触发（因OnValueChanged仅在数值变更时生效）
             Vector3 myPosition = new Vector3(currentCharacterData.xPosition, currentCharacterData.yPosition, currentCharacterData.zPosition);
-            transform.position = myPosition;
+            if (motor != null)
+                motor.SetPosition(myPosition);
+            else
+                transform.position = myPosition;
 
             playerNetworkManager.vigor.Value = currentCharacterData.vitality;
             playerNetworkManager.endurance.Value = currentCharacterData.endurance;

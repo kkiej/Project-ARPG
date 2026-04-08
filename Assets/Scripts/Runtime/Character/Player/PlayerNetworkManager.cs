@@ -204,7 +204,6 @@ namespace LZ
 
             if (player.playerCombatManager.currentWeaponBeingUsed != null)
             {
-                player.playerAnimatorManager.UpdateAnimatorController(player.playerCombatManager.currentWeaponBeingUsed.weaponAnimator);
                 player.playerAnimatorManager.SetActiveWeaponAnimationSet(player.playerCombatManager.currentWeaponBeingUsed.weaponAnimationSet);
             }
         }
@@ -619,7 +618,11 @@ namespace LZ
                 {
                     //  TEMPORARY, IN THE FUTURE THE ARROW WILL USE THE CAMERA'S LOOK DIRECTION TO ALIGN ITS UP/DOWN ROTATION VALUE
                     //  HINT IF YOU WANT TO DO THIS ON YOUR OWN LOOK AT THE FORWARD DIRECTION VALUE OF THE CAMERA, AND DIRECT THE ARROW ACCORDINGLY
-                    player.transform.rotation = Quaternion.Euler(player.transform.rotation.x, yCharacterRotation, player.transform.rotation.z);
+                    Quaternion charRot = Quaternion.Euler(player.transform.rotation.x, yCharacterRotation, player.transform.rotation.z);
+                    if (player.kcc != null)
+                        player.kcc.SetRotationImmediate(charRot);
+                    else
+                        player.transform.rotation = charRot;
                     Quaternion arrowRotation = Quaternion.LookRotation(player.transform.forward);
                     projectileGameObject.transform.rotation = arrowRotation;
                 }

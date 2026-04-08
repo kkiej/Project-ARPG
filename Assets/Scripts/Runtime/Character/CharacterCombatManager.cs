@@ -157,8 +157,17 @@ namespace LZ
                 }
 
                 riposteReceiverTransform.localPosition = ripostePosition;
-                enemyCharacter.transform.position = riposteReceiverTransform.position;
-                transform.rotation = Quaternion.LookRotation(-enemyCharacter.transform.forward);
+
+                if (enemyCharacter.motor != null)
+                    enemyCharacter.motor.SetPosition(riposteReceiverTransform.position);
+                else
+                    enemyCharacter.transform.position = riposteReceiverTransform.position;
+
+                Quaternion riposteRot = Quaternion.LookRotation(-enemyCharacter.transform.forward);
+                if (character.kcc != null)
+                    character.kcc.SetRotationImmediate(riposteRot);
+                else
+                    transform.rotation = riposteRot;
 
                 yield return null;
             }
@@ -181,8 +190,17 @@ namespace LZ
                 }
 
                 backstabReceiverTransform.localPosition = backstabPosition;
-                enemyCharacter.transform.position = backstabReceiverTransform.position;
-                transform.rotation = Quaternion.LookRotation(enemyCharacter.transform.forward);
+
+                if (enemyCharacter.motor != null)
+                    enemyCharacter.motor.SetPosition(backstabReceiverTransform.position);
+                else
+                    enemyCharacter.transform.position = backstabReceiverTransform.position;
+
+                Quaternion backstabRot = Quaternion.LookRotation(enemyCharacter.transform.forward);
+                if (character.kcc != null)
+                    character.kcc.SetRotationImmediate(backstabRot);
+                else
+                    transform.rotation = backstabRot;
 
                 yield return null;
             }

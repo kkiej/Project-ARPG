@@ -19,7 +19,12 @@ namespace LZ
         {
             if (aiCharacter.aiCharacterNetworkManager.isMoving.Value)
             {
-                aiCharacter.transform.rotation = aiCharacter.navMeshAgent.transform.rotation;
+                Quaternion agentRotation = aiCharacter.navMeshAgent.transform.rotation;
+
+                if (aiCharacter.kcc != null)
+                    aiCharacter.kcc.SetTargetRotation(agentRotation);
+                else
+                    aiCharacter.transform.rotation = agentRotation;
             }
         }
 

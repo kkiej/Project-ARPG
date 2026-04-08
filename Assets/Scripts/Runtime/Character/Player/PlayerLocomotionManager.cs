@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LZ
@@ -70,10 +68,17 @@ namespace LZ
 
         public void HandleAllMovement()
         {
-            HandleGroundedMovement();
+            if (player.kcc == null)
+                return;
+
+            Vector3 velocity = Vector3.zero;
+
+            velocity += CalculateGroundedMovement();
+            velocity += CalculateAirMovement();
+
+            player.kcc.moveVelocity = velocity;
+
             HandleRotation();
-            HandleJumpingMovement();
-            HandleFreeFallMovement();
         }
 
         private void GetMovementValues()
@@ -81,10 +86,9 @@ namespace LZ
             verticalMovement = PlayerInputManager.instance.verticalInput;
             horizontalMovement = PlayerInputManager.instance.horizontalInput;
             moveAmount = PlayerInputManager.instance.moveAmount;
-            // clamp the movements
         }
 
-        private void HandleGroundedMovement()
+        private Vector3 CalculateGroundedMovement()
         {
             if (player.characterLocomotionManager.canMove || player.playerLocomotionManager.canRotate)
             {
@@ -92,9 +96,7 @@ namespace LZ
             }
 
             if (!player.characterLocomotionManager.canMove)
-                return;
-
-            //  OUR MOVE DIRECTION IS BASED ON OUR CAMERAS FACING PERSPECTIVE & OUR MOVEMENT INPUTS
+                return Vector3.zero;
 
             if (player.playerNetworkManager.isAiming.Value)
             {
@@ -113,41 +115,36 @@ namespace LZ
 
             if (player.playerNetworkManager.isSprinting.Value)
             {
-                player.characterController.Move(moveDirection * (sprintingSpeed * Time.deltaTime));
+                return moveDirection * sprintingSpeed;
             }
             else
             {
                 if (PlayerInputManager.instance.moveAmount > 0.5f)
-                {
-                    player.characterController.Move(moveDirection * (runningSpeed * Time.deltaTime));
-                }
-                else if (PlayerInputManager.instance.moveAmount <= 0.5f)
-                {
-                    player.characterController.Move(moveDirection * (walkingSpeed * Time.deltaTime));
-                }
+                    return moveDirection * runningSpeed;
+                else
+                    return moveDirection * walkingSpeed;
             }
         }
 
-        private void HandleJumpingMovement()
+        private Vector3 CalculateAirMovement()
         {
+            Vector3 airVelocity = Vector3.zero;
+
             if (player.playerNetworkManager.isJumping.Value)
             {
-                player.characterController.Move(jumpDirection * (jumpForwardSpeed * Time.deltaTime));
+                airVelocity += jumpDirection * jumpForwardSpeed;
             }
-        }
 
-        private void HandleFreeFallMovement()
-        {
             if (!player.characterLocomotionManager.isGrounded)
             {
-                Vector3 freeFallDirection;
-
-                freeFallDirection = PlayerCamera.instance.transform.forward * PlayerInputManager.instance.verticalInput;
+                Vector3 freeFallDirection = PlayerCamera.instance.transform.forward * PlayerInputManager.instance.verticalInput;
                 freeFallDirection += PlayerCamera.instance.transform.right * PlayerInputManager.instance.horizontalInput;
                 freeFallDirection.y = 0;
 
-                player.characterController.Move(freeFallDirection * (freeFallSpeed * Time.deltaTime));
+                airVelocity += freeFallDirection * freeFallSpeed;
             }
+
+            return airVelocity;
         }
 
         private void HandleRotation()
@@ -168,6 +165,14 @@ namespace LZ
             }
         }
 
+        private void ApplyRotation(Quaternion rotation)
+        {
+            if (player.kcc != null)
+                player.kcc.SetTargetRotation(rotation);
+            else
+                transform.rotation = rotation;
+        }
+
         private void HandleAimRotations()
         {
             Vector3 targetDirection;
@@ -177,7 +182,7 @@ namespace LZ
 
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
             Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            transform.rotation = finalRotation;
+            ApplyRotation(finalRotation);
         }
 
         private void HandleStandardRotation()
@@ -198,7 +203,7 @@ namespace LZ
                     Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
                     Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation,
                         rotationSpeed * Time.deltaTime);
-                    transform.rotation = finalRotation;
+                    ApplyRotation(finalRotation);
                 }
                 else
                 {
@@ -213,7 +218,7 @@ namespace LZ
                     Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
                     Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation,
                         rotationSpeed * Time.deltaTime);
-                    transform.rotation = finalRotation;
+                    ApplyRotation(finalRotation);
                 }
             }
             else
@@ -231,7 +236,7 @@ namespace LZ
 
                 Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
                 Quaternion targetRotation = Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
-                transform.rotation = targetRotation;
+                ApplyRotation(targetRotation);
             }
         }
 
@@ -285,13 +290,16 @@ namespace LZ
                 rollDirection.Normalize();
             
                 Quaternion playerRotation = Quaternion.LookRotation(rollDirection);
-                player.transform.rotation = playerRotation;
+                if (player.kcc != null)
+                    player.kcc.SetRotationImmediate(playerRotation);
+                else
+                    player.transform.rotation = playerRotation;
 
                 var ad = player.playerAnimatorManager.animData;
                 if (ad != null && ad.rollForward != null)
                     player.playerAnimatorManager.PlayTargetActionAnimation(ad.rollForward, true, true);
                 else
-                    player.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_01", true, true);
+                    Debug.LogWarning($"{player.name}: rollForward clip 未配置", player);
                 player.playerLocomotionManager.isRolling = true;
             }
             // 如果我们处于静止状态，我们执行一个后撤步
@@ -301,7 +309,7 @@ namespace LZ
                 if (ad != null && ad.backstep != null)
                     player.playerAnimatorManager.PlayTargetActionAnimation(ad.backstep, true, true);
                 else
-                    player.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
+                    Debug.LogWarning($"{player.name}: backstep clip 未配置", player);
             }
 
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
@@ -334,7 +342,7 @@ namespace LZ
             if (ad != null && ad.jumpStart != null)
                 player.playerAnimatorManager.PlayJumpSequence();
             else
-                player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_01", false);
+                Debug.LogWarning($"{player.name}: jumpStart clip 未配置", player);
 
             player.playerNetworkManager.isJumping.Value = true;
 
@@ -366,9 +374,17 @@ namespace LZ
             }
         }
 
+        /// <summary>
+        /// 由 Animation Event 调用 — 赋予跳跃的垂直速度。
+        /// </summary>
         public void ApplyJumpingVelocity()
         {
-            yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityForce);
+            if (player.kcc == null)
+                return;
+
+            float gravity = Mathf.Abs(player.kcc.gravity.y);
+            player.kcc.jumpUpSpeed = Mathf.Sqrt(jumpHeight * 2f * gravity);
+            player.kcc.jumpRequested = true;
         }
     }
 }

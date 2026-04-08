@@ -92,7 +92,7 @@ namespace LZ
                 if (ad != null && ad.parryLand != null)
                     damageTarget.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.parryLand, true);
                 else
-                    damageTarget.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parry_Land_01", true);
+                    Debug.LogWarning($"{damageTarget.name}: parryLand clip 未配置", damageTarget);
             }
         }
     }

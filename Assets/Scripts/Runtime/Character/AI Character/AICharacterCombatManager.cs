@@ -204,8 +204,7 @@ namespace LZ
                 if (wakeClip != null)
                     aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(wakeClip, true);
                 else
-                    aiCharacter.characterAnimatorManager.PlayTargetActionAnimation(
-                        aiCharacter.aiCharacterNetworkManager.wakingAnimation.Value.ToString(), true);
+                    Debug.LogWarning($"{aiCharacter.name}: wakingAnimation clip not found", aiCharacter);
             }
 
             aiCharacter.investigateSound.positionOfSound = positionOfSound;
@@ -307,7 +306,12 @@ namespace LZ
         {
             if (aiCharacter.aiCharacterNetworkManager.isMoving.Value)
             {
-                aiCharacter.transform.rotation = aiCharacter.navMeshAgent.transform.rotation;
+                Quaternion agentRotation = aiCharacter.navMeshAgent.transform.rotation;
+
+                if (aiCharacter.kcc != null)
+                    aiCharacter.kcc.SetTargetRotation(agentRotation);
+                else
+                    aiCharacter.transform.rotation = agentRotation;
             }
         }
         
@@ -330,9 +334,12 @@ namespace LZ
                 targetDirection = aiCharacter.transform.forward;
 
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            Quaternion smoothedRotation = Quaternion.Slerp(aiCharacter.transform.rotation, targetRotation, attackRotationSpeed * Time.deltaTime);
 
-            aiCharacter.transform.rotation = Quaternion.Slerp(aiCharacter.transform.rotation, targetRotation, attackRotationSpeed * Time.deltaTime);
-
+            if (aiCharacter.kcc != null)
+                aiCharacter.kcc.SetTargetRotation(smoothedRotation);
+            else
+                aiCharacter.transform.rotation = smoothedRotation;
         }
 
         public void HandleActionRecovery(AICharacterManager aiCharacter)
@@ -390,8 +397,13 @@ namespace LZ
                 Debug.LogWarning($"{aiCharacter.name}: evade clip 未配置", aiCharacter);
             Vector3 directionToDodge = Random.insideUnitSphere.normalized;
             directionToDodge.y = 0;
-            //  OPTIONALLY USE A COROUTINE TO APPLY THIS ROTATION SMOOTHLY OVER 0.2-1 SECONDS SO IT DOESNT LOOK AS SHARP
-            aiCharacter.transform.rotation = Quaternion.LookRotation(directionToDodge);
+            if (directionToDodge == Vector3.zero) directionToDodge = aiCharacter.transform.forward;
+
+            Quaternion dodgeRotation = Quaternion.LookRotation(directionToDodge);
+            if (aiCharacter.kcc != null)
+                aiCharacter.kcc.SetRotationImmediate(dodgeRotation);
+            else
+                aiCharacter.transform.rotation = dodgeRotation;
 
             //  METHOD #4, USE A BLEND TREE AND SET RANDOM VALUES FOR "VERTICAL" AND "HORIZONTAL" OR USE STRAFING VALUES
             // 1. SELECT VALUES AND UPDATE NETWORK VERT AND HORZ

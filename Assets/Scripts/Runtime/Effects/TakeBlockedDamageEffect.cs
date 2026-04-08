@@ -188,16 +188,7 @@ namespace LZ
             }
             else
             {
-                switch (damageIntensity)
-                {
-                    case DamageIntensity.Ping:     damageAnimation = "Block_Ping_01";     break;
-                    case DamageIntensity.Light:    damageAnimation = "Block_Light_01";    break;
-                    case DamageIntensity.Medium:   damageAnimation = "Block_Medium_01";   break;
-                    case DamageIntensity.Heavy:    damageAnimation = "Block_Heavy_01";    break;
-                    case DamageIntensity.Colossal: damageAnimation = "Block_Colossal_01"; break;
-                }
-                character.characterAnimatorManager.lastDamageAnimationPlayed = damageAnimation;
-                character.characterAnimatorManager.PlayTargetActionAnimation(damageAnimation, true);
+                Debug.LogWarning($"{character.name}: block damage clip 未配置 (intensity={damageIntensity})", character);
             }
         }
     }

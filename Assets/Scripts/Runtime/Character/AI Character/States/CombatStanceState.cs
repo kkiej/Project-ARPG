@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -190,7 +190,8 @@ namespace LZ
 
         protected virtual void SetCirclePath(AICharacterManager aiCharacter)
         {
-            if (Physics.CheckSphere(aiCharacter.aiCharacterCombatManager.lockOnTransform.position, aiCharacter.characterController.radius + 0.25f, WorldUtilityManager.Instance.GetEnviroLayers()))
+            float radius = aiCharacter.kcc != null ? aiCharacter.kcc.CapsuleRadius : 0.5f;
+            if (Physics.CheckSphere(aiCharacter.aiCharacterCombatManager.lockOnTransform.position, radius + 0.25f, WorldUtilityManager.Instance.GetEnviroLayers()))
             {
                 //  STOP STRAFING/CIRCLING BECAUSE WE'VE HIT SOMETHING, INSTEAD PATH TOWARDS ENEMY (WE USE ABS INCASE ITS NEGATIVE, TO MAKE IT POSITIVE)
                 //  THIS WILL MAKE OUR CHARACTER FOLLOW THE NAVMESH AGENT AND PATH TOWARDS THE TARGET

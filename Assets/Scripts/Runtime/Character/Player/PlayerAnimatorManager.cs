@@ -6,8 +6,6 @@ namespace LZ
     {
         private PlayerManager player;
 
-        protected override bool useControllerState => false;
-
         protected override void Awake()
         {
             base.Awake();
@@ -192,15 +190,5 @@ namespace LZ
         }
 
         #endregion
-
-        private void OnAnimatorMove()
-        {
-            if (applyRootMotion)
-            {
-                Vector3 velocity = player.animator.deltaPosition;
-                player.characterController.Move(velocity);
-                player.transform.rotation *= player.animator.deltaRotation;
-            }
-        }
     }
 }

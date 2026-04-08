@@ -1885,6 +1885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  lastAttackClipPerformed: {fileID: 0}
   lastAttackAnimationPerformed: 
   previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
@@ -1973,8 +1974,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bad65eb70da47c2a36102e64e9a321d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animData: {fileID: 11400000, guid: 883312be31cd4ae4c991b551c23c0cdb, type: 2}
   applyRootMotion: 0
   lastDamageAnimationPlayed: 
+  lastDamageClipPlayed: {fileID: 0}
+  forward_Ping_Damage_Clips: []
+  backward_Ping_Damage_Clips: []
+  left_Ping_Damage_Clips: []
+  right_Ping_Damage_Clips: []
+  forward_Medium_Damage_Clips: []
+  backward_Medium_Damage_Clips: []
+  left_Medium_Damage_Clips: []
+  right_Medium_Damage_Clips: []
   hit_Forward_Ping_01: Hit_Forward_Ping_01
   hit_Forward_Ping_02: Hit_Forward_Ping_02
   hit_Backward_Ping_01: Hit_Backward_Ping_01

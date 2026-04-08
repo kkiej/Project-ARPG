@@ -1,0 +1,188 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb26ea7f320fe124ba10e42fedd799c7, type: 3}
+  m_Name: AIDurkAnimationData
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.CharacterAnimationData
+  jumpStart: {fileID: 0}
+  jumpLift: {fileID: 0}
+  jumpIdle: {fileID: 5252732915974851826, guid: 3269750ba5972884288ef4b83b4c9dc3,
+    type: 3}
+  jumpEnd: {fileID: 800205213175602759, guid: 3d4fc7495569b2a4caeb4f1dadcd1a22, type: 3}
+  jumpStart2H: {fileID: 0}
+  jumpLift2H: {fileID: 0}
+  jumpIdle2H: {fileID: 0}
+  jumpEnd2H: {fileID: 0}
+  rollForward: {fileID: 0}
+  backstep: {fileID: 0}
+  hitForwardMedium01: {fileID: -7959569735815888632, guid: 9e8a931e34b683147b8694c975ddb02f,
+    type: 3}
+  hitForwardMedium02: {fileID: 1431198907024658100, guid: 594a9780bc7ce2a4794a2b2af767fad8,
+    type: 3}
+  hitBackwardMedium01: {fileID: 8530685465264167463, guid: 519bc6750c6e081439d7904b1e3b5385,
+    type: 3}
+  hitBackwardMedium02: {fileID: -2071174895372467563, guid: d78751a43a822914083331bdafff87ce,
+    type: 3}
+  hitLeftMedium01: {fileID: -4353348262354453302, guid: 38e1e54f8cc1cf142b1a77c42b234d87,
+    type: 3}
+  hitLeftMedium02: {fileID: -4353348262354453302, guid: 38e1e54f8cc1cf142b1a77c42b234d87,
+    type: 3}
+  hitRightMedium01: {fileID: -7453786226243025521, guid: 3f467d2fd3abc6543bd5dac1e21c7208,
+    type: 3}
+  hitRightMedium02: {fileID: -7453786226243025521, guid: 3f467d2fd3abc6543bd5dac1e21c7208,
+    type: 3}
+  hitForwardPing01: {fileID: 0}
+  hitForwardPing02: {fileID: 0}
+  hitBackwardPing01: {fileID: 0}
+  hitBackwardPing02: {fileID: 0}
+  hitLeftPing01: {fileID: 0}
+  hitLeftPing02: {fileID: 0}
+  hitRightPing01: {fileID: 0}
+  hitRightPing02: {fileID: 0}
+  blockPing: {fileID: 0}
+  blockLight: {fileID: 0}
+  blockMedium: {fileID: 0}
+  blockHeavy: {fileID: 0}
+  blockColossal: {fileID: 0}
+  guardBreak: {fileID: 0}
+  stanceBreak: {fileID: -4200277849532489423, guid: c8a27b37c077c5543b9c0cab14fbeaaa,
+    type: 3}
+  fastParry: {fileID: 0}
+  mediumParry: {fileID: 0}
+  slowParry: {fileID: 0}
+  parryLand: {fileID: 0}
+  parried: {fileID: -6163846051975219361, guid: 1edd03274919acf46bf37af400332595,
+    type: 3}
+  backstab: {fileID: 8594672525682897810, guid: 6236ec05ec7676d4fb4a25f6d3e5486a,
+    type: 3}
+  backstabbed: {fileID: 104474999294911555, guid: 245382e7a7da0e74bbcdc9c171549c48,
+    type: 3}
+  backstabDeath: {fileID: -6906435868212464426, guid: 068769099ab08df449bae4752e3b568d,
+    type: 3}
+  backstabGetUp: {fileID: 1523418328703242901, guid: 5afdbdc5352c40a43b2bf96010fc1a3d,
+    type: 3}
+  riposte: {fileID: 2241361648400260794, guid: d722e5f042ff00d44a9d73c16000caf8, type: 3}
+  riposted: {fileID: 1058709201432496298, guid: 4edd99ee0e2fd3b4d9ed2381f6160d4e,
+    type: 3}
+  riposteDeath: {fileID: -906657822473106755, guid: 4bba72656c94a5b468d3989b3cda06d9,
+    type: 3}
+  riposteGetUp: {fileID: -6449118187938250115, guid: 11c3cd791a98eb6438e777640a912778,
+    type: 3}
+  dead: {fileID: -6459834799788060821, guid: 69500d861a07270469b07ca53b7105f6, type: 3}
+  turnRight45: {fileID: 1116721343113362871, guid: 3156000270c3e014cb7c9c796e3efb94,
+    type: 3}
+  turnLeft45: {fileID: 5368435262945271033, guid: afe14afe42db8bb4b812c0a943eebda6,
+    type: 3}
+  turnRight90: {fileID: 1116721343113362871, guid: 3156000270c3e014cb7c9c796e3efb94,
+    type: 3}
+  turnLeft90: {fileID: 5368435262945271033, guid: afe14afe42db8bb4b812c0a943eebda6,
+    type: 3}
+  turnRight135: {fileID: -6372830373898847879, guid: 00512c73416da924483cf5c3912c48c3,
+    type: 3}
+  turnLeft135: {fileID: -6372830373898847879, guid: 00512c73416da924483cf5c3912c48c3,
+    type: 3}
+  turnRight180: {fileID: -6372830373898847879, guid: 00512c73416da924483cf5c3912c48c3,
+    type: 3}
+  turnLeft180: {fileID: -6372830373898847879, guid: 00512c73416da924483cf5c3912c48c3,
+    type: 3}
+  evade: {fileID: 0}
+  passThroughFog: {fileID: 0}
+  activateSiteOfGrace: {fileID: 0}
+  pickUpItem: {fileID: 0}
+  swapRightWeapon: {fileID: 0}
+  swapLeftWeapon: {fileID: 0}
+  flaskDrinkStart: {fileID: 0}
+  flaskDrink: {fileID: 0}
+  flaskEnd: {fileID: 0}
+  flaskEmpty: {fileID: 0}
+  bowDraw: {fileID: 0}
+  outOfAmmo: {fileID: 0}
+  spellMainStart: {fileID: 0}
+  spellMainCharge: {fileID: 0}
+  spellMainRelease: {fileID: 0}
+  spellMainFullRelease: {fileID: 0}
+  spellOffStart: {fileID: 0}
+  spellOffCharge: {fileID: 0}
+  spellOffRelease: {fileID: 0}
+  spellOffFullRelease: {fileID: 0}
+  upperbodyMask: {fileID: 0}
+  pingDamageMask: {fileID: 0}
+  idle1H: {fileID: -4794951470572363078, guid: ef5dfff50540de548a2fb31b64d22e45, type: 3}
+  locomotion1H:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Animations:
+    - {fileID: -2685640921010292712, guid: a0fb0830acaafab44add169eac847b1c, type: 3}
+    - {fileID: -2685640921010292712, guid: a0fb0830acaafab44add169eac847b1c, type: 3}
+    _Speeds: []
+    _SynchronizeChildren: 
+    _Thresholds:
+    - {x: 0, y: 0}
+    - {x: 0, y: 0.5}
+    _DefaultParameter: {x: 0, y: 0}
+    _Type: 1
+    _ParameterNameX: {fileID: 0}
+    _ParameterNameY: {fileID: 0}
+  idle2H: {fileID: 0}
+  locomotion2H:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Animations: []
+    _Speeds: []
+    _SynchronizeChildren: 
+    _Thresholds: []
+    _DefaultParameter: {x: 0, y: 0}
+    _Type: 0
+    _ParameterNameX: {fileID: 0}
+    _ParameterNameY: {fileID: 0}
+  blockingIdle1H: {fileID: 0}
+  blockingLocomotion1H:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Animations: []
+    _Speeds: []
+    _SynchronizeChildren: 
+    _Thresholds: []
+    _DefaultParameter: {x: 0, y: 0}
+    _Type: 0
+    _ParameterNameX: {fileID: 0}
+    _ParameterNameY: {fileID: 0}
+  blockingIdle2H: {fileID: 0}
+  blockingLocomotion2H:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Animations: []
+    _Speeds: []
+    _SynchronizeChildren: 
+    _Thresholds: []
+    _DefaultParameter: {x: 0, y: 0}
+    _Type: 0
+    _ParameterNameX: {fileID: 0}
+    _ParameterNameY: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

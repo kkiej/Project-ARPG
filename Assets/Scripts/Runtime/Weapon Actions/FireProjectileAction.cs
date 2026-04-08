@@ -74,7 +74,7 @@ namespace LZ
                     if (ad != null && ad.outOfAmmo != null)
                         playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation(ad.outOfAmmo, true);
                     else
-                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Out_Of_Ammo_01", true);
+                        Debug.LogWarning($"{playerPerformingAction.name}: outOfAmmo clip 未配置", playerPerformingAction);
                     return;
                 }
 
@@ -83,7 +83,7 @@ namespace LZ
                 if (animData != null && animData.bowDraw != null)
                     playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation(animData.bowDraw, true);
                 else
-                    playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Bow_Draw_01", true);
+                    Debug.LogWarning($"{playerPerformingAction.name}: bowDraw clip 未配置", playerPerformingAction);
                 playerPerformingAction.playerNetworkManager.NotifyServerOfDrawnProjectileServerRpc(projectileItem.itemID);
             }
         }

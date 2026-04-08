@@ -109,7 +109,7 @@ namespace LZ
             if (ad != null && ad.pickUpItem != null)
                 player.playerAnimatorManager.PlayTargetActionAnimation(ad.pickUpItem, true);
             else
-                player.playerAnimatorManager.PlayTargetActionAnimation("Pick_Up_Item_01", true);
+                Debug.LogWarning($"{player.name}: pickUpItem clip 未配置", player);
 
             // 2. ADD ITEM TO INVENTORY
             player.playerInventoryManager.AddItemToInventory(item);

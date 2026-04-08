@@ -43,7 +43,7 @@ namespace LZ
             if (ad != null && ad.passThroughFog != null)
                 player.playerAnimatorManager.PlayTargetActionAnimation(ad.passThroughFog, true);
             else
-                player.playerAnimatorManager.PlayTargetActionAnimation("Pass_Through_Fog_01", true);
+                Debug.LogWarning($"{player.name}: passThroughFog clip 未配置", player);
         }
         
         public override void OnNetworkSpawn()
@@ -104,10 +104,13 @@ namespace LZ
 
         private IEnumerator DisableCollisionForTime(PlayerManager player)
         {
-            // 使此函数的执行时长与穿过雾墙的动画时长保持一致
-            Physics.IgnoreCollision(player.characterController, fogWallCollider, true);
+            if (player.kcc != null)
+                player.kcc.ignoredColliders.Add(fogWallCollider);
+
             yield return new WaitForSeconds(3);
-            Physics.IgnoreCollision(player.characterController, fogWallCollider, false);
+
+            if (player.kcc != null)
+                player.kcc.ignoredColliders.Remove(fogWallCollider);
         }
     }
 }

@@ -94,10 +94,6 @@ namespace LZ
         [Header("Evade")]
         public AnimationClip evade;
 
-        [Header("Sleep / Wake")]
-        public AnimationClip sleep;
-        public AnimationClip wake;
-
         [Header("Misc Actions")]
         public AnimationClip passThroughFog;
         public AnimationClip activateSiteOfGrace;

@@ -65,7 +65,7 @@ namespace LZ
                     if (ad != null && ad.slowParry != null)
                         playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation(ad.slowParry, true);
                     else
-                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Slow_Parry_01", true);
+                        Debug.LogWarning($"{playerPerformingAction.name}: slowParry clip 未配置", playerPerformingAction);
                     break;
                 case WeaponClass.Fist:
                     break;
@@ -73,7 +73,7 @@ namespace LZ
                     if (ad != null && ad.fastParry != null)
                         playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation(ad.fastParry, true);
                     else
-                        playerPerformingAction.playerAnimatorManager.PlayTargetActionAnimation("Fast_Parry_01", true);
+                        Debug.LogWarning($"{playerPerformingAction.name}: fastParry clip 未配置", playerPerformingAction);
                     break;
                 default:
                     break;

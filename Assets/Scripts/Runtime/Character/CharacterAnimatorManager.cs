@@ -13,11 +13,6 @@ namespace LZ
         private int horizontal;
         private int vertical;
 
-        private ControllerTransition _controllerTransition = new ControllerTransition();
-
-        /// <summary>子类返回 false 可跳过 ControllerState 初始化（Player 全走 Animancer clip）。</summary>
-        protected virtual bool useControllerState => true;
-
         // ── Per-character clip name → AnimationClip lookup（供远端 RPC 查找）──
         private Dictionary<string, AnimationClip> _clipLookup = new Dictionary<string, AnimationClip>();
 
@@ -61,36 +56,6 @@ namespace LZ
         [HideInInspector] public List<AnimationClip> left_Medium_Damage_Clips = new List<AnimationClip>();
         [HideInInspector] public List<AnimationClip> right_Medium_Damage_Clips = new List<AnimationClip>();
 
-        //  PING HIT REACTIONS (string-based, legacy)
-        [SerializeField] string hit_Forward_Ping_01 = "Hit_Forward_Ping_01";
-        [SerializeField] string hit_Forward_Ping_02 = "Hit_Forward_Ping_02";
-        [SerializeField] string hit_Backward_Ping_01 = "Hit_Backward_Ping_01";
-        [SerializeField] string hit_Backward_Ping_02 = "Hit_Backward_Ping_02";
-        [SerializeField] string hit_Left_Ping_01 = "Hit_Left_Ping_01";
-        [SerializeField] string hit_Left_Ping_02 = "Hit_Left_Ping_02";
-        [SerializeField] string hit_Right_Ping_01 = "Hit_Right_Ping_01";
-        [SerializeField] string hit_Right_Ping_02 = "Hit_Right_Ping_02";
-
-        public List<string> forward_Ping_Damage = new List<string>();
-        public List<string> backward_Ping_Damage = new List<string>();
-        public List<string> left_Ping_Damage = new List<string>();
-        public List<string> right_Ping_Damage = new List<string>();
-
-        //  MEDIUM HIT REACTIONS
-        [SerializeField] string hit_Forward_Medium_01 = "Hit_Forward_Medium_01";
-        [SerializeField] string hit_Forward_Medium_02 = "Hit_Forward_Medium_02";
-        [SerializeField] string hit_Backward_Medium_01 = "Hit_Backward_Medium_01";
-        [SerializeField] string hit_Backward_Medium_02 = "Hit_Backward_Medium_02";
-        [SerializeField] string hit_Left_Medium_01 = "Hit_Left_Medium_01";
-        [SerializeField] string hit_Left_Medium_02 = "Hit_Left_Medium_02";
-        [SerializeField] string hit_Right_Medium_01 = "Hit_Right_Medium_01";
-        [SerializeField] string hit_Right_Medium_02 = "Hit_Right_Medium_02";
-
-        public List<string> forward_Medium_Damage = new List<string>();
-        public List<string> backward_Medium_Damage = new List<string>();
-        public List<string> left_Medium_Damage = new List<string>();
-        public List<string> right_Medium_Damage = new List<string>();
-
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
@@ -101,38 +66,7 @@ namespace LZ
 
         protected virtual void Start()
         {
-            forward_Ping_Damage.Add(hit_Forward_Ping_01);
-            forward_Ping_Damage.Add(hit_Forward_Ping_02);
-
-            backward_Ping_Damage.Add(hit_Backward_Ping_01);
-            backward_Ping_Damage.Add(hit_Backward_Ping_02);
-
-            left_Ping_Damage.Add(hit_Left_Ping_01);
-            left_Ping_Damage.Add(hit_Left_Ping_02);
-
-            right_Ping_Damage.Add(hit_Right_Ping_01);
-            right_Ping_Damage.Add(hit_Right_Ping_02);
-
-            forward_Medium_Damage.Add(hit_Forward_Medium_01);
-            forward_Medium_Damage.Add(hit_Forward_Medium_02);
-            
-            backward_Medium_Damage.Add(hit_Backward_Medium_01);
-            backward_Medium_Damage.Add(hit_Backward_Medium_02);
-            
-            left_Medium_Damage.Add(hit_Left_Medium_01);
-            left_Medium_Damage.Add(hit_Left_Medium_02);
-            
-            right_Medium_Damage.Add(hit_Right_Medium_01);
-            right_Medium_Damage.Add(hit_Right_Medium_02);
-
-            if (useControllerState)
-            {
-                InitControllerState(character.animator.runtimeAnimatorController);
-            }
-            else
-            {
-                character.animator.runtimeAnimatorController = null;
-            }
+            character.animator.runtimeAnimatorController = null;
 
             BuildClipLookup(animData);
             InitAnimancerLayers();
@@ -140,7 +74,51 @@ namespace LZ
             InitLocomotion();
         }
 
-        #region Animancer Layers Init
+        #region Root Motion
+
+        /// <summary>
+        /// 子类重写以控制何时应用 Root Motion。
+        /// Player：仅在 applyRootMotion 标志为 true 时（翻滚/攻击等动作期间）。
+        /// AI：落地时始终应用（动画驱动移动）。
+        /// </summary>
+        protected virtual bool ShouldApplyRootMotion() => applyRootMotion;
+
+        protected virtual void OnAnimatorMove()
+        {
+            if (!ShouldApplyRootMotion()) return;
+            if (character.kcc == null) return;
+
+            character.kcc.rootMotionDelta += character.animator.deltaPosition;
+            character.kcc.rootMotionRotationDelta = character.animator.deltaRotation * character.kcc.rootMotionRotationDelta;
+            character.kcc.useRootMotion = true;
+        }
+
+        #endregion
+
+        #region Animancer Layers
+
+        /// <summary>
+        /// 在指定层播放 clip，安全处理层激活。
+        /// 当层 weight ≈ 0（未激活）时：clip 立即播放（内部 fade=0），改为淡入层权重，
+        /// 避免"空层 T-pose 闪帧"（Animancer 空层输出默认 pose）。
+        /// 当层已激活时：保持层权重，正常 crossfade。
+        /// </summary>
+        private AnimancerState ActivateLayerAndPlay(int layerIndex, AnimationClip clip, float fadeDuration, float targetWeight)
+        {
+            var layer = character.animancer.Layers[layerIndex];
+
+            if (fadeDuration > 0f && layer.Weight < 0.01f)
+            {
+                var state = layer.Play(clip, 0f);
+                layer.StartFade(targetWeight, fadeDuration);
+                return state;
+            }
+            else
+            {
+                layer.SetWeight(targetWeight);
+                return layer.Play(clip, fadeDuration);
+            }
+        }
 
         private void InitAnimancerLayers()
         {
@@ -155,7 +133,9 @@ namespace LZ
             }
 
             // Layer 2: Action — 无 mask，全身覆盖（攻击/翻滚/受击等）
-            character.animancer.Layers[ActionLayer].SetWeight(0f);
+            var actionLayer = character.animancer.Layers[ActionLayer];
+            actionLayer.SetWeight(0f);
+            actionLayer.SetDebugName("Action Override");
 
             // Layer 3: Ping Damage — 只影响头胸部位
             if (animData != null && animData.pingDamageMask != null)
@@ -202,9 +182,7 @@ namespace LZ
         /// <summary>在 Upperbody 层播放 clip，播完自动淡出层权重。</summary>
         public AnimancerState PlayUpperbodyClip(AnimationClip clip, float fadeDuration = 0.2f)
         {
-            var layer = character.animancer.Layers[UpperbodyLayer];
-            layer.SetWeight(1f);
-            var state = layer.Play(clip, fadeDuration);
+            var state = ActivateLayerAndPlay(UpperbodyLayer, clip, fadeDuration, 1f);
             state.Events(this).OnEnd = () => ReturnFromUpperbody(fadeDuration);
             return state;
         }
@@ -248,9 +226,7 @@ namespace LZ
         /// <summary>在 Ping Damage 层播放 clip，播完自动淡出层权重。</summary>
         public AnimancerState PlayPingDamageClip(AnimationClip clip, float fadeDuration = 0.2f)
         {
-            var layer = character.animancer.Layers[PingDamageLayer];
-            layer.SetWeight(PingDamageDefaultWeight);
-            var state = layer.Play(clip, fadeDuration);
+            var state = ActivateLayerAndPlay(PingDamageLayer, clip, fadeDuration, PingDamageDefaultWeight);
             state.Events(this).OnEnd = () => ReturnFromPingDamage(fadeDuration);
             return state;
         }
@@ -483,46 +459,6 @@ namespace LZ
 
         #endregion
 
-        /// <summary>
-        /// 将 RuntimeAnimatorController 托管给 Animancer，创建 ControllerState。
-        /// Animator 上的 Controller 会被清空，由 Animancer 的 Playable 图接管。
-        /// </summary>
-        private void InitControllerState(RuntimeAnimatorController controller)
-        {
-            if (controller == null || character.animancer == null) return;
-
-            _controllerTransition.State?.Destroy();
-            _controllerTransition.Controller = controller;
-            character.animator.runtimeAnimatorController = null;
-            character.animancer.Play(_controllerTransition);
-            character.controllerState = _controllerTransition.State;
-        }
-
-        public string GetRandomAnimationFromList(List<string> animationList)
-        {
-            List<string> finalList = new List<string>();
-
-            foreach (var item in animationList)
-            {
-                finalList.Add(item);
-            }
-            
-            // 检查我们是否已经播放过这个伤害动画，避免重复
-            finalList.Remove(lastDamageAnimationPlayed);
-
-            // 删除列表中的空值
-            for (int i = finalList.Count - 1; i > -1; i--)
-            {
-                if (finalList[i] == null)
-                {
-                    finalList.RemoveAt(i);
-                }
-            }
-
-            int randomValue = Random.Range(0, finalList.Count);
-
-            return finalList[randomValue];
-        }
 
         public void UpdateAnimatorMovementParameters(float horizontalMovement, float verticalMovement, bool isSprinting)
         {
@@ -577,27 +513,15 @@ namespace LZ
                 snappedVertical = 2;
             }
             
-            if (useControllerState)
-            {
-                character.SetAnimFloat(horizontal, snappedHorizontal, 0.1f, Time.deltaTime);
-                character.SetAnimFloat(vertical, snappedVertical, 0.1f, Time.deltaTime);
-            }
-
             ApplyMixerParameter(snappedHorizontal, snappedVertical, 0.1f, Time.deltaTime);
         }
 
         public void SetAnimatorMovementParameters(float horizontalMovement, float verticalMovement)
         {
-            if (useControllerState)
-            {
-                character.SetAnimFloat(vertical, verticalMovement, 0.1f, Time.deltaTime);
-                character.SetAnimFloat(horizontal, horizontalMovement, 0.1f, Time.deltaTime);
-            }
-
             ApplyMixerParameter(horizontalMovement, verticalMovement, 0.1f, Time.deltaTime);
         }
 
-        #region Animancer clip 播完 → 回到 ControllerState
+        #region Animancer clip 播完 → 回到 Locomotion
 
         /// <summary>
         /// 在 Action 层播放 clip 并注册结束回调：fade 回 Locomotion + 重置 action flag。
@@ -607,9 +531,9 @@ namespace LZ
         {
             CancelActiveChain();
             _inLocomotionMode = false;
-            var actionLayer = character.animancer.Layers[ActionLayer];
-            actionLayer.SetWeight(1f);
-            return PlayClipWithAutoReturnInternal(clip, fadeDuration);
+            var state = ActivateLayerAndPlay(ActionLayer, clip, fadeDuration, 1f);
+            state.Events(this).OnEnd = () => ReturnToController(fadeDuration);
+            return state;
         }
 
         private AnimancerState PlayClipWithAutoReturnInternal(AnimationClip clip, float fadeDuration = 0.2f)
@@ -674,115 +598,6 @@ namespace LZ
         {
             PlayClipWithAutoReturn(clip, fadeDuration);
         }
-
-        #region Controller 播放辅助 (供 RPC handler 等外部调用)
-
-        /// <summary>在 ControllerState 内 CrossFade 到指定状态</summary>
-        public void CrossFadeOnController(string stateName, float fadeDuration = 0.2f)
-        {
-            CancelActiveChain();
-            _inLocomotionMode = false;
-            if (character.controllerState == null) return;
-            character.animancer.Play(character.controllerState, fadeDuration);
-            character.controllerState.Playable.CrossFade(stateName, fadeDuration);
-        }
-
-        /// <summary>在 ControllerState 内立即 Play 指定状态</summary>
-        public void PlayOnController(string stateName)
-        {
-            CancelActiveChain();
-            _inLocomotionMode = false;
-            if (character.controllerState == null) return;
-            character.animancer.Play(character.controllerState);
-            character.controllerState.Playable.Play(stateName);
-        }
-
-        #endregion
-
-        #region Play Action Animation (string — 通过 AnimatorController 状态机)
-
-        public virtual void PlayTargetActionAnimation(
-            string targetAnimation, 
-            bool isPerformingAction, 
-            bool applyRootMotion = true, 
-            bool canRotate = false, 
-            bool canMove = false,
-            bool canRun = true,
-            bool canRoll = false)
-        {
-            //Debug.Log("Playing Animation: " + targetAnimation);
-            this.applyRootMotion = applyRootMotion;
-            CrossFadeOnController(targetAnimation);
-            // 可以用来阻止角色尝试新的动作
-            // 例如，如果你受到伤害，并开始执行受击动画
-            // 如果你被眩晕，这个标志会变为真
-            // 然后我们可以在尝试新动作之前检查这个标志
-            character.isPerformingAction = isPerformingAction;
-            character.characterLocomotionManager.canRotate = canRotate;
-            character.characterLocomotionManager.canMove = canMove;
-            character.characterLocomotionManager.canRun = canRun;
-            character.characterLocomotionManager.canRoll = canRoll;
-
-            //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
-            character.characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
-        }
-        
-        public virtual void PlayTargetActionAnimationInstantly(
-            string targetAnimation,
-            bool isPerformingAction,
-            bool applyRootMotion = true,
-            bool canRotate = false,
-            bool canMove = false,
-            bool canRun = true,
-            bool canRoll = false)
-        {
-            this.applyRootMotion = applyRootMotion;
-            PlayOnController(targetAnimation);
-            //  CAN BE USED TO STOP CHARACTER FROM ATTEMPTING NEW ACTIONS
-            //  FOR EXAMPLE, IF YOU GET DAMAGED, AND BEGIN PERFORMING A DAMAGE ANIMATION
-            //  THIS FLAG WILL TURN TRUE IF YOU ARE STUNNED
-            //  WE CAN THEN CHECK FOR THIS BEFORE ATTEMPTING NEW ACTIONS
-            character.isPerformingAction = isPerformingAction;
-            character.characterLocomotionManager.canRotate = canRotate;
-            character.characterLocomotionManager.canMove = canMove;
-            character.characterLocomotionManager.canRun = canRun;
-            character.characterLocomotionManager.canRoll = canRoll;
-
-            //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
-            character.characterNetworkManager.NotifyTheServerOfInstantActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
-        }
-
-        public virtual void PlayTargetAttackActionAnimation(
-            WeaponItem weapon,
-            AttackType attackType,
-            string targetAnimation,
-            bool isPerformingAction,
-            bool applyRootMotion = true,
-            bool canRotate = false,
-            bool canMove = false,
-            bool canRoll = false)
-        {
-            // 跟踪上次执行的攻击（用于连招）
-            // 跟踪当前攻击类型（轻攻击、重攻击等）
-            // 更新动画集为当前武器动画
-            // 判断我们的攻击是否可以被招架
-            // 通知网络我们的“正在攻击”标志是激活状态（用于反击伤害等）
-            character.characterCombatManager.currentAttackType = attackType;
-            character.characterCombatManager.lastAttackAnimationPerformed = targetAnimation;
-            UpdateAnimatorController(weapon.weaponAnimator);
-            this.applyRootMotion = applyRootMotion;
-            CrossFadeOnController(targetAnimation);
-            character.isPerformingAction = isPerformingAction;
-            character.characterLocomotionManager.canRotate = canRotate;
-            character.characterLocomotionManager.canMove = canMove;
-            character.characterNetworkManager.isAttacking.Value = true;
-            character.characterLocomotionManager.canRoll = canRoll;
-
-            //  TELL THE SERVER/HOST WE PLAYED AN ANIMATION, AND TO PLAY THAT ANIMATION FOR EVERYBODY ELSE PRESENT
-            character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation, applyRootMotion);
-        }
-
-        #endregion
 
         #region Play Action Animation (AnimationClip — 通过 Animancer 直接播放)
 
@@ -881,7 +696,6 @@ namespace LZ
         {
             CancelActiveChain();
             _inLocomotionMode = false;
-            character.animancer.Layers[ActionLayer].SetWeight(1f);
 
             character.characterCombatManager.currentAttackType = initialAttackType;
             character.characterCombatManager.lastAttackClipPerformed = attackClip;
@@ -902,8 +716,7 @@ namespace LZ
             _heavyReleaseClip = releaseClip;
             _heavyFullReleaseClip = fullReleaseClip;
 
-            var layer = character.animancer.Layers[ActionLayer];
-            var state = layer.Play(attackClip, 0.2f);
+            var state = ActivateLayerAndPlay(ActionLayer, attackClip, 0.2f, 1f);
             state.Events(this).OnEnd = () => OnHeavyAttackEnterHold(holdClip);
         }
 
@@ -977,10 +790,8 @@ namespace LZ
 
             CancelActiveChain();
             _inLocomotionMode = false;
-            character.animancer.Layers[ActionLayer].SetWeight(1f);
 
-            var layer = character.animancer.Layers[ActionLayer];
-            var state = layer.Play(_jumpStartClip, 0.2f);
+            var state = ActivateLayerAndPlay(ActionLayer, _jumpStartClip, 0.2f, 1f);
             SendPhaseRpc(_jumpStartClip.name);
             state.Events(this).OnEnd = OnJumpStartEnd;
         }
@@ -1065,7 +876,6 @@ namespace LZ
         {
             CancelActiveChain();
             _inLocomotionMode = false;
-            character.animancer.Layers[ActionLayer].SetWeight(1f);
 
             character.characterCombatManager.currentAttackType = attackType;
             character.characterCombatManager.lastAttackClipPerformed = attackClip;
@@ -1085,8 +895,7 @@ namespace LZ
             _jumpAttackAirIdleClip = airIdleClip;
             _jumpAttackEndClip = endClip;
 
-            var layer = character.animancer.Layers[ActionLayer];
-            var state = layer.Play(attackClip, 0.2f);
+            var state = ActivateLayerAndPlay(ActionLayer, attackClip, 0.2f, 1f);
             state.Events(this).OnEnd = OnJumpAttackClipEnd;
         }
 
@@ -1136,15 +945,6 @@ namespace LZ
         }
 
         #endregion
-
-        /// <summary>
-        /// 切换武器的 AnimatorOverrideController。销毁旧 ControllerState，用新 controller 重建。
-        /// </summary>
-        public void UpdateAnimatorController(AnimatorOverrideController weaponController)
-        {
-            if (useControllerState)
-                InitControllerState(weaponController);
-        }
 
         /// <summary>
         /// 设置当前武器的动画集，用于覆盖 locomotion 默认动画。

@@ -82,7 +82,7 @@ namespace LZ
             if (ad != null && ad.activateSiteOfGrace != null)
                 player.playerAnimatorManager.PlayTargetActionAnimation(ad.activateSiteOfGrace, true);
             else
-                player.playerAnimatorManager.PlayTargetActionAnimation("Activate_Site_Of_Grace_01", true);
+                Debug.LogWarning($"{player.name}: activateSiteOfGrace clip 未配置", player);
             // 播放动画时若需隐藏武器模型，可在此设置
 
             PlayerUIManager.instance.playerUIPopUpManager.SendGraceRestoredPopUp("SITE OF GRACE RESTORED");

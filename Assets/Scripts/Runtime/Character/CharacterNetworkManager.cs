@@ -86,7 +86,6 @@ namespace LZ
 
         public virtual void OnIsDeadChanged(bool oldStatus, bool newStatus)
         {
-            character.SetAnimBool("isDead", character.isDead.Value);
         }
 
         public virtual void OnLockOnTargetIDChange(ulong oldID, ulong newID)
@@ -105,12 +104,10 @@ namespace LZ
 
         public void OnIsChargingAttackChanged(bool oldStatus, bool newStatus)
         {
-            character.SetAnimBool("isChargingAttack", isChargingAttack.Value);
         }
 
         public void OnIsMovingChanged(bool oldStatus, bool newStatus)
         {
-            character.SetAnimBool("isMoving", isMoving.Value);
         }
 
         public virtual void OnIsActiveChanged(bool oldStatus, bool newStatus)
@@ -120,7 +117,6 @@ namespace LZ
         
         public virtual void OnIsBlockingChanged(bool oldStatus, bool newStatus)
         {
-            character.SetAnimBool("isBlocking", isBlocking.Value);
         }
 
         //  USED TO CANCEL FX WHEN POISE BROKEN
@@ -230,25 +226,14 @@ namespace LZ
             PlayAnimationByName(animationID, false);
         }
 
-        /// <summary>
-        /// 优先从 per-character clip 字典查找，其次 AnimationClipRegistry，
-        /// 最后 fallback 到 ControllerState（仅 AI 仍需要）。
-        /// </summary>
         private void PlayAnimationByName(string animationID, bool instant)
         {
             var clip = character.characterAnimatorManager.LookupClipByName(animationID);
 
             if (clip != null)
-            {
                 character.characterAnimatorManager.PlayClipOnRemote(clip, instant ? 0f : 0.2f);
-            }
             else
-            {
-                if (instant)
-                    character.characterAnimatorManager.PlayOnController(animationID);
-                else
-                    character.characterAnimatorManager.CrossFadeOnController(animationID);
-            }
+                Debug.LogWarning($"{character.name}: clip '{animationID}' not found in lookup", character);
         }
 
         //  UPPERBODY LAYER ANIMATION
@@ -277,7 +262,7 @@ namespace LZ
             if (clip != null)
                 character.characterAnimatorManager.PlayUpperbodyClipOnRemote(clip, 0.2f);
             else
-                character.characterAnimatorManager.CrossFadeOnController(animationID);
+                Debug.LogWarning($"{character.name}: upperbody clip '{animationID}' not found", character);
         }
 
         //  PING DAMAGE LAYER ANIMATION
@@ -306,7 +291,7 @@ namespace LZ
             if (clip != null)
                 character.characterAnimatorManager.PlayPingDamageClipOnRemote(clip, 0.2f);
             else
-                character.characterAnimatorManager.CrossFadeOnController(animationID);
+                Debug.LogWarning($"{character.name}: ping damage clip '{animationID}' not found", character);
         }
 
         //  DAMAGE
@@ -459,7 +444,7 @@ namespace LZ
                 if (ad != null && ad.riposted != null)
                     damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.riposted, true);
                 else
-                    damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
+                    Debug.LogWarning($"{damagedCharacter.name}: riposted clip 未配置", damagedCharacter);
             }
 
             // MOVE THE ENEMY TO THE PROPER RIPOSTE POSITION
@@ -549,7 +534,7 @@ namespace LZ
                 if (ad != null && ad.backstabbed != null)
                     damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.backstabbed, true);
                 else
-                    damagedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(criticalDamageAnimation, true);
+                    Debug.LogWarning($"{damagedCharacter.name}: backstabbed clip 未配置", damagedCharacter);
             }
 
             // MOVE THE BACKSTAB TARGET TO THE POSITION OF THE BACK STABBER
@@ -588,7 +573,7 @@ namespace LZ
                 if (ad != null && ad.parried != null)
                     parriedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.parried, true);
                 else
-                    parriedCharacter.characterAnimatorManager.PlayTargetActionAnimationInstantly("Parried_01", true);
+                    Debug.LogWarning($"{parriedCharacter.name}: parried clip 未配置", parriedCharacter);
             }
         }
     }

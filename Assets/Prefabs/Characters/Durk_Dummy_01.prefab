@@ -1886,6 +1886,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  lastAttackClipPerformed: {fileID: 0}
   lastAttackAnimationPerformed: 
   previousPoiseDamageTaken: 0
   currentTarget: {fileID: 0}
@@ -1977,10 +1978,13 @@ MonoBehaviour:
   hasBeenDefeated:
     m_InternalValue: 0
   fogWalls: []
-  sleepAnimation: Sleep_01
-  awakenAnimation: 
+  sleepClip: {fileID: 564098893400542450, guid: ca0b78578b2949942a631b65f7ed7748,
+    type: 3}
+  awakenClip: {fileID: -3026250279719231542, guid: 9209cb9e6e556e349b75605754318d95,
+    type: 3}
   minimumHealthPercentageToShift: 50
-  phaseShiftAnimation: Phase_Change_01
+  phaseShiftClip: {fileID: -2225883367608404345, guid: edc980daa5812f143a54e7e082167321,
+    type: 3}
   phase02CombatStanceState: {fileID: 11400000, guid: e24200ab43c1c1640a815cf76f52f33c,
     type: 2}
   sleepState: {fileID: 11400000, guid: 3b84abac98c0a814f9d279944f9aec69, type: 2}
@@ -1998,8 +2002,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bad65eb70da47c2a36102e64e9a321d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animData: {fileID: 11400000, guid: deb30c2cfc288cd4c9b59de090670709, type: 2}
   applyRootMotion: 1
   lastDamageAnimationPlayed: 
+  lastDamageClipPlayed: {fileID: 0}
+  forward_Ping_Damage_Clips: []
+  backward_Ping_Damage_Clips: []
+  left_Ping_Damage_Clips: []
+  right_Ping_Damage_Clips: []
+  forward_Medium_Damage_Clips: []
+  backward_Medium_Damage_Clips: []
+  left_Medium_Damage_Clips: []
+  right_Medium_Damage_Clips: []
   hit_Forward_Ping_01: Hit_Forward_Ping_01
   hit_Forward_Ping_02: Hit_Forward_Ping_02
   hit_Backward_Ping_01: Hit_Backward_Ping_01

@@ -136,7 +136,7 @@ namespace LZ
             if (ad != null && ad.riposte != null)
                 character.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.riposte, true);
             else
-                character.characterAnimatorManager.PlayTargetActionAnimationInstantly("Riposte_01", true);
+                Debug.LogWarning($"{character.name}: riposte clip 未配置", character);
 
             //  WHILST PERFORMING A CRITICAL STRIKE, YOU CANNOT BE DAMAGED
             if (character.IsOwner)
@@ -211,7 +211,7 @@ namespace LZ
             if (ad != null && ad.backstab != null)
                 character.characterAnimatorManager.PlayTargetActionAnimationInstantly(ad.backstab, true);
             else
-                character.characterAnimatorManager.PlayTargetActionAnimationInstantly("Backstab_01", true);
+                Debug.LogWarning($"{character.name}: backstab clip 未配置", character);
 
             //  WHILST PERFORMING A CRITICAL STRIKE, YOU CANNOT BE DAMAGED
             if (character.IsOwner)
