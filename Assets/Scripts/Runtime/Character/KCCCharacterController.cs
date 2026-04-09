@@ -18,7 +18,7 @@ namespace LZ
         public KinematicCharacterMotor motor;
 
         [Header("Gravity")]
-        public Vector3 gravity = new Vector3(0, -30f, 0);
+        public Vector3 gravity = new Vector3(0, -5.55f, 0);
 
         [Header("Collision")]
         public List<Collider> ignoredColliders = new List<Collider>();
@@ -129,7 +129,9 @@ namespace LZ
                 }
                 else
                 {
-                    currentVelocity += moveVelocity * deltaTime;
+                    // 空中：保留纵向速度（重力/跳跃积累），水平分量直接替换为输入速度
+                    float verticalSpeed = Vector3.Dot(currentVelocity, motor.CharacterUp);
+                    currentVelocity = moveVelocity + motor.CharacterUp * verticalSpeed;
                     currentVelocity += gravity * deltaTime;
                 }
             }

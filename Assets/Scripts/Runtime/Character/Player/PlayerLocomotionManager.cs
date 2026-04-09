@@ -167,10 +167,11 @@ namespace LZ
 
         private void ApplyRotation(Quaternion rotation)
         {
-            if (player.kcc != null)
-                player.kcc.SetTargetRotation(rotation);
-            else
-                transform.rotation = rotation;
+            // 直接写 transform.rotation —— KCC motor 在下一次 Simulate 开始时
+            // 会读取 transform.rotation 作为 TransientRotation，不会冲突。
+            // 若走 SetTargetRotation → motor FixedUpdate 中转，
+            // Slerp 的起点会滞后一帧，导致转速减半。
+            transform.rotation = rotation;
         }
 
         private void HandleAimRotations()

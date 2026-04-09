@@ -4519,10 +4519,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -5654157579870011388}
-    - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4353011010962205564}
     - targetCorrespondingSourceObject: {fileID: 1752634011024786, guid: 3f581b8f5dacdc54b8e405d2157e1d8b,
         type: 3}
@@ -5211,7 +5207,6 @@ MonoBehaviour:
   isPerformingAction: 0
   isDead:
     m_InternalValue: 0
-  characterController: {fileID: 0}
   motor: {fileID: 0}
   kcc: {fileID: 0}
   animator: {fileID: 0}
@@ -5617,31 +5612,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentInteractableActions: []
---- !u!143 &-5654157579870011388
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688345335358352327}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1.73
-  m_Radius: 0.23
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.94, z: 0}
 --- !u!54 &4353011010962205564
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5786,9 +5756,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.23
-  m_Height: 1.73
+  m_Height: 1.78
   m_Direction: 1
-  m_Center: {x: 0, y: 0.94, z: 0}
+  m_Center: {x: 0, y: 0.89, z: 0}
 --- !u!114 &7942000307213381949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5803,8 +5773,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp-firstpass::KinematicCharacterController.KinematicCharacterMotor
   Capsule: {fileID: 1966295073249511471}
   CapsuleRadius: 0.23
-  CapsuleHeight: 1.73
-  CapsuleYOffset: 0.94
+  CapsuleHeight: 1.78
+  CapsuleYOffset: 0.89
   CapsulePhysicsMaterial: {fileID: 0}
   GroundDetectionExtraDistance: 0
   MaxStableSlopeAngle: 60
@@ -5846,6 +5816,7 @@ MonoBehaviour:
   motor: {fileID: 7942000307213381949}
   gravity: {x: 0, y: -30, z: 0}
   ignoredColliders: []
+  pushForceOnCharacters: 2
   moveVelocity: {x: 0, y: 0, z: 0}
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
   useDirectRotation: 0

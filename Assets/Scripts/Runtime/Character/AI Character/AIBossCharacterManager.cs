@@ -49,6 +49,9 @@ namespace LZ
             {
                 sleepState = Instantiate(sleepState);
                 currentState = sleepState;
+
+                if (!hasBeenAwakened.Value)
+                    aiCharacterNetworkManager.isAwake.Value = false;
             }
 
             if (IsServer)
@@ -127,6 +130,9 @@ namespace LZ
                 characterNetworkManager.currentHealth.Value = 0;
                 isDead.Value = true;
                 bossFightIsActive.Value = false;
+
+                if (navMeshAgent != null)
+                    navMeshAgent.enabled = false;
 
                 foreach (var fogWall in fogWalls)
                 {

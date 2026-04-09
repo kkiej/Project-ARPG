@@ -2705,9 +2705,11 @@ GameObject:
   - component: {fileID: 5702189357165242003}
   - component: {fileID: 2677919046479770755}
   - component: {fileID: 3413141271688343265}
-  - component: {fileID: 6173294021211634938}
   - component: {fileID: 3174600439510094657}
   - component: {fileID: 2809171661953101303}
+  - component: {fileID: 5400494668648879361}
+  - component: {fileID: -3992311110710823937}
+  - component: {fileID: 15541176012962895}
   m_Layer: 6
   m_Name: Knight_Dummy_01
   m_TagString: Untagged
@@ -3032,28 +3034,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b510014cccb24c4e8e2e7b15e6b0c01e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravityForce: -5.55
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 9
-  groundCheckSphereRadius: 1
-  yVelocity: {x: 0, y: 0, z: 0}
-  groundedYVelocity: -20
-  fallStartYVelocity: -5
-  inAirTimer: 0
   isRolling: 0
   canRotate: 1
   canMove: 1
   canRun: 1
   canRoll: 1
   isGrounded: 1
-  slopeSlideStartPositionYOffset: 1
-  slopeSlideSphereCastMaxDistance: 2
-  slopeSlideSpeed: -11
-  slopeSlideSpeedMultiplier: 3
-  slipperySurfaceMaxAngle: 15
-  characterSlideOffHeadCollisionMaxDistanceCheck: 5
-  characterCollisionCheckSphereMultiplier: 1.5
+  inAirTimer: 0
 --- !u!114 &4666341949266627338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3118,7 +3105,8 @@ MonoBehaviour:
   isPerformingAction: 0
   isDead:
     m_InternalValue: 0
-  characterController: {fileID: 0}
+  motor: {fileID: 0}
+  kcc: {fileID: 0}
   animator: {fileID: 0}
   animancer: {fileID: 0}
   characterNetworkManager: {fileID: 0}
@@ -3167,30 +3155,6 @@ MonoBehaviour:
   backward_Medium_Damage_Clips: []
   left_Medium_Damage_Clips: []
   right_Medium_Damage_Clips: []
-  hit_Forward_Ping_01: Hit_Forward_Ping_01
-  hit_Forward_Ping_02: Hit_Forward_Ping_02
-  hit_Backward_Ping_01: Hit_Backward_Ping_01
-  hit_Backward_Ping_02: Hit_Backward_Ping_02
-  hit_Left_Ping_01: Hit_Left_Ping_01
-  hit_Left_Ping_02: Hit_Left_Ping_02
-  hit_Right_Ping_01: Hit_Right_Ping_01
-  hit_Right_Ping_02: Hit_Right_Ping_02
-  forward_Ping_Damage: []
-  backward_Ping_Damage: []
-  left_Ping_Damage: []
-  right_Ping_Damage: []
-  hit_Forward_Medium_01: Hit_Forward_Medium_01
-  hit_Forward_Medium_02: Hit_Forward_Medium_02
-  hit_Backward_Medium_01: Hit_Backward_Medium_01
-  hit_Backward_Medium_02: Hit_Backward_Medium_02
-  hit_Left_Medium_01: Hit_Left_Medium_01
-  hit_Left_Medium_02: Hit_Left_Medium_02
-  hit_Right_Medium_01: Hit_Right_Medium_01
-  hit_Right_Medium_02: Hit_Right_Medium_02
-  forward_Medium_Damage: []
-  backward_Medium_Damage: []
-  left_Medium_Damage: []
-  right_Medium_Damage: []
 --- !u!114 &220221739626946829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3345,31 +3309,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!143 &6173294021211634938
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9116315882318417191}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1.73
-  m_Radius: 0.23
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.94, z: 0}
 --- !u!82 &3174600439510094657
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3481,6 +3420,96 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasFloatingHPBar: 1
   characterHPBar: {fileID: 8272881876483858098}
+--- !u!136 &5400494668648879361
+CapsuleCollider:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9116315882318417191}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.23
+  m_Height: 1.78
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.89, z: 0}
+--- !u!114 &-3992311110710823937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9116315882318417191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1bc5515e3ab954e80599c538834774, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp-firstpass::KinematicCharacterController.KinematicCharacterMotor
+  Capsule: {fileID: 5400494668648879361}
+  CapsuleRadius: 0.23
+  CapsuleHeight: 1.78
+  CapsuleYOffset: 0.89
+  CapsulePhysicsMaterial: {fileID: 0}
+  GroundDetectionExtraDistance: 0
+  MaxStableSlopeAngle: 60
+  StableGroundLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  DiscreteCollisionEvents: 0
+  StepHandling: 1
+  MaxStepHeight: 0.5
+  AllowSteppingWithoutStableGrounding: 0
+  MinRequiredStepDepth: 0
+  LedgeAndDenivelationHandling: 1
+  MaxStableDistanceFromLedge: 0
+  MaxVelocityForLedgeSnap: 0
+  MaxStableDenivelationAngle: 180
+  InteractiveRigidbodyHandling: 1
+  RigidbodyInteractionType: 0
+  SimulatedCharacterMass: 1
+  PreserveAttachedRigidbodyMomentum: 1
+  HasPlanarConstraint: 0
+  PlanarConstraintAxis: {x: 0, y: 0, z: 1}
+  MaxMovementIterations: 5
+  MaxDecollisionIterations: 1
+  CheckMovementInitialOverlaps: 1
+  KillVelocityWhenExceedMaxMovementIterations: 1
+  KillRemainingMovementWhenExceedMaxMovementIterations: 1
+--- !u!114 &15541176012962895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9116315882318417191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c3d2ffa57e81e84f93cd730d4f79e00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.KCCCharacterController
+  motor: {fileID: 0}
+  gravity: {x: 0, y: -30, z: 0}
+  ignoredColliders: []
+  pushForceOnCharacters: 2
+  moveVelocity: {x: 0, y: 0, z: 0}
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  useDirectRotation: 0
+  rootMotionDelta: {x: 0, y: 0, z: 0}
+  rootMotionRotationDelta: {x: 0, y: 0, z: 0, w: 1}
+  useRootMotion: 0
+  jumpRequested: 0
+  jumpUpSpeed: 0
+  jumpScalableDirection: {x: 0, y: 0, z: 0}
 --- !u!1001 &1107892286568448374
 PrefabInstance:
   m_ObjectHideFlags: 0

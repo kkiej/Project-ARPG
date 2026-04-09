@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -116,6 +116,9 @@ namespace LZ
         protected override void Update()
         {
             base.Update();
+
+            if (isDead.Value)
+                return;
             
             aiCharacterCombatManager.HandleActionRecovery(this);
 
