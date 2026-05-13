@@ -554,6 +554,9 @@ namespace LZ
         /// </summary>
         public void ReturnToController(float fadeDuration = 0.2f)
         {
+            if (character.isDead.Value)
+                return;
+
             // 淡出 Action 层（clip-based 动作）
             character.animancer.Layers[ActionLayer].StartFade(0f, fadeDuration);
 
@@ -844,6 +847,10 @@ namespace LZ
             {
                 SendPhaseRpc(_jumpEndClip.name);
                 PlayClipWithAutoReturnInternal(_jumpEndClip, 0.2f);
+
+                character.isPerformingAction = true;
+                character.characterLocomotionManager.canMove = false;
+                character.characterLocomotionManager.canRotate = false;
             }
             else
             {

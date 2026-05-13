@@ -113,6 +113,15 @@ namespace LZ
         {
             base.OnNetworkSpawn();
 
+            if (IsServer)
+            {
+                characterNetworkManager.networkPosition.Value = transform.position;
+                characterNetworkManager.networkRotation.Value = transform.rotation;
+
+                if (motor != null)
+                    motor.SetPositionAndRotation(transform.position, transform.rotation);
+            }
+
             characterNetworkManager.OnIsActiveChanged(false, characterNetworkManager.isActive.Value);
 
             isDead.OnValueChanged += characterNetworkManager.OnIsDeadChanged;

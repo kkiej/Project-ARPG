@@ -42,7 +42,20 @@ namespace LZ
                 instantiatedGameObject = Instantiate(characterGameObject);
                 instantiatedGameObject.transform.position = transform.position;
                 instantiatedGameObject.transform.rotation = transform.rotation;
+
+                var motor = instantiatedGameObject.GetComponent<KinematicCharacterController.KinematicCharacterMotor>();
+                if (motor != null)
+                    motor.SetPositionAndRotation(transform.position, transform.rotation);
+
                 instantiatedGameObject.GetComponent<NetworkObject>().Spawn();
+
+                var netMgr = instantiatedGameObject.GetComponent<CharacterNetworkManager>();
+                if (netMgr != null)
+                {
+                    netMgr.networkPosition.Value = transform.position;
+                    netMgr.networkRotation.Value = transform.rotation;
+                }
+
                 aiCharacter = instantiatedGameObject.GetComponent<AICharacterManager>();
 
                 if (aiCharacter == null)
@@ -78,6 +91,13 @@ namespace LZ
 
             instantiatedGameObject.transform.position = transform.position;
             instantiatedGameObject.transform.rotation = transform.rotation;
+
+            var motor = instantiatedGameObject.GetComponent<KinematicCharacterController.KinematicCharacterMotor>();
+            if (motor != null)
+                motor.SetPositionAndRotation(transform.position, transform.rotation);
+
+            aiCharacter.characterNetworkManager.networkPosition.Value = transform.position;
+            aiCharacter.characterNetworkManager.networkRotation.Value = transform.rotation;
             aiCharacter.aiCharacterNetworkManager.currentHealth.Value = aiCharacter.aiCharacterNetworkManager.maxHealth.Value;
             aiCharacter.aiCharacterCombatManager.SetTarget(null);
 

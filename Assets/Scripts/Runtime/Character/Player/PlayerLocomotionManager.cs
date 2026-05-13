@@ -167,11 +167,18 @@ namespace LZ
 
         private void ApplyRotation(Quaternion rotation)
         {
-            // 直接写 transform.rotation —— KCC motor 在下一次 Simulate 开始时
-            // 会读取 transform.rotation 作为 TransientRotation，不会冲突。
-            // 若走 SetTargetRotation → motor FixedUpdate 中转，
-            // Slerp 的起点会滞后一帧，导致转速减半。
-            transform.rotation = rotation;
+            if (player.kcc != null)
+                player.kcc.SetTargetRotation(rotation);
+            else
+                transform.rotation = rotation;
+        }
+
+        /// <summary>
+        /// 获取角色当前真实旋转（KCC 插值模式下 transform.rotation 是插值中间值，不可靠）。
+        /// </summary>
+        private Quaternion GetCurrentRotation()
+        {
+            return player.motor != null ? player.motor.TransientRotation : transform.rotation;
         }
 
         private void HandleAimRotations()
@@ -182,12 +189,14 @@ namespace LZ
             targetDirection.Normalize();
 
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            Quaternion finalRotation = Quaternion.Slerp(GetCurrentRotation(), targetRotation, rotationSpeed * Time.deltaTime);
             ApplyRotation(finalRotation);
         }
 
         private void HandleStandardRotation()
         {
+            Quaternion currentRot = GetCurrentRotation();
+
             if (player.playerNetworkManager.isLockedOn.Value)
             {
                 if (player.playerNetworkManager.isSprinting.Value || player.playerLocomotionManager.isRolling)
@@ -199,10 +208,10 @@ namespace LZ
                     targetDirection.y = 0;
 
                     if (targetDirection == Vector3.zero)
-                        targetDirection = transform.forward;
+                        targetDirection = currentRot * Vector3.forward;
 
                     Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-                    Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation,
+                    Quaternion finalRotation = Quaternion.Slerp(currentRot, targetRotation,
                         rotationSpeed * Time.deltaTime);
                     ApplyRotation(finalRotation);
                 }
@@ -217,7 +226,7 @@ namespace LZ
                     targetDirection.Normalize();
 
                     Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-                    Quaternion finalRotation = Quaternion.Slerp(transform.rotation, targetRotation,
+                    Quaternion finalRotation = Quaternion.Slerp(currentRot, targetRotation,
                         rotationSpeed * Time.deltaTime);
                     ApplyRotation(finalRotation);
                 }
@@ -232,11 +241,11 @@ namespace LZ
 
                 if (targetRotationDirection == Vector3.zero)
                 {
-                    targetRotationDirection = transform.forward;
+                    targetRotationDirection = currentRot * Vector3.forward;
                 }
 
                 Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
-                Quaternion targetRotation = Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
+                Quaternion targetRotation = Quaternion.Slerp(currentRot, newRotation, rotationSpeed * Time.deltaTime);
                 ApplyRotation(targetRotation);
             }
         }
