@@ -1,0 +1,2336 @@
+{
+ "tae": "a929",
+ "taeId": 2929,
+ "animationCount": 2,
+ "eventCount": 145,
+ "animations": [
+  {
+   "animId": "a000_040000",
+   "rawId": 40000,
+   "events": [
+    {
+     "type": 795,
+     "start": 0.4667,
+     "end": 2.6667,
+     "params": [
+      457,
+      1065353216,
+      0,
+      0,
+      16,
+      0,
+      2688
+     ]
+    },
+    {
+     "type": 16,
+     "start": 0.0,
+     "end": 0.1667,
+     "name": "PlaySFX_Body",
+     "category": "vfx",
+     "params": [
+      96,
+      0,
+      2704,
+      0,
+      451070,
+      100,
+      -1,
+      65792
+     ]
+    },
+    {
+     "type": 96,
+     "start": 0.1667,
+     "end": 2.5,
+     "name": "SpawnFFX_DummyPoly",
+     "category": "vfx",
+     "params": [
+      451070,
+      100,
+      -1,
+      65792
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.3333,
+     "end": 0.4333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      8,
+      2001,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 700,
+     "start": 0.8,
+     "end": 2.2333,
+     "name": "WeaponTrail",
+     "category": "vfx",
+     "params": [
+      -1082130432,
+      -1082130432,
+      -1082130432,
+      -1082130432,
+      100,
+      65286,
+      -1082130432,
+      -1082130432
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.5333,
+     "end": 2.6333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      8,
+      1001,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 3.3333,
+     "end": 3.4333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      8,
+      1001,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 712,
+     "start": 0.0,
+     "end": 4.1667,
+     "name": "SpawnFFX_WeaponBoth",
+     "category": "vfx",
+     "params": [
+      -16711936,
+      -16711936,
+      50463488,
+      -16711936,
+      1
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.9667,
+     "end": 1.0667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      200,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.1333,
+     "end": 1.1667,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      72,
+      1035489772,
+      -1,
+      6,
+      129,
+      0,
+      3088
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.0,
+     "end": 2.1,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      200,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 96,
+     "start": 2.0,
+     "end": 2.1,
+     "name": "SpawnFFX_DummyPoly",
+     "category": "vfx",
+     "params": [
+      451071,
+      101,
+      -1,
+      65537
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.1667,
+     "end": 0.2667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      100,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 226,
+     "start": 1.1333,
+     "end": 1.3,
+     "name": "SetHitTargetMode",
+     "category": "state",
+     "params": [
+      80,
+      0,
+      0,
+      0,
+      129,
+      0,
+      3264
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.8,
+     "end": 2.9,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      100,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 605,
+     "start": 3.3,
+     "end": 3.6667,
+     "name": "RootMotion_Mult",
+     "category": "motion",
+     "params": [
+      0,
+      0,
+      0,
+      1065353216
+     ]
+    },
+    {
+     "type": 605,
+     "start": 3.6667,
+     "end": 4.3333,
+     "name": "RootMotion_Mult",
+     "category": "motion",
+     "params": [
+      0,
+      0,
+      1065353216,
+      1065353216
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.6,
+     "end": 0.7,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      0,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.1333,
+     "end": 1.3,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      56,
+      0,
+      -1,
+      6,
+      129,
+      0,
+      3488
+     ]
+    },
+    {
+     "type": 129,
+     "start": 1.6,
+     "end": 1.7,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      0,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 3.3333,
+     "end": 3.4333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      0,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.1333,
+     "end": 1.3,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      57,
+      0,
+      -1,
+      6,
+      129,
+      0,
+      3616
+     ]
+    },
+    {
+     "type": 129,
+     "start": 1.1667,
+     "end": 1.2667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      103565000,
+      100,
+      -1,
+      16777216,
+      1
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.0,
+     "end": 2.1,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      103565000,
+      100,
+      -1,
+      16777216,
+      1
+     ]
+    },
+    {
+     "type": 330,
+     "start": 1.1333,
+     "end": 1.1667,
+     "params": [
+      0,
+      0,
+      0,
+      0,
+      112,
+      0,
+      3744
+     ]
+    },
+    {
+     "type": 112,
+     "start": 1.1333,
+     "end": 1.2333,
+     "name": "Hitbox_DummyPoly",
+     "category": "combat",
+     "params": [
+      0,
+      6,
+      0,
+      0,
+      112,
+      0,
+      3776
+     ]
+    },
+    {
+     "type": 112,
+     "start": 1.9333,
+     "end": 2.0333,
+     "name": "Hitbox_DummyPoly",
+     "category": "combat",
+     "params": [
+      0,
+      6,
+      0,
+      0,
+      129,
+      0,
+      3808
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.2,
+     "end": 0.3,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      999996016,
+      100,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 1,
+     "start": 1.1333,
+     "end": 1.3,
+     "name": "InvokeBulletBehavior",
+     "category": "combat",
+     "params": [
+      1,
+      0,
+      6760,
+      0,
+      129,
+      0,
+      3888
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.1,
+     "end": 2.2,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      999996016,
+      100,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 1.1,
+     "end": 1.2,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      8,
+      3001,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 2,
+     "start": 1.1667,
+     "end": 1.2,
+     "name": "InvokeCommonBehavior",
+     "category": "combat",
+     "params": [
+      101,
+      0,
+      6761
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.0333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      87,
+      0,
+      -1,
+      6,
+      129,
+      0,
+      4064
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.0,
+     "end": 2.0333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      5,
+      451071,
+      -1,
+      -1,
+      65536,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.0333,
+     "end": 2.0667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      5,
+      451071,
+      -1,
+      -1,
+      65536,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.0667,
+     "end": 2.1667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      5,
+      451071,
+      -1,
+      -1,
+      65536,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.0333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      106,
+      0,
+      -1,
+      6,
+      66,
+      0,
+      4240
+     ]
+    },
+    {
+     "type": 66,
+     "start": 3.3667,
+     "end": 4.3333,
+     "name": "PlaySound_DummyPoly",
+     "category": "sound",
+     "params": [
+      100420,
+      0,
+      0,
+      0,
+      300,
+      0,
+      4272
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2,
+     "end": 3.2667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131076,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4304
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.2667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      4,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      4336
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2,
+     "end": 3.2667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131175,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4368
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.2667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      103,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      4400
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2667,
+     "end": 3.3333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131176,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4432
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      104,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      4464
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2667,
+     "end": 3.3333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131088,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4496
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      16,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      4528
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2667,
+     "end": 3.3333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131094,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4560
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      22,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      4592
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.3667,
+     "end": 3.4333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131083,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4624
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.4333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      11,
+      0,
+      -1,
+      6,
+      0,
+      0,
+      4656
+     ]
+    },
+    {
+     "type": 0,
+     "start": 0.0,
+     "end": 0.8,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      7,
+      0,
+      -1,
+      6,
+      0,
+      0,
+      4688
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.1,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      7,
+      0,
+      -1,
+      6,
+      224,
+      0,
+      4720
+     ]
+    },
+    {
+     "type": 224,
+     "start": 0.8,
+     "end": 0.8667,
+     "name": "SetWeaponSubscription",
+     "category": "state",
+     "params": [
+      1138819072,
+      65280,
+      0,
+      0,
+      300,
+      0,
+      4752
+     ]
+    },
+    {
+     "type": 300,
+     "start": 2.9667,
+     "end": 3.0333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131098,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4784
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.0333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      26,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      4816
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.1,
+     "end": 3.1667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      65643,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4848
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.1667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      107,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      4880
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.3,
+     "end": 3.3667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131103,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4912
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      31,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      4944
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.3,
+     "end": 3.3667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131101,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      4976
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      29,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      5008
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.3,
+     "end": 3.3667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131104,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      5040
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      32,
+      0,
+      -1,
+      6,
+      225,
+      0,
+      5072
+     ]
+    },
+    {
+     "type": 225,
+     "start": 0.0,
+     "end": 3.3333,
+     "name": "SetEnemyRequestID",
+     "category": "state",
+     "params": [
+      0,
+      0,
+      0,
+      0,
+      66,
+      0,
+      5104
+     ]
+    },
+    {
+     "type": 66,
+     "start": 1.1333,
+     "end": 2.6333,
+     "name": "PlaySound_DummyPoly",
+     "category": "sound",
+     "params": [
+      45,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5136
+     ]
+    },
+    {
+     "type": 0,
+     "start": 0.0,
+     "end": 1.7667,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      51,
+      0,
+      -1,
+      6,
+      0,
+      0,
+      5168
+     ]
+    },
+    {
+     "type": 0,
+     "start": 0.0,
+     "end": 1.7667,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      134,
+      0,
+      -1,
+      6,
+      907,
+      0,
+      5200
+     ]
+    },
+    {
+     "type": 907,
+     "start": 0.0,
+     "end": 1.3,
+     "params": [
+      1077936128,
+      -1082130432,
+      -1082130432,
+      -1082130432,
+      129,
+      0,
+      5232
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.9667,
+     "end": 1.0667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      103563000,
+      100,
+      -1,
+      16777216,
+      1
+     ]
+    },
+    {
+     "type": 145,
+     "start": 1.1667,
+     "end": 1.3333,
+     "name": "SuperArmor_Poise",
+     "category": "iframe",
+     "params": [
+      66,
+      65535,
+      0,
+      0,
+      792,
+      0,
+      5312
+     ]
+    },
+    {
+     "type": 792,
+     "start": 1.2,
+     "end": 1.3,
+     "name": "MovementFlag",
+     "category": "motion",
+     "params": [
+      142,
+      101,
+      -1,
+      65537,
+      792,
+      0,
+      5344
+     ]
+    },
+    {
+     "type": 792,
+     "start": 2.0,
+     "end": 2.1,
+     "name": "MovementFlag",
+     "category": "motion",
+     "params": [
+      142,
+      101,
+      -1,
+      65537,
+      145,
+      0,
+      5376
+     ]
+    },
+    {
+     "type": 145,
+     "start": 2.1,
+     "end": 2.2667,
+     "name": "SuperArmor_Poise",
+     "category": "iframe",
+     "params": [
+      65,
+      65535,
+      0,
+      0,
+      112,
+      0,
+      5408
+     ]
+    },
+    {
+     "type": 112,
+     "start": 0.3667,
+     "end": 0.4667,
+     "name": "Hitbox_DummyPoly",
+     "category": "combat",
+     "params": [
+      0,
+      5,
+      0,
+      0,
+      112,
+      0,
+      5440
+     ]
+    },
+    {
+     "type": 112,
+     "start": 2.3333,
+     "end": 2.4333,
+     "name": "Hitbox_DummyPoly",
+     "category": "combat",
+     "params": [
+      0,
+      5,
+      0,
+      0,
+      129,
+      0,
+      5472
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.0,
+     "end": 1.1667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      5,
+      451070,
+      100,
+      -1,
+      16842752,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 1.1667,
+     "end": 1.2667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      5,
+      450001,
+      100,
+      -1,
+      65536,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.0,
+     "end": 2.1,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      5,
+      450001,
+      100,
+      -1,
+      65536,
+      1,
+      0,
+      255
+     ]
+    }
+   ]
+  },
+  {
+   "animId": "a000_040005",
+   "rawId": 40005,
+   "events": [
+    {
+     "type": 700,
+     "start": 0.8,
+     "end": 2.2333,
+     "name": "WeaponTrail",
+     "category": "vfx",
+     "params": [
+      -1082130432,
+      -1082130432,
+      -1082130432,
+      -1082130432,
+      100,
+      65286,
+      -1082130432,
+      -1082130432
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.1333,
+     "end": 1.1667,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      72,
+      1035489772,
+      -1,
+      6,
+      226,
+      0,
+      10864
+     ]
+    },
+    {
+     "type": 226,
+     "start": 1.1333,
+     "end": 1.3,
+     "name": "SetHitTargetMode",
+     "category": "state",
+     "params": [
+      80,
+      0,
+      0,
+      0,
+      0,
+      0,
+      10896
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.1333,
+     "end": 1.3,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      56,
+      0,
+      -1,
+      6,
+      0,
+      0,
+      10928
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.1333,
+     "end": 1.3,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      57,
+      0,
+      -1,
+      6,
+      1,
+      0,
+      10960
+     ]
+    },
+    {
+     "type": 1,
+     "start": 1.1333,
+     "end": 1.3,
+     "name": "InvokeBulletBehavior",
+     "category": "combat",
+     "params": [
+      1,
+      0,
+      6764,
+      0,
+      0,
+      0,
+      10992
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.0333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      87,
+      0,
+      -1,
+      6,
+      0,
+      0,
+      11024
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.0333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      106,
+      0,
+      -1,
+      6,
+      66,
+      0,
+      11056
+     ]
+    },
+    {
+     "type": 66,
+     "start": 3.3667,
+     "end": 4.3333,
+     "name": "PlaySound_DummyPoly",
+     "category": "sound",
+     "params": [
+      100420,
+      0,
+      0,
+      0,
+      300,
+      0,
+      11088
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2,
+     "end": 3.2667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131076,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11120
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.2667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      4,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11152
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2,
+     "end": 3.2667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131175,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11184
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.2667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      103,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11216
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2667,
+     "end": 3.3333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131176,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11248
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      104,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11280
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2667,
+     "end": 3.3333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131088,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11312
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      16,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11344
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.2667,
+     "end": 3.3333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131094,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11376
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      22,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11408
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.3667,
+     "end": 3.4333,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131083,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11440
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.4333,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      11,
+      0,
+      -1,
+      6,
+      0,
+      0,
+      11472
+     ]
+    },
+    {
+     "type": 0,
+     "start": 0.0,
+     "end": 0.8,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      7,
+      0,
+      -1,
+      6,
+      0,
+      0,
+      11504
+     ]
+    },
+    {
+     "type": 0,
+     "start": 1.1,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      7,
+      0,
+      -1,
+      6,
+      224,
+      0,
+      11536
+     ]
+    },
+    {
+     "type": 224,
+     "start": 0.8,
+     "end": 0.8667,
+     "name": "SetWeaponSubscription",
+     "category": "state",
+     "params": [
+      1138819072,
+      65280,
+      0,
+      0,
+      300,
+      0,
+      11568
+     ]
+    },
+    {
+     "type": 300,
+     "start": 2.9333,
+     "end": 3.0,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131098,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11600
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.0,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      26,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11632
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.1,
+     "end": 3.1667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      65643,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11664
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.1667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      107,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11696
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.3,
+     "end": 3.3667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131103,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11728
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      31,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11760
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.3,
+     "end": 3.3667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131101,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11792
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      29,
+      0,
+      -1,
+      6,
+      300,
+      0,
+      11824
+     ]
+    },
+    {
+     "type": 300,
+     "start": 3.3,
+     "end": 3.3667,
+     "name": "SpawnFFX_OneShot",
+     "category": "vfx",
+     "params": [
+      131104,
+      0,
+      1065353216,
+      -1,
+      0,
+      0,
+      11856
+     ]
+    },
+    {
+     "type": 0,
+     "start": 3.3667,
+     "end": 4.3333,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      32,
+      0,
+      -1,
+      6,
+      225,
+      0,
+      11888
+     ]
+    },
+    {
+     "type": 225,
+     "start": 0.0,
+     "end": 3.3333,
+     "name": "SetEnemyRequestID",
+     "category": "state",
+     "params": [
+      0,
+      0,
+      0,
+      0,
+      66,
+      0,
+      11920
+     ]
+    },
+    {
+     "type": 66,
+     "start": 1.1333,
+     "end": 2.6333,
+     "name": "PlaySound_DummyPoly",
+     "category": "sound",
+     "params": [
+      45,
+      0,
+      0,
+      0,
+      0,
+      0,
+      11952
+     ]
+    },
+    {
+     "type": 0,
+     "start": 0.0,
+     "end": 1.7667,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      51,
+      0,
+      -1,
+      6,
+      0,
+      0,
+      11984
+     ]
+    },
+    {
+     "type": 0,
+     "start": 0.0,
+     "end": 1.7667,
+     "name": "InvokeAttackBehavior",
+     "category": "combat",
+     "params": [
+      134,
+      0,
+      -1,
+      6,
+      907,
+      0,
+      12016
+     ]
+    },
+    {
+     "type": 907,
+     "start": 0.0,
+     "end": 1.3,
+     "params": [
+      1077936128,
+      -1082130432,
+      -1082130432,
+      -1082130432,
+      16,
+      0,
+      12048
+     ]
+    },
+    {
+     "type": 16,
+     "start": 0.0,
+     "end": 0.1667,
+     "name": "PlaySFX_Body",
+     "category": "vfx",
+     "params": [
+      129,
+      0,
+      12064,
+      0,
+      8,
+      2001,
+      -1,
+      -1
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.3333,
+     "end": 0.4333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      8,
+      2001,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 112,
+     "start": 0.3667,
+     "end": 0.4667,
+     "name": "Hitbox_DummyPoly",
+     "category": "combat",
+     "params": [
+      0,
+      5,
+      0,
+      0,
+      112,
+      0,
+      12144
+     ]
+    },
+    {
+     "type": 112,
+     "start": 2.3333,
+     "end": 2.4333,
+     "name": "Hitbox_DummyPoly",
+     "category": "combat",
+     "params": [
+      0,
+      5,
+      0,
+      0,
+      129,
+      0,
+      12176
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.5333,
+     "end": 2.6333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      8,
+      1001,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 3.3333,
+     "end": 3.4333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      8,
+      1001,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 1.0333,
+     "end": 1.1333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      103560000,
+      100,
+      -1,
+      16777216,
+      1
+     ]
+    },
+    {
+     "type": 112,
+     "start": 1.1333,
+     "end": 1.2333,
+     "name": "Hitbox_DummyPoly",
+     "category": "combat",
+     "params": [
+      0,
+      6,
+      0,
+      0,
+      145,
+      0,
+      12352
+     ]
+    },
+    {
+     "type": 145,
+     "start": 1.1667,
+     "end": 1.3333,
+     "name": "SuperArmor_Poise",
+     "category": "iframe",
+     "params": [
+      66,
+      65535,
+      0,
+      0,
+      112,
+      0,
+      12384
+     ]
+    },
+    {
+     "type": 112,
+     "start": 1.9333,
+     "end": 2.0333,
+     "name": "Hitbox_DummyPoly",
+     "category": "combat",
+     "params": [
+      0,
+      6,
+      0,
+      0,
+      145,
+      0,
+      12416
+     ]
+    },
+    {
+     "type": 145,
+     "start": 2.1,
+     "end": 2.2667,
+     "name": "SuperArmor_Poise",
+     "category": "iframe",
+     "params": [
+      65,
+      65535,
+      0,
+      0,
+      792,
+      0,
+      12448
+     ]
+    },
+    {
+     "type": 792,
+     "start": 1.2,
+     "end": 1.3,
+     "name": "MovementFlag",
+     "category": "motion",
+     "params": [
+      142,
+      101,
+      -1,
+      65537,
+      792,
+      0,
+      12480
+     ]
+    },
+    {
+     "type": 792,
+     "start": 2.0,
+     "end": 2.1,
+     "name": "MovementFlag",
+     "category": "motion",
+     "params": [
+      142,
+      101,
+      -1,
+      65537,
+      712,
+      0,
+      12512
+     ]
+    },
+    {
+     "type": 712,
+     "start": 0.0,
+     "end": 4.1667,
+     "name": "SpawnFFX_WeaponBoth",
+     "category": "vfx",
+     "params": [
+      -16711936,
+      -16711936,
+      50463488,
+      -16711936,
+      1
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.9667,
+     "end": 1.0667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      200,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.0,
+     "end": 2.1,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      200,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.1667,
+     "end": 0.2667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      100,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.8,
+     "end": 2.9,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      100,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 605,
+     "start": 3.3,
+     "end": 3.6667,
+     "name": "RootMotion_Mult",
+     "category": "motion",
+     "params": [
+      0,
+      0,
+      0,
+      1065353216
+     ]
+    },
+    {
+     "type": 605,
+     "start": 3.6667,
+     "end": 4.3333,
+     "name": "RootMotion_Mult",
+     "category": "motion",
+     "params": [
+      0,
+      0,
+      1065353216,
+      1065353216
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.6,
+     "end": 0.7,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      0,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 1.6,
+     "end": 1.7,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      0,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 3.3333,
+     "end": 3.4333,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      15,
+      0,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 1.1667,
+     "end": 1.2667,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      103565000,
+      100,
+      -1,
+      16777216,
+      1
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.0,
+     "end": 2.1,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      103565100,
+      100,
+      -1,
+      16842752,
+      1
+     ]
+    },
+    {
+     "type": 129,
+     "start": 0.2,
+     "end": 0.3,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      999996016,
+      100,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 2.1,
+     "end": 2.2,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      1,
+      999996016,
+      100,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    },
+    {
+     "type": 129,
+     "start": 1.1,
+     "end": 1.2,
+     "name": "SetPlayerInput",
+     "category": "state",
+     "params": [
+      8,
+      3001,
+      -1,
+      -1,
+      16777216,
+      1,
+      0,
+      255
+     ]
+    }
+   ]
+  }
+ ]
+}

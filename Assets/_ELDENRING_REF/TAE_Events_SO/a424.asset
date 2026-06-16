@@ -1,0 +1,1703 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6588c196bfb77fc4dbdb070057a72876, type: 3}
+  m_Name: a424
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.TAEEventData
+  tae: a424
+  taeId: 2424
+  animations:
+  - animId: a000_045000
+    rawId: 45000
+    events:
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 00000000080000000000803f0000803f
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4333
+      endTime: 0.5333
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 0.5333
+      endTime: 0.8667
+      parameters: 5d000500000000000000803fffffffffe100000000000000d0050000
+    - type: 225
+      name: SetEnemyRequestID
+      category: state
+      startTime: 0
+      endTime: 1.2333
+      parameters: 320000000000000000000000000000007300000000000000f0050000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.4333
+      endTime: -1
+      parameters: 0000000000008503010000000000000101000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 0.5333
+      parameters: 5a00000000000000ffffffff06000000c80200000000000040060000
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00ff00ff00ff00ff0003020300ff00ff01000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.2667
+      endTime: 0.3667
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4333
+      endTime: 0.5333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0.5333
+      endTime: 1.8333
+      parameters: 5900000000000000ffffffff060000001000000000000000f0060000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 000000000000000000070000000000000700000000000000ffffffff06000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0.5333
+      endTime: 1.8333
+      parameters: 0700000000000000ffffffff06000000000000000000000020070000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 1.8333
+      parameters: 3300000000000000ffffffff06000000730000000000000040070000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.4333
+      endTime: -1
+      parameters: 0000000000008603020000000000000101000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 1.8333
+      parameters: 8600000000000000ffffffff06000000730000000000000090070000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.4333
+      endTime: 0.5333
+      parameters: 000000000000dc00ffffffff0000010001000000
+    - type: 907
+      name: 
+      category: 
+      startTime: 0
+      endTime: 1.8333
+      parameters: 00000040000080bf000080bf000080bf8100000000000000e0070000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4
+      endTime: 1.5333
+      parameters: 05000000fffe07006400000005000000000001010100000000000000ff000000
+  - animId: a000_045010
+    rawId: 45010
+    events:
+    - type: 66
+      name: PlaySound_DummyPoly
+      category: sound
+      startTime: 0
+      endTime: 0.5667
+      parameters: 02890100000000000000000000000000400000000000000020140000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 1.4667
+      endTime: 1.5
+      parameters: f00000000000ffff07010000ff000000100000000000000040140000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 40000000000000005014000000000000f00000000100ffff03010100
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 1.4667
+      endTime: 3.2
+      parameters: f00000000100ffff0301010000000000400000000000000070140000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 1.4667
+      endTime: 3.2
+      parameters: f00000000100ffff0401010001000000400000000000000090140000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 1.4667
+      endTime: 3.2
+      parameters: fa0000000100ffff05010100020000000000000000000000b0140000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2
+      endTime: 4.7
+      parameters: 5700000000000000ffffffff060000000000000000000000d0140000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2
+      endTime: 4.7
+      parameters: 6a00000000000000ffffffff060000002c01000000000000f0140000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.7667
+      endTime: 3.8333
+      parameters: 1d000100000000000000803fffffffff000000000000000010150000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.8333
+      endTime: 4.7
+      parameters: 1d00000000000000ffffffff060000002c0100000000000030150000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.7667
+      endTime: 3.8333
+      parameters: 04000100000000000000803fffffffff000000000000000050150000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.8333
+      endTime: 4.7
+      parameters: 0400000000000000ffffffff060000002c0100000000000070150000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.7667
+      endTime: 3.8333
+      parameters: 67000100000000000000803fffffffff000000000000000090150000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.8333
+      endTime: 4.7
+      parameters: 6700000000000000ffffffff060000002c01000000000000b0150000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 68000100000000000000803fffffffff0000000000000000d0150000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 6800000000000000ffffffff060000002c01000000000000f0150000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 10000100000000000000803fffffffff000000000000000010160000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 1000000000000000ffffffff060000002c0100000000000030160000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 16000200000000000000803fffffffff000000000000000050160000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 1600000000000000ffffffff060000002c0100000000000070160000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.9333
+      endTime: 4
+      parameters: 0b000200000000000000803fffffffff000000000000000090160000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 4
+      endTime: 4.7
+      parameters: 0b00000000000000ffffffff06000000e000000000000000b0160000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0.7333
+      endTime: 1
+      parameters: 0000344400ff000000000000000000000000000000000000d0160000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 0.7333
+      parameters: 0700000000000000ffffffff060000000000000000000000f0160000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 1
+      endTime: 4
+      parameters: 0700000000000000ffffffff060000002c0100000000000010170000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.5667
+      endTime: 3.6333
+      parameters: 1a000100000000000000803fffffffff000000000000000030170000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.6333
+      endTime: 4.7
+      parameters: 1a00000000000000ffffffff060000002c0100000000000050170000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.7667
+      endTime: 3.8333
+      parameters: 6b000100000000000000803fffffffff000000000000000070170000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.8333
+      endTime: 4.7
+      parameters: 6b00000000000000ffffffff060000002c0100000000000090170000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 1f000200000000000000803fffffffff0000000000000000b0170000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 1f00000000000000ffffffff060000002c01000000000000d0170000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 20000200000000000000803fffffffff0000000000000000f0170000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 2000000000000000ffffffff06000000000000000000000010180000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 4
+      parameters: 5900000000000000ffffffff06000000000000000000000030180000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2
+      endTime: 4.7
+      parameters: 5700000000000000ffffffff06000000000000000000000050180000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 4.2667
+      parameters: 3300000000000000ffffffff06000000000000000000000070180000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 4.2667
+      parameters: 8600000000000000ffffffff060000008b0300000000000090180000
+    - type: 907
+      name: 
+      category: 
+      startTime: 0
+      endTime: 4.1667
+      parameters: 00000040000080bf000080bf000080bf7300000000000000b0180000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0
+      endTime: 0.2667
+      parameters: 0000000000008503010000000000000101000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0
+      endTime: 0.2667
+      parameters: 0000000000008603020000000000000101000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.2667
+      endTime: 1.4667
+      parameters: 0000000000008503030000000000020101000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.4
+      endTime: 1.4333
+      parameters: 0100000029f5360664000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.4333
+      endTime: 1.5333
+      parameters: 0100000029f5360666000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.2333
+      endTime: 1.5
+      parameters: 0500000003ff070064000000ffffffff000001010100000000000000ff000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.2667
+      endTime: 1.4667
+      parameters: 0000000000008603040000000000020101000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.4
+      endTime: 1.5
+      parameters: 05000000e3fe070064000000ffffffff000001010100000000000000ff000000
+    - type: 112
+      name: Hitbox_DummyPoly
+      category: combat
+      startTime: 1.1667
+      endTime: 1.2667
+      parameters: 00000000060000000000000000000000c802000000000000501a0000
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00ff00ff00ff00ff0003020300ff00ff01000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.1333
+      endTime: 1.2333
+      parameters: 08000000d1070000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 4.1667
+      endTime: 4.2667
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 4.5333
+      endTime: 4.6333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3
+      endTime: 1.4
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 3.9333
+      endTime: 4.3333
+      parameters: 0000000000000000000000000000803f
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 4.3333
+      endTime: -1
+      parameters: 00000000000000000000803f0000803f
+    - type: 787
+      name: Homing_Movement
+      category: motion
+      startTime: 1.1667
+      endTime: 4
+      parameters: 000070410000704100000000cdcc4c3e
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.7333
+      endTime: 3.8333
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.6333
+      endTime: 0.7333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 145
+      name: SuperArmor_Poise
+      category: iframe
+      startTime: 1.4667
+      endTime: 1.5667
+      parameters: 43000000ffff000000000000000000008100000000000000801c0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.0667
+      endTime: 2.1667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.2
+      endTime: 3.3
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 4.3333
+      endTime: 4.4333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3
+      endTime: 1.4
+      parameters: 01000000401f000064000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 1.5
+      parameters: 05000000fffe07006400000005000000000001010100000000000000ff000000
+  - animId: a000_045011
+    rawId: 45011
+    events:
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 0.5
+      endTime: 0.5333
+      parameters: f00000000000ffff06010000ff0000007300000000000000f02e0000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0
+      endTime: 0.5
+      parameters: 0000000000008503010000000000000101000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 4000000000000000302f000000000000f00000000100ffff00010100
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 0.5
+      endTime: 1.8333
+      parameters: f00000000100ffff00010100000000004000000000000000502f0000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 0.5
+      endTime: 1.8333
+      parameters: f00000000100ffff01010100010000004000000000000000702f0000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 0.5
+      endTime: 1.8333
+      parameters: fa0000000100ffff02010100020000000000000000000000902f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 1.5667
+      endTime: 3.2333
+      parameters: 5700000000000000ffffffff060000000000000000000000b02f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 1.5667
+      endTime: 3.2333
+      parameters: 6a00000000000000ffffffff060000002c01000000000000d02f0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.3333
+      endTime: 2.4
+      parameters: 1d000100000000000000803fffffffff0000000000000000f02f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4
+      endTime: 3.2333
+      parameters: 1d00000000000000ffffffff060000002c0100000000000010300000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.3333
+      endTime: 2.4
+      parameters: 04000100000000000000803fffffffff000000000000000030300000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4
+      endTime: 3.2333
+      parameters: 0400000000000000ffffffff060000002c0100000000000050300000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.3333
+      endTime: 2.4
+      parameters: 67000100000000000000803fffffffff000000000000000070300000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4
+      endTime: 3.2333
+      parameters: 6700000000000000ffffffff060000002c0100000000000090300000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 68000100000000000000803fffffffff0000000000000000b0300000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 6800000000000000ffffffff060000002c01000000000000d0300000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 10000100000000000000803fffffffff0000000000000000f0300000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 1000000000000000ffffffff060000002c0100000000000010310000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 16000200000000000000803fffffffff000000000000000030310000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 1600000000000000ffffffff060000002c0100000000000050310000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.5
+      endTime: 2.5667
+      parameters: 0b000200000000000000803fffffffff000000000000000070310000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.5667
+      endTime: 3.2333
+      parameters: 0b00000000000000ffffffff06000000e00000000000000090310000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0.0667
+      endTime: 0.3333
+      parameters: 0000344400ff000000000000000000000000000000000000b0310000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 0.0667
+      parameters: 0700000000000000ffffffff060000000000000000000000d0310000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0.3333
+      endTime: 3.2333
+      parameters: 0700000000000000ffffffff060000002c01000000000000f0310000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.1667
+      endTime: 2.2333
+      parameters: 1a000100000000000000803fffffffff000000000000000010320000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.2333
+      endTime: 3.2333
+      parameters: 1a00000000000000ffffffff060000002c0100000000000030320000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.3333
+      endTime: 2.4
+      parameters: 6b000100000000000000803fffffffff000000000000000050320000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4
+      endTime: 3.2333
+      parameters: 6b00000000000000ffffffff060000002c0100000000000070320000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 1f000200000000000000803fffffffff000000000000000090320000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 1f00000000000000ffffffff060000002c01000000000000b0320000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 20000200000000000000803fffffffff0000000000000000d0320000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 2000000000000000ffffffff060000000000000000000000f0320000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 2.5667
+      parameters: 5900000000000000ffffffff06000000e10000000000000010330000
+    - type: 225
+      name: SetEnemyRequestID
+      category: state
+      startTime: 0
+      endTime: 2.5667
+      parameters: 00000000000000000000000000000000000000000000000030330000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 2.7667
+      parameters: 3300000000000000ffffffff06000000000000000000000050330000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 2.7667
+      parameters: 8600000000000000ffffffff060000008b0300000000000070330000
+    - type: 907
+      name: 
+      category: 
+      startTime: 0
+      endTime: 2.6667
+      parameters: 00000040000080bf000080bf000080bf730000000000000090330000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0
+      endTime: 0.5
+      parameters: 0000000000008603020000000000000101000000
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00ff00ff00ff00ff0003020300ff00ff01000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.7
+      endTime: 2.8
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.0333
+      endTime: 3.1333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 787
+      name: Homing_Movement
+      category: motion
+      startTime: 0.3333
+      endTime: 2.6
+      parameters: 000070410000704100000000cdcc4c3e
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.2667
+      endTime: 2.3667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 145
+      name: SuperArmor_Poise
+      category: iframe
+      startTime: 0.5
+      endTime: 0.6
+      parameters: 43000000ffff000000000000000000008100000000000000d0340000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.9667
+      endTime: 1.0667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6667
+      endTime: 1.7667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.8667
+      endTime: 2.9667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.3333
+      endTime: 0.4333
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 2.4667
+      endTime: 2.8667
+      parameters: 0000000000000000000000000000803f
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 2.8667
+      endTime: -1
+      parameters: 00000000000000000000803f0000803f
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.3333
+      endTime: 0.4333
+      parameters: 01000000401f000064000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4333
+      endTime: 0.4667
+      parameters: 0100000029f5360664000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4667
+      endTime: 0.5667
+      parameters: 0100000029f5360666000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.5667
+      parameters: 05000000fffe07006400000005000000000001010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4333
+      endTime: 0.5333
+      parameters: 05000000e3fe070064000000ffffffff000001010100000000000000ff000000
+  - animId: a000_045100
+    rawId: 45100
+    events:
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 0.5333
+      endTime: 0.8667
+      parameters: 5d000500000000000000803fffffffff0000000000000000e1000000
+    - type: 225
+      name: SetEnemyRequestID
+      category: state
+      startTime: 0
+      endTime: 1.2333
+      parameters: 320000000000000000000000000000000000000000000000a0430000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 0.5333
+      parameters: 5a00000000000000ffffffff060000000000000000000000c0430000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0.5333
+      endTime: 1.8333
+      parameters: 5900000000000000ffffffff060000000000000000000000e0430000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0.5333
+      endTime: 1.8333
+      parameters: 0700000000000000ffffffff06000000000000000000000000440000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 1.8333
+      parameters: 3300000000000000ffffffff06000000000000000000000020440000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 1.8333
+      parameters: 8600000000000000ffffffff060000008b0300000000000040440000
+    - type: 907
+      name: 
+      category: 
+      startTime: 0
+      endTime: 1.8333
+      parameters: 00000040000080bf000080bf000080bf810000000000000060440000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4
+      endTime: 1.5333
+      parameters: 05000000fffe07006400000005000000000001010100000000000000ff000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.4333
+      endTime: -1
+      parameters: 0000000000008503010000000000000101000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.4333
+      endTime: -1
+      parameters: 0000000000008603020000000000000101000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.4333
+      endTime: 0.5333
+      parameters: 000000000000dc00ffffffff0000010001000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.2667
+      endTime: 0.3667
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4333
+      endTime: 0.5333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000300ff00ff00ff00ff00ff00ff00ff01000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4333
+      endTime: 0.5333
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 00000000080000000000803f0000803f
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 0100000000000000d048000000000000c0480000
+  - animId: a000_045110
+    rawId: 45110
+    events:
+    - type: 66
+      name: PlaySound_DummyPoly
+      category: sound
+      startTime: 0
+      endTime: 0.5667
+      parameters: 02890100000000000000000000000000400000000000000030520000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 1.4667
+      endTime: 1.5
+      parameters: f00000000000ffff07010000ff000000400000000000000050520000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 1.4667
+      endTime: 3.2
+      parameters: f00000000100ffff0301010000000000400000000000000070520000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 1.4667
+      endTime: 3.2
+      parameters: f00000000100ffff0401010001000000400000000000000090520000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 1.4667
+      endTime: 3.2
+      parameters: fa0000000100ffff05010100020000000000000000000000b0520000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2
+      endTime: 4.7
+      parameters: 5700000000000000ffffffff060000000000000000000000d0520000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2
+      endTime: 4.7
+      parameters: 6a00000000000000ffffffff060000002c01000000000000f0520000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.7667
+      endTime: 3.8333
+      parameters: 1d000100000000000000803fffffffff000000000000000010530000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.8333
+      endTime: 4.7
+      parameters: 1d00000000000000ffffffff060000002c0100000000000030530000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.7667
+      endTime: 3.8333
+      parameters: 04000100000000000000803fffffffff000000000000000050530000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.8333
+      endTime: 4.7
+      parameters: 0400000000000000ffffffff060000002c0100000000000070530000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.7667
+      endTime: 3.8333
+      parameters: 67000100000000000000803fffffffff000000000000000090530000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.8333
+      endTime: 4.7
+      parameters: 6700000000000000ffffffff060000002c01000000000000b0530000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 68000100000000000000803fffffffff0000000000000000d0530000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 6800000000000000ffffffff060000002c01000000000000f0530000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 10000100000000000000803fffffffff000000000000000010540000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 1000000000000000ffffffff060000002c0100000000000030540000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 16000200000000000000803fffffffff000000000000000050540000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 1600000000000000ffffffff060000002c0100000000000070540000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.9333
+      endTime: 4
+      parameters: 0b000200000000000000803fffffffff000000000000000090540000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 4
+      endTime: 4.7
+      parameters: 0b00000000000000ffffffff06000000e000000000000000b0540000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0.7333
+      endTime: 1
+      parameters: 0000344400ff000000000000000000000000000000000000d0540000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 0.7333
+      parameters: 0700000000000000ffffffff060000000000000000000000f0540000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 1
+      endTime: 4
+      parameters: 0700000000000000ffffffff060000002c0100000000000010550000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.5667
+      endTime: 3.6333
+      parameters: 1a000100000000000000803fffffffff000000000000000030550000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.6333
+      endTime: 4.7
+      parameters: 1a00000000000000ffffffff060000002c0100000000000050550000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.7667
+      endTime: 3.8333
+      parameters: 6b000100000000000000803fffffffff000000000000000070550000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.8333
+      endTime: 4.7
+      parameters: 6b00000000000000ffffffff060000002c0100000000000090550000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 1f000200000000000000803fffffffff0000000000000000b0550000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 1f00000000000000ffffffff060000002c01000000000000d0550000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 3.8333
+      endTime: 3.9
+      parameters: 20000200000000000000803fffffffff0000000000000000f0550000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.9
+      endTime: 4.7
+      parameters: 2000000000000000ffffffff06000000000000000000000010560000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 4
+      parameters: 5900000000000000ffffffff06000000e10000000000000030560000
+    - type: 225
+      name: SetEnemyRequestID
+      category: state
+      startTime: 0
+      endTime: 4
+      parameters: 00000000000000000000000000000000000000000000000050560000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 4.2667
+      parameters: 3300000000000000ffffffff06000000000000000000000070560000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 4.2667
+      parameters: 8600000000000000ffffffff060000008b0300000000000090560000
+    - type: 907
+      name: 
+      category: 
+      startTime: 0
+      endTime: 4.1667
+      parameters: 00000040000080bf000080bf000080bf7300000000000000b0560000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0
+      endTime: 0.2667
+      parameters: 0000000000008503010000000000000101000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.4
+      endTime: 1.5
+      parameters: 05000000e3fe070064000000ffffffff000001010100000000000000ff000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0
+      endTime: 0.2667
+      parameters: 0000000000008603020000000000000101000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.2667
+      endTime: 1.4667
+      parameters: 0000000000008503030000000000020101000000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0.2667
+      endTime: 1.4667
+      parameters: 0000000000008603040000000000020101000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.4
+      endTime: 1.4333
+      parameters: 0100000029f5360664000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.4333
+      endTime: 1.5333
+      parameters: 0100000029f5360666000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.2333
+      endTime: 1.5
+      parameters: 0500000003ff070066000000ffffffff000001010100000000000000ff000000
+    - type: 112
+      name: Hitbox_DummyPoly
+      category: combat
+      startTime: 1.1667
+      endTime: 1.2667
+      parameters: 00000000060000000000000000000000810000000000000050580000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.1333
+      endTime: 1.2333
+      parameters: 08000000d1070000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 4.1667
+      endTime: 4.2667
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 4.5333
+      endTime: 4.6333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000300ff00ff00ff00ff00ff00ff00ff01000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3
+      endTime: 1.4
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.7333
+      endTime: 3.8333
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 3.9333
+      endTime: 4.3333
+      parameters: 0000000000000000000000000000803f
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 4.3333
+      endTime: -1
+      parameters: 00000000000000000000803f0000803f
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.6333
+      endTime: 0.7333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 787
+      name: Homing_Movement
+      category: motion
+      startTime: 1.1667
+      endTime: 4
+      parameters: 000070410000704100000000cdcc4c3e
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.0667
+      endTime: 2.1667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.2
+      endTime: 3.3
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 4.3333
+      endTime: 4.4333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3
+      endTime: 1.4
+      parameters: 01000000401f000064000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 1.5
+      parameters: 05000000fffe07006400000005000000000001010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 9100000000000000605b00000000000043000000ffff0000
+    - type: 145
+      name: SuperArmor_Poise
+      category: iframe
+      startTime: 1.4667
+      endTime: 1.5667
+      parameters: 43000000ffff00000000000000000000010000000000000020610000
+  - animId: a000_045111
+    rawId: 45111
+    events:
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 0.5
+      endTime: 0.5333
+      parameters: f00000000000ffff06010000ff0000004000000000000000006d0000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 0.5
+      endTime: 1.8333
+      parameters: f00000000100ffff00010100000000004000000000000000206d0000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 0.5
+      endTime: 1.8333
+      parameters: f00000000100ffff01010100010000004000000000000000406d0000
+    - type: 64
+      name: PlaySound_Body
+      category: sound
+      startTime: 0.5
+      endTime: 1.8333
+      parameters: fa0000000100ffff02010100020000000000000000000000606d0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 1.5667
+      endTime: 3.2333
+      parameters: 5700000000000000ffffffff060000000000000000000000806d0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 1.5667
+      endTime: 3.2333
+      parameters: 6a00000000000000ffffffff060000002c01000000000000a06d0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.3333
+      endTime: 2.4
+      parameters: 1d000100000000000000803fffffffff0000000000000000c06d0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4
+      endTime: 3.2333
+      parameters: 1d00000000000000ffffffff060000002c01000000000000e06d0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.3333
+      endTime: 2.4
+      parameters: 04000100000000000000803fffffffff0000000000000000006e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4
+      endTime: 3.2333
+      parameters: 0400000000000000ffffffff060000002c01000000000000206e0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.3333
+      endTime: 2.4
+      parameters: 67000100000000000000803fffffffff0000000000000000406e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4
+      endTime: 3.2333
+      parameters: 6700000000000000ffffffff060000002c01000000000000606e0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 68000100000000000000803fffffffff0000000000000000806e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 6800000000000000ffffffff060000002c01000000000000a06e0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 10000100000000000000803fffffffff0000000000000000c06e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 1000000000000000ffffffff060000002c01000000000000e06e0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 16000200000000000000803fffffffff0000000000000000006f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 1600000000000000ffffffff060000002c01000000000000206f0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.5
+      endTime: 2.5667
+      parameters: 0b000200000000000000803fffffffff0000000000000000406f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.5667
+      endTime: 3.2333
+      parameters: 0b00000000000000ffffffff06000000e000000000000000606f0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0.0667
+      endTime: 0.3333
+      parameters: 0000344400ff000000000000000000000000000000000000806f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 0.0667
+      parameters: 0700000000000000ffffffff060000000000000000000000a06f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0.3333
+      endTime: 3.2333
+      parameters: 0700000000000000ffffffff060000002c01000000000000c06f0000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.1667
+      endTime: 2.2333
+      parameters: 1a000100000000000000803fffffffff0000000000000000e06f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.2333
+      endTime: 3.2333
+      parameters: 1a00000000000000ffffffff060000002c0100000000000000700000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.3333
+      endTime: 2.4
+      parameters: 6b000100000000000000803fffffffff000000000000000020700000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4
+      endTime: 3.2333
+      parameters: 6b00000000000000ffffffff060000002c0100000000000040700000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 1f000200000000000000803fffffffff000000000000000060700000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 1f00000000000000ffffffff060000002c0100000000000080700000
+    - type: 300
+      name: SpawnFFX_OneShot
+      category: vfx
+      startTime: 2.4
+      endTime: 2.4667
+      parameters: 20000200000000000000803fffffffff0000000000000000a0700000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.4667
+      endTime: 3.2333
+      parameters: 2000000000000000ffffffff060000000000000000000000c0700000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 2.5667
+      parameters: 5900000000000000ffffffff06000000e100000000000000e0700000
+    - type: 225
+      name: SetEnemyRequestID
+      category: state
+      startTime: 0
+      endTime: 2.5667
+      parameters: 00000000000000000000000000000000000000000000000000710000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 2.7667
+      parameters: 3300000000000000ffffffff06000000000000000000000020710000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 2.7667
+      parameters: 8600000000000000ffffffff060000008b0300000000000040710000
+    - type: 907
+      name: 
+      category: 
+      startTime: 0
+      endTime: 2.6667
+      parameters: 00000040000080bf000080bf000080bf730000000000000060710000
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0
+      endTime: 0.5
+      parameters: 0000000000008503010000000000000101000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 7300000000000000a07100000000000000000000000086030200000000000001
+    - type: 115
+      name: Hitbox_Capsule
+      category: combat
+      startTime: 0
+      endTime: 0.5
+      parameters: 0000000000008603020000000000000101000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.7
+      endTime: 2.8
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.0333
+      endTime: 3.1333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.2667
+      endTime: 2.3667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 2.4667
+      endTime: 2.8667
+      parameters: 0000000000000000000000000000803f
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 2.8667
+      endTime: -1
+      parameters: 00000000000000000000803f0000803f
+    - type: 787
+      name: Homing_Movement
+      category: motion
+      startTime: 0.3333
+      endTime: 2.6
+      parameters: 000070410000704100000000cdcc4c3e
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.9667
+      endTime: 1.0667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6667
+      endTime: 1.7667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.8667
+      endTime: 2.9667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000300ff00ff00ff00ff00ff00ff00ff01000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.3333
+      endTime: 0.4333
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.3333
+      endTime: 0.4333
+      parameters: 01000000401f000064000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4333
+      endTime: 0.4667
+      parameters: 0100000029f5360664000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4667
+      endTime: 0.5667
+      parameters: 0100000029f5360666000000ffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.5667
+      parameters: 05000000fffe07006400000005000000000001010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.4333
+      endTime: 0.5333
+      parameters: 05000000e3fe070064000000ffffffff000001010100000000000000ff000000
+    - type: 145
+      name: SuperArmor_Poise
+      category: iframe
+      startTime: 0.5
+      endTime: 0.6
+      parameters: 43000000ffff000000000000000000000100000000000000107a0000

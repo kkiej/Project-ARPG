@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6588c196bfb77fc4dbdb070057a72876, type: 3}
+  m_Name: a348
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.TAEEventData
+  tae: a348
+  taeId: 2348
+  animations:
+  - animId: a000_090100
+    rawId: 90100
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000000000000000000000e2000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000590200000000000030030000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffffe00000000000000050030000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000070030000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff06000000000000000000000090030000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000005d02000000000000b0030000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff06000000430000000000000000040000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 98250000000000000000000000000000430000000000000020040000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000000000000000000040040000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000000000000000000000060000

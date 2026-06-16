@@ -1,0 +1,4355 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6588c196bfb77fc4dbdb070057a72876, type: 3}
+  m_Name: a327
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.TAEEventData
+  tae: a327
+  taeId: 2327
+  animations:
+  - animId: a000_090100
+    rawId: 90100
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff06000000e200000000000000a00f0000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000e000000000000000c00f0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000e00f0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000000100000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff000000000000000020100000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff06000000000000000000000040100000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff06000000430000000000000060100000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 98250000000000000000000000000000000000000000000080100000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005d02000000000000a0100000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000000000000000000000f0100000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000010110000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: c602000000000000201100000000000000010000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000000000000000000040130000
+  - animId: a000_090101
+    rawId: 90101
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000e20000000000000090160000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000e000000000000000b0160000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000d0160000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff5902000000000000f0160000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000010170000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000000000000000000030170000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000050170000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.5
+      parameters: c602000000000000601700000000000000010000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000005d0200000000000080170000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090102
+    rawId: 90102
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000e200000000000000001c0000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000e000000000000000201c0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000401c0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff5902000000000000601c0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff4300000000000000801c0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000000000000000000000a01c0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000001000000000000000c01c0000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.5
+      parameters: c602000000000000d01c00000000000000010000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000005d02000000000000f01c0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090103
+    rawId: 90103
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000000000000000000000e2000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc02000000000000b0210000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000010220000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000030220000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000050220000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000000000000000000070220000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000090220000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: c602000000000000a02200000000000000010000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000005d02000000000000c0220000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090104
+    rawId: 90104
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000000000000000000000e2000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000e00000000000000000280000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000020280000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff000000000000000040280000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff06000000590200000000000060280000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000080280000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d02000000000000a0280000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000008100000000000000f0280000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 810000000000000030290000000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3333
+      endTime: 1.4333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000000000000000000000402b0000
+  - animId: a000_090105
+    rawId: 90105
+    events:
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000001303000000000000a02e0000
+    - type: 787
+      name: Homing_Movement
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000020410000204100000000cdcccc3d
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000f02e0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff5d02000000000000102f0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005902000000000000602f0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff0000000000000000802f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000c602000000000000a02f0000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000000000000000000000c02f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000000000000000000080310000
+  - animId: a000_090106
+    rawId: 90106
+    events:
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000000000e00000000000000020350000000000000000000000ff0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000040350000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 5700000000000000ffffffff06000000000000000000000060350000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 0400000000000000ffffffff06000000000000000000000080350000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 1000000000000000ffffffff060000000000000000000000a0350000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 1600000000000000ffffffff060000000000000000000000c0350000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 0b00000000000000ffffffff060000000000000000000000e0350000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 1a00000000000000ffffffff06000000000000000000000000360000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 1f00000000000000ffffffff06000000000000000000000020360000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 1d00000000000000ffffffff06000000000000000000000040360000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.6333
+      endTime: 2.8333
+      parameters: 2000000000000000ffffffff06000000000000000000000060360000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000080360000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 000000000000000090360000000000001c00000000000000ffffffff06000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff060000005902000000000000b0360000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff5902000000000000d0360000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000f0360000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090107
+    rawId: 90107
+    events:
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000000000e000000000000000e03d0000000000000000000000ff0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000003e0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff0000000000000000203e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 5700000000000000ffffffff060000005d02000000000000403e0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 0400000000000000ffffffff060000000000000000000000903e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 1000000000000000ffffffff060000000000000000000000b03e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 1600000000000000ffffffff060000000000000000000000d03e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 0b00000000000000ffffffff060000000000000000000000f03e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 1a00000000000000ffffffff060000000000000000000000103f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 1f00000000000000ffffffff060000000000000000000000303f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 1d00000000000000ffffffff060000000000000000000000503f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 2.9333
+      endTime: 3.1333
+      parameters: 2000000000000000ffffffff060000000000000000000000703f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000001000000000000000903f0000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000a03f0000000000007100000000000000ffffffff06000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000005902000000000000c03f0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff000000000000000040420000
+  - animId: a000_090108
+    rawId: 90108
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: e200000000000000e0450000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000000000000000000000460000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000e00000000000000020460000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000040460000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000060460000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff000000000000000080460000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005d02000000000000a0460000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000000000000000000000f0460000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000000000000000000000b0480000
+  - animId: a000_090109
+    rawId: 90109
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000e200000000000000a04b0000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000000000000000000000c04b0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000e000000000000000e04b0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000004c0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffffbc02000000000000204c0000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005902000000000000804c0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff4300000000000000a04c0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d02000000000000c04c0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000000000000000000000b04e0000
+  - animId: a000_090110
+    rawId: 90110
+    events:
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 652b0900840300000200000000010100000000000000000081000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 1.0333
+      parameters: 05000000652b0900ffffffff01000000000001010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: e20000000000000000520000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000000000000000000020520000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000e00000000000000040520000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000060520000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff430000000000000080520000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d02000000000000a0520000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000f0520000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff0000000000000000b0540000
+  - animId: a000_090200
+    rawId: 90200
+    events:
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.5
+      endTime: 3.6
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc02000000000000e0580000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.5
+      endTime: 0.6
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.9333
+      endTime: 3.0333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000a0590000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff060000005902000000000000c0590000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff0000000000000000e0590000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000005902000000000000005a0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff0000000000000000205a0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff060000005d02000000000000405a0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 982500000000000000000000000000000000000000000000905a0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000004300000000000000b05a0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000c602000000000000d05a0000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000001000000000000000f05a0000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000605d000000000000505d0000
+  - animId: a000_090201
+    rawId: 90201
+    events:
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000008100000000000000e0610000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 4.0667
+      endTime: 4.1667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc0200000000000030620000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.5
+      endTime: 0.6
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.5
+      endTime: 3.6
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000f0620000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000010630000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000030630000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d0200000000000050630000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000000000000000000000a0630000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff06000000c602000000000000c0630000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000001000000000000000e0630000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000106600000000000000660000
+  - animId: a000_090202
+    rawId: 90202
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000008100000000000000706a0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3333
+      endTime: 1.4333
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 8.6667
+      endTime: 8.7667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000008100000000000000f06a0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.8333
+      endTime: 0.9333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.4
+      endTime: 2.5
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 8.1333
+      endTime: 8.2333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 10.7
+      endTime: 10.8
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000d06b0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff5902000000000000f06b0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff4300000000000000106c0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d02000000000000306c0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 0800000000000000ffffffff06000000c602000000000000806c0000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000008100000000000000a06c0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 9.0667
+      endTime: 9.1667
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 11.0333
+      endTime: 11.1333
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000f06e000000000000e06e0000
+  - animId: a000_090203
+    rawId: 90203
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2333
+      parameters: 0000000000000000e200000000000000c0730000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000e0730000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000600000000000000000740000
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 3.2333
+      endTime: 9.0333
+      parameters: 672b090085030000ffffffff00010100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.2333
+      endTime: 3.3333
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000080740000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: 9.5
+      parameters: 7100000000000000ffffffff060000008100000000000000a0740000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.7
+      endTime: 2.8
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 9.4
+      endTime: 9.5
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 9.9667
+      endTime: 10.0667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.2
+      endTime: 2.3
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.7333
+      endTime: 3.8333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 9.0333
+      endTime: 9.1333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 10.4333
+      endTime: 10.5333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 10.4333
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000000000000000000050760000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 0800000000000000ffffffff06000000430000000000000070760000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: ac260000000000000000000000000000810000000000000090760000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.7
+      endTime: 2.8
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.7333
+      endTime: 3.8333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 9.4
+      endTime: 9.5
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 10.4333
+      endTime: 10.5333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.2
+      endTime: 9.0333
+      parameters: 05000000f51c0000ff000000ffffffff000001010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 9.4
+      endTime: 9.5
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 10.4333
+      endTime: 10.5333
+      parameters: 08000000e9030000ffffffffffffffff000000010100000000000000ff000000
+  - animId: a000_090204
+    rawId: 90204
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000008100000000000000f07d0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.5
+      endTime: 0.6
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000008100000000000000407e0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.1
+      endTime: 1.2
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.8333
+      endTime: 1.9333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000c07e0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff5902000000000000e07e0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff4300000000000000007f0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d02000000000000207f0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000000000000000000000707f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff06000000c602000000000000907f0000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000001000000000000000b07f0000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.6667
+      parameters: 0000000000000000c081000000000000b0810000
+  - animId: a000_090205
+    rawId: 90205
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000810000000000000070850000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.6667
+      endTime: 0.7667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc02000000000000c0850000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.4
+      endTime: 1.5
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000050860000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000070860000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000090860000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d02000000000000b0860000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff06000000000000000000000000870000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff06000000c60200000000000020870000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000100000000000000040870000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000708900000000000060890000
+  - animId: a000_090206
+    rawId: 90206
+    events:
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000000000e000000000000000c08d0000000000000000000000ff0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000200000000000000e08d0000
+    - type: 2
+      name: InvokeCommonBehavior
+      category: combat
+      startTime: 1.1667
+      endTime: 1.3333
+      parameters: dc0000000000000084030000000000000000ff00
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100010001000100ff00ff00ff00ff01010100
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 1.1667
+      endTime: -1
+      parameters: f403080085030000ffffffff00010100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000000000000000000000908e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000000000000000000000b08e0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff060000004300000000000000d08e0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 982500000000000000000000000000004300000000000000f08e0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000000000000000000000108f0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff060000008100000000000000308f0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.9667
+      endTime: 1.0667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff8100000000000000b08f0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6333
+      endTime: 1.7333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.1333
+      endTime: 1.2333
+      parameters: 05000000f6030800ffffffffffffffff000000010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 59020000000000002090000000000000030000000000803f0000803fffffffff
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d0200000000000040900000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090207
+    rawId: 90207
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.0333
+      parameters: e200000000000000c0990000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000008100000000000000e0990000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6667
+      endTime: 1.7667
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 193
+      name: TurnControl
+      category: motion
+      startTime: 2.0333
+      endTime: 2.9
+      parameters: 0000803f000000000100000000000000c100000000000000309a0000
+    - type: 193
+      name: TurnControl
+      category: motion
+      startTime: 2.9
+      endTime: -1
+      parameters: 00000000000000000100000000000000e000000000000000509a0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000008100000000000000709a0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff060000008100000000000000c09a0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.1333
+      endTime: 1.2333
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 1.2333
+      endTime: -1
+      parameters: 5f00000000000000ffffffff060000005902000000000000109b0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff8100000000000000309b0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.5333
+      endTime: 0.6333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 0800000000000000ffffffff060000005d02000000000000d09b0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 01000000fdc99a3bffffffffffffffff000000010100000000000000ff000000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6667
+      endTime: 1.7667
+      parameters: 0f00000038180000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 1.7333
+      endTime: 1.8333
+      parameters: 0c00000000000000ffffffff060000000000000000000000209d0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000008100000000000000409d0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.1333
+      endTime: 3.9
+      parameters: 05000000791e0000ffffffffffffffff000001010100000000000000ff000000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000007800000000000000e09d0000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2
+      endTime: 2.1
+      parameters: 05000000781e0000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff060000007800000000000000809e0000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 982500000000000000000000000000007800000000000000f09e0000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: a12500000000000000000000000000007800000000000000609f0000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000007800000000000000d09f0000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: 0.6667
+      parameters: 03000000000000000000803fffffffff810000000000000040a00000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 01000000a400f605ff000000ffffffff000000010100000000000000ff000000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0.6667
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff780000000000000090a00000
+    - type: 120
+      name: Condition_ComboAttack
+      category: cancel
+      startTime: 1.1667
+      endTime: 2.9
+      parameters: c900000000000000247700002e770000
+  - animId: a000_090208
+    rawId: 90208
+    events:
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000000000e000000000000000f0ac0000000000000000000000ff0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000c80200000000000010ad0000
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100010001000100ff00ff00ff00ff01010100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff06000000810000000000000060ad0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.9
+      endTime: 1
+      parameters: 05000000f6030800ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 5700000000000000ffffffff060000000000000000000000b0ad0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 0400000000000000ffffffff060000000000000000000000d0ad0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 1000000000000000ffffffff060000000000000000000000f0ad0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 1600000000000000ffffffff06000000000000000000000010ae0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 0b00000000000000ffffffff06000000000000000000000030ae0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 1a00000000000000ffffffff06000000000000000000000050ae0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 1f00000000000000ffffffff06000000000000000000000070ae0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 1d00000000000000ffffffff06000000000000000000000090ae0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 3.2667
+      endTime: 3.4667
+      parameters: 2000000000000000ffffffff060000004300000000000000b0ae0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000001000000000000000d0ae0000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 6000000000000000e0ae000000000000f403080085030000ffffffff00010100
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0.9333
+      endTime: -1
+      parameters: f403080085030000ffffffff00010100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000590200000000000030af0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff810000000000000050af0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.7667
+      endTime: 0.8667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff8100000000000000a0af0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.9667
+      endTime: 2.0667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090209
+    rawId: 90209
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: e20000000000000070b80000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000000000000000000090b80000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000001803000000000000b0b80000
+    - type: 792
+      name: MovementFlag
+      category: motion
+      startTime: 1.7333
+      endTime: 1.8333
+      parameters: 01000000ac030000ffffffff00010100e000000000000000d0b80000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000f0b80000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000010b90000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff810000000000000030b90000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.5333
+      endTime: 1.6333
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005d0200000000000080b90000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.9667
+      endTime: 1.0667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000810000000000000000ba0000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.2333
+      endTime: 2.3333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.0667
+      endTime: 3.1667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6
+      endTime: 1.7
+      parameters: 0f00000038180000ffffffffffffffff000000010100000000000000ff000000
+  - animId: a000_090210
+    rawId: 90210
+    events:
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 662b090084030000ffffffff00010100000000000000000010000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: e200000000000000e0c00000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000000000000000000000c10000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000e00000000000000020c10000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000040c10000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff810000000000000060c10000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.0667
+      endTime: 2.1667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 3.5
+      endTime: 3.6
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005d02000000000000e0c10000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000590200000000000030c20000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff810000000000000050c20000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 11.8333
+      parameters: 05000000662b0900ffffffff02000000000001010100000000000000ff000000
+  - animId: a000_090211
+    rawId: 90211
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: e20000000000000010c80000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000000000000000000030c80000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000e00000000000000050c80000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000070c80000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff810000000000000090c80000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.1667
+      endTime: 1.2667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.4333
+      endTime: 2.5333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff06000000bc0200000000000010c90000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000590200000000000070c90000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d0200000000000090c90000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090300
+    rawId: 90300
+    events:
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000000000bc0200000000000030cf000000000000000080bf000080bf
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000090cf0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff060000005902000000000000b0cf0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff0000000000000000d0cf0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000005902000000000000f0cf0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff000000000000000010d00000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff060000005d0200000000000030d00000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 98250000000000000000000000000000430000000000000080d00000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000000000000000000000a0d00000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000001000000000000000c0d00000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.6667
+      parameters: 8100000000000000d0d00000000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.2
+      endTime: 0.3
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000000000000000000040d30000
+  - animId: a000_090301
+    rawId: 90301
+    events:
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000000000bc02000000000000f0d6000000000000000080bf000080bf
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000050d70000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff06000000590200000000000070d70000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff000000000000000090d70000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000005902000000000000b0d70000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff0000000000000000d0d70000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff060000005d02000000000000f0d70000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 98250000000000000000000000000000000000000000000040d80000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000060d80000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: c60200000000000070d800000000000000010000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000000000000000000070da0000
+  - animId: a000_090302
+    rawId: 90302
+    events:
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000e00000000000000010de0000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000030de0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff06000000590200000000000050de0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff000000000000000070de0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff06000000590200000000000090de0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff0000000000000000b0de0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff060000005d02000000000000d0de0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 98250000000000000000000000000000430000000000000020df0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000000000000000000040df0000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000060df0000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.6667
+      parameters: 810000000000000070df0000000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.8667
+      endTime: 0.9667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000000000000000000000c0e10000
+  - animId: a000_090305
+    rawId: 90305
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000e20000000000000050e50000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc0200000000000070e50000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000d0e50000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff5902000000000000f0e50000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000010e60000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d0200000000000030e60000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000080e60000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.6667
+      parameters: 810000000000000090e60000000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.2667
+      endTime: 0.3667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000000000000000000000a0e80000
+  - animId: a000_090306
+    rawId: 90306
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000000000000000000000e2000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc02000000000000f0eb0000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000050ec0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000070ec0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000090ec0000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d02000000000000b0ec0000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000000ed0000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: c60200000000000010ed00000000000000010000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000000000000000000000d0ee0000
+  - animId: a000_090307
+    rawId: 90307
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000000000000000000000e2000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000e00000000000000010f20000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000030f20000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000050f20000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000070f20000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d0200000000000090f20000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000001000000000000000e0f20000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.6667
+      parameters: 8100000000000000f0f20000000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.7667
+      endTime: 0.8667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000000000000000000000e0f40000
+  - animId: a000_090310
+    rawId: 90310
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000000000000000000081000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.1
+      endTime: 1.2
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc0200000000000080f80000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.5
+      endTime: 0.6
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000010f90000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000030f90000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000050f90000
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d0200000000000070f90000
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000c602000000000000c0f90000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000001000000000000000e0f90000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.5
+      parameters: 0000000000000000f0fb000000000000e0fb0000
+  - animId: a000_090311
+    rawId: 90311
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000000000000000000000e2000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc0200000000000070ff0000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000005902000000000000d0ff0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff5902000000000000f0ff0000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000010000100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d0200000000000030000100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000100000000000000080000100
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: c602000000000000900001000000000000010000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000000000000000000050020100
+  - animId: a000_090312
+    rawId: 90312
+    events:
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000810000000000000000060100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.9333
+      endTime: 1.0333
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000bc0200000000000050060100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.5
+      endTime: 0.6
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6667
+      endTime: 1.7667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 4.3
+      endTime: 4.4
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 5.3333
+      endTime: 5.4333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000590200000000000070070100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff590200000000000090070100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff4300000000000000b0070100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005d02000000000000d0070100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000c60200000000000020080100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000100000000000000040080100
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.6667
+      parameters: 0000000000000000500a010000000000400a0100
+  - animId: a000_090315
+    rawId: 90315
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000e200000000000000a00d0100
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000c00d0100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000e00d0100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000000e0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000bc02000000000000200e0100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005902000000000000800e0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff0000000000000000a00e0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000c00e0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000e00e0100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090316
+    rawId: 90316
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000e200000000000000b0130100
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000d0130100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000f0130100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000010140100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000bc0200000000000030140100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000590200000000000090140100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff0000000000000000b0140100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000d0140100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000f0140100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090317
+    rawId: 90317
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: e200000000000000a0190100
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000c0190100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000e0190100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000001a0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000004300000000000000201a0100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005902000000000000401a0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff0000000000000000601a0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000801a0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000a01a0100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090320
+    rawId: 90320
+    events:
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 8100000000000000801f0100000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3333
+      endTime: 1.4333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000d01f0100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000f01f0100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000010200100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000430000000000000030200100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000590200000000000050200100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff000000000000000070200100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000590200000000000090200100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000b0200100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090321
+    rawId: 90321
+    events:
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 8100000000000000d0250100000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3333
+      endTime: 1.4333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c60200000000000020260100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e00000000000000040260100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000060260100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000430000000000000080260100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005902000000000000a0260100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff0000000000000000c0260100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000e0260100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d0200000000000000270100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090322
+    rawId: 90322
+    events:
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.2
+      parameters: 8100000000000000202c0100000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3333
+      endTime: 1.4333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000702c0100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000902c0100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000b02c0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff060000004300000000000000d02c0100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000005902000000000000f02c0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff0000000000000000102d0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000302d0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000502d0100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090325
+    rawId: 90325
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.6667
+      parameters: 0000000000000000e200000000000000d0320100
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000f0320100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e00000000000000010330100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000030330100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000810000000000000050330100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.9
+      endTime: 2
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.9333
+      endTime: 1.0333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6667
+      endTime: 1.7667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.7
+      endTime: 2.8
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff06000000590200000000000070340100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff430000000000000090340100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000bc02000000000000b0340100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf3701000008ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000590200000000000010350100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d0200000000000030350100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090326
+    rawId: 90326
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000e200000000000000603b0100
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000803b0100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000a03b0100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000c03b0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000bc02000000000000e03b0100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005902000000000000403c0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff4300000000000000603c0100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000bc02000000000000803c0100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf3701000008ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000e03c0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000003d0100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090327
+    rawId: 90327
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000e20000000000000000430100
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c60200000000000020430100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e00000000000000040430100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000060430100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000810000000000000080430100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.6667
+      endTime: 1.7667
+      parameters: 0f00000064000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.9333
+      endTime: 1.0333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.9
+      endTime: 2
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 2.7
+      endTime: 2.8
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005902000000000000a0440100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff4300000000000000c0440100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000bc02000000000000e0440100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf3701000008ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000590200000000000040450100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d0200000000000060450100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090330
+    rawId: 90330
+    events:
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.6667
+      parameters: 8100000000000000004c0100000000000f00000000000000ffffffffffffffff
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.5
+      endTime: 1.6
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000504c0100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000704c0100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000904c0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000bc02000000000000b04c0100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005902000000000000104d0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff4300000000000000304d0100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000bc02000000000000504d0100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf3701000008ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000b04d0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000d04d0100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090331
+    rawId: 90331
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 0000000000000000e20000000000000090530100
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000b0530100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000d0530100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000f0530100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000bc0200000000000010540100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff06000000590200000000000070540100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff430000000000000090540100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000bc02000000000000b0540100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf3701000008ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000590200000000000010550100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d0200000000000030550100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090332
+    rawId: 90332
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.3333
+      parameters: 00000000000000008100000000000000f05a0100000000000f000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.5333
+      endTime: 0.6333
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.5
+      endTime: 1.6
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000c602000000000000705b0100
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000e000000000000000905b0100
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000b05b0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 7100000000000000ffffffff06000000bc02000000000000d05b0100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf2d01000009ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005902000000000000305c0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff4300000000000000505c0100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000bc02000000000000705c0100
+    - type: 700
+      name: WeaponTrail
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000080bf000080bf000080bf000080bf3701000008ff0000000080bf000080bf
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000005902000000000000d05c0100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff5d02000000000000f05c0100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+  - animId: a000_090400
+    rawId: 90400
+    events:
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000008100000000000000f0630100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000600000000000000040640100
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0.5
+      endTime: 0.8333
+      parameters: f903080089030000ffffffff010101009c010000
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.0333
+      parameters: 60000000000000008064010000000000f403080089030000ffffffff01010100
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0.3667
+      endTime: 1.1333
+      parameters: f403080089030000ffffffff010101009c010000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.7
+      endTime: 0.8
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3667
+      endTime: 1.4667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000020000000000000030650100
+    - type: 2
+      name: InvokeCommonBehavior
+      category: combat
+      startTime: 0.8333
+      endTime: 1.1667
+      parameters: dc000000000000008403000000009c010000ff00
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100010001000100ff00ff00ff00ff01010100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff060000000000000000000000b0650100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000000000000000000000d0650100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1300000000000000ffffffff060000005902000000000000f0650100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff810000000000000010660100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.8
+      endTime: 0.9
+      parameters: 05000000f6030800ffffffffffffffff9c0100010100000000000000ff000000
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1b00000000000000ffffffff06000000590200000000000060660100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff430000000000000080660100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 982500000000000000000000000000005d02000000000000a0660100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: a12500000000000000000000000000004300000000000000f0660100
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000000000000000000010670100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000170300000000000030670100
+    - type: 791
+      name: 
+      category: 
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000000000000000000000d06a0100
+  - animId: a000_090401
+    rawId: 90401
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.0333
+      parameters: 60000000000000008070010000000000f403080089030000ffffffff01010100
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0.3667
+      endTime: 1.1333
+      parameters: f403080089030000ffffffff010101009c010000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000008100000000000000d0700100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 00010000000000000000000000000000600000000000000020710100
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0.5
+      endTime: 0.8333
+      parameters: f903080089030000ffffffff010101009c010000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff00000000000000000000000000000000000070710100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff06000000810000000000000090710100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.7
+      endTime: 0.8
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3667
+      endTime: 1.4667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff020000000000000010720100
+    - type: 2
+      name: InvokeCommonBehavior
+      category: combat
+      startTime: 0.8
+      endTime: 1.0667
+      parameters: dc000000000000008403000000009c010000ff00
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100010001000100ff00ff00ff00ff01010100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff000000000000000090720100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005d02000000000000b0720100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 23000000000000000000000000000000000000000000000000730100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff06000000170300000000000020730100
+    - type: 791
+      name: 
+      category: 
+      startTime: 0
+      endTime: -1
+      parameters: 00000000000000000000000000000000810000000000000040730100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.7667
+      endTime: 0.8667
+      parameters: 05000000f6030800ffffffffffffffff9c0100010100000000000000ff000000
+  - animId: a000_090402
+    rawId: 90402
+    events:
+    - type: 16
+      name: PlaySFX_Body
+      category: vfx
+      startTime: 0
+      endTime: 0.0333
+      parameters: 6000000000000000707b010000000000f403080089030000ffffffff01010100
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0.3667
+      endTime: 1.1333
+      parameters: f403080089030000ffffffff010101009c010000
+    - type: 226
+      name: SetHitTargetMode
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000008100000000000000c07b0100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0
+      endTime: 0.1
+      parameters: 0f000000c8000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 710
+      name: SpawnFFX_WeaponR
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100000000000000000000000000006000000000000000107c0100
+    - type: 96
+      name: SpawnFFX_DummyPoly
+      category: vfx
+      startTime: 0.5
+      endTime: 0.8333
+      parameters: f903080089030000ffffffff010101009c010000
+    - type: 224
+      name: SetWeaponSubscription
+      category: state
+      startTime: 0
+      endTime: -1
+      parameters: 0000000000ff000000000000000000000000000000000000607c0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1c00000000000000ffffffff060000008100000000000000807c0100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.7
+      endTime: 0.8
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 1.3667
+      endTime: 1.4667
+      parameters: 0f00000000000000ffffffffffffffff000000010100000000000000ff000000
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000803f0000803fffffffff0200000000000000007d0100
+    - type: 2
+      name: InvokeCommonBehavior
+      category: combat
+      startTime: 0.8
+      endTime: 1.1667
+      parameters: dc000000000000008403000000009c010000ff00
+    - type: 712
+      name: SpawnFFX_WeaponBoth
+      category: vfx
+      startTime: 0
+      endTime: -1
+      parameters: 000100010001000100ff00ff00ff00ff01010100
+    - type: 601
+      name: RootMotion_ScaleAnim
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 030000000000803f0000803fffffffff0000000000000000807d0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 1800000000000000ffffffff060000005d02000000000000a07d0100
+    - type: 605
+      name: RootMotion_Mult
+      category: motion
+      startTime: 0
+      endTime: -1
+      parameters: 000000000b0000000000803f0000803f
+    - type: 67
+      name: PlaySound_Weapon
+      category: sound
+      startTime: 0
+      endTime: -1
+      parameters: 230000000000000000000000000000000000000000000000f07d0100
+    - type: 0
+      name: InvokeAttackBehavior
+      category: combat
+      startTime: 0
+      endTime: -1
+      parameters: 8e00000000000000ffffffff060000001703000000000000107e0100
+    - type: 791
+      name: 
+      category: 
+      startTime: 0
+      endTime: -1
+      parameters: 000000000000000000000000000000008100000000000000307e0100
+    - type: 129
+      name: SetPlayerInput
+      category: state
+      startTime: 0.7667
+      endTime: 0.8667
+      parameters: 05000000f6030800ffffffffffffffff9c0100010100000000000000ff000000
+  - animId: a000_090403
+    rawId: 90403
+    events: []
