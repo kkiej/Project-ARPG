@@ -34,153 +34,121 @@ namespace LZ
             player = GetComponent<PlayerManager>();
         }
 
+        //  空安全工具：模块化换装模式下，默认身体引用可能为空（部件已由 ModularCharacterAssembler 接管），
+        //  因此所有显隐操作都需先判空，避免移除旧 Synty 身体后空引用崩溃。
+        private static void SetActiveSafe(GameObject go, bool active)
+        {
+            if (go != null) go.SetActive(active);
+        }
+
+        private static void SetActiveSafe(GameObject[] models, bool active)
+        {
+            if (models == null) return;
+            foreach (var model in models)
+                if (model != null) model.SetActive(active);
+        }
+
         //  ENABLE BODY FEATURES
         public void EnableHead()
         {
             // ENABLE HEAD OBJECT
-            maleHead.SetActive(true);
-            femaleHead.SetActive(true);
+            SetActiveSafe(maleHead, true);
+            SetActiveSafe(femaleHead, true);
 
             // ENABLE ANY FACIAL OBJECTS (EYEBROWS, LIPS, NOSE ECT)
-            maleEyebrows.SetActive(true);
-            femaleEyebrows.SetActive(true);
+            SetActiveSafe(maleEyebrows, true);
+            SetActiveSafe(femaleEyebrows, true);
         }
 
         public void DisableHead()
         {
             // DISABLE HEAD OBJECT
-            maleHead.SetActive(false);
-            femaleHead.SetActive(false);
+            SetActiveSafe(maleHead, false);
+            SetActiveSafe(femaleHead, false);
 
             // DISABLE ANY FACIAL OBJECTS (EYEBROWS, LIPS, NOSE ECT)
-            maleEyebrows.SetActive(false);
-            femaleEyebrows.SetActive(false);
+            SetActiveSafe(maleEyebrows, false);
+            SetActiveSafe(femaleEyebrows, false);
         }
 
         public void EnableHair()
         {
-            hair.SetActive(true);
+            SetActiveSafe(hair, true);
         }
 
         public void DisableHair()
         {
-            hair.SetActive(false);
+            SetActiveSafe(hair, false);
         }
 
         public void EnableFacialHair()
         {
-            facialHair.SetActive(true);
+            SetActiveSafe(facialHair, true);
         }
 
         public void DisableFacialHair()
         {
-            facialHair.SetActive(false);
+            SetActiveSafe(facialHair, false);
         }
 
         public void EnableBody()
         {
-            foreach (var model in maleBody)
-            {
-                model.SetActive(true);
-            }
-
-            foreach (var model in femaleBody)
-            {
-                model.SetActive(true);
-            }
+            SetActiveSafe(maleBody, true);
+            SetActiveSafe(femaleBody, true);
         }
 
         public void EnableArms()
         {
-            foreach (var model in maleArms)
-            {
-                model.SetActive(true);
-            }
-
-            foreach (var model in femaleArms)
-            {
-                model.SetActive(true);
-            }
+            SetActiveSafe(maleArms, true);
+            SetActiveSafe(femaleArms, true);
         }
 
         public void EnableLowerBody()
         {
-            foreach (var model in maleLegs)
-            {
-                model.SetActive(true);
-            }
-
-            foreach (var model in femaleLegs)
-            {
-                model.SetActive(true);
-            }
+            SetActiveSafe(maleLegs, true);
+            SetActiveSafe(femaleLegs, true);
         }
 
         public void DisableBody()
         {
-            foreach (var model in maleBody)
-            {
-                model.SetActive(false);
-            }
-
-            foreach (var model in femaleBody)
-            {
-                model.SetActive(false);
-            }
+            SetActiveSafe(maleBody, false);
+            SetActiveSafe(femaleBody, false);
         }
 
         public void DisableArms()
         {
-            foreach (var model in maleArms)
-            {
-                model.SetActive(false);
-            }
-
-            foreach (var model in femaleArms)
-            {
-                model.SetActive(false);
-            }
+            SetActiveSafe(maleArms, false);
+            SetActiveSafe(femaleArms, false);
         }
 
         public void DisableLowerBody()
         {
-            foreach (var model in maleLegs)
-            {
-                model.SetActive(false);
-            }
-
-            foreach (var model in femaleLegs)
-            {
-                model.SetActive(false);
-            }
+            SetActiveSafe(maleLegs, false);
+            SetActiveSafe(femaleLegs, false);
         }
 
         public void ToggleBodyType(bool isMale)
         {
-            if (isMale)
-            {
-                maleObject.SetActive(true);
-                femaleObject.SetActive(false);
-            }
-            else
-            {
-                maleObject.SetActive(false);
-                femaleObject.SetActive(true);
-            }
+            SetActiveSafe(maleObject, isMale);
+            SetActiveSafe(femaleObject, !isMale);
 
             player.playerEquipmentManager.EquipArmor();
         }
 
         public void ToggleHairType(int hairType)
         {
+            if (hairObjects == null || hairObjects.Length == 0)
+                return;
+
             //  DISABLE ALL HAIR
             for (int i = 0; i < hairObjects.Length; i++)
             {
-                hairObjects[i].SetActive(false);
+                SetActiveSafe(hairObjects[i], false);
             }
 
             //  ENABLE CHOOSEN HAIR
-            hairObjects[hairType].SetActive(true);
+            if (hairType >= 0 && hairType < hairObjects.Length)
+                SetActiveSafe(hairObjects[hairType], true);
         }
 
         public void SetHairColor()
@@ -196,8 +164,14 @@ namespace LZ
 
             hairColor = new Color32(red, green, blue, 255);
 
+            if (hairObjects == null)
+                return;
+
             for (int i = 0; i < hairObjects.Length; i++)
             {
+                if (hairObjects[i] == null)
+                    continue;
+
                 SkinnedMeshRenderer skinMeshRenderer = hairObjects[i].GetComponent<SkinnedMeshRenderer>();
 
                 if (skinMeshRenderer != null)

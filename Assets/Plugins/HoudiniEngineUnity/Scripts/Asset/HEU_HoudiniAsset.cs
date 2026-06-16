@@ -403,7 +403,7 @@ namespace HoudiniEngineUnity
 	[SerializeField]
 	private long _sessionID = HEU_SessionData.INVALID_SESSION_ID;
 
-	[SerializeField]
+	[field: SerializeField]
 	internal bool WarnedPrefabNotSupported { get; set; }
 
 	// UI TOGGLES -------------------------------------------------------------------------------------------------
@@ -444,7 +444,6 @@ namespace HoudiniEngineUnity
 	[SerializeField]
 	private HEU_InstanceInputUIState _instanceInputUIState;
 
-	[SerializeField]
 	internal HEU_InstanceInputUIState InstanceInputUIState
 	{
 	    get { return _instanceInputUIState; }

@@ -23,5 +23,11 @@ namespace LZ
         public float poise;
 
         public EquipmentModel[] equipmentModels;
+
+        [Header("Modular Part (ER 共享骨架换装)")]
+        [Tooltip("ER 部件基础编号，仅填数字部分，如 1350。\n" +
+                 "运行时会按 槽位前缀(HD/BD/AM/LG) + 性别(M/F) + 此编号 拼出部件名（如 BD_M_1350）去 EquipmentPartCatalog 查 prefab。\n" +
+                 "留空 = 该装备不走模块化（沿用旧的预置模型方案）。")]
+        public string modularPartCode;
     }
 }

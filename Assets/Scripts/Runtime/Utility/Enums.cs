@@ -174,6 +174,17 @@ public enum EquipmentType
     QuickSlot03         // 14
 }
 
+//  USED BY THE MODULAR CHARACTER SYSTEM TO TAG WHICH BODY REGION A SKINNED PART OCCUPIES
+//  (SHARED-SKELETON / RUNTIME BONE-REBINDING PIPELINE — SEE docs/EldenRing-Modular-Character-Integration.md)
+public enum BodySlot
+{
+    Head,
+    Torso,
+    Arms,
+    Legs,
+    Hair
+}
+
 //  USED TO TAG HELMET TYPE, SO SPECIFIC HEAD PORTIONS CAN BE HIDDEN DURING EQUIP PROCESS (HAIR, BEARD, ECT)
 public enum HeadEquipmentType
 {

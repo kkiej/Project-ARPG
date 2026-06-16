@@ -96,6 +96,12 @@ namespace LZ
         public GameObject femaleLeftLegObject;
         [HideInInspector] public GameObject[] femaleLeftLegs;
 
+        [Header("Modular Character (ER 共享骨架换装)")]
+        [Tooltip("开启后，头/身/腿/手装备改用 ModularCharacterAssembler 按 itemID 动态加载部件并重绑定到 c0000 骨架；关闭则沿用旧的预置模型 SetActive 方案。")]
+        public bool useModularEquipment = false;
+        public ModularCharacterAssembler modularAssembler;
+        public EquipmentPartCatalog partCatalog;
+
         protected override void Awake()
         {
             base.Awake();
@@ -103,7 +109,70 @@ namespace LZ
             player = GetComponent<PlayerManager>();
             
             InitializeWeaponSlots();
-            InitializeArmorModels();
+
+            //  模块化模式不依赖预置模型容器，跳过旧的初始化（避免缺少 *Object 引用时报空）
+            if (!useModularEquipment)
+                InitializeArmorModels();
+
+            if (useModularEquipment && modularAssembler == null)
+                modularAssembler = GetComponentInChildren<ModularCharacterAssembler>(true);
+        }
+
+        /// <summary>
+        /// 模块化换装入口（方案 B）：
+        /// 权威数据在装备 SO 上（ArmorItem.modularPartCode），运行时按 槽位前缀 + 性别 + 编号
+        /// 拼出部件名（如 BD_M_1350），到 EquipmentPartCatalog 查 prefab，交给装配器装上/卸下。
+        /// owner 与联机远端都会经过 Load*Equipment，故此处统一覆盖两端。
+        /// </summary>
+        /// <returns>true=已用模块化处理（应跳过旧的 SetActive 流程）。</returns>
+        private bool ApplyModularPart(BodySlot slot, EquipmentItem equipment)
+        {
+            if (!useModularEquipment) return false;
+
+            if (modularAssembler == null)
+            {
+                Debug.LogWarning("[PlayerEquipmentManager] 已开启 useModularEquipment 但未设置 modularAssembler。", this);
+                return false;
+            }
+
+            //  取基础编号（仅 ArmorItem 有）。为空 → 该件不走模块化，清空该槽。
+            string baseCode = (equipment as ArmorItem)?.modularPartCode;
+            if (equipment == null || string.IsNullOrEmpty(baseCode))
+            {
+                modularAssembler.UnequipPart(slot);
+                return true;
+            }
+
+            string gender = player.playerNetworkManager.isMale.Value ? "M" : "F";
+            string code = $"{SlotPrefix(slot)}_{gender}_{baseCode}";
+
+            GameObject prefab = partCatalog != null ? partCatalog.GetPrefabByCode(code) : null;
+
+            if (prefab != null)
+            {
+                modularAssembler.EquipPart(slot, prefab);
+            }
+            else
+            {
+                Debug.LogWarning($"[PlayerEquipmentManager] 部件目录中找不到 '{code}'（itemID={equipment.itemID}）。该槽留空。", this);
+                modularAssembler.UnequipPart(slot);
+            }
+
+            return true;
+        }
+
+        //  槽位 -> ER 部件名前缀（HD 头 / BD 身 / AM 臂 / LG 腿）
+        private static string SlotPrefix(BodySlot slot)
+        {
+            switch (slot)
+            {
+                case BodySlot.Head: return "HD";
+                case BodySlot.Torso: return "BD";
+                case BodySlot.Arms: return "AM";
+                case BodySlot.Legs: return "LG";
+                case BodySlot.Hair: return "HR";
+                default: return "BD";
+            }
         }
 
         protected override void Start()
@@ -536,7 +605,8 @@ namespace LZ
         public void LoadHeadEquipment(HeadEquipmentItem equipment)
         {
             // 1. 卸载旧的头部装备模型（如存在）
-            UnloadHeadEquipmentModels();
+            if (!useModularEquipment)
+                UnloadHeadEquipmentModels();
             
             // 2. 若装备为空，则直接将库存中的装备设为空并返回
             if (equipment == null)
@@ -545,6 +615,7 @@ namespace LZ
                     player.playerNetworkManager.headEquipmentID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
 
                 player.playerInventoryManager.headEquipment = null;
+                ApplyModularPart(BodySlot.Head, null);
                 return;
             }
             
@@ -573,9 +644,12 @@ namespace LZ
             }
 			
             // 6. 加载头部装备模型
-            foreach (var model in equipment.equipmentModels)
+            if (!ApplyModularPart(BodySlot.Head, equipment))
             {
-                model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+                foreach (var model in equipment.equipmentModels)
+                {
+                    model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+                }
             }
             
             // 7. 计算总装备负重（所有穿戴装备的重量之和，该数值会影响翻滚速度，过重时还会影响移动速度）
@@ -626,7 +700,8 @@ namespace LZ
         public void LoadBodyEquipment(BodyEquipmentItem equipment)
         {
             // 1. 卸载旧装备模型（如存在）
-			UnloadBodyEquipmentModels();
+			if (!useModularEquipment)
+			    UnloadBodyEquipmentModels();
 			
             // 2. 若装备为空，则直接将库存中的对应装备设为空并返回
 			if (equipment == null)
@@ -635,6 +710,7 @@ namespace LZ
                     player.playerNetworkManager.bodyEquipmentID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
 
                 player.playerInventoryManager.bodyEquipment = null;
+                ApplyModularPart(BodySlot.Torso, null);
                 return;
             }
 
@@ -647,9 +723,12 @@ namespace LZ
             player.playerBodyManager.DisableBody();
 
             //  6. LOAD HEAD EQUIPMENT MODELS
-            foreach (var model in equipment.equipmentModels)
+            if (!ApplyModularPart(BodySlot.Torso, equipment))
             {
-                model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+                foreach (var model in equipment.equipmentModels)
+                {
+                    model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+                }
             }
 
             //  7. CALCULATE TOTAL EQUIPMENT LOAD (WEIGHT OF ALL YOUR WORN EQUIPMENT. THIS IMPACTS ROLL SPEED AND AT EXTREME WEIGHTS, MOVEMENT SPEED)
@@ -727,7 +806,8 @@ namespace LZ
         public void LoadLegEquipment(LegEquipmentItem equipment)
         {
             //  1. UNLOAD OLD EQUIPMENT MODELS (IF ANY)
-            UnloadLegEquipmentModels();
+            if (!useModularEquipment)
+                UnloadLegEquipmentModels();
 
             //  2. IF EQUIPMENT IS NULL SIMPLY SET EQUIPMENT IN INVENTORY TO NULL AND RETURN
             if (equipment == null)
@@ -736,6 +816,7 @@ namespace LZ
                     player.playerNetworkManager.legEquipmentID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
 
                 player.playerInventoryManager.legEquipment = null;
+                ApplyModularPart(BodySlot.Legs, null);
                 return;
             }
 
@@ -748,9 +829,12 @@ namespace LZ
             player.playerBodyManager.DisableLowerBody();
 
             //  6. LOAD HEAD EQUIPMENT MODELS
-            foreach (var model in equipment.equipmentModels)
+            if (!ApplyModularPart(BodySlot.Legs, equipment))
             {
-                model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+                foreach (var model in equipment.equipmentModels)
+                {
+                    model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+                }
             }
 
             //  7. CALCULATE TOTAL EQUIPMENT LOAD (WEIGHT OF ALL YOUR WORN EQUIPMENT. THIS IMPACTS ROLL SPEED AND AT EXTREME WEIGHTS, MOVEMENT SPEED)
@@ -810,7 +894,8 @@ namespace LZ
         public void LoadHandEquipment(HandEquipmentItem equipment)
         {
             //  1. UNLOAD OLD EQUIPMENT MODELS (IF ANY)
-            UnloadHandEquipmentModels();
+            if (!useModularEquipment)
+                UnloadHandEquipmentModels();
 
             //  2. IF EQUIPMENT IS NULL SIMPLY SET EQUIPMENT IN INVENTORY TO NULL AND RETURN
             if (equipment == null)
@@ -819,6 +904,7 @@ namespace LZ
                     player.playerNetworkManager.handEquipmentID.Value = -1; //  -1 WILL NEVER BE AN ITEM ID, SO IT WILL ALWAYS BE NULL
 
                 player.playerInventoryManager.handEquipment = null;
+                ApplyModularPart(BodySlot.Arms, null);
                 return;
             }
 
@@ -831,9 +917,12 @@ namespace LZ
             player.playerBodyManager.DisableArms();
 
             //  6. LOAD HEAD EQUIPMENT MODELS
-            foreach (var model in equipment.equipmentModels)
+            if (!ApplyModularPart(BodySlot.Arms, equipment))
             {
-                model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+                foreach (var model in equipment.equipmentModels)
+                {
+                    model.LoadModel(player, player.playerNetworkManager.isMale.Value);
+                }
             }
 
             //  7. CALCULATE TOTAL EQUIPMENT LOAD (WEIGHT OF ALL YOUR WORN EQUIPMENT. THIS IMPACTS ROLL SPEED AND AT EXTREME WEIGHTS, MOVEMENT SPEED)
