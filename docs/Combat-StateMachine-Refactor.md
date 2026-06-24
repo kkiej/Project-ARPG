@@ -297,3 +297,40 @@ animId = stance * 1_000_000 + (actionBase + load*10 + direction)
 未覆盖（按需后续）：负重档当前统一用 `defaultLoadGroup`（接入负重系统后改由角色状态提供）；左手/双持武器大类细分（暂统一取右手）；格挡 locomotion；hit/parry/backstab 等未记录动作仍走 `CharacterAnimationData` 强类型字段。
 
 相关文件：[CommonAnimationConvention.cs](Assets/Scripts/Runtime/Animation/CommonAnimationConvention.cs)、[CommonAnimationSet.cs](Assets/Scripts/Runtime/Animation/CommonAnimationSet.cs)、[CommonAnimationAutoFiller.cs](Assets/Scripts/Editor/Animation/CommonAnimationAutoFiller.cs)、[ER-Animation-Category-Reference.md](Assets/_ELDENRING_REF/ER-Animation-Category-Reference.md)（§6 编码规则）。
+
+### 8.7 终态：全量 animId 化 + `CharacterAnimationData` 瘦身为 Profile
+
+**背景**：角色骨架/模型/动画已全面切到 ER，旧动画与 ER 骨架不匹配，**不再需要回退旧动画路径**。当前 [CharacterAnimationData.cs](Assets/Scripts/Runtime/Animation/CharacterAnimationData.cs) 是 ~80 个强类型 `AnimationClip` 字段的大杂烩，而其中绝大多数动作在 ER 里本就是 `a000_` 类、本来就有 animId。强类型字段扩展不到上万，必须收口到 animId。
+
+**终态数据模型**：一切动画按 `animId` 经 [CharacterAnimationLibrary](Assets/Scripts/Runtime/Animation/CharacterAnimationLibrary.cs) 解析，只两个数据源：
+
+```mermaid
+flowchart LR
+  Weapon["每武器 MovesetData<br/>(攻击, aXXX_)"] --> Lib[CharacterAnimationLibrary]
+  Common["每角色 CommonAnimationSet<br/>(全部 a000_ 类:<br/>locomotion/dodge/受击/死亡/姿势/喝药/拾取…)"] --> Lib
+  Conv[CommonAnimationConvention<br/>animId 约定表] -.驱动回填/解析.-> Common
+  Lib --> FSM[FSM 选片 + RPC 同步]
+```
+
+`CharacterAnimationData` 退化为薄 **Profile**：只留没有 animId 的配置 —— `commonConvention`、`commonSet`、`AvatarMask`（upperbody/pingDamage）、层配置。所有 clip 字段迁走。
+
+> 内存说明：`commonSet` 是 SO **引用**，嵌不嵌进 `CharacterAnimationData` 都不影响内存；真正决定内存的是 `CommonAnimationSet` 收了多大子集（每角色工作集约一两百，远小于上万全表）。
+
+**Strangler 迁移（4 阶段，按已知 animId 优先）**：
+
+| 阶段 | 范围 | animId 状态 | 状态 |
+|----|------|------|------|
+| P1 | locomotion / idle / dodge **彻底 ER 化、去旧回退** | 已知（walk 20000 / jog 20100 / run 20200 / roll 27100 / backstep 27000） | 进行中 |
+| P2 | 受击（hit/flinch）/ 死亡（death） | **待确认**（先在约定留 `Unset` 占位） | 待办 |
+| P3 | 姿势（emote `a000_08xxxx`）/ 喝药 / 法术 / 拾取 / 换武 | 部分已知（emote 列表已有） | 待办 |
+| P4 | 收尾：`CharacterAnimationData` 砍成 Profile，移除强类型 clip 字段与反射 `RegisterClipFields` | — | 待办 |
+
+**P1 落地细节（本次）**：
+- 迁移采用「按角色」的 strangler 闸门：`CharacterAnimationData.commonConvention != null` 即视为**已迁移角色**，其非格挡 locomotion/idle **只走 ER 通用系统、不回退旧 clip**；缺数据时 `warn-once` 并跳过（不再用旧动画掩盖缺数据）。未挂 `commonConvention` 的角色（尚未迁移的 AI）仍走旧路径。
+- `InitLocomotion` 在 `commonConvention` 存在时即启用 locomotion，不再依赖 `idle1H`/`locomotion1H` 这些遗留字段是否赋值。
+- `BuildCommonLocomotionMixer` 去掉 `idle ??= animData.idle1H` 的旧回退。
+- 格挡 locomotion 的 ER id 暂未知，**暂留旧路径**（归入 P2/P3 后续）。
+
+**P2+ 占位**：在 `CommonAnimationConvention` 增加受击/死亡等基址字段，默认 `IdleUnset(-1)` 表示「待确认」；消费方（`TakeDamageEffect`/`ProcessDeathEvent`）暂不改，待 id 确认后再像 locomotion 一样接入并去旧字段。
+
+相关文件（终态新增/改动）：上列通用动画文件 + [CharacterAnimatorManager.cs](Assets/Scripts/Runtime/Character/CharacterAnimatorManager.cs)（locomotion 驱动）、[CharacterAnimationData.cs](Assets/Scripts/Runtime/Animation/CharacterAnimationData.cs)（最终瘦身）、[TakeDamageEffect.cs](Assets/Scripts/Runtime/Effects/TakeDamageEffect.cs) 与 [CharacterManager.cs](Assets/Scripts/Runtime/Character/CharacterManager.cs)（P2 受击/死亡消费方）。

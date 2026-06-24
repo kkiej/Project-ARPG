@@ -62,6 +62,21 @@ namespace LZ
         [Tooltip("前手翻基址，如 a000_027140 → 27140。+方向(0-3)。")]
         public int handspringBase = 27140;
 
+        // ── Phase 2+ 待接入（设计文档 §8.7）：ER animId 待确认，先留 IdleUnset(-1) 占位。 ──
+        // 填入正确基址后，消费方（受击/死亡等）即可像 locomotion 一样改走 ComposeId + 库解析，并删对应强类型字段。
+        [Header("Phase 2 待接入：受击 / 死亡（ER animId 待确认，-1=未填）")]
+        [Tooltip("中度受击硬直基址（a000_，方向 0-3）。待确认 ER id，-1 表示未填、消费方暂走 CharacterAnimationData 强类型字段。")]
+        public int hitMediumBase = IdleUnset;
+        [Tooltip("轻微受击 flinch 基址（a000_，方向 0-3）。待确认 ER id。")]
+        public int hitPingBase = IdleUnset;
+        [Tooltip("死亡基址（a000_）。待确认 ER id。")]
+        public int deathBase = IdleUnset;
+
+        // ── Phase 3 待接入：姿势 emote（a000_08xxxx，每个动作独立 id，不走 base+load+dir，单列以备清单化）。 ──
+        [Header("Phase 3 待接入：姿势 emote 起始基址（a000_080000 → 80000，仅作清单锚点）")]
+        [Tooltip("emote 段起始（如 BOW a000_080000 → 80000）。emote 为离散 id，运行时按具体动作号查，不做 load/dir 组合。")]
+        public int gestureBase = 80000;
+
         [Header("运行时默认值（接入负重/武器系统前的兜底）")]
         [Tooltip("当前项目尚无装备负重系统：运行时统一用此负重档（0轻/1中/2重）。接入后改由角色状态提供。")]
         public int defaultLoadGroup = LoadLight;

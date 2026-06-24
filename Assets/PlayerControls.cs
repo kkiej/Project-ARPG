@@ -1145,7 +1145,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1a000004-0000-4000-8000-000000000001"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""path"": ""<Keyboard>/delete"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

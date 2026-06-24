@@ -284,7 +284,9 @@ namespace LZ
         private void InitLocomotion()
         {
             if (animData == null) return;
-            if (animData.idle1H == null && animData.locomotion1H == null) return;
+            // 已迁移角色（挂了 commonConvention）走纯 ER 通用 locomotion，不再依赖遗留 idle1H/locomotion1H 字段是否赋值。
+            bool dataDriven = animData.commonConvention != null;
+            if (!dataDriven && animData.idle1H == null && animData.locomotion1H == null) return;
 
             _locomotionEnabled = true;
             _inLocomotionMode = true;
@@ -319,6 +321,15 @@ namespace LZ
             bool isBlocking = character.characterNetworkManager.isBlocking.Value;
             bool isTwoHanding = GetIsTwoHanding();
 
+            // 已迁移角色（挂了 commonConvention）的非格挡 locomotion 走纯 ER 通用系统，不回退旧 clip。
+            // 格挡 locomotion 的 ER id 暂未知，保持旧路径（见设计文档 §8.7 P2/P3）。
+            bool dataDriven = !isBlocking && animData.commonConvention != null;
+            if (dataDriven)
+            {
+                PlayCommonLocomotion(isMoving, fadeDuration, force);
+                return;
+            }
+
             MixerTransition2D targetMixer;
             AnimationClip targetIdle;
 
@@ -333,19 +344,6 @@ namespace LZ
                 else            { targetMixer = animData.locomotion1H;         targetIdle = animData.idle1H; }
             }
 
-            // 数据驱动覆盖（非格挡）：用通用集运行时构建的混合树替换手搓 mixer；
-            // 数据不足（返回 null）时自动回退上面的 animData 手搓 mixer。格挡 locomotion 暂未数据化，保持旧路径。
-            bool usingCommonMixer = false;
-            if (!isBlocking)
-            {
-                var commonMixer = BuildCommonLocomotionMixer();
-                if (commonMixer != null)
-                {
-                    targetMixer = commonMixer;
-                    usingCommonMixer = true;
-                }
-            }
-
             object newKey = (isMoving && targetMixer != null) ? (object)targetMixer : targetIdle;
             if (newKey == null) return;
             if (!force && newKey == _currentLocoKey && _currentLocoState != null) return;
@@ -356,16 +354,70 @@ namespace LZ
             {
                 _currentLocoState = character.animancer.Layers[0].Play(targetMixer, fadeDuration);
                 _activeMixer = _currentLocoState as Vector2MixerState;
-                // 通用混合树的 clip 已是最终 ER 动画，无需再叠加武器 clip 覆盖（覆盖表引用的是 animData clip，不匹配）。
-                if (!usingCommonMixer)
-                    ApplyLocomotionClipOverrides(_currentLocoState as ManualMixerState, targetMixer);
+                ApplyLocomotionClipOverrides(_currentLocoState as ManualMixerState, targetMixer);
             }
             else if (targetIdle != null)
             {
-                var resolvedIdle = ResolveClip(targetIdle);
-                _currentLocoState = character.animancer.Layers[0].Play(resolvedIdle, fadeDuration);
+                _currentLocoState = character.animancer.Layers[0].Play(ResolveClip(targetIdle), fadeDuration);
                 _activeMixer = null;
             }
+        }
+
+        // 缺通用 locomotion 数据时只告警一次，避免每帧刷屏（也是"不回退旧动画"的可见信号）。
+        private bool _warnedMissingCommonLoco;
+
+        /// <summary>
+        /// 已迁移角色的纯 ER 通用 locomotion：移动播运行时混合树，站立播通用 idle（<c>a000_000000</c>）。
+        /// 数据缺失（回填器未跑 / 约定未配）时 warn-once 并跳过，**不回退旧动画**（设计文档 §8.7 P1）。
+        /// </summary>
+        private void PlayCommonLocomotion(bool isMoving, float fadeDuration, bool force)
+        {
+            if (isMoving)
+            {
+                var mixer = BuildCommonLocomotionMixer();
+                if (mixer == null) { WarnMissingCommonLoco(); return; }
+
+                if (!force && (object)mixer == _currentLocoKey && _currentLocoState != null) return;
+
+                _currentLocoKey = mixer;
+                // 通用混合树的 clip 已是最终 ER 动画，不再叠加武器覆盖（覆盖表引用 animData clip，不匹配）。
+                _currentLocoState = character.animancer.Layers[0].Play(mixer, fadeDuration);
+                _activeMixer = _currentLocoState as Vector2MixerState;
+                return;
+            }
+
+            var idle = ResolveCommonIdle();
+            if (idle == null) { WarnMissingCommonLoco(); return; }
+
+            if (!force && (object)idle == _currentLocoKey && _currentLocoState != null) return;
+
+            _currentLocoKey = idle;
+            _currentLocoState = character.animancer.Layers[0].Play(idle, fadeDuration);
+            _activeMixer = null;
+        }
+
+        private void WarnMissingCommonLoco()
+        {
+            if (_warnedMissingCommonLoco) return;
+            _warnedMissingCommonLoco = true;
+            Debug.LogWarning(
+                $"[{name}] 通用 ER locomotion 数据缺失（idle/走/跑 解析不到）。" +
+                "请重跑 Common Animation Filler 生成 CommonAnimationSet，并确认 CharacterAnimationData 已挂 commonConvention/commonSet。" +
+                "（已按 §8.7 不再回退旧动画。）", this);
+        }
+
+        /// <summary>
+        /// 解析通用 ER 站立 idle（<c>a000_000000</c>，按当前姿态前缀）。
+        /// 约定未配（idleId == IdleUnset）或库未命中（如未重跑回填器）时返回 null，调用方回退 animData idle。
+        /// </summary>
+        private AnimationClip ResolveCommonIdle()
+        {
+            var conv = animData != null ? animData.commonConvention : null;
+            if (conv == null || conv.idleId == CommonAnimationConvention.IdleUnset) return null;
+
+            int stance = CommonAnimationConvention.ResolveStanceCategory(GetIsTwoHanding(), GetWeaponStanceClass());
+            return LookupClipByAnimId(
+                CommonAnimationConvention.ComposeId(stance, conv.idleId, 0, CommonAnimationConvention.DirForward));
         }
 
         /// <summary>
@@ -409,12 +461,11 @@ namespace LZ
             if (_builtLocoMixer != null && _builtLocoKey == cacheKey)
                 return _builtLocoMixer;
 
-            // idle：优先约定 idleId（按姿态前缀解析，idle 为单锚点，固定 load0/dir0），否则回退 animData.idle1H。
-            // idleId 合法可为 0（a000_000000），用 IdleUnset(-1) 判未配。
+            // idle：按约定 idleId 解析（按姿态前缀，单锚点，固定 load0/dir0）。idleId 合法可为 0（a000_000000），
+            // 用 IdleUnset(-1) 判未配。已迁移角色不再回退 animData.idle1H（§8.7 P1）。
             AnimationClip idle = conv.idleId != CommonAnimationConvention.IdleUnset
                 ? LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.idleId, 0, CommonAnimationConvention.DirForward))
                 : null;
-            if (idle == null) idle = animData.idle1H;
 
             AnimationClip walkF = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirForward));
             AnimationClip walkB = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirBackward));
