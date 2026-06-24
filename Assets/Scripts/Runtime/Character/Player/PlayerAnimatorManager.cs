@@ -18,6 +18,13 @@ namespace LZ
             return player != null && player.playerNetworkManager.isTwoHandingWeapon.Value;
         }
 
+        protected override CommonStanceClass GetWeaponStanceClass()
+        {
+            var weapon = player != null ? player.playerInventoryManager.currentRightHandWeapon : null;
+            if (weapon == null) return CommonStanceClass.Light;
+            return CommonAnimationConvention.FromWeaponClass(weapon.weaponClass);
+        }
+
         /// <summary>
         /// Upperbody 动画结束回调，复制原 ResetUpperbodyAction StateMachineBehaviour 的逻辑。
         /// </summary>

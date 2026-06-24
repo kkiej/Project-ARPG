@@ -472,6 +472,13 @@ namespace LZ
                 if (PlayerUIManager.instance.menuWindowIsOpen)
                     return;
 
+                // FSM 路径（开关开启）：投递闪避意图给状态机，由 LocomotionState → DodgeState 裁决。
+                if (player.UseStateMachine)
+                {
+                    player.GetOrCreateStateMachine().EnqueueInput(InputCommand.Dodge);
+                    return;
+                }
+
                 player.playerLocomotionManager.AttemptToPerformDodge();
             }
         }
@@ -498,9 +505,27 @@ namespace LZ
                 if (PlayerUIManager.instance.menuWindowIsOpen)
                     return;
 					
+                // FSM 路径（开关开启）：投递跳跃意图给状态机，由 LocomotionState → JumpState 裁决。
+                if (player.UseStateMachine)
+                {
+                    player.GetOrCreateStateMachine().EnqueueInput(InputCommand.Jump);
+                    return;
+                }
+
                 // 尝试执行跳跃动作
                 player.playerLocomotionManager.AttemptToPerformJump();
             }
+        }
+
+        // FSM 攻击路由门：仅当开关开启且右手武器配置了 moveset 时，才交给状态机；
+        // 否则回退旧 WeaponItemAction 路径，保证未配置 moveset 的武器在默认开启下仍可攻击。
+        private bool ShouldRouteAttackToStateMachine()
+        {
+            if (!player.UseStateMachine)
+                return false;
+
+            WeaponItem rightWeapon = player.playerInventoryManager.currentRightHandWeapon;
+            return rightWeapon != null && rightWeapon.moveset != null;
         }
 
         private void HandleRBInput()
@@ -513,7 +538,14 @@ namespace LZ
                 RB_Input = false;
                 
                 // TODO: 如果我们有UI窗口开着，那么什么也不做，直接返回
-                
+
+                // FSM 路径（开关开启且武器有 moveset）：投递轻击意图给状态机，由 AttackState 裁决连招
+                if (ShouldRouteAttackToStateMachine())
+                {
+                    player.GetOrCreateStateMachine().EnqueueInput(InputCommand.LightAttack);
+                    return;
+                }
+
                 player.playerNetworkManager.SetCharacterActionHand(true);
                 
                 // TODO: 如果我们双持武器，使用双持动作
@@ -580,7 +612,14 @@ namespace LZ
                 RT_Input = false;
                 
                 // TODO: 如果我们有UI窗口开着，那么什么也不做，直接返回
-                
+
+                // FSM 路径（开关开启且武器有 moveset）：投递重击意图给状态机
+                if (ShouldRouteAttackToStateMachine())
+                {
+                    player.GetOrCreateStateMachine().EnqueueInput(InputCommand.HeavyAttack);
+                    return;
+                }
+
                 player.playerNetworkManager.SetCharacterActionHand(true);
                 
                 // TODO: 如果我们双持武器，使用双持动作

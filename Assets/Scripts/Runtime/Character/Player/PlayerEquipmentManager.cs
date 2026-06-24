@@ -1047,7 +1047,7 @@ namespace LZ
         //  WEAPONS
         private void InitializeWeaponSlots()
         {
-            WeaponModelInstantiationSlot[] weaponSlots = GetComponentsInChildren<WeaponModelInstantiationSlot>();
+            WeaponModelInstantiationSlot[] weaponSlots = GetComponentsInChildren<WeaponModelInstantiationSlot>(true);
 
             foreach (var weaponSlot in weaponSlots)
             {
@@ -1068,6 +1068,49 @@ namespace LZ
                     backSlot = weaponSlot;
                 }
             }
+
+            //  兜底：c0000 共享骨架自带挂点骨(R_Weapon/L_Weapon/L_Shield)但没挂组件时，按骨名自动补上。
+            //  避免在深层骨架里手动逐个加组件，且能扛骨架替换。
+            if (rightHandWeaponSlot == null)
+                rightHandWeaponSlot = EnsureWeaponSlotOnBone("R_Weapon", WeaponModelSlot.RightHand);
+            if (leftHandWeaponSlot == null)
+                leftHandWeaponSlot = EnsureWeaponSlotOnBone("L_Weapon", WeaponModelSlot.LeftHandWeaponSlot);
+            if (leftHandShieldSlot == null)
+                leftHandShieldSlot = EnsureWeaponSlotOnBone("L_Shield", WeaponModelSlot.LeftHandShieldSlot);
+        }
+
+        /// <summary>
+        /// 在角色骨架里按精确骨名查找挂点骨，并确保其上有 <see cref="WeaponModelInstantiationSlot"/> 组件。
+        /// 找不到骨返回 null（由调用方的空安全防护处理）。
+        /// </summary>
+        private WeaponModelInstantiationSlot EnsureWeaponSlotOnBone(string boneName, WeaponModelSlot slotType)
+        {
+            Transform bone = FindDescendantByExactName(transform, boneName);
+            if (bone == null)
+            {
+                Debug.LogWarning($"[PlayerEquipmentManager] 骨架下找不到挂点骨 '{boneName}'，{slotType} 槽位未创建。", this);
+                return null;
+            }
+
+            var slot = bone.GetComponent<WeaponModelInstantiationSlot>();
+            if (slot == null)
+            {
+                slot = bone.gameObject.AddComponent<WeaponModelInstantiationSlot>();
+                slot.weaponSlot = slotType;
+            }
+            return slot;
+        }
+
+        /// <summary>深度优先在子层级里精确匹配骨名（避开 'Ctrl L_Weapon' 等同名前缀的控制骨）。</summary>
+        private static Transform FindDescendantByExactName(Transform root, string exactName)
+        {
+            foreach (Transform child in root)
+            {
+                if (child.name == exactName) return child;
+                Transform found = FindDescendantByExactName(child, exactName);
+                if (found != null) return found;
+            }
+            return null;
         }
 
         public void EquipWeapons()
@@ -1163,6 +1206,13 @@ namespace LZ
         
         public void LoadRightWeapon()
         {
+            //  临时防护：切换到 c0000 骨架后若右手挂载槽缺失，跳过武器加载以免空引用打断后续装备加载
+            if (rightHandWeaponSlot == null)
+            {
+                Debug.LogWarning("[PlayerEquipmentManager] rightHandWeaponSlot 为空，跳过右手武器加载。请检查角色骨架下是否存在 RightHand 的 WeaponModelInstantiationSlot。", this);
+                return;
+            }
+
             if (player.playerInventoryManager.currentRightHandWeapon != null)
             {
                 // 移除旧武器
@@ -1174,6 +1224,9 @@ namespace LZ
                 rightWeaponManager = rightHandWeaponModel.GetComponent<WeaponManager>();
                 rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
                 player.playerAnimatorManager.SetActiveWeaponAnimationSet(player.playerInventoryManager.currentRightHandWeapon.weaponAnimationSet);
+                // 按角色作用域注册当前武器 moveset 的攻击 clip（owner + 远端都会执行到此，
+                // 由复制的 currentRightHandWeaponID 驱动）→ FSM 选片与远端 RPC 解析都能命中，不依赖全局表。
+                player.playerAnimatorManager.RegisterMoveset(player.playerInventoryManager.currentRightHandWeapon.moveset);
             }
         }
 
@@ -1265,6 +1318,13 @@ namespace LZ
         
         public void LoadLeftWeapon()
         {
+            //  临时防护：切换到 c0000 骨架后若左手挂载槽缺失，跳过武器加载以免空引用打断后续装备加载
+            if (leftHandWeaponSlot == null || leftHandShieldSlot == null)
+            {
+                Debug.LogWarning("[PlayerEquipmentManager] leftHandWeaponSlot/leftHandShieldSlot 为空，跳过左手武器加载。请检查角色骨架下是否存在对应的 WeaponModelInstantiationSlot。", this);
+                return;
+            }
+
             if (player.playerInventoryManager.currentLeftHandWeapon != null)
             {
                 // 移除旧武器

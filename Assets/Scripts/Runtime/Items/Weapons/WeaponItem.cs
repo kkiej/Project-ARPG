@@ -9,6 +9,10 @@ namespace LZ
         [Header("Animations")]
         public WeaponAnimationSet weaponAnimationSet;
 
+        [Header("Moveset (FSM 数据驱动连招，与 weaponAnimationSet 并存)")]
+        [Tooltip("开启 useStateMachine 后由该 MovesetData 驱动攻击；为空则该武器走旧的 WeaponItemAction 路径。")]
+        public MovesetData moveset;
+
         [Header("Model Instantiation")]
         public WeaponModelType weaponModelType;
 

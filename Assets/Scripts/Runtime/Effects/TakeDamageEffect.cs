@@ -164,6 +164,9 @@ namespace LZ
                     Debug.LogWarning($"{character.name}: medium damage clip 未配置", character);
                 }
 
+                // 硬直信号：供 FSM 全局转移进入 HitState（仅 Owner，已在方法开头判定）。
+                character.characterCombatManager.isStaggered = true;
+
                 character.characterCombatManager.DestroyAllCurrentActionFX();
             }
             else

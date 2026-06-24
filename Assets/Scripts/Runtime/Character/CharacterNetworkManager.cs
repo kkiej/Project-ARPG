@@ -226,6 +226,37 @@ namespace LZ
             PlayAnimationByName(animationID, false);
         }
 
+        //  ATTACK ANIMATION (按 ER animId — FSM/ER 路径，紧凑且按角色作用域解析、不撞名)
+
+        [ServerRpc]
+        public void NotifyTheServerOfAttackActionAnimationByIdServerRpc(ulong clientID, int animId, bool applyRootMotion)
+        {
+            if (IsServer)
+            {
+                PlayAttackActionAnimationByIdForAllClientsClientRpc(clientID, animId, applyRootMotion);
+            }
+        }
+
+        [ClientRpc]
+        public void PlayAttackActionAnimationByIdForAllClientsClientRpc(ulong clientID, int animId, bool applyRootMotion)
+        {
+            if (clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformAttackActionAnimationByIdFromServer(animId, applyRootMotion);
+            }
+        }
+
+        private void PerformAttackActionAnimationByIdFromServer(int animId, bool applyRootMotion)
+        {
+            character.characterAnimatorManager.applyRootMotion = applyRootMotion;
+
+            var clip = character.characterAnimatorManager.LookupClipByAnimId(animId);
+            if (clip != null)
+                character.characterAnimatorManager.PlayClipOnRemote(clip, 0.2f);
+            else
+                Debug.LogWarning($"{character.name}: attack clip animId '{animId}' not found in library", character);
+        }
+
         private void PlayAnimationByName(string animationID, bool instant)
         {
             var clip = character.characterAnimatorManager.LookupClipByName(animationID);

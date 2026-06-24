@@ -19,6 +19,23 @@ namespace LZ
         [HideInInspector] public PlayerEffectsManager playerEffectsManager;
         [HideInInspector] public PlayerBodyManager playerBodyManager;
 
+        [Header("State Machine（阶段3+：FSM 接管移动/攻击，仅 Owner）")]
+        [Tooltip("开启后由 CharacterStateMachine 驱动移动与攻击；关闭则走旧的直接调用路径。两路并存，便于切换验证。")]
+        [SerializeField] private bool useStateMachine = true;
+        [HideInInspector] public CharacterStateMachine stateMachine;
+
+        /// <summary>是否启用 FSM 路径（供输入层判断是否投递到状态机而非旧 WeaponItemAction）。</summary>
+        public bool UseStateMachine => useStateMachine;
+
+        /// <summary>取状态机（首次访问时惰性创建，初始状态为 LocomotionState）。仅 Owner 使用。</summary>
+        public CharacterStateMachine GetOrCreateStateMachine()
+        {
+            if (stateMachine == null)
+                stateMachine = new CharacterStateMachine(this, new LocomotionState());
+
+            return stateMachine;
+        }
+
         protected override void Awake()
         {
             base.Awake();
@@ -44,8 +61,15 @@ namespace LZ
             if (!IsOwner)
                 return;
             
-            // 处理位移
-            playerLocomotionManager.HandleAllMovement();
+            // 处理位移：开启状态机则由 FSM 驱动（各 State → HandleAllMovement），否则走旧路径
+            if (useStateMachine)
+            {
+                GetOrCreateStateMachine().Tick();
+            }
+            else
+            {
+                playerLocomotionManager.HandleAllMovement();
+            }
             
             // 耐力再生
             playerStatsManager.RegenerateStamina();

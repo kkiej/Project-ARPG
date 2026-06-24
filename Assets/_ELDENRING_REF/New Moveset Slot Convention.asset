@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed7ac734b03e56647a2f0a6556a14b5e, type: 3}
+  m_Name: New Moveset Slot Convention
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.MovesetSlotConvention
+  hands:
+  - handState: 0
+    baseSlot: 30000
+    enabled: 1
+  - handState: 1
+    baseSlot: 32000
+    enabled: 1
+  - handState: 2
+    baseSlot: 35000
+    enabled: 1
+  slots:
+  - slot: 1
+    suffix: 0
+    attackType: 0
+    applyRootMotion: 1
+    canCharge: 0
+    note: "R1 \u7B2C\u4E00\u6BB5\uFF08\u9AD8\u7F6E\u4FE1\uFF09"
+  - slot: 2
+    suffix: 10
+    attackType: 1
+    applyRootMotion: 1
+    canCharge: 0
+    note: "R1 \u7B2C\u4E8C\u6BB5\uFF08\u9AD8\u7F6E\u4FE1\uFF09"
+  - slot: 3
+    suffix: 20
+    attackType: 0
+    applyRootMotion: 1
+    canCharge: 0
+    note: "R1 \u7B2C\u4E09\u6BB5\uFF08\u9AD8\u7F6E\u4FE1\uFF09"
+  - slot: 4
+    suffix: 30
+    attackType: 1
+    applyRootMotion: 1
+    canCharge: 0
+    note: "R1 \u7B2C\u56DB\u6BB5\uFF08\u9AD8\u7F6E\u4FE1\uFF09"
+  - slot: 5
+    suffix: 40
+    attackType: 0
+    applyRootMotion: 1
+    canCharge: 0
+    note: "R1 \u7B2C\u4E94\u6BB5\uFF08\u9AD8\u7F6E\u4FE1\uFF09"
+  - slot: 6
+    suffix: 500
+    attackType: 2
+    applyRootMotion: 1
+    canCharge: 1
+    note: "R2 \u7B2C\u4E00\u6BB5 / \u53EF\u84C4\u529B\uFF08\u9AD8\u7F6E\u4FE1\uFF09"
+  - slot: 7
+    suffix: 510
+    attackType: 3
+    applyRootMotion: 1
+    canCharge: 1
+    note: "R2 \u7B2C\u4E8C\u6BB5 / \u53EF\u84C4\u529B\uFF08\u9AD8\u7F6E\u4FE1\uFF09"
+  - slot: 8
+    suffix: 200
+    attackType: 6
+    applyRootMotion: 1
+    canCharge: 0
+    note: "\u51B2\u523A\u653B\u51FB\uFF08\u4E2D\u7F6E\u4FE1\uFF0C\u5EFA\u8BAE DSAS
+      \u6838\u5BF9\uFF09"
+  - slot: 9
+    suffix: 210
+    attackType: 7
+    applyRootMotion: 1
+    canCharge: 0
+    note: "\u7FFB\u6EDA\u653B\u51FB\uFF08\u4E2D\u7F6E\u4FE1\uFF0C\u6709 poise \u6807\u8BB0\uFF09"
+  - slot: 10
+    suffix: 300
+    attackType: 8
+    applyRootMotion: 1
+    canCharge: 0
+    note: "\u540E\u64A4\u6B65\u653B\u51FB\uFF08\u4E2D\u7F6E\u4FE1\uFF09"
+  - slot: 11
+    suffix: 400
+    attackType: 9
+    applyRootMotion: 1
+    canCharge: 0
+    note: "\u8DF3\u8DC3\u653B\u51FB\uFF08\u4E2D\u7F6E\u4FE1\uFF09"
+  - slot: 12
+    suffix: 700
+    attackType: 2
+    applyRootMotion: 1
+    canCharge: 0
+    note: "\u76FE\u53CD / \u9632\u5FA1\u53CD\u51FB\uFF08\u5F85\u786E\u8BA4\uFF09"

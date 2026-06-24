@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Reflection;
 using Animancer;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,8 +12,11 @@ namespace LZ
         private int horizontal;
         private int vertical;
 
-        // ── Per-character clip name → AnimationClip lookup（供远端 RPC 查找）──
-        private Dictionary<string, AnimationClip> _clipLookup = new Dictionary<string, AnimationClip>();
+        // ── Per-character 动画解析服务（按角色作用域，供 owner 选片与远端 RPC 查找；不依赖全局大表）──
+        private readonly CharacterAnimationLibrary _animLibrary = new CharacterAnimationLibrary();
+
+        /// <summary>每角色动画解析服务（设计文档 §8.4）。FSM 按 animId / 远端按 name 都经此解析。</summary>
+        public CharacterAnimationLibrary AnimationLibrary => _animLibrary;
 
         /// <summary>每帧执行的阶段性检查（如跳跃等落地、蓄力检测松手），播放新动作时自动清除。</summary>
         private System.Action _phaseUpdate;
@@ -68,7 +70,13 @@ namespace LZ
         {
             character.animator.runtimeAnimatorController = null;
 
+            //  模块化角色的网格在运行时重绑骨架，SkinnedMeshRenderer 的 bounds 不可靠，
+            //  靠可见性剔除会误判为"不可见"而冻结骨骼。固定为 AlwaysAnimate 保证骨骼始终被动画驱动。
+            character.animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+
             BuildClipLookup(animData);
+            if (animData != null)
+                _animLibrary.RegisterCommonSet(animData.commonSet);
             InitAnimancerLayers();
             InitDamageClipLists();
             InitLocomotion();
@@ -325,6 +333,19 @@ namespace LZ
                 else            { targetMixer = animData.locomotion1H;         targetIdle = animData.idle1H; }
             }
 
+            // 数据驱动覆盖（非格挡）：用通用集运行时构建的混合树替换手搓 mixer；
+            // 数据不足（返回 null）时自动回退上面的 animData 手搓 mixer。格挡 locomotion 暂未数据化，保持旧路径。
+            bool usingCommonMixer = false;
+            if (!isBlocking)
+            {
+                var commonMixer = BuildCommonLocomotionMixer();
+                if (commonMixer != null)
+                {
+                    targetMixer = commonMixer;
+                    usingCommonMixer = true;
+                }
+            }
+
             object newKey = (isMoving && targetMixer != null) ? (object)targetMixer : targetIdle;
             if (newKey == null) return;
             if (!force && newKey == _currentLocoKey && _currentLocoState != null) return;
@@ -335,7 +356,9 @@ namespace LZ
             {
                 _currentLocoState = character.animancer.Layers[0].Play(targetMixer, fadeDuration);
                 _activeMixer = _currentLocoState as Vector2MixerState;
-                ApplyLocomotionClipOverrides(_currentLocoState as ManualMixerState, targetMixer);
+                // 通用混合树的 clip 已是最终 ER 动画，无需再叠加武器 clip 覆盖（覆盖表引用的是 animData clip，不匹配）。
+                if (!usingCommonMixer)
+                    ApplyLocomotionClipOverrides(_currentLocoState as ManualMixerState, targetMixer);
             }
             else if (targetIdle != null)
             {
@@ -360,6 +383,78 @@ namespace LZ
                     return overrides[i].replacement;
 
             return baseClip;
+        }
+
+        // ── 运行时构建的通用 locomotion 混合树（Option B，设计文档 §8.3/§8.4）──
+        private MixerTransition2D _builtLocoMixer;
+        private int _builtLocoKey = int.MinValue;
+
+        /// <summary>
+        /// 用 <see cref="CommonAnimationConvention"/> + <see cref="CharacterAnimationLibrary"/> 运行时构建一棵
+        /// 方向性 locomotion 混合树（idle / 四向走 / 四向慢跑 / 前向奔跑），不依赖手搓 MixerTransition2D 资产。
+        /// 阈值布局固定为 ER 约定：idle(0,0)、walk ±0.5、jog ±1、sprint(0,2)。
+        /// 缓存按负重组复用；核心 clip（idle/walkF/jogF）缺失时返回 null → 调用方回退 animData 手搓混合树。
+        /// </summary>
+        private MixerTransition2D BuildCommonLocomotionMixer()
+        {
+            var conv = animData != null ? animData.commonConvention : null;
+            if (conv == null) return null;
+
+            int group = conv.defaultLoadGroup;
+            // 运行时选姿态前缀：握持(单/双手) + 武器大类 → aXXX 类别号。
+            int stance = CommonAnimationConvention.ResolveStanceCategory(GetIsTwoHanding(), GetWeaponStanceClass());
+
+            // 缓存按 (stance, 负重组) 复用：换持武状态 / 负重时自动重建。
+            int cacheKey = stance * 100 + group;
+            if (_builtLocoMixer != null && _builtLocoKey == cacheKey)
+                return _builtLocoMixer;
+
+            // idle：优先约定 idleId（按姿态前缀解析，idle 为单锚点，固定 load0/dir0），否则回退 animData.idle1H。
+            // idleId 合法可为 0（a000_000000），用 IdleUnset(-1) 判未配。
+            AnimationClip idle = conv.idleId != CommonAnimationConvention.IdleUnset
+                ? LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.idleId, 0, CommonAnimationConvention.DirForward))
+                : null;
+            if (idle == null) idle = animData.idle1H;
+
+            AnimationClip walkF = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirForward));
+            AnimationClip walkB = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirBackward));
+            AnimationClip walkL = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirLeft));
+            AnimationClip walkR = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirRight));
+            AnimationClip jogF = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirForward));
+            AnimationClip jogB = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirBackward));
+            AnimationClip jogL = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirLeft));
+            AnimationClip jogR = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirRight));
+            AnimationClip runF = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.runBase, group, CommonAnimationConvention.DirForward));
+
+            // 核心方向缺失 → 数据不足，放弃数据驱动，回退手搓混合树。
+            if (idle == null || walkF == null || jogF == null)
+                return null;
+
+            // 个别方向缺失用同类前向兜底，避免 null 子状态。
+            if (walkB == null) walkB = walkF;
+            if (walkL == null) walkL = walkF;
+            if (walkR == null) walkR = walkF;
+            if (jogB == null) jogB = jogF;
+            if (jogL == null) jogL = jogF;
+            if (jogR == null) jogR = jogF;
+            if (runF == null) runF = jogF;
+
+            var clips = new UnityEngine.Object[] { idle, walkF, walkB, walkL, walkR, jogF, jogB, jogL, jogR, runF };
+            var thresholds = new Vector2[]
+            {
+                new Vector2(0f, 0f),
+                new Vector2(0f, 0.5f), new Vector2(0f, -0.5f), new Vector2(-0.5f, 0f), new Vector2(0.5f, 0f),
+                new Vector2(0f, 1f),   new Vector2(0f, -1f),   new Vector2(-1f, 0f),   new Vector2(1f, 0f),
+                new Vector2(0f, 2f),
+            };
+
+            var mixer = new MixerTransition2D { Type = MixerTransition2D.MixerType.Directional };
+            mixer.Animations = clips;
+            mixer.Thresholds = thresholds;
+
+            _builtLocoMixer = mixer;
+            _builtLocoKey = cacheKey;
+            return mixer;
         }
 
         /// <summary>
@@ -402,6 +497,9 @@ namespace LZ
         /// <summary>子类重写以提供 isTwoHandingWeapon 状态。基类默认返回 false。</summary>
         protected virtual bool GetIsTwoHanding() => false;
 
+        /// <summary>子类重写以提供当前武器大类（用于运行时解析通用动画的姿态前缀）。基类默认轻型。</summary>
+        protected virtual CommonStanceClass GetWeaponStanceClass() => CommonStanceClass.Light;
+
         /// <summary>读取当前 Animancer Mixer 的 (Horizontal, Vertical) 参数值。用于 AI Owner 端网络同步。</summary>
         public Vector2 GetCurrentMixerParameter()
         {
@@ -427,34 +525,54 @@ namespace LZ
 
         #endregion
 
-        #region Clip Lookup (name → clip)
+        #region Clip Lookup (name / animId → clip)
 
         private void BuildClipLookup(object source)
         {
-            if (source == null) return;
-            foreach (var field in source.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (field.FieldType != typeof(AnimationClip)) continue;
-                var clip = field.GetValue(source) as AnimationClip;
-                if (clip != null)
-                    _clipLookup[clip.name] = clip;
-            }
+            _animLibrary.RegisterClipFields(source);
         }
 
-        /// <summary>注册武器动画集的所有 clip 到本地字典（武器切换时调用）。</summary>
+        /// <summary>注册武器动画集的所有 clip 到本地解析服务（武器切换时调用）。</summary>
         public void RegisterWeaponClips(object weaponAnimSet)
         {
-            BuildClipLookup(weaponAnimSet);
+            _animLibrary.RegisterClipFields(weaponAnimSet);
         }
 
-        /// <summary>通过 clip 名称查找本地字典。</summary>
+        /// <summary>注册当前武器 moveset 的所有攻击 clip（装备时调用，owner + 远端都跑）。</summary>
+        public void RegisterMoveset(MovesetData moveset)
+        {
+            _animLibrary.RegisterMoveset(moveset);
+        }
+
+        /// <summary>
+        /// 通过 clip 名称解析：先查本角色作用域服务；未命中再回退全局 <see cref="AnimationClipRegistry"/>（过渡期兜底，档位 A4 移除）。
+        /// </summary>
         public AnimationClip LookupClipByName(string clipName)
         {
-            if (_clipLookup.TryGetValue(clipName, out var clip))
+            if (_animLibrary.TryGetByName(clipName, out var clip))
                 return clip;
             if (AnimationClipRegistry.Instance != null)
                 return AnimationClipRegistry.Instance.GetClipByName(clipName);
             return null;
+        }
+
+        /// <summary>通过 ER animId 解析（FSM 选片 / RPC 按 id 同步）。未命中返回 null。</summary>
+        public AnimationClip LookupClipByAnimId(int animId)
+        {
+            return _animLibrary.TryGetByAnimId(animId, out var clip) ? clip : null;
+        }
+
+        /// <summary>
+        /// 发送攻击动画的网络广播：clip 有 ER animId（FSM/ER 路径）走紧凑的 id RPC，
+        /// 否则（通用 / 旧 WeaponItemAction 路径的 clip 无 id）回退按名字 RPC。
+        /// </summary>
+        private void SendAttackActionRpc(AnimationClip clip, bool applyRootMotion)
+        {
+            ulong localId = NetworkManager.Singleton.LocalClientId;
+            if (_animLibrary.TryGetAnimId(clip, out int animId))
+                character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationByIdServerRpc(localId, animId, applyRootMotion);
+            else
+                character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(localId, clip.name, applyRootMotion);
         }
 
         #endregion
@@ -667,8 +785,33 @@ namespace LZ
             character.characterNetworkManager.isAttacking.Value = true;
             character.characterLocomotionManager.canRoll = canRoll;
 
-            character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(
-                NetworkManager.Singleton.LocalClientId, clip.name, applyRootMotion);
+            SendAttackActionRpc(clip, applyRootMotion);
+        }
+
+        #endregion
+
+        #region Action Layer Playback Query（供 FSM 判断开窗时机）
+
+        /// <summary>当前 Action 层正在播放的 clip 的已播放时间（秒）；无活跃状态返回 0。</summary>
+        public float CurrentActionTime
+        {
+            get
+            {
+                if (character.animancer == null) return 0f;
+                var state = character.animancer.Layers[ActionLayer].CurrentState;
+                return state != null ? (float)state.Time : 0f;
+            }
+        }
+
+        /// <summary>当前 Action 层正在播放的 clip 的总时长（秒）；无活跃状态返回 0。</summary>
+        public float CurrentActionLength
+        {
+            get
+            {
+                if (character.animancer == null) return 0f;
+                var state = character.animancer.Layers[ActionLayer].CurrentState;
+                return state != null ? (float)state.Length : 0f;
+            }
         }
 
         #endregion
@@ -712,8 +855,7 @@ namespace LZ
             if (character.IsOwner)
                 character.characterNetworkManager.isAttacking.Value = true;
 
-            character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(
-                NetworkManager.Singleton.LocalClientId, attackClip.name, applyRootMotion);
+            SendAttackActionRpc(attackClip, applyRootMotion);
 
             _heavyChargedAttackType = chargedAttackType;
             _heavyReleaseClip = releaseClip;
@@ -896,8 +1038,7 @@ namespace LZ
             if (character.IsOwner)
                 character.characterNetworkManager.isAttacking.Value = true;
 
-            character.characterNetworkManager.NotifyTheServerOfAttackActionAnimationServerRpc(
-                NetworkManager.Singleton.LocalClientId, attackClip.name, applyRootMotion);
+            SendAttackActionRpc(attackClip, applyRootMotion);
 
             _jumpAttackAirIdleClip = airIdleClip;
             _jumpAttackEndClip = endClip;

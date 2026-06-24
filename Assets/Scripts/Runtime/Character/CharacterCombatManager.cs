@@ -31,6 +31,10 @@ namespace LZ
         public bool canBlock = true;
         public bool canBeBackstabbed = true;
 
+        [Header("Hit / Stagger（FSM 受击信号）")]
+        [Tooltip("受击且姿态被打破（硬直）时由 TakeDamageEffect 置位；FSM 据此进入 HitState，进入后清零。非动画事件。")]
+        public bool isStaggered = false;
+
         [Header("Critical Attack")]
         private Transform riposteReceiverTransform;
         private Transform backstabReceiverTransform;

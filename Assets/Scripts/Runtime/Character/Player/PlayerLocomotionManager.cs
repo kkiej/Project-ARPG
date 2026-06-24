@@ -305,27 +305,56 @@ namespace LZ
                 else
                     player.transform.rotation = playerRotation;
 
-                var ad = player.playerAnimatorManager.animData;
-                if (ad != null && ad.rollForward != null)
-                    player.playerAnimatorManager.PlayTargetActionAnimation(ad.rollForward, true, true);
+                // 已转向输入方向 → 用前滚（dir=0）。翻滚固定 a000 前缀（权威表 §6.3）。回退旧 rollForward。
+                AnimationClip rollClip = ResolveCommonAnim(CommonAnimationConvention.RollStance, c => c.rollBase, CommonAnimationConvention.DirForward)
+                                         ?? player.playerAnimatorManager.animData?.rollForward;
+                if (rollClip != null)
+                    player.playerAnimatorManager.PlayTargetActionAnimation(rollClip, true, true);
                 else
-                    Debug.LogWarning($"{player.name}: rollForward clip 未配置", player);
+                    Debug.LogWarning($"{player.name}: roll clip 未配置（commonSet / rollForward 均缺）", player);
                 player.playerLocomotionManager.isRolling = true;
             }
             // 如果我们处于静止状态，我们执行一个后撤步
             else
             {
-                var ad = player.playerAnimatorManager.animData;
-                if (ad != null && ad.backstep != null)
-                    player.playerAnimatorManager.PlayTargetActionAnimation(ad.backstep, true, true);
+                // 后撤步随姿态前缀变（权威表 §6.2），无方向（dir=0）。
+                AnimationClip backstepClip = ResolveCommonAnim(ResolveCurrentStance(), c => c.backstepBase, CommonAnimationConvention.DirForward)
+                                             ?? player.playerAnimatorManager.animData?.backstep;
+                if (backstepClip != null)
+                    player.playerAnimatorManager.PlayTargetActionAnimation(backstepClip, true, true);
                 else
-                    Debug.LogWarning($"{player.name}: backstep clip 未配置", player);
+                    Debug.LogWarning($"{player.name}: backstep clip 未配置（commonSet / backstep 均缺）", player);
             }
 
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
             player.playerNetworkManager.DestroyAllCurrentActionFXServerRpc();
         }
-        
+
+        /// <summary>
+        /// 按通用动画约定（<see cref="CommonAnimationConvention"/>）解析一个 clip：
+        /// stance*1_000_000 + base + defaultLoadGroup*10 + direction，再经 <see cref="CharacterAnimationLibrary"/> 取 clip。
+        /// 约定未配 / 库未命中时返回 null（调用方回退旧 animData 强类型字段）。
+        /// </summary>
+        private AnimationClip ResolveCommonAnim(int stance, System.Func<CommonAnimationConvention, int> baseSelector, int direction)
+        {
+            var conv = player.playerAnimatorManager.animData?.commonConvention;
+            if (conv == null) return null;
+
+            int animId = CommonAnimationConvention.ComposeId(stance, baseSelector(conv), conv.defaultLoadGroup, direction);
+            return player.playerAnimatorManager.LookupClipByAnimId(animId);
+        }
+
+        /// <summary>由当前握持(单/双手) + 右手武器大类解析通用动画的姿态前缀类别号（aXXX）。</summary>
+        private int ResolveCurrentStance()
+        {
+            bool twoHanding = player.playerNetworkManager.isTwoHandingWeapon.Value;
+            var weapon = player.playerInventoryManager.currentRightHandWeapon;
+            var cls = weapon != null
+                ? CommonAnimationConvention.FromWeaponClass(weapon.weaponClass)
+                : CommonStanceClass.Light;
+            return CommonAnimationConvention.ResolveStanceCategory(twoHanding, cls);
+        }
+
         public void AttemptToPerformJump()
         {
             // 如果我们正在播放通用动作，我们不想要跳跃（添加战斗时会修改）

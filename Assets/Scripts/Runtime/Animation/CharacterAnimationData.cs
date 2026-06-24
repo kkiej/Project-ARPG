@@ -24,7 +24,13 @@ namespace LZ
         public AnimationClip jumpIdle2H;
         public AnimationClip jumpEnd2H;
 
-        [Header("Roll & Dodge")]
+        [Header("Common Animation (ER a000_ 数据驱动，设计文档 §8)")]
+        [Tooltip("通用动画 ID 约定表（base+组*10+方向）。供 locomotion / dodge 按 animId 解析。")]
+        public CommonAnimationConvention commonConvention;
+        [Tooltip("本角色实际用到的 a000_ 子集（CommonAnimationAutoFiller 回填）。运行时注册进 CharacterAnimationLibrary。")]
+        public CommonAnimationSet commonSet;
+
+        [Header("Roll & Dodge (旧强类型字段，commonSet 未配时回退)")]
         public AnimationClip rollForward;
         public AnimationClip backstep;
 
