@@ -1127,8 +1127,11 @@ namespace LZ
 
             player.playerNetworkManager.isTwoHandingWeapon.Value = false;
 
-            if (player.playerAnimatorManager.animData != null && player.playerAnimatorManager.animData.swapRightWeapon != null)
-                player.playerAnimatorManager.PlayTargetUpperbodyAnimation(player.playerAnimatorManager.animData.swapRightWeapon);
+            // 优先 ER a000_029001（§8.7 P3，变体范围 290xx 视武器细分，先收基址），回退旧 swapRightWeapon。
+            AnimationClip swapRightClip = player.playerAnimatorManager.ResolveCommonActionClip(c => c.weaponSwapRightBase)
+                                          ?? (player.playerAnimatorManager.animData != null ? player.playerAnimatorManager.animData.swapRightWeapon : null);
+            if (swapRightClip != null)
+                player.playerAnimatorManager.PlayTargetUpperbodyAnimation(swapRightClip);
             else
                 Debug.LogWarning($"{player.name}: swapRightWeapon clip 未配置", player);
             
@@ -1238,8 +1241,11 @@ namespace LZ
 
             player.playerNetworkManager.isTwoHandingWeapon.Value = false;
 
-            if (player.playerAnimatorManager.animData != null && player.playerAnimatorManager.animData.swapLeftWeapon != null)
-                player.playerAnimatorManager.PlayTargetUpperbodyAnimation(player.playerAnimatorManager.animData.swapLeftWeapon);
+            // 优先 ER a000_029031（§8.7 P3），回退旧 swapLeftWeapon。
+            AnimationClip swapLeftClip = player.playerAnimatorManager.ResolveCommonActionClip(c => c.weaponSwapLeftBase)
+                                         ?? (player.playerAnimatorManager.animData != null ? player.playerAnimatorManager.animData.swapLeftWeapon : null);
+            if (swapLeftClip != null)
+                player.playerAnimatorManager.PlayTargetUpperbodyAnimation(swapLeftClip);
             else
                 Debug.LogWarning($"{player.name}: swapLeftWeapon clip 未配置", player);
             

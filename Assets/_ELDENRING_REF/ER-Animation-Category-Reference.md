@@ -620,11 +620,42 @@ a{stance}_{action + load*10 + direction}
   | a014 | 双手·弓姿态 |
   | a015 | 双手·盾姿态（注：与 §1 表的"a015=弩"冲突，待核对） |
   | a016 | 双手·弩姿态（注：与 §1 表的"a016=2H 圣印记"冲突，待核对） |
-- **load（负重）= 十位 ×10，仅 3 档**：light=0 / medium=10 / heavy=20。（修正：不是 4 档）
+- **load（负重）= 十位 ×10，4 档**：light=0 / medium=10 / heavy=20 / overweight(超重)=30。
+  （运行期实测确认：穿重甲/持重武使总负重%升档，移动 ID 的十位随之变化。当前项目暂只用 light=0，未接负重系统。）
 - **direction（方向）= 个位 +0..3**：前 0 / 后 1 / 左 2 / 右 3。
 
 > 即 `animId = 前缀号 * 1_000_000 + (action基址 + load*10 + dir)`，与 `MovesetSlotConvention.ComposeAnimId` 一致；
 > 多前缀（a000/a010/a012…）天然由 `CharacterAnimationLibrary` 按 animId 区分。
+
+#### 6.0.1 运行期实测验证（Elden-Ring-Debug-Tool + 实际 clip 文件比对）
+
+调试工具显示的"运行时动画 ID"就是上式算出的 `animId`（a000 前缀=0 时省略前缀，故看着像纯后缀）：
+
+| 运行时 ID | 拆解 | 文件 | 含义 | 核对 |
+|---|---|---|---|---|
+| `0` | 0×1e6 + 0 | a000_000000 | idle | ✓ |
+| `20000/1/2/3` | 0 + 20000 + 0 + dir | a000_020000.. | 慢走 前/后/左/右 | ✓ |
+| `20100/1/2/3` | 0 + 20100 + 0 + dir | a000_020100.. | 快走 四向 | ✓ |
+| `20200` | 0 + 20200 | a000_020200 | 奔跑(前) | ✓ |
+| `2020010` | **2**×1e6 + 20000 + **10** + 0 | a002_020010 | 大剑·走·**中载**·前 | ✓ |
+| `10020000` | **10**×1e6 + 20000 | a010_020000 | 双手轻·走·前 | ✓ |
+| `10000000` | 10×1e6 + 0 | a010_000000 | 双手轻·idle | ✓ |
+
+**结论**：`animId = stance×1,000,000 + (base + load×10 + dir)` 即 ER 运行期真实编码，与项目 `CommonAnimationConvention.ComposeId` 完全一致。
+
+#### 6.0.2 Locomotion 六位 suffix 的完整结构
+
+移动类 suffix（`02xxxx`）实为 4 段:
+
+```
+suffix = 0 2 [d3 状态] [d4 速度] [d5 负重] [d6 方向]
+```
+- **d3 状态**：`0`=移动循环 / `2`=刹停（"停"，如 `022100`）。
+- **d4 速度**：`0`=慢走 / `1`=快走 / `2`=奔跑。
+- **d5 负重**：`0`轻 / `1`中 / `2`重 / `3`超重（即上面的 load）。
+- **d6 方向**：`0`前 / `1`后 / `2`左 / `3`右。
+
+故 `base + load*10 + dir` 公式中：walk base=`020000`、jog base=`020100`、run base=`020200`；刹停 base=`022100`(jog)/`022200`(run)。
 
 ### 6.1 手势（Gestures，a000_080xxx）
 
@@ -685,3 +716,72 @@ a{stance}_{action + load*10 + direction}
 
 > 注：本权威表每档负重只列 4 向（…100-103）。早前 `CommonAnimationInstruction.md` 手记里出现的
 > `…104-107`（第二组四向）在此未确认，可能不是标准翻滚，待核对。
+
+### 6.4 Locomotion 移动循环（base 随姿态前缀，+load*10，+dir）
+
+> 运行期实测确认（单手 a000、轻载 d5=0）。十位接负重、个位接方向。
+
+| 动作 | base(后缀) | 前(0) | 后(1) | 左(2) | 右(3) |
+|------|-----------|-------|-------|-------|-------|
+| idle | `000000` | a000_000000 | — | — | — |
+| 慢走 walk | `020000` | a000_020000 | a000_020001 | a000_020002 | a000_020003 |
+| 快走 jog | `020100` | a000_020100 | a000_020101 | a000_020102 | a000_020103 |
+| 奔跑 run | `020200` | a000_020200 | (a000_020210=冲刺?) | — | — |
+| 快走刹停 jog-stop | `022100` | a000_022100 | a000_022101 | a000_022102 | a000_022103 |
+| 奔跑刹停 run-stop | `022200` | a000_022200 | — | — | — |
+
+> 双手轻=a010、大剑(双武器右手重)=a002 等其它姿态同构，仅前缀不同（如 a010_020000、a002_020010）。
+
+### 6.5 跳跃 / 落地（a000_202xxx，base + 速度档*10）
+
+> 注意跳跃族前缀是 `202`（不是移动的 `02`）。速度档：站 0 / 走 1 / 快走 2 / 奔跑 3，进十位。
+
+| 动作 | 站立(0) | 走(10) | 快走(20) | 奔跑(30) |
+|------|---------|--------|----------|----------|
+| 起跳 jump | a000_202000 | a000_202010 | a000_202020 | a000_202030 |
+| 落地 land | a000_202100 | a000_202100 | a000_202110 | a000_202120 |
+
+> 实测：站跳/前走跳落地都用 `202100`；快走跳落地 `202110`、其"落地后接走"= `202115`；奔跑跳落地 `202120`。
+
+### 6.6 换武 / 喝药 / 无道具（a000_0xxxxx）
+
+| 动作 | base | 说明 |
+|------|------|------|
+| 换右手武器 | `029001`~`029021` | 武器→武器 |
+| 右手 盾→武器 | `029000`~`029020` | |
+| 换左手武器 | `029031`~`029051` | |
+| 左手 盾 | `029030`~`029050` | |
+| 喝药（有药） | `050110` / `050111` / `050112` | 起手 / 饮 / 收（一组三段，DSAS 已核实） |
+| **空手/无道具** | `050050` | **未装备药、或药已喝光时，"喝药"动作改播此动画** |
+
+> ✅ **TAE 事件 type / flag 的权威全量表已迁到 `TAE_Events/README.md` §5**，来源是 DSAS 导出的
+> **c0000 完整 TAE 转储 `c0000.anibnd.dcx.txt`**（13,700 个动画，名称/type/flag 全对）。不再需要 DSAS 逐个看。
+> `TAE_Events/*.json` 里每个事件的 `name`/`category` 字段是早期脚本错误猜测的，**严禁按 `name` 匹配**，
+> 运行期一律按 **`type` + `params`** 匹配，含义查 README §5。
+>
+> 几处此前被改错 / 待核实、现已由转储定论的要点：
+> - `type 0`=`ChrActionFlag`（无敌/霸体/连招窗/取消窗/输入窗**全是它的 flag**，不是独立 type）；
+>   `type 1`=`AttackBehavior`（近战判定）、`2`=`BulletBehavior`、`65`=**`ConsumeCurrentGoods`（喝药回血本体）**。
+> - `type 144/145`=**`RumbleCam_Local/Global`**（手柄/镜头震动），**不是** Invulnerability/SuperArmor——后者根本不存在为独立 type。
+> - `112`=`SpawnFFX_FloorDetermined`、`114`=`SpawnFFX_GoodsAndMagic`、`116`=`SpawnFFX_Throw`、`120`=`SpawnFFX_ChrType`（均特效，非判定盒）。
+> - `605`=`SetTimeActEditorHavokVariable`、`700`=`EnableTwistModifier`、`792`=`FootSfxParam_Entity`（`RootMotion_Mult`/`WeaponTrail`/`MovementFlag` 都是旧错名）。
+>
+> **无敌 / 霸体全是 `type0` 的 flag**：`8`=Flag As Dodging（翻滚无敌帧）、`24`=Super Armor（霸体）、
+> `67`=Invincible Excluding Throw、`94`=Perfect Invincibility、`132`=Jump Frames (Lower Body IFrames)、
+> `143`=PvE Only IFrames、`134`=Falling Jump Frames(配合 51)。
+>
+> **翻滚无敌帧（iframe，c0000 转储实测）**：
+> - 前滚 `a000_027100`：flag 8 (Flag As Dodging) 帧 **0–16** → **0~0.533s@30fps**（clip 约 60 帧/2.0s）。已写入
+>   `CommonAnimationConvention.rollIFrameStartSeconds/EndSeconds`（0 / 16⁄30），`DodgeState` 据此开关 `isInvulnerable`。
+> - 后撤步 `a000_027000`：flag 8 帧 **0–7**（≈0~0.233s）+ flag 143 (PvE Only IFrames) 帧 **7–11**。
+>   即后撤步**也有短无敌**（前 7 帧全无敌、7–11 帧仅对 AI 无敌），并非"无 iframe"。
+>
+> **连招窗语义注意**：`flag 87 (Input-Common)` 是「输入缓冲窗」（何时能按下并记住下一击），范围很宽（a023_030000
+> 实测 0.367~2.767s）；真正「能执行下一段」的取消门是 `flag 115 (Cancel-R1Attack, 0.567~0.7s)` /
+> `flag 4 (Cancel-RHAttack, 0.7~2.767s)`。当前 `MovesetAutoFiller` 用 flag 87 取窗 → 连招最早可在挥砍中途接出，
+> 比 ER 实际可取消点偏早。更贴 ER 的做法：输入缓冲用 flag 87，开窗起点用 flag 4/115（待定，未改）。
+>
+> **喝药回血时点**：`a000_050111`（饮）含 `ConsumeCurrentGoods` 事件（消耗道具/生效），DSAS 实测在
+> **第 8 帧**、clip 共 **30 帧(1s@30fps)** → 归一化 **8/30 ≈ 0.2667**，已写入
+> `CommonAnimationConvention.flaskConsumeNormalizedTime`。运行时（本机 + 远端复制体）以 Animancer 定时事件在此
+> 触发 `SuccessfullyUseQuickSlotItem`，替代 ER clip 缺失的 Unity AnimationEvent。

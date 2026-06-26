@@ -320,10 +320,27 @@ flowchart LR
 
 | 阶段 | 范围 | animId 状态 | 状态 |
 |----|------|------|------|
-| P1 | locomotion / idle / dodge **彻底 ER 化、去旧回退** | 已知（walk 20000 / jog 20100 / run 20200 / roll 27100 / backstep 27000） | 进行中 |
+| P1 | locomotion / idle / dodge **彻底 ER 化、去旧回退** + **锁定/非锁定两套移动** | 已知（walk 20000 / jog 20100 / run 20200 / roll 27100 / backstep 27000） | ✅ 完成 |
 | P2 | 受击（hit/flinch）/ 死亡（death） | **待确认**（先在约定留 `Unset` 占位） | 待办 |
-| P3 | 姿势（emote `a000_08xxxx`）/ 喝药 / 法术 / 拾取 / 换武 | 部分已知（emote 列表已有） | 待办 |
+| P3 | 换武 / 喝药空瓶 / 姿势 emote / 法术 / 拾取 | 换武 29001/29031、喝药 50110-112、无道具 50050、emote 80xxx 已知 | 进行中（见下） |
 | P4 | 收尾：`CharacterAnimationData` 砍成 Profile，移除强类型 clip 字段与反射 `RegisterClipFields` | — | 待办 |
+
+**P1 补充（锁定/非锁定两套移动，运行期实测对齐 ER）**：[CharacterAnimatorManager.BuildCommonLocomotionMixer](Assets/Scripts/Runtime/Character/CharacterAnimatorManager.cs) 现按 `GetIsLockedOn()` 构建两套——
+- **非锁定**：纯前向（idle/走/快走/奔跑，Cartesian 沿 +Y），方向靠 `HandleStandardRotation` 把角色转到输入方向，无侧/后移动画；
+- **锁定**：四向走/慢跑 + 前向冲刺（Directional）。
+
+缓存键含锁定位，切锁定即重建。玩家锁定状态经 `PlayerAnimatorManager.GetIsLockedOn()`（读 `isLockedOn`）。
+
+**P3 已落地（安全切片，resolve-by-id + 回退旧字段，零回归）**：
+- 换武 → `ResolveCommonActionClip(weaponSwapRightBase/LeftBase)`（[PlayerEquipmentManager](Assets/Scripts/Runtime/Character/Player/PlayerEquipmentManager.cs)）。
+- 喝药空瓶/无道具 → `noItemUseBase`(50050)（[PlayerAnimatorManager.PlayFlaskEmptyAnimation](Assets/Scripts/Runtime/Character/Player/PlayerAnimatorManager.cs)）。
+- 回填器扩入：刹停(jog/run stop)、喝药 50110-113、无道具 50050、换武 29001/29031。**需重跑 Common Animation Filler** 才会进 Set。
+
+**P3 待接（含嵌入时序，需 ER TAE，不能纯换片）**：
+- 喝药"饮"段的回血时点（旧靠 clip 上 `SuccessfullyUseQuickSlotItem` 动画事件）→ 须改由 a000_050111 的 TAE 驱动（同连招方案）。
+- 法术释放时点（spell release）同理。
+- 换武变体细分（290xx 按武器类别）；姿势 emote / 拾取的具体 id 待确认。
+- 跳跃**不属于 P3**（ER 为 202000 起跳 + 202100 落地的 2-clip 结构，与现 4 段序列不同，需单独重构 + 起跳冲量 TAE 时点）。
 
 **P1 落地细节（本次）**：
 - 迁移采用「按角色」的 strangler 闸门：`CharacterAnimationData.commonConvention != null` 即视为**已迁移角色**，其非格挡 locomotion/idle **只走 ER 通用系统、不回退旧 clip**；缺数据时 `warn-once` 并跳过（不再用旧动画掩盖缺数据）。未挂 `commonConvention` 的角色（尚未迁移的 AI）仍走旧路径。

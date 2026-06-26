@@ -31,10 +31,11 @@ namespace LZ
         public const int DirLeft = 2;
         public const int DirRight = 3;
 
-        // ── 负重档（仅 3 档，乘 10 进 ID 的十位）──
+        // ── 负重档（乘 10 进 ID 的十位）。运行期实测确认 4 档，含超重。项目暂只用 LoadLight。 ──
         public const int LoadLight = 0;
         public const int LoadMedium = 1;
         public const int LoadHeavy = 2;
+        public const int LoadOverweight = 3;
 
         // ── 翻滚约定固定使用的姿态前缀（a000，权威表 §6.3）──
         public const int RollStance = 0;
@@ -51,6 +52,10 @@ namespace LZ
         public int jogBase = 20100;
         [Tooltip("奔跑/冲刺基址，如 a0XX_020200 → 20200。+组*10（仅前向）。")]
         public int runBase = 20200;
+        [Tooltip("快走刹停基址，如 a0XX_022100 → 22100。+组*10 +方向(0-3)。")]
+        public int jogStopBase = 22100;
+        [Tooltip("奔跑刹停基址，如 a0XX_022200 → 22200。+组*10。")]
+        public int runStopBase = 22200;
         [Tooltip("蹲走基址，如 a000_021000 → 21000。+方向(0-3)。")]
         public int crouchWalkBase = 21000;
 
@@ -62,10 +67,45 @@ namespace LZ
         [Tooltip("前手翻基址，如 a000_027140 → 27140。+方向(0-3)。")]
         public int handspringBase = 27140;
 
-        // ── Phase 2+ 待接入（设计文档 §8.7）：ER animId 待确认，先留 IdleUnset(-1) 占位。 ──
-        // 填入正确基址后，消费方（受击/死亡等）即可像 locomotion 一样改走 ComposeId + 库解析，并删对应强类型字段。
-        [Header("Phase 2 待接入：受击 / 死亡（ER animId 待确认，-1=未填）")]
-        [Tooltip("中度受击硬直基址（a000_，方向 0-3）。待确认 ER id，-1 表示未填、消费方暂走 CharacterAnimationData 强类型字段。")]
+        // ── Phase 3 待接入：以下 base 已由运行期实测+文件比对确认（见 ER-Animation-Category-Reference.md §6.4-6.6），
+        //    但消费方（跳跃/喝药/换武）暂仍走 CharacterAnimationData 强类型字段，待 P3 统一改走 ComposeId+库解析。 ──
+        [Header("Phase 3 待接入：跳跃 / 落地（a000_202xxx，base + 速度档*10；前缀 202 非移动的 02）")]
+        [Tooltip("起跳基址：站 a000_202000 → 202000。速度档(站0/走1/快走2/奔跑3)进十位。")]
+        public int jumpBase = 202000;
+        [Tooltip("落地基址：a000_202100 → 202100。速度档进十位（站/走110? 实测站走共用100，快走110，奔跑120）。")]
+        public int jumpLandBase = 202100;
+
+        [Header("Phase 3：换武 / 喝药 / 无道具（a000_0xxxxx）")]
+        [Tooltip("换右手武器基址 a000_029001 → 29001（盾→武器为 29000）。")]
+        public int weaponSwapRightBase = 29001;
+        [Tooltip("换左手基址 a000_029031 → 29031（盾为 29030）。")]
+        public int weaponSwapLeftBase = 29031;
+        // 喝药三段：050110 举瓶起手 / 050111 饮(含 ConsumeCurrentGoods 消耗→回血时点) / 050112 收。
+        // 注：早期被 TAE 提取器错误的「事件名」误判为战斗动作（type0 错标 InvokeAttackBehavior、
+        // type114 错标 Hitbox_DummyPoly），经 DSAS 截图核实更正：这些就是喝药动画。
+        [Tooltip("喝药（有药）基址 a000_050110 → 50110。一组三段：起手/饮/收 = 50110/50111/50112。")]
+        public int flaskDrinkBase = 50110;
+        [Tooltip("空手/无道具动画 a000_050050 → 50050：未装备药或药已喝光时，喝药改播此动画。")]
+        public int noItemUseBase = 50050;
+        [Range(0f, 1f)]
+        [Tooltip("饮(a000_050111)内 ConsumeCurrentGoods 的归一化时点：播到此处触发回血/消耗，替代 ER clip 缺失的" +
+                 " Unity AnimationEvent。仅对 a000_ 通用 clip 生效。DSAS 实测：ConsumeCurrentGoods 第 8 帧、clip 共 30 帧" +
+                 "(1s@30fps) → 8/30 ≈ 0.2667。")]
+        public float flaskConsumeNormalizedTime = 8f / 30f;
+
+        [Header("闪避无敌帧（秒，按 clip 绝对播放时间；来源 c0000 TAE 转储的 type0 flag8 \"Flag As Dodging\"）")]
+        [Tooltip("翻滚无敌帧起点（秒）。a000_027100 实测 flag8 自第 0 帧起。")]
+        public float rollIFrameStartSeconds = 0f;
+        [Tooltip("翻滚无敌帧终点（秒）。a000_027100 实测 flag8 帧 0–16 → 16/30 ≈ 0.533s（@30fps）。")]
+        public float rollIFrameEndSeconds = 16f / 30f;
+        [Tooltip("后撤步无敌帧起点（秒）。a000_027000 实测 flag8 自第 0 帧起。")]
+        public float backstepIFrameStartSeconds = 0f;
+        [Tooltip("后撤步无敌帧终点（秒）。a000_027000 实测 flag8 帧 0–7 → 7/30 ≈ 0.233s（之后 7–11 帧仅 PvE 无敌，从简不接）。")]
+        public float backstepIFrameEndSeconds = 7f / 30f;
+
+        // ── Phase 2/3 待接入：ER animId 待确认，先留 IdleUnset(-1) 占位。 ──
+        [Header("待确认：受击 / 死亡（ER animId 未知，-1=未填）")]
+        [Tooltip("中度受击硬直基址（a000_，方向 0-3）。待确认 ER id。")]
         public int hitMediumBase = IdleUnset;
         [Tooltip("轻微受击 flinch 基址（a000_，方向 0-3）。待确认 ER id。")]
         public int hitPingBase = IdleUnset;
@@ -78,7 +118,7 @@ namespace LZ
         public int gestureBase = 80000;
 
         [Header("运行时默认值（接入负重/武器系统前的兜底）")]
-        [Tooltip("当前项目尚无装备负重系统：运行时统一用此负重档（0轻/1中/2重）。接入后改由角色状态提供。")]
+        [Tooltip("当前项目尚无装备负重系统：运行时统一用此负重档（0轻/1中/2重/3超重）。接入后改由角色状态提供。")]
         public int defaultLoadGroup = LoadLight;
         [Tooltip("解析姿态前缀时，握持已知但武器大类未知时使用的默认大类。")]
         public CommonStanceClass defaultStanceClass = CommonStanceClass.Light;

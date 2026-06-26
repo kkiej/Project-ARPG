@@ -1,3 +1,4 @@
+using Animancer;
 using UnityEngine;
 
 namespace LZ
@@ -23,6 +24,11 @@ namespace LZ
             var weapon = player != null ? player.playerInventoryManager.currentRightHandWeapon : null;
             if (weapon == null) return CommonStanceClass.Light;
             return CommonAnimationConvention.FromWeaponClass(weapon.weaponClass);
+        }
+
+        protected override bool GetIsLockedOn()
+        {
+            return player != null && player.playerNetworkManager.isLockedOn.Value;
         }
 
         /// <summary>
@@ -68,11 +74,12 @@ namespace LZ
             state.Events(this).OnEnd = OnFlaskDrinkStartEnd;
         }
 
-        /// <summary>播放空瓶动画（药水用完时）。</summary>
+        /// <summary>播放空瓶 / 无道具动画（药水用完或未装备时）。优先 ER a000_050050（§8.7 P3），回退旧 flaskEmpty。</summary>
         public void PlayFlaskEmptyAnimation()
         {
-            if (animData == null || animData.flaskEmpty == null) return;
-            PlayTargetUpperbodyAnimation(animData.flaskEmpty, canRun: false, canRoll: false);
+            AnimationClip clip = ResolveCommonActionClip(c => c.noItemUseBase) ?? (animData != null ? animData.flaskEmpty : null);
+            if (clip == null) return;
+            PlayTargetUpperbodyAnimation(clip, canRun: false, canRoll: false);
         }
 
         private void OnFlaskDrinkStartEnd()
@@ -92,15 +99,49 @@ namespace LZ
                 player.playerNetworkManager.isChugging.Value = false;
             }
 
-            // 播放 Drink clip（clip 上的 Animation Event 触发 SuccessfullyUseQuickSlotItem）
+            // 播放 Drink clip（a000_050111）。
             if (animData.flaskDrink != null)
             {
                 var layer = player.animancer.Layers[UpperbodyLayer];
                 NotifyUpperbody(animData.flaskDrink);
                 var state = layer.Play(animData.flaskDrink, 0.1f);
                 state.Events(this).OnEnd = OnFlaskDrinkEnd;
+                TryScheduleFlaskConsume(state, animData.flaskDrink);
             }
         }
+
+        /// <summary>
+        /// 远端复制体回放：ER 喝药饮段(a000_050111)无 Unity AnimationEvent，需手动在 ConsumeCurrentGoods 时点补挂，
+        /// 与本机一致（PlayHealingFX 等远端可见效果；数值改动由 FlaskItem 内部 IsOwner 门控，远端不会双触发）。
+        /// </summary>
+        public override void PlayUpperbodyClipOnRemote(AnimationClip clip, float fadeDuration = 0.2f)
+        {
+            var state = PlayUpperbodyClip(clip, fadeDuration);
+            TryScheduleFlaskConsume(state, clip);
+        }
+
+        /// <summary>
+        /// 若 clip 为 ER 喝药饮段(a000_050111 == animData.flaskDrink)，按约定的 ConsumeCurrentGoods 归一化时点
+        /// 挂回血/消耗回调，替代 ER clip 缺失的 Unity AnimationEvent。仅 a000_ 通用 clip 生效，旧 clip 仍走自带事件，不双触发。
+        /// </summary>
+        private void TryScheduleFlaskConsume(AnimancerState state, AnimationClip clip)
+        {
+            if (state == null || clip == null) return;
+            var conv = animData != null ? animData.commonConvention : null;
+            if (conv == null || animData.flaskDrink == null) return;
+            if (!IsErCommonClip(clip) || clip.name != animData.flaskDrink.name) return;
+
+            state.Events(this).Add(Mathf.Clamp01(conv.flaskConsumeNormalizedTime), OnFlaskConsumeGoods);
+        }
+
+        /// <summary>TAE ConsumeCurrentGoods 时点回调：等价旧 flaskDrink clip 上的 SuccessfullyUseQuickSlotItem 动画事件。</summary>
+        private void OnFlaskConsumeGoods()
+        {
+            player.playerCombatManager.SuccessfullyUseQuickSlotItem();
+        }
+
+        private static bool IsErCommonClip(AnimationClip clip)
+            => clip != null && clip.name.StartsWith("a000_", System.StringComparison.OrdinalIgnoreCase);
 
         private void OnFlaskDrinkEnd()
         {
@@ -170,10 +211,11 @@ namespace LZ
                 player.playerEffectsManager.activeQuickSlotItemFX = emptyFlask;
             }
 
-            if (animData.flaskEmpty != null)
+            AnimationClip emptyClip = ResolveCommonActionClip(c => c.noItemUseBase) ?? animData.flaskEmpty;
+            if (emptyClip != null)
             {
-                NotifyUpperbody(animData.flaskEmpty);
-                var state = layer.Play(animData.flaskEmpty, 0.2f);
+                NotifyUpperbody(emptyClip);
+                var state = layer.Play(emptyClip, 0.2f);
                 state.Events(this).OnEnd = () =>
                 {
                     layer.StartFade(0f, 0.2f);

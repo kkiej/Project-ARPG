@@ -24,11 +24,17 @@ namespace LZ.Editor
         [SerializeField] private bool _skipMissingClips = true;
         [SerializeField] private MovesetData _target;
 
-        [Tooltip("TAE JSON：用于回填连招开窗（Input-Common 窗）。留空则不填窗，运行时回退到归一化窗口。")]
-        [SerializeField] private string _taeJsonPath = "Assets/_ELDENRING_REF/TAE_Events/a23.json";
+        [Tooltip("权威 TAE 数据（c0000_TAE.asset，由 TAEDumpImporter 生成）：用于回填连招开窗。留空则不填窗，运行时回退到归一化窗口。")]
+        [SerializeField] private TAEEventData _taeData;
 
-        // ER ChrActionFlag id：87 = Input - Common（可输入下一段动作的窗口）。
+        // ER ChrActionFlag id（DSAS 核实）：
+        //   87  = Input-Common      —— 输入「缓冲」窗（何时能按下并记住下一击，偏早，范围宽）
+        //   115 = Cancel-R1Attack   —— 可取消接「下一段 R1」的执行窗（连招真正开窗起点）
+        //   4   = Cancel-RHAttack   —— 可取消接「右手攻击」的执行窗（通常衔接在 115 之后到 clip 尾）
+        // 连招开窗取「可执行」窗 = (115 ∪ 4)；缺这俩时回退到 87（输入缓冲窗）。
         private const int Flag_InputCommon = 87;
+        private const int Flag_CancelR1Attack = 115;
+        private const int Flag_CancelRHAttack = 4;
 
         private Vector2 _scroll;
         private string _report;
@@ -49,7 +55,7 @@ namespace LZ.Editor
             _baseAnimData = (CharacterAnimationData)EditorGUILayout.ObjectField("基础动画数据(可空)", _baseAnimData, typeof(CharacterAnimationData), false);
             _wepMotionCategory = EditorGUILayout.IntField("武器类别号 (wepMotionCategory)", _wepMotionCategory);
             _skipMissingClips = EditorGUILayout.Toggle("跳过缺失 clip 的槽位", _skipMissingClips);
-            _taeJsonPath = EditorGUILayout.TextField("TAE JSON(连招开窗,可空)", _taeJsonPath);
+            _taeData = (TAEEventData)EditorGUILayout.ObjectField("权威 TAE 数据(连招开窗,可空)", _taeData, typeof(TAEEventData), false);
 
             GUILayout.Space(4);
             GUILayout.Label("输出目标（二选一）", EditorStyles.boldLabel);
@@ -145,7 +151,7 @@ namespace LZ.Editor
             {
                 if (!_convention.TryGetSlot(slot, out var entry)) continue;
 
-                int rawId = hand.baseSlot + entry.suffix;
+                int fullId = MovesetSlotConvention.ComposeAnimId(_wepMotionCategory, hand.baseSlot, entry.suffix);
                 string clipName = MovesetSlotConvention.ComposeClipName(_wepMotionCategory, hand.baseSlot, entry.suffix);
                 AnimationClip clip = ResolveClip(clipName);
                 bool found = clip != null;
@@ -157,13 +163,13 @@ namespace LZ.Editor
                     continue;
                 }
 
-                Vector2 window = comboWindows != null && comboWindows.TryGetValue(rawId, out var w) ? w : Vector2.zero;
+                Vector2 window = comboWindows != null && comboWindows.TryGetValue(fullId, out var w) ? w : Vector2.zero;
 
                 var node = new AttackNode
                 {
                     label = slot.ToString(),
                     clip = clip,
-                    animId = MovesetSlotConvention.ComposeAnimId(_wepMotionCategory, hand.baseSlot, entry.suffix),
+                    animId = fullId,
                     attackType = entry.attackType,
                     applyRootMotion = entry.applyRootMotion,
                     comboWindowStart = window.x,
@@ -249,60 +255,50 @@ namespace LZ.Editor
         }
 
         /// <summary>
-        /// 解析 TAE JSON，提取每个动画的连招开窗（Input-Common / flag 87 的 [start,end]）。
-        /// 返回 rawId → (start, end) 秒。JSON 路径为空或解析失败时返回 null（运行时回退到归一化窗口）。
+        /// 从权威 TAE 数据（c0000_TAE.asset）提取本武器类别每个动画的连招开窗，键为完整 animId（category*1e6+slot）。
+        /// 「可执行」窗 = Cancel-R1Attack(115) ∪ Cancel-RHAttack(4)；缺失才回退「缓冲」窗 Input-Common(87)。
+        /// _taeData 为空时返回 null（运行时回退到归一化窗口）。
         /// </summary>
         private Dictionary<int, Vector2> LoadComboWindows(StringBuilder sb)
         {
-            if (string.IsNullOrEmpty(_taeJsonPath))
-                return null;
-
-            string full = ToAbsolute(_taeJsonPath);
-            if (!File.Exists(full))
+            if (_taeData == null)
             {
-                sb.AppendLine($"[warn] TAE JSON 未找到，跳过连招开窗回填：{_taeJsonPath}");
+                sb.AppendLine("[warn] 未指定权威 TAE 数据（c0000_TAE.asset），跳过连招开窗回填，运行时回退归一化窗口。");
                 return null;
             }
+            if (_taeData.animations == null) return new Dictionary<int, Vector2>();
 
-            TaeRoot root;
-            try { root = JsonUtility.FromJson<TaeRoot>(File.ReadAllText(full)); }
-            catch (Exception e)
-            {
-                sb.AppendLine($"[warn] TAE JSON 解析失败，跳过开窗回填：{e.Message}");
-                return null;
-            }
-
+            int catPrefix = _wepMotionCategory * 1_000_000;
             var map = new Dictionary<int, Vector2>();
-            if (root?.animations == null) return map;
+            int exCount = 0, bufCount = 0;
 
-            foreach (var anim in root.animations)
+            foreach (var anim in _taeData.animations)
             {
-                if (anim.events == null) continue;
+                // 只取本武器类别（rawId 高位 = category）。
+                if (anim.rawId / 1_000_000 != _wepMotionCategory) continue;
 
-                // 取该动画内所有 Input-Common(flag 87) 事件的并集窗口（min start, max end）。
-                float start = float.PositiveInfinity, end = float.NegativeInfinity;
-                foreach (var ev in anim.events)
+                bool hasR1 = TAEEventQuery.TryGetActionFlagWindow(anim, Flag_CancelR1Attack, out float r1s, out float r1e);
+                bool hasRH = TAEEventQuery.TryGetActionFlagWindow(anim, Flag_CancelRHAttack, out float rhs, out float rhe);
+                bool hasBuf = TAEEventQuery.TryGetActionFlagWindow(anim, Flag_InputCommon, out float bs, out float be);
+
+                float exStart = Mathf.Min(hasR1 ? r1s : float.PositiveInfinity, hasRH ? rhs : float.PositiveInfinity);
+                float exEnd   = Mathf.Max(hasR1 ? r1e : float.NegativeInfinity, hasRH ? rhe : float.NegativeInfinity);
+
+                if (hasR1 || hasRH)
                 {
-                    // 该导出里 ChrActionFlag 被标为 type 0，params[0] 为 flag id。
-                    if (ev.type != 0 || ev.@params == null || ev.@params.Length == 0) continue;
-                    if (ev.@params[0] != Flag_InputCommon) continue;
-
-                    if (ev.start < start) start = ev.start;
-                    float e = ev.end < 0f ? ev.start : ev.end;
-                    if (e > end) end = e;
+                    map[anim.rawId] = new Vector2(Mathf.Max(0f, exStart), exEnd);
+                    exCount++;
                 }
-
-                if (end > start && end > 0f)
-                    map[anim.rawId] = new Vector2(Mathf.Max(0f, start), end);
+                else if (hasBuf)
+                {
+                    map[anim.rawId] = new Vector2(Mathf.Max(0f, bs), be);
+                    bufCount++;
+                }
             }
 
-            sb.AppendLine($"[info] 连招开窗回填来源 {_taeJsonPath}，含窗动画 {map.Count} 个。");
+            sb.AppendLine($"[info] 连招开窗回填来源 {_taeData.name}（类别 a{_wepMotionCategory:000}），含窗动画 {map.Count} 个" +
+                          $"（执行窗 115/4：{exCount}，回退缓冲窗 87：{bufCount}）。");
             return map;
         }
-
-        // ── TAE JSON DTO（与 MovesetTAEExtractor 一致）──
-        [Serializable] private class TaeRoot { public TaeAnim[] animations; }
-        [Serializable] private class TaeAnim { public int rawId; public TaeEvent[] events; }
-        [Serializable] private class TaeEvent { public int type; public float start; public float end; public int[] @params; }
     }
 }

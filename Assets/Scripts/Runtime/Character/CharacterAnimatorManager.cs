@@ -195,8 +195,8 @@ namespace LZ
             return state;
         }
 
-        /// <summary>远端客户端在 Upperbody 层播放。</summary>
-        public void PlayUpperbodyClipOnRemote(AnimationClip clip, float fadeDuration = 0.2f)
+        /// <summary>远端客户端在 Upperbody 层播放。子类可重写以补挂 ER clip 缺失的时点事件（如喝药 ConsumeCurrentGoods）。</summary>
+        public virtual void PlayUpperbodyClipOnRemote(AnimationClip clip, float fadeDuration = 0.2f)
         {
             PlayUpperbodyClip(clip, fadeDuration);
         }
@@ -442,10 +442,13 @@ namespace LZ
         private int _builtLocoKey = int.MinValue;
 
         /// <summary>
-        /// 用 <see cref="CommonAnimationConvention"/> + <see cref="CharacterAnimationLibrary"/> 运行时构建一棵
-        /// 方向性 locomotion 混合树（idle / 四向走 / 四向慢跑 / 前向奔跑），不依赖手搓 MixerTransition2D 资产。
-        /// 阈值布局固定为 ER 约定：idle(0,0)、walk ±0.5、jog ±1、sprint(0,2)。
-        /// 缓存按负重组复用；核心 clip（idle/walkF/jogF）缺失时返回 null → 调用方回退 animData 手搓混合树。
+        /// 用 <see cref="CommonAnimationConvention"/> + <see cref="CharacterAnimationLibrary"/> 运行时构建 locomotion 混合树，
+        /// 不依赖手搓 MixerTransition2D 资产。**对齐 ER 的两套模式**（运行期实测）：
+        /// <list type="bullet">
+        /// <item><b>非锁定</b>：只前向（idle/走/快走/奔跑），其它方向靠角色转向，不需要侧/后移动画。Cartesian 沿 +Y 轴。</item>
+        /// <item><b>锁定</b>：四向走/慢跑 + 前向奔跑(冲刺)。Directional，阈值 idle(0,0)、walk±0.5、jog±1、sprint(0,2)。</item>
+        /// </list>
+        /// 缓存按 (stance, 负重组, 锁定) 复用；核心 clip（idle/walkF/jogF）缺失时返回 null → 调用方告警不回退旧动画（§8.7）。
         /// </summary>
         private MixerTransition2D BuildCommonLocomotionMixer()
         {
@@ -455,9 +458,10 @@ namespace LZ
             int group = conv.defaultLoadGroup;
             // 运行时选姿态前缀：握持(单/双手) + 武器大类 → aXXX 类别号。
             int stance = CommonAnimationConvention.ResolveStanceCategory(GetIsTwoHanding(), GetWeaponStanceClass());
+            bool lockedOn = GetIsLockedOn();
 
-            // 缓存按 (stance, 负重组) 复用：换持武状态 / 负重时自动重建。
-            int cacheKey = stance * 100 + group;
+            // 缓存按 (stance, 负重组, 锁定) 复用：换持武 / 负重 / 切换锁定时自动重建。
+            int cacheKey = (stance * 100 + group) * 2 + (lockedOn ? 1 : 0);
             if (_builtLocoMixer != null && _builtLocoKey == cacheKey)
                 return _builtLocoMixer;
 
@@ -468,40 +472,55 @@ namespace LZ
                 : null;
 
             AnimationClip walkF = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirForward));
-            AnimationClip walkB = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirBackward));
-            AnimationClip walkL = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirLeft));
-            AnimationClip walkR = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirRight));
             AnimationClip jogF = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirForward));
-            AnimationClip jogB = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirBackward));
-            AnimationClip jogL = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirLeft));
-            AnimationClip jogR = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirRight));
             AnimationClip runF = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.runBase, group, CommonAnimationConvention.DirForward));
 
-            // 核心方向缺失 → 数据不足，放弃数据驱动，回退手搓混合树。
+            // 核心前向缺失 → 数据不足，放弃数据驱动。
             if (idle == null || walkF == null || jogF == null)
                 return null;
-
-            // 个别方向缺失用同类前向兜底，避免 null 子状态。
-            if (walkB == null) walkB = walkF;
-            if (walkL == null) walkL = walkF;
-            if (walkR == null) walkR = walkF;
-            if (jogB == null) jogB = jogF;
-            if (jogL == null) jogL = jogF;
-            if (jogR == null) jogR = jogF;
             if (runF == null) runF = jogF;
 
-            var clips = new UnityEngine.Object[] { idle, walkF, walkB, walkL, walkR, jogF, jogB, jogL, jogR, runF };
-            var thresholds = new Vector2[]
-            {
-                new Vector2(0f, 0f),
-                new Vector2(0f, 0.5f), new Vector2(0f, -0.5f), new Vector2(-0.5f, 0f), new Vector2(0.5f, 0f),
-                new Vector2(0f, 1f),   new Vector2(0f, -1f),   new Vector2(-1f, 0f),   new Vector2(1f, 0f),
-                new Vector2(0f, 2f),
-            };
+            MixerTransition2D mixer;
 
-            var mixer = new MixerTransition2D { Type = MixerTransition2D.MixerType.Directional };
-            mixer.Animations = clips;
-            mixer.Thresholds = thresholds;
+            if (!lockedOn)
+            {
+                // 非锁定：纯前向。方向由 HandleStandardRotation 把角色转到输入方向，动画始终前向。
+                // 用 Cartesian（沿 +Y 轴的共线阈值，Directional 会退化）。
+                mixer = new MixerTransition2D { Type = MixerTransition2D.MixerType.Cartesian };
+                mixer.Animations = new UnityEngine.Object[] { idle, walkF, jogF, runF };
+                mixer.Thresholds = new Vector2[]
+                {
+                    new Vector2(0f, 0f), new Vector2(0f, 0.5f), new Vector2(0f, 1f), new Vector2(0f, 2f),
+                };
+            }
+            else
+            {
+                // 锁定：四向走/慢跑 + 前向奔跑。
+                AnimationClip walkB = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirBackward));
+                AnimationClip walkL = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirLeft));
+                AnimationClip walkR = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.walkBase, group, CommonAnimationConvention.DirRight));
+                AnimationClip jogB = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirBackward));
+                AnimationClip jogL = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirLeft));
+                AnimationClip jogR = LookupClipByAnimId(CommonAnimationConvention.ComposeId(stance, conv.jogBase, group, CommonAnimationConvention.DirRight));
+
+                // 个别方向缺失用同类前向兜底，避免 null 子状态。
+                if (walkB == null) walkB = walkF;
+                if (walkL == null) walkL = walkF;
+                if (walkR == null) walkR = walkF;
+                if (jogB == null) jogB = jogF;
+                if (jogL == null) jogL = jogF;
+                if (jogR == null) jogR = jogF;
+
+                mixer = new MixerTransition2D { Type = MixerTransition2D.MixerType.Directional };
+                mixer.Animations = new UnityEngine.Object[] { idle, walkF, walkB, walkL, walkR, jogF, jogB, jogL, jogR, runF };
+                mixer.Thresholds = new Vector2[]
+                {
+                    new Vector2(0f, 0f),
+                    new Vector2(0f, 0.5f), new Vector2(0f, -0.5f), new Vector2(-0.5f, 0f), new Vector2(0.5f, 0f),
+                    new Vector2(0f, 1f),   new Vector2(0f, -1f),   new Vector2(-1f, 0f),   new Vector2(1f, 0f),
+                    new Vector2(0f, 2f),
+                };
+            }
 
             _builtLocoMixer = mixer;
             _builtLocoKey = cacheKey;
@@ -550,6 +569,9 @@ namespace LZ
 
         /// <summary>子类重写以提供当前武器大类（用于运行时解析通用动画的姿态前缀）。基类默认轻型。</summary>
         protected virtual CommonStanceClass GetWeaponStanceClass() => CommonStanceClass.Light;
+
+        /// <summary>子类重写以提供锁定状态（决定 locomotion 用四向还是纯前向）。基类默认 false（非锁定）。</summary>
+        protected virtual bool GetIsLockedOn() => false;
 
         /// <summary>读取当前 Animancer Mixer 的 (Horizontal, Vertical) 参数值。用于 AI Owner 端网络同步。</summary>
         public Vector2 GetCurrentMixerParameter()
@@ -611,6 +633,23 @@ namespace LZ
         public AnimationClip LookupClipByAnimId(int animId)
         {
             return _animLibrary.TryGetByAnimId(animId, out var clip) ? clip : null;
+        }
+
+        /// <summary>
+        /// 解析一个固定 a000 前缀、无负重/方向的通用动作 clip（换武 / 喝药 / 无道具 等，§8.7 P3）。
+        /// base 由 <see cref="CommonAnimationConvention"/> 取（可在 Inspector 校正）；约定未配 / base 为 Unset / 库未命中 → null。
+        /// 调用方据此回退 <see cref="CharacterAnimationData"/> 强类型字段，迁移期零回归。
+        /// </summary>
+        public AnimationClip ResolveCommonActionClip(System.Func<CommonAnimationConvention, int> baseSelector)
+        {
+            var conv = animData != null ? animData.commonConvention : null;
+            if (conv == null) return null;
+
+            int baseId = baseSelector(conv);
+            if (baseId == CommonAnimationConvention.IdleUnset) return null;
+
+            return LookupClipByAnimId(CommonAnimationConvention.ComposeId(
+                CommonAnimationConvention.RollStance, baseId, 0, CommonAnimationConvention.DirForward));
         }
 
         /// <summary>

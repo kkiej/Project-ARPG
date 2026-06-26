@@ -106,6 +106,9 @@ namespace LZ.Editor
                 AddGroups(entries, seen, sb, $"Jog[{p}]", stance, _convention.jogBase, _maxLoadGroup, true, ref found, ref missing);
                 // 奔跑：仅前向 × 负重
                 AddGroups(entries, seen, sb, $"Run[{p}]", stance, _convention.runBase, _maxLoadGroup, false, ref found, ref missing);
+                // 刹停（§6.4）：快走四向 / 奔跑前向 × 负重
+                AddGroups(entries, seen, sb, $"JogStop[{p}]", stance, _convention.jogStopBase, _maxLoadGroup, true, ref found, ref missing);
+                AddGroups(entries, seen, sb, $"RunStop[{p}]", stance, _convention.runStopBase, _maxLoadGroup, false, ref found, ref missing);
                 // 后撤步：单向 × 负重（权威表 §6.2：随姿态前缀，无方向）
                 AddGroups(entries, seen, sb, $"Backstep[{p}]", stance, _convention.backstepBase, _maxLoadGroup, false, ref found, ref missing);
             }
@@ -118,6 +121,17 @@ namespace LZ.Editor
             AddGroups(entries, seen, sb, "CrouchWalk", a000, _convention.crouchWalkBase, 0, true, ref found, ref missing);
             // 前手翻：四向，单档
             AddGroups(entries, seen, sb, "Handspring", a000, _convention.handspringBase, 0, true, ref found, ref missing);
+
+            // ── P3 通用动作（固定 a000，§6.6）：换武 / 喝药 / 无道具 ──
+            // 换武（单 id；变体范围 290xx 由具体武器决定，先收基址，后续按需细分）。
+            AddGroups(entries, seen, sb, "SwapRight", a000, _convention.weaponSwapRightBase, 0, false, ref found, ref missing);
+            AddGroups(entries, seen, sb, "SwapLeft", a000, _convention.weaponSwapLeftBase, 0, false, ref found, ref missing);
+            // 喝药 drink：四向枚举 d0-3 顺带覆盖 50110/111/112/113（缺失自动跳过）。
+            if (_convention.flaskDrinkBase != CommonAnimationConvention.IdleUnset)
+                AddGroups(entries, seen, sb, "FlaskDrink", a000, _convention.flaskDrinkBase, 0, true, ref found, ref missing);
+            // 无道具 / 空瓶 50050（单 id）。
+            if (_convention.noItemUseBase != CommonAnimationConvention.IdleUnset)
+                AddGroups(entries, seen, sb, "NoItemUse", a000, _convention.noItemUseBase, 0, false, ref found, ref missing);
 
             CommonAnimationSet set = _target;
             bool isNew = set == null;

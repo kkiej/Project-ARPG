@@ -25,8 +25,9 @@ namespace LZ
 
         public bool applyRootMotion;
 
-        [Header("连招开窗（秒，来自 ER TAE 的 Input-Common(flag87) 窗口）")]
-        [Tooltip("可输入下一段的窗口起点（秒，按 clip 播放时间）。由 MovesetAutoFiller 从 a23.json 回填。")]
+        [Header("连招开窗（秒，来自 ER TAE 的 Cancel-R1Attack(115)∪Cancel-RHAttack(4) 执行窗；缺失回退 Input-Common(87)）")]
+        [Tooltip("可接出下一段的窗口起点（秒，按 clip 播放时间）。由 MovesetAutoFiller 从 a23.json 回填。" +
+                 "输入缓冲由 ActionRequest 缓冲处理，故此处取「可执行」窗而非偏早的输入窗。")]
         public float comboWindowStart;
         [Tooltip("可输入下一段的窗口终点（秒）。<=0 表示无 TAE 数据，PlayerAttackState 回退到归一化 [0.35,0.95]。")]
         public float comboWindowEnd;
