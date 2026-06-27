@@ -151,10 +151,12 @@ namespace LZ
                 return;
 
             var animData = playerPerformingAction.characterAnimatorManager.animData;
+            // 旧路径无 ER 触地攻：landingAttack/recovery 传 null → 走通用落地回退分支，行为同旧。
             playerPerformingAction.playerAnimatorManager.PlayJumpAttackSequenceAnimation(
                 weapon, AttackType.LightJumpingAttack01,
                 weapon.weaponAnimationSet.lightJumpAttack01,
                 animData != null ? animData.jumpIdle : null,
+                null, AttackType.LightJumpingAttack01, null,
                 animData != null ? animData.jumpEnd : null,
                 true);
         }
@@ -169,6 +171,7 @@ namespace LZ
                 weapon, AttackType.LightJumpingAttack01,
                 weapon.weaponAnimationSet.th_lightJumpAttack01,
                 animData != null ? (animData.jumpIdle2H ?? animData.jumpIdle) : null,
+                null, AttackType.LightJumpingAttack01, null,
                 animData != null ? (animData.jumpEnd2H ?? animData.jumpEnd) : null,
                 true);
         }

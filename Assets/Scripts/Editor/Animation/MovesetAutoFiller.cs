@@ -36,6 +36,9 @@ namespace LZ.Editor
         private const int Flag_CancelR1Attack = 115;
         private const int Flag_CancelRHAttack = 4;
 
+        // ER TAE 事件 type：1 = AttackBehavior（近战命中框）。伤害判定窗 = 全部 type1 事件的并集 [start,end]。
+        private const int Type_AttackBehavior = 1;
+
         private Vector2 _scroll;
         private string _report;
 
@@ -88,7 +91,7 @@ namespace LZ.Editor
             AttackSlot.R1_1, AttackSlot.R1_2, AttackSlot.R1_3, AttackSlot.R1_4, AttackSlot.R1_5,
             AttackSlot.R2_1, AttackSlot.R2_2,
             AttackSlot.RunAttack, AttackSlot.RollAttack, AttackSlot.BackstepAttack,
-            AttackSlot.JumpAttack, AttackSlot.GuardCounter,
+            AttackSlot.JumpAttack, AttackSlot.CrouchAttack, AttackSlot.GuardCounter,
         };
 
         private void Generate()
@@ -105,12 +108,13 @@ namespace LZ.Editor
             if (_baseAnimData != null) data.baseAnimData = _baseAnimData;
 
             Dictionary<int, Vector2> comboWindows = LoadComboWindows(sb);
+            Dictionary<int, Vector2> damageWindows = LoadDamageWindows(sb);
 
             int totalNodes = 0, totalMissing = 0;
             foreach (var hand in _convention.hands)
             {
                 if (!hand.enabled) continue;
-                var moveset = BuildHandMoveset(hand, comboWindows, sb, out int nodeCount, out int missing);
+                var moveset = BuildHandMoveset(hand, comboWindows, damageWindows, sb, out int nodeCount, out int missing);
                 totalNodes += nodeCount;
                 totalMissing += missing;
 
@@ -139,7 +143,7 @@ namespace LZ.Editor
             Selection.activeObject = data;
         }
 
-        private HandMoveset BuildHandMoveset(MovesetSlotConvention.HandBaseEntry hand, Dictionary<int, Vector2> comboWindows, StringBuilder sb, out int nodeCount, out int missing)
+        private HandMoveset BuildHandMoveset(MovesetSlotConvention.HandBaseEntry hand, Dictionary<int, Vector2> comboWindows, Dictionary<int, Vector2> damageWindows, StringBuilder sb, out int nodeCount, out int missing)
         {
             sb.AppendLine($"── {hand.handState} (base {hand.baseSlot}) ──");
 
@@ -164,6 +168,7 @@ namespace LZ.Editor
                 }
 
                 Vector2 window = comboWindows != null && comboWindows.TryGetValue(fullId, out var w) ? w : Vector2.zero;
+                Vector2 dmg = damageWindows != null && damageWindows.TryGetValue(fullId, out var d) ? d : Vector2.zero;
 
                 var node = new AttackNode
                 {
@@ -174,16 +179,29 @@ namespace LZ.Editor
                     applyRootMotion = entry.applyRootMotion,
                     comboWindowStart = window.x,
                     comboWindowEnd = window.y,
+                    damageWindowStart = dmg.x,
+                    damageWindowEnd = dmg.y,
                     canCharge = entry.canCharge,
                     chargedAttackType = entry.canCharge ? AttackType.ChargedAttack01 : entry.attackType,
+                    chargeMinHoldTime = entry.chargeMinHoldTime,
+                    chargeCommitTime = entry.chargeCommitTime,
                     nextOnLight = -1,
                     nextOnHeavy = -1,
                 };
 
+                // 蓄力重击：解析短按直接出手 clip（0505/0515）。
+                if (entry.canCharge && entry.chargeQuickSuffix > 0)
+                    node.quickAttackClip = ResolveClip(MovesetSlotConvention.ComposeClipName(_wepMotionCategory, hand.baseSlot, entry.chargeQuickSuffix));
+
+                // 跳攻落地融合：解析空中维持 / 触地攻 / 落地恢复 clip + 触地攻命中窗。
+                if (slot == AttackSlot.JumpAttack)
+                    FillJumpFusion(ref node, hand, entry, damageWindows, sb);
+
                 slotToIndex[slot] = nodes.Count;
                 nodes.Add(node);
                 string win = window.y > 0f ? $"  win[{window.x:0.00}~{window.y:0.00}]" : "  win[-]";
-                sb.AppendLine($"  [{(found ? "ok" : "null")}] {slot,-14} {clipName}{win}");
+                string dwin = dmg.y > 0f ? $" dmg[{dmg.x:0.00}~{dmg.y:0.00}]" : " dmg[-]";
+                sb.AppendLine($"  [{(found ? "ok" : "null")}] {slot,-14} {clipName}{win}{dwin}");
             }
 
             // ── 连线 ──
@@ -206,10 +224,59 @@ namespace LZ.Editor
                 backstepAttack  = IndexOf(slotToIndex, AttackSlot.BackstepAttack),
                 jumpLight       = IndexOf(slotToIndex, AttackSlot.JumpAttack),
                 jumpHeavy       = -1,
+                crouchAttack    = IndexOf(slotToIndex, AttackSlot.CrouchAttack),
             };
 
             nodeCount = arr.Length;
             return ms;
+        }
+
+        /// <summary>
+        /// 跳攻落地融合回填：按约定表的 airHold/landing/landingRecovery 后缀解析 clip，
+        /// 并从权威 SO 取触地攻(070)的 AttackBehavior 窗写入 landingDamageWindow。
+        /// 后缀为 0 视为"无该段"，留空回退通用收招。
+        /// </summary>
+        private void FillJumpFusion(ref AttackNode node, MovesetSlotConvention.HandBaseEntry hand,
+            MovesetSlotConvention.SlotEntry entry, Dictionary<int, Vector2> damageWindows, StringBuilder sb)
+        {
+            node.landingAttackType = entry.landingAttackType;
+            node.landingLookahead = entry.landingLookahead;
+
+            if (entry.airHoldSuffix > 0)
+                node.airHoldClip = ResolveClip(MovesetSlotConvention.ComposeClipName(_wepMotionCategory, hand.baseSlot, entry.airHoldSuffix));
+
+            if (entry.landingSuffix > 0)
+            {
+                string lname = MovesetSlotConvention.ComposeClipName(_wepMotionCategory, hand.baseSlot, entry.landingSuffix);
+                node.landingAttackClip = ResolveClip(lname);
+                int lid = MovesetSlotConvention.ComposeAnimId(_wepMotionCategory, hand.baseSlot, entry.landingSuffix);
+                if (damageWindows != null && damageWindows.TryGetValue(lid, out var ld))
+                {
+                    node.landingDamageWindowStart = ld.x;
+                    node.landingDamageWindowEnd = ld.y;
+                }
+                sb.AppendLine($"      ↳ landing {lname}" +
+                              (node.landingAttackClip ? "" : " (clip 未找到)") +
+                              (ld_has(damageWindows, lid, out var lw) ? $" dmg[{lw.x:0.00}~{lw.y:0.00}]" : ""));
+            }
+
+            if (entry.landingRecoverySuffix > 0)
+                node.landingRecoveryClip = ResolveClip(MovesetSlotConvention.ComposeClipName(_wepMotionCategory, hand.baseSlot, entry.landingRecoverySuffix));
+            if (entry.landingRecoveryLongSuffix > 0)
+                node.landingRecoveryLongClip = ResolveClip(MovesetSlotConvention.ComposeClipName(_wepMotionCategory, hand.baseSlot, entry.landingRecoveryLongSuffix));
+            if (entry.landingRecoveryFastSuffix > 0)
+                node.landingRecoveryFastClip = ResolveClip(MovesetSlotConvention.ComposeClipName(_wepMotionCategory, hand.baseSlot, entry.landingRecoveryFastSuffix));
+            if (entry.landingRecoveryFastLongSuffix > 0)
+                node.landingRecoveryFastLongClip = ResolveClip(MovesetSlotConvention.ComposeClipName(_wepMotionCategory, hand.baseSlot, entry.landingRecoveryFastLongSuffix));
+
+            node.landingLongFallThreshold = entry.landingLongFallThreshold;
+            node.landingFastProgressThreshold = entry.landingFastProgressThreshold;
+        }
+
+        private static bool ld_has(Dictionary<int, Vector2> map, int id, out Vector2 w)
+        {
+            if (map != null && map.TryGetValue(id, out w)) return w.y > 0f;
+            w = Vector2.zero; return false;
         }
 
         private static void LinkLight(AttackNode[] nodes, Dictionary<AttackSlot, int> map, AttackSlot from, AttackSlot to)
@@ -298,6 +365,28 @@ namespace LZ.Editor
 
             sb.AppendLine($"[info] 连招开窗回填来源 {_taeData.name}（类别 a{_wepMotionCategory:000}），含窗动画 {map.Count} 个" +
                           $"（执行窗 115/4：{exCount}，回退缓冲窗 87：{bufCount}）。");
+            return map;
+        }
+
+        /// <summary>
+        /// 从权威 TAE 数据提取本武器类别每个动画的伤害判定窗，键为完整 animId。
+        /// 窗 = 全部 type1(AttackBehavior) 事件的并集 [start,end]（秒）。无 type1 的动画不入表。
+        /// _taeData 为空时返回 null（运行期回退到 clip 自带动画事件）。
+        /// </summary>
+        private Dictionary<int, Vector2> LoadDamageWindows(StringBuilder sb)
+        {
+            if (_taeData == null) return null;
+            if (_taeData.animations == null) return new Dictionary<int, Vector2>();
+
+            var map = new Dictionary<int, Vector2>();
+            foreach (var anim in _taeData.animations)
+            {
+                if (anim.rawId / 1_000_000 != _wepMotionCategory) continue;
+                if (TAEEventQuery.TryGetEventTypeWindow(anim, Type_AttackBehavior, out float s, out float e))
+                    map[anim.rawId] = new Vector2(Mathf.Max(0f, s), e);
+            }
+
+            sb.AppendLine($"[info] 伤害判定窗回填来源 {_taeData.name}（类别 a{_wepMotionCategory:000}，type1 AttackBehavior），含窗动画 {map.Count} 个。");
             return map;
         }
     }

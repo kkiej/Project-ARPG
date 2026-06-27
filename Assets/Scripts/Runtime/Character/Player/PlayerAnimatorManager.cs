@@ -239,5 +239,48 @@ namespace LZ
         }
 
         #endregion
+
+        #region Spell Release（Action Layer — TAE type64 CastHighlightedMagic 驱动）
+
+        /// <summary>
+        /// 在施法 clip 已开始播放后调用：若该法术配了 ER 释放时点（<see cref="SpellItem.castReleaseSeconds"/> ≥ 0，
+        /// 由 TAETimingBackfiller 从权威 SO 的 type64 CastHighlightedMagic 回填），按归一化时点补挂
+        /// <see cref="PlayerCombatManager.SuccessfullyCastSpell"/>，替代 ER clip 缺失的 Unity AnimationEvent。
+        /// castReleaseSeconds &lt; 0（旧自定义 clip）则不挂，仍走 clip 自带动画事件，互不冲突、不双触发。
+        /// 备注：远端复制体的施法可见效果待真实 ER 法术 clip 接入后，比照喝药 PlayUpperbodyClipOnRemote 同模式补挂。
+        /// </summary>
+        public void TryScheduleSpellRelease(SpellItem spell)
+        {
+            if (spell == null || spell.castReleaseSeconds < 0f) return;
+
+            var state = CurrentActionState;
+            if (state == null) return;
+
+            float len = (float)state.Length;
+            if (len <= 0f) return;
+
+            state.Events(this).Add(Mathf.Clamp01(spell.castReleaseSeconds / len), OnSpellRelease);
+        }
+
+        private void OnSpellRelease()
+        {
+            player.playerCombatManager.SuccessfullyCastSpell();
+        }
+
+        #endregion
+
+        #region Damage Window Hooks（接装备管理器命中框，替代 ER clip 缺失的 Open/CloseDamageCollider 动画事件）
+
+        protected override void OpenDamageColliders()
+        {
+            if (player != null) player.playerEquipmentManager.OpenDamageCollider();
+        }
+
+        protected override void CloseDamageColliders()
+        {
+            if (player != null) player.playerEquipmentManager.CloseDamageCollider();
+        }
+
+        #endregion
     }
 }

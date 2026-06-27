@@ -61,9 +61,12 @@ namespace LZ
 
                 if (playerPerformingAction.IsOwner)
                 {
+                    // 旧路径无 ER 触地攻：landingAttack/recovery 传 null → 走通用落地回退分支，行为同旧。
                     playerPerformingAction.playerAnimatorManager.PlayJumpAttackSequenceAnimation(
                         weapon, AttackType.DualJumpAttack,
-                        clips.dw_JumpAttack01, clips.dw_JumpAttackIdle, clips.dw_JumpAttackEnd, true);
+                        clips.dw_JumpAttack01, clips.dw_JumpAttackIdle,
+                        null, AttackType.DualJumpAttack, null,
+                        clips.dw_JumpAttackEnd, true);
                 }
 
                 return;

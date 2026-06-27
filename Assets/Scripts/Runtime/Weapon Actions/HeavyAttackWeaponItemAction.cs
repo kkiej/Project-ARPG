@@ -123,9 +123,12 @@ namespace LZ
                 return;
 
             var clips = weapon.weaponAnimationSet;
+            // 旧路径无 ER 触地攻：landingAttack/recovery 传 null → 走通用落地（fallbackEnd）回退分支，行为同旧。
             playerPerformingAction.playerAnimatorManager.PlayJumpAttackSequenceAnimation(
                 weapon, AttackType.HeavyJumpingAttack01,
-                clips.heavyJumpAttack01, clips.heavyJumpAttackIdle, clips.heavyJumpAttackEnd, true);
+                clips.heavyJumpAttack01, clips.heavyJumpAttackIdle,
+                null, AttackType.HeavyJumpingAttack01, null,
+                clips.heavyJumpAttackEnd, true);
         }
 
         private void PerformTwoHandJumpingHeavyAttack(PlayerManager playerPerformingAction, WeaponItem weapon)
@@ -136,7 +139,9 @@ namespace LZ
             var clips = weapon.weaponAnimationSet;
             playerPerformingAction.playerAnimatorManager.PlayJumpAttackSequenceAnimation(
                 weapon, AttackType.HeavyJumpingAttack01,
-                clips.th_heavyJumpAttack01, clips.th_heavyJumpAttackIdle, clips.th_heavyJumpAttackEnd, true);
+                clips.th_heavyJumpAttack01, clips.th_heavyJumpAttackIdle,
+                null, AttackType.HeavyJumpingAttack01, null,
+                clips.th_heavyJumpAttackEnd, true);
         }
     }
 }

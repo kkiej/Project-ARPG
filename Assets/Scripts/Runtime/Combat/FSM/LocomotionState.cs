@@ -37,6 +37,13 @@ namespace LZ
                     return new JumpState();
                 }
 
+                // 下蹲（地面）→ CrouchState（切换式，再按一次在 CrouchState 内站起）。
+                if (cmd == InputCommand.Crouch && player.characterLocomotionManager.isGrounded)
+                {
+                    machine.ClearBuffer();
+                    return new CrouchState();
+                }
+
                 // 攻击：空中 → 跳跃攻击；地面（非起跳瞬间）→ 冲刺 / 普通起手。对齐旧 LightAttackWeaponItemAction 分流。
                 if (cmd == InputCommand.LightAttack || cmd == InputCommand.HeavyAttack)
                 {

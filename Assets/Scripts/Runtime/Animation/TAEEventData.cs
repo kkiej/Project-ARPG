@@ -136,6 +136,27 @@ namespace LZ
             return ok;
         }
 
+        /// <summary>求某个事件 type 在该动画里的并集窗口 [start,end]（秒）；无则返回 false。end=-1 段视为持续到结尾。
+        /// 伤害判定窗用 type 1（AttackBehavior）。</summary>
+        public static bool TryGetEventTypeWindow(TAEAnimationEntry entry, int type, out float start, out float end)
+        {
+            start = float.PositiveInfinity; end = float.NegativeInfinity;
+            if (entry.events != null)
+            {
+                for (int i = 0; i < entry.events.Length; i++)
+                {
+                    var ev = entry.events[i];
+                    if (ev.type != type) continue;
+                    float e = ev.endTime < 0f ? ev.startTime : ev.endTime;
+                    if (ev.startTime < start) start = ev.startTime;
+                    if (e > end) end = e;
+                }
+            }
+            bool ok = end > start && end > 0f;
+            if (!ok) { start = 0f; end = 0f; }
+            return ok;
+        }
+
         public static void GetActiveEvents(TAEAnimationEntry entry, float time, string category, List<TAEEvent> results)
         {
             results.Clear();

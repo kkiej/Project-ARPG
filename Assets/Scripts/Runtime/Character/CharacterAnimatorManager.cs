@@ -774,6 +774,9 @@ namespace LZ
                 PlayLocomotionState(fadeDuration, force: true);
             }
 
+            // 动作结束/被打断时确保命中框已关，避免 TAE 窗事件被取消导致命中框泄漏。
+            CloseDamageColliders();
+
             character.isPerformingAction = false;
             applyRootMotion = false;
             character.characterLocomotionManager.canRotate = true;
@@ -862,18 +865,24 @@ namespace LZ
             bool applyRootMotion = true,
             bool canRotate = false,
             bool canMove = false,
-            bool canRoll = false)
+            bool canRoll = false,
+            float damageWindowStart = 0f,
+            float damageWindowEnd = 0f)
         {
             character.characterCombatManager.currentAttackType = attackType;
             character.characterCombatManager.lastAttackClipPerformed = clip;
             character.characterCombatManager.lastAttackAnimationPerformed = clip.name;
             this.applyRootMotion = applyRootMotion;
-            PlayClipWithAutoReturn(clip, 0.2f);
+            var state = PlayClipWithAutoReturn(clip, 0.2f);
             character.isPerformingAction = isPerformingAction;
             character.characterLocomotionManager.canRotate = canRotate;
             character.characterLocomotionManager.canMove = canMove;
             character.characterNetworkManager.isAttacking.Value = true;
             character.characterLocomotionManager.canRoll = canRoll;
+
+            // ER clip 无 OpenDamageCollider 动画事件 → 按 TAE AttackBehavior 窗驱动命中框（owner 权威）。
+            if (character.IsOwner)
+                ScheduleDamageWindow(state, damageWindowStart, damageWindowEnd);
 
             SendAttackActionRpc(clip, applyRootMotion);
         }
@@ -902,6 +911,41 @@ namespace LZ
                 var state = character.animancer.Layers[ActionLayer].CurrentState;
                 return state != null ? (float)state.Length : 0f;
             }
+        }
+
+        /// <summary>当前 Action 层活跃状态（供子类在播放动作 clip 后补挂 ER 缺失的时点事件，如法术释放）。无则 null。</summary>
+        public Animancer.AnimancerState CurrentActionState
+            => character != null && character.animancer != null
+                ? character.animancer.Layers[ActionLayer].CurrentState
+                : null;
+
+        #endregion
+
+        #region Damage Window（TAE AttackBehavior 驱动命中框）
+
+        /// <summary>开启近战命中框（替代 ER clip 缺失的 OpenDamageCollider 动画事件）。基类空实现，玩家子类接装备管理器。</summary>
+        protected virtual void OpenDamageColliders() { }
+
+        /// <summary>关闭近战命中框。基类空实现，玩家子类接装备管理器。</summary>
+        protected virtual void CloseDamageColliders() { }
+
+        /// <summary>
+        /// 给某个攻击 clip 的播放状态挂上「按 TAE AttackBehavior 窗开/合命中框」的时点事件。
+        /// 窗为秒（clip 绝对时间），内部换算成归一化时点。endSec&lt;=0 视为无 TAE 数据 → 不挂（旧 clip 仍走自带动画事件）。
+        /// 仅在 owner 调度即可：伤害判定是 owner 权威。
+        /// </summary>
+        protected void ScheduleDamageWindow(AnimancerState state, float startSec, float endSec)
+        {
+            if (state == null || endSec <= 0f) return;
+            float len = (float)state.Length;
+            if (len <= 0f) return;
+
+            // 进入新攻击段前，先确保上一段的命中框已关（连招/相位切换时防泄漏）。
+            CloseDamageColliders();
+
+            var ev = state.Events(this);
+            ev.Add(Mathf.Clamp01(startSec / len), OpenDamageColliders);
+            ev.Add(Mathf.Clamp01(endSec / len), CloseDamageColliders);
         }
 
         #endregion
@@ -994,6 +1038,103 @@ namespace LZ
 
         #endregion
 
+        #region Multi-Phase Chain — Chargeable Heavy Attack（ER：长按 0500 蓄满 / 短按切 0505 直接出手）
+
+        private AnimationClip _chargeQuickClip;        // 0505：短按/未蓄满的直接出手
+        private AttackType _chargeUnchargedType;       // 短按时的攻击类型
+        private AttackType _chargeChargedType;         // 蓄满时的攻击类型
+        private float _chargeMinHoldTime;              // 起手后此时间内不判松手（给 Hold 交互留识别窗）
+        private float _chargeCommitTime;               // 0500 播到此仍按住=蓄满，此前松手=短按
+        private bool _chargeCommitted;                 // 已提交（蓄满或已切短按），停止判定
+
+        /// <summary>
+        /// ER 蓄力重击：起手即播蓄满 clip <paramref name="chargedClip"/>(0500，前期有较长蓄力过程)。
+        /// 起手 <paramref name="minHoldTime"/> 秒内不判松手；之后若松手（isChargingAttack=false）则切短按直接出手
+        /// <paramref name="quickClip"/>(0505)；若播到 <paramref name="commitTime"/> 仍按住则判蓄满，0500 继续播完。
+        /// </summary>
+        public virtual void PlayChargeAttackAnimation(
+            WeaponItem weapon,
+            AttackType unchargedType,
+            AttackType chargedType,
+            AnimationClip chargedClip,
+            AnimationClip quickClip,
+            float minHoldTime,
+            float commitTime,
+            bool isPerformingAction,
+            bool applyRootMotion = true,
+            bool canRotate = false,
+            bool canMove = false,
+            bool canRoll = false)
+        {
+            CancelActiveChain();
+            _inLocomotionMode = false;
+
+            character.characterCombatManager.currentAttackType = unchargedType;
+            character.characterCombatManager.lastAttackClipPerformed = chargedClip;
+            character.characterCombatManager.lastAttackAnimationPerformed = chargedClip.name;
+            this.applyRootMotion = applyRootMotion;
+            character.isPerformingAction = isPerformingAction;
+            character.characterLocomotionManager.canRotate = canRotate;
+            character.characterLocomotionManager.canMove = canMove;
+            character.characterLocomotionManager.canRoll = canRoll;
+
+            if (character.IsOwner)
+                character.characterNetworkManager.isAttacking.Value = true;
+
+            SendAttackActionRpc(chargedClip, applyRootMotion);
+
+            _chargeQuickClip = quickClip;
+            _chargeUnchargedType = unchargedType;
+            _chargeChargedType = chargedType;
+            _chargeMinHoldTime = minHoldTime;
+            _chargeCommitTime = commitTime;
+            _chargeCommitted = false;
+
+            var state = ActivateLayerAndPlay(ActionLayer, chargedClip, 0.2f, 1f);
+            state.Events(this).OnEnd = () => ReturnToController(0.2f);
+
+            _phaseUpdate = CheckChargeAttack;
+        }
+
+        private void CheckChargeAttack()
+        {
+            if (_chargeCommitted) return;
+
+            var chargeState = character.animancer.Layers[ActionLayer].CurrentState;
+            float t = chargeState != null ? (float)chargeState.Time : 0f;
+            // 起手保护窗：给手柄 Hold 交互识别时间，避免一起手就被判成短按。
+            if (t < _chargeMinHoldTime) return;
+
+            bool stillHolding = character.characterNetworkManager.isChargingAttack.Value;
+
+            if (t >= _chargeCommitTime)
+            {
+                // 提交蓄满：0500 继续播完，切到蓄满攻击类型。
+                _chargeCommitted = true;
+                _phaseUpdate = null;
+                if (stillHolding)
+                    character.characterCombatManager.currentAttackType = _chargeChargedType;
+                return;
+            }
+
+            if (!stillHolding)
+            {
+                // 蓄满提交前松手 → 短按：切到直接出手 0505（无则继续 0500 蓄满）。
+                _chargeCommitted = true;
+                _phaseUpdate = null;
+                if (_chargeQuickClip != null)
+                {
+                    character.characterCombatManager.currentAttackType = _chargeUnchargedType;
+                    character.characterCombatManager.lastAttackClipPerformed = _chargeQuickClip;
+                    character.characterCombatManager.lastAttackAnimationPerformed = _chargeQuickClip.name;
+                    SendPhaseRpc(_chargeQuickClip.name);
+                    PlayClipWithAutoReturnInternal(_chargeQuickClip, 0.1f);
+                }
+            }
+        }
+
+        #endregion
+
         #region Multi-Phase Chain — Normal Jump Sequence
 
         private AnimationClip _jumpStartClip;
@@ -1025,6 +1166,9 @@ namespace LZ
 
             CancelActiveChain();
             _inLocomotionMode = false;
+
+            // 起跳即开始记录最高点：跳跃上升高度固定，空中出招时机不固定，故下落高度须以起跳为起点。
+            BeginJumpApex();
 
             var state = ActivateLayerAndPlay(ActionLayer, _jumpStartClip, 0.2f, 1f);
             SendPhaseRpc(_jumpStartClip.name);
@@ -1064,6 +1208,7 @@ namespace LZ
 
         private void CheckJumpLanding()
         {
+            TrackJumpApex();
             if (character.characterLocomotionManager.isGrounded)
                 PlayJumpLanding();
         }
@@ -1071,6 +1216,7 @@ namespace LZ
         private void PlayJumpLanding()
         {
             _phaseUpdate = null;
+            _jumpApexTracking = false;
 
             if (character.IsOwner)
                 character.characterNetworkManager.isJumping.Value = false;
@@ -1092,33 +1238,63 @@ namespace LZ
 
         #endregion
 
-        #region Multi-Phase Chain — Jump Attack Sequence
+        #region Multi-Phase Chain — Jump Attack Sequence（ER 落地驱动融合）
 
-        private AnimationClip _jumpAttackAirIdleClip;
-        private AnimationClip _jumpAttackEndClip;
+        private AnimationClip _jumpAttackAirHoldClip;        // 060：空中维持/下落（可空，回退通用 jumpIdle）
+        private AnimationClip _jumpAttackLandingClip;        // 070：触地攻（带命中框）
+        private AnimationClip _jumpAttackRecoveryClip;       // 071：落地恢复（短距离 + 前序未到尾声；其余落地恢复缺省时的回退）
+        private AnimationClip _jumpAttackRecoveryLongClip;   // 072：长距离 + 前序未到尾声
+        private AnimationClip _jumpAttackRecoveryFastClip;   // 081：短距离 + 前序接近尾声
+        private AnimationClip _jumpAttackRecoveryFastLongClip;// 082：长距离 + 前序接近尾声
+        private AnimationClip _jumpAttackFallbackEndClip;    // 未配 070 时回退的通用落地（jumpEnd）
+        private AttackType _jumpAttackLandingType;
+        private float _jumpAttackLandingLookahead;
+        private float _jumpAttackLandingDmgStart, _jumpAttackLandingDmgEnd; // 070 触地攻命中窗（秒）
+        private float _jumpAttackLongFallThreshold;          // 下落高度阈值（米）：峰值Y−落地Y ≥ 此值视为落得高
+        private float _jumpAttackFastProgressThreshold;      // 前序快慢阈值（归一化 0~1）
+        private float _jumpApexY;                            // 起跳后累计的最高点 Y（用于算下落高度）；从起跳开始记，延续到跳攻落地
+        private bool _jumpApexTracking;                      // 是否正在记录跳跃最高点（起跳置位，落地清零）
+        private bool _jumpAttackAirClipCompleted;            // 空中攻 030 是否在触地前已播完（进入维持）→ 视为接近尾声
+        private bool _jumpAttackLandedLong;                  // 本次触地：是否落得高/远（触地瞬间锁存）
+        private bool _jumpAttackLandedFast;                  // 本次触地：前序是否接近尾声（触地瞬间锁存）
 
         /// <summary>
-        /// 播放跳跃攻击序列：Attack → [AirIdle（等落地）] → Landing。
-        /// 使用 Events 驱动 Attack→AirIdle 转换，Update 检测落地。
+        /// 播放跳跃攻击序列（ER 融合）：空中攻 03x030 →[空中维持 060/jumpIdle]→ 触地攻 03x070 →[落地恢复 03x071]。
+        /// 三段切换由<b>落地检测</b>驱动（<see cref="KCCCharacterController.IsNearGround"/> 预判 + isGrounded），非动画事件：
+        /// 空中攻播放中/播完一旦快触地即切 070；播完仍在高处则播 060 维持并持续探测。070 带自身 attackType 命中框，
+        /// 070 播完接 071 收招。未配 070 时回退旧的通用 jumpEnd。
         /// </summary>
         public virtual void PlayJumpAttackSequenceAnimation(
             WeaponItem weapon,
-            AttackType attackType,
-            AnimationClip attackClip,
-            AnimationClip airIdleClip,
-            AnimationClip endClip,
+            AttackType airAttackType,
+            AnimationClip airAttackClip,
+            AnimationClip airHoldClip,
+            AnimationClip landingAttackClip,
+            AttackType landingAttackType,
+            AnimationClip landingRecoveryClip,
+            AnimationClip fallbackEndClip,
             bool isPerformingAction,
             bool applyRootMotion = true,
+            float landingLookahead = 0f,
             bool canRotate = false,
             bool canMove = false,
-            bool canRoll = false)
+            bool canRoll = false,
+            float airDamageWindowStart = 0f,
+            float airDamageWindowEnd = 0f,
+            float landingDamageWindowStart = 0f,
+            float landingDamageWindowEnd = 0f,
+            AnimationClip landingRecoveryLongClip = null,
+            AnimationClip landingRecoveryFastClip = null,
+            AnimationClip landingRecoveryFastLongClip = null,
+            float landingLongFallThreshold = 0f,
+            float landingFastProgressThreshold = 0f)
         {
             CancelActiveChain();
             _inLocomotionMode = false;
 
-            character.characterCombatManager.currentAttackType = attackType;
-            character.characterCombatManager.lastAttackClipPerformed = attackClip;
-            character.characterCombatManager.lastAttackAnimationPerformed = attackClip.name;
+            character.characterCombatManager.currentAttackType = airAttackType;
+            character.characterCombatManager.lastAttackClipPerformed = airAttackClip;
+            character.characterCombatManager.lastAttackAnimationPerformed = airAttackClip.name;
             this.applyRootMotion = applyRootMotion;
             character.isPerformingAction = isPerformingAction;
             character.characterLocomotionManager.canRotate = canRotate;
@@ -1128,33 +1304,86 @@ namespace LZ
             if (character.IsOwner)
                 character.characterNetworkManager.isAttacking.Value = true;
 
-            SendAttackActionRpc(attackClip, applyRootMotion);
+            SendAttackActionRpc(airAttackClip, applyRootMotion);
 
-            _jumpAttackAirIdleClip = airIdleClip;
-            _jumpAttackEndClip = endClip;
+            _jumpAttackAirHoldClip = airHoldClip;
+            _jumpAttackLandingClip = landingAttackClip;
+            _jumpAttackRecoveryClip = landingRecoveryClip;
+            _jumpAttackRecoveryLongClip = landingRecoveryLongClip;
+            _jumpAttackRecoveryFastClip = landingRecoveryFastClip;
+            _jumpAttackRecoveryFastLongClip = landingRecoveryFastLongClip;
+            _jumpAttackFallbackEndClip = fallbackEndClip;
+            _jumpAttackLandingType = landingAttackType;
+            _jumpAttackLandingLookahead = landingLookahead;
+            _jumpAttackLandingDmgStart = landingDamageWindowStart;
+            _jumpAttackLandingDmgEnd = landingDamageWindowEnd;
+            _jumpAttackLongFallThreshold = landingLongFallThreshold;
+            _jumpAttackFastProgressThreshold = landingFastProgressThreshold;
+            _jumpAttackAirClipCompleted = false;
+            _jumpAttackLandedLong = false;
+            _jumpAttackLandedFast = false;
+            // 峰值从起跳(PlayJumpSequence)就开始记并延续至此，这里不重置；
+            // 仅当跳攻不是经由起跳进入（如从下落直接接空中攻）时兜底以当前高度起记。
+            if (!_jumpApexTracking) BeginJumpApex();
 
-            var state = ActivateLayerAndPlay(ActionLayer, attackClip, 0.2f, 1f);
-            state.Events(this).OnEnd = OnJumpAttackClipEnd;
+            var state = ActivateLayerAndPlay(ActionLayer, airAttackClip, 0.2f, 1f);
+            state.Events(this).OnEnd = OnJumpAttackAirClipEnd;
+
+            // 空中攻 030 命中框（owner 权威）。
+            if (character.IsOwner)
+                ScheduleDamageWindow(state, airDamageWindowStart, airDamageWindowEnd);
+
+            // 空中攻播放期间也持续探测：矮跳/快落时提前落地即可立刻切触地攻，不必等空中攻播完。
+            _phaseUpdate = CheckJumpAttackLanding;
         }
 
-        private void OnJumpAttackClipEnd()
+        private bool NearGroundForLanding()
+            => character.kcc != null
+                ? character.kcc.IsNearGround(_jumpAttackLandingLookahead)
+                : character.characterLocomotionManager.isGrounded;
+
+        /// <summary>当前世界 Y（优先用 KCC 的 TransientPosition，回退 transform）。</summary>
+        private float CurrentWorldY()
+            => character.kcc != null ? character.kcc.CurrentY : character.transform.position.y;
+
+        /// <summary>起跳时调用：以当前高度为起点开始记录最高点。</summary>
+        private void BeginJumpApex()
         {
-            if (!character.characterLocomotionManager.isGrounded && _jumpAttackAirIdleClip != null)
-            {
-                var layer = character.animancer.Layers[ActionLayer];
-                layer.Play(_jumpAttackAirIdleClip, 0f);
-                SendPhaseRpc(_jumpAttackAirIdleClip.name);
-                _phaseUpdate = CheckJumpAttackLanding;
-            }
-            else
+            _jumpApexY = CurrentWorldY();
+            _jumpApexTracking = true;
+        }
+
+        /// <summary>空中阶段每帧调用：刷新最高点，供落地时计算下落高度。</summary>
+        private void TrackJumpApex()
+        {
+            float y = CurrentWorldY();
+            if (y > _jumpApexY) _jumpApexY = y;
+        }
+
+        private void OnJumpAttackAirClipEnd()
+        {
+            // 空中攻 030 已完整播完：无论随后是立刻落地还是进维持，前序都算「接近尾声」→ 倾向快速恢复(8x)。
+            _jumpAttackAirClipCompleted = true;
+
+            if (NearGroundForLanding())
             {
                 PlayJumpAttackLanding();
+                return;
             }
+
+            // 仍在高处：播空中维持（060 或回退通用 jumpIdle），继续探测落地。
+            if (_jumpAttackAirHoldClip != null)
+            {
+                character.animancer.Layers[ActionLayer].Play(_jumpAttackAirHoldClip, 0.1f);
+                SendPhaseRpc(_jumpAttackAirHoldClip.name);
+            }
+            _phaseUpdate = CheckJumpAttackLanding;
         }
 
         private void CheckJumpAttackLanding()
         {
-            if (character.characterLocomotionManager.isGrounded)
+            TrackJumpApex();
+            if (NearGroundForLanding())
                 PlayJumpAttackLanding();
         }
 
@@ -1162,11 +1391,190 @@ namespace LZ
         {
             _phaseUpdate = null;
 
+            // 触地瞬间锁存落地恢复的两个判据（恢复段在 070 播完后才选 clip，此刻先存下当时的下落高度/前序进度）：
+            //   高低 = 本次下落高度(起跳后最高点Y − 落地Y)是否达阈值；快慢 = 空中攻是否已播完 或 其归一化进度是否达阈值。
+            _jumpApexTracking = false;
+            float fallHeight = _jumpApexY - CurrentWorldY();
+            _jumpAttackLandedLong = _jumpAttackLongFallThreshold > 0f
+                && fallHeight >= _jumpAttackLongFallThreshold;
+
+            float airProgress = 1f;
+            if (!_jumpAttackAirClipCompleted)
+            {
+                float len = CurrentActionLength;
+                airProgress = len > 0f ? CurrentActionTime / len : 0f;
+            }
+            _jumpAttackLandedFast = _jumpAttackFastProgressThreshold > 0f
+                && airProgress >= _jumpAttackFastProgressThreshold;
+
             if (character.IsOwner)
                 character.characterNetworkManager.isJumping.Value = false;
 
-            SendPhaseRpc(_jumpAttackEndClip.name);
-            PlayClipWithAutoReturnInternal(_jumpAttackEndClip, 0.2f);
+            // 未配触地攻 → 回退旧通用落地（jumpEnd / 直接收）。
+            if (_jumpAttackLandingClip == null)
+            {
+                if (_jumpAttackFallbackEndClip != null)
+                {
+                    SendPhaseRpc(_jumpAttackFallbackEndClip.name);
+                    PlayClipWithAutoReturnInternal(_jumpAttackFallbackEndClip, 0.2f);
+                }
+                else
+                {
+                    ReturnToController(0.2f);
+                }
+                return;
+            }
+
+            // 触地攻 070：换成自身 attackType 命中框（沿用现有伤害/网络逻辑读取 currentAttackType + isAttacking）。
+            character.characterCombatManager.currentAttackType = _jumpAttackLandingType;
+            character.characterCombatManager.lastAttackClipPerformed = _jumpAttackLandingClip;
+            character.characterCombatManager.lastAttackAnimationPerformed = _jumpAttackLandingClip.name;
+            if (character.IsOwner)
+                character.characterNetworkManager.isAttacking.Value = true;
+
+            SendPhaseRpc(_jumpAttackLandingClip.name);
+            var state = character.animancer.Layers[ActionLayer].Play(_jumpAttackLandingClip, 0.1f);
+            state.Events(this).OnEnd = OnJumpAttackLandingEnd;
+
+            // 触地攻 070 命中框（owner 权威）。
+            if (character.IsOwner)
+                ScheduleDamageWindow(state, _jumpAttackLandingDmgStart, _jumpAttackLandingDmgEnd);
+        }
+
+        private void OnJumpAttackLandingEnd()
+        {
+            // 落地恢复（无命中）：按触地瞬间锁存的「距离长短 × 前序快慢」四选一，缺省逐级回退到 071。
+            AnimationClip recovery = SelectJumpLandingRecovery(_jumpAttackLandedLong, _jumpAttackLandedFast);
+            if (recovery != null)
+            {
+                SendPhaseRpc(recovery.name);
+                PlayClipWithAutoReturnInternal(recovery, 0.15f);
+            }
+            else
+            {
+                ReturnToController(0.2f);
+            }
+        }
+
+        /// <summary>
+        /// 落地恢复 clip 选择：落得低/高(071/072) × 前序慢/快(071·072/081·082)。
+        /// 「高低」按下落高度，「快慢」按前序空中攻进度。某变体未配时回退：快速→对应非快速，高→低，最终落到 071（<see cref="_jumpAttackRecoveryClip"/>）。
+        /// </summary>
+        private AnimationClip SelectJumpLandingRecovery(bool isLong, bool isFast)
+        {
+            AnimationClip Pick(AnimationClip primary, AnimationClip fallback)
+                => primary != null ? primary : fallback;
+
+            if (isFast && isLong) return Pick(_jumpAttackRecoveryFastLongClip,           // 082
+                                         Pick(_jumpAttackRecoveryLongClip,               // ← 072
+                                         Pick(_jumpAttackRecoveryFastClip,               // ← 081
+                                              _jumpAttackRecoveryClip)));                // ← 071
+            if (isFast)            return Pick(_jumpAttackRecoveryFastClip,               // 081
+                                              _jumpAttackRecoveryClip);                  // ← 071
+            if (isLong)            return Pick(_jumpAttackRecoveryLongClip,               // 072
+                                              _jumpAttackRecoveryClip);                  // ← 071
+            return _jumpAttackRecoveryClip;                                              // 071
+        }
+
+        #endregion
+
+        #region Crouch（下蹲：进入 → idle/四向移动 → 站起，固定 a000 前缀，按 animId 数据驱动解析）
+
+        private bool _crouching;
+        private bool _crouchEntering;          // 进入过渡 clip 播放中，期间不被 idle/移动覆盖
+        private int _crouchAnimKey = int.MinValue;  // 当前下蹲 loco clip 标识，避免每帧重播
+
+        /// <summary>当前是否处于下蹲（含进入过渡）。</summary>
+        public bool IsCrouching => _crouching;
+
+        // 下蹲全部用 a000 前缀（RollStance=0），不随持武姿态变。
+        private AnimationClip LookupCrouchClip(System.Func<CommonAnimationConvention, int> baseSel, int direction)
+        {
+            var conv = animData != null ? animData.commonConvention : null;
+            if (conv == null) return null;
+            int b = baseSel(conv);
+            if (b == CommonAnimationConvention.IdleUnset) return null;
+            return LookupClipByAnimId(CommonAnimationConvention.ComposeId(
+                CommonAnimationConvention.RollStance, b, 0, direction));
+        }
+
+        /// <summary>进入下蹲：播 a000_390000 过渡，随后转下蹲 idle/移动（由 <see cref="UpdateCrouchLocomotion"/> 驱动）。
+        /// 不设 isPerformingAction，使下蹲中仍可移动并取消到跳/闪/攻。</summary>
+        public void EnterCrouch()
+        {
+            CancelActiveChain();
+            _inLocomotionMode = false;        // 关掉自动 locomotion 评估，下蹲动画改由 CrouchState 驱动
+            _crouching = true;
+            _crouchEntering = true;
+            _crouchAnimKey = int.MinValue;
+            character.isPerformingAction = false;
+            character.characterLocomotionManager.canMove = true;
+            character.characterLocomotionManager.canRotate = true;
+            character.characterLocomotionManager.canRun = false;   // 下蹲中不可冲刺
+
+            AnimationClip enter = LookupCrouchClip(c => c.crouchEnterId, CommonAnimationConvention.DirForward);
+            if (enter != null)
+            {
+                SendPhaseRpc(enter.name);
+                var state = ActivateLayerAndPlay(ActionLayer, enter, 0.15f, 1f);
+                state.Events(this).OnEnd = () => _crouchEntering = false;
+            }
+            else
+            {
+                _crouchEntering = false;  // 无进入 clip → 直接进 idle
+            }
+        }
+
+        /// <summary>下蹲期间每帧驱动：站立播下蹲 idle(300000)，移动播四向下蹲移动(320000+dir)。
+        /// 非锁定只用前向（朝向由旋转处理），锁定用四向。</summary>
+        public void UpdateCrouchLocomotion(bool isMoving, float vertical, float horizontal, bool lockedOn)
+        {
+            if (!_crouching || _crouchEntering) return;
+
+            AnimationClip clip;
+            int key;
+            if (isMoving)
+            {
+                int dir = lockedOn ? CommonAnimationConvention.ResolveDirection(vertical, horizontal)
+                                   : CommonAnimationConvention.DirForward;
+                clip = LookupCrouchClip(c => c.crouchMoveBase, dir);
+                key = dir;
+            }
+            else
+            {
+                clip = LookupCrouchClip(c => c.crouchIdleBase, CommonAnimationConvention.DirForward);
+                key = 100;  // idle 专用 key
+            }
+
+            if (clip == null || key == _crouchAnimKey) return;
+            _crouchAnimKey = key;
+            character.animancer.Layers[ActionLayer].Play(clip, 0.2f);
+            SendPhaseRpc(clip.name);
+        }
+
+        /// <summary>退出下蹲。playStandup=true：播 a000_390001 站起再回 locomotion；
+        /// false：取消到其它动作（跳/闪/攻），仅清下蹲标志，由后续动作接管动画。</summary>
+        public void ExitCrouch(bool playStandup)
+        {
+            if (!_crouching) return;
+            _crouching = false;
+            _crouchEntering = false;
+            _crouchAnimKey = int.MinValue;
+
+            if (!playStandup)
+                return;  // 取消路径：调用方紧接着会播自己的动画
+
+            AnimationClip standup = LookupCrouchClip(c => c.crouchStandupId, CommonAnimationConvention.DirForward);
+            if (standup != null)
+            {
+                character.isPerformingAction = true;   // 站起过渡锁住，播完 ReturnToController 复位
+                SendPhaseRpc(standup.name);
+                PlayClipWithAutoReturnInternal(standup, 0.15f);
+            }
+            else
+            {
+                ReturnToController(0.15f);
+            }
         }
 
         #endregion

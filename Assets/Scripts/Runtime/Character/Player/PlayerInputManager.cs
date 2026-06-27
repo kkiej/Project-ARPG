@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace LZ
@@ -221,6 +222,7 @@ namespace LZ
             HandleDodgeInput();
             HandleSprintInput();
             HandleJumpInput();
+            HandleCrouchInput();
             HandleRBInput();
             HandleHoldRBInput();
             HandleLBInput();
@@ -515,6 +517,31 @@ namespace LZ
                 // 尝试执行跳跃动作
                 player.playerLocomotionManager.AttemptToPerformJump();
             }
+        }
+
+        //  CROUCH（下蹲）：键盘 C / 手柄左摇杆按下。直接轮询设备，避免改动输入资产。
+        //  切换式：投递 InputCommand.Crouch 给状态机——地面 LocomotionState 收到则进 CrouchState，
+        //  CrouchState 收到则站起。仅 FSM 路径支持。
+        private void HandleCrouchInput()
+        {
+            bool pressed = false;
+
+            var keyboard = Keyboard.current;
+            if (keyboard != null && keyboard.cKey.wasPressedThisFrame)
+                pressed = true;
+
+            var gamepad = Gamepad.current;
+            if (gamepad != null && gamepad.leftStickButton.wasPressedThisFrame)
+                pressed = true;
+
+            if (!pressed)
+                return;
+
+            if (player == null || PlayerUIManager.instance.menuWindowIsOpen)
+                return;
+
+            if (player.UseStateMachine)
+                player.GetOrCreateStateMachine().EnqueueInput(InputCommand.Crouch);
         }
 
         // FSM 攻击路由门：仅当开关开启且右手武器配置了 moveset 时，才交给状态机；

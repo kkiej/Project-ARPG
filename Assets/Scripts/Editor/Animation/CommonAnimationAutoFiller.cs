@@ -117,8 +117,13 @@ namespace LZ.Editor
             int a000 = CommonAnimationConvention.RollStance;
             // 翻滚：四向 × 负重
             AddGroups(entries, seen, sb, "Roll", a000, _convention.rollBase, _maxLoadGroup, true, ref found, ref missing);
-            // 蹲走：四向，单档
+            // 蹲走（旧 021000 慢走）：四向，单档
             AddGroups(entries, seen, sb, "CrouchWalk", a000, _convention.crouchWalkBase, 0, true, ref found, ref missing);
+            // 下蹲（ER a000_3xxxxx）：idle 单锚点 / 移动四向 / 进入 / 站起
+            AddGroups(entries, seen, sb, "CrouchIdle", a000, _convention.crouchIdleBase, 0, false, ref found, ref missing);
+            AddGroups(entries, seen, sb, "CrouchMove", a000, _convention.crouchMoveBase, 0, true, ref found, ref missing);
+            AddGroups(entries, seen, sb, "CrouchEnter", a000, _convention.crouchEnterId, 0, false, ref found, ref missing);
+            AddGroups(entries, seen, sb, "CrouchStandup", a000, _convention.crouchStandupId, 0, false, ref found, ref missing);
             // 前手翻：四向，单档
             AddGroups(entries, seen, sb, "Handspring", a000, _convention.handspringBase, 0, true, ref found, ref missing);
 

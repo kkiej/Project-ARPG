@@ -115,6 +115,20 @@ namespace LZ
             return new PlayerAttackState(weapon, hm, idx);
         }
 
+        /// <summary>下蹲攻击（a023_030310）。无下蹲攻击节点的武器返回 null（调用方据此忽略输入）。</summary>
+        public static PlayerAttackState TryCreateCrouchAttack(PlayerManager player, InputCommand command)
+        {
+            WeaponItem weapon = player.playerInventoryManager.currentRightHandWeapon;
+            if (weapon == null || weapon.moveset == null)
+                return null;
+
+            HandMoveset hm = weapon.moveset.GetMoveset(GetHandState(player));
+            if (hm == null || !hm.HasNode(hm.crouchAttack))
+                return null;
+
+            return new PlayerAttackState(weapon, hm, hm.crouchAttack);
+        }
+
         public override void OnEnter(CharacterStateMachine machine)
         {
             PlayerManager player = machine.player;
@@ -208,38 +222,66 @@ namespace LZ
             if (!_moveset.TryGetNode(index, out AttackNode node) || node.clip == null)
                 return;
 
-            // 跳跃攻击：Attack→AirIdle→Landing 三段链（落地由 isGrounded 驱动）。AirIdle / Landing 复用通用跳跃 clip。
+            // 跳跃攻击（ER 落地融合）：空中攻 03x030 →[060/jumpIdle 维持]→ 触地攻 03x070 →[落地恢复 071/072/081/082 四选一]，落地检测驱动。
+            // 落地恢复按「落地距离长短 × 前序进度快慢」选 clip（执行层 SelectJumpLandingRecovery）；clip 来自节点配置（MovesetData），缺省时回退通用跳跃 idle/end。
             if (_isJumpAttack)
             {
                 CharacterAnimatorManager anim = player.playerAnimatorManager;
                 CharacterAnimationData ad = anim.animData;
                 bool twoH = player.playerNetworkManager.isTwoHandingWeapon.Value;
-                AnimationClip airIdle = ad == null ? null : (twoH && ad.jumpIdle2H != null ? ad.jumpIdle2H : ad.jumpIdle);
-                AnimationClip end     = ad == null ? null : (twoH && ad.jumpEnd2H  != null ? ad.jumpEnd2H  : ad.jumpEnd);
+                AnimationClip jumpIdle = ad == null ? null : (twoH && ad.jumpIdle2H != null ? ad.jumpIdle2H : ad.jumpIdle);
+                AnimationClip jumpEnd  = ad == null ? null : (twoH && ad.jumpEnd2H  != null ? ad.jumpEnd2H  : ad.jumpEnd);
+
+                // 空中维持优先用节点配的 060，缺省回退通用 jumpIdle。
+                AnimationClip airHold = node.airHoldClip != null ? node.airHoldClip : jumpIdle;
 
                 anim.PlayJumpAttackSequenceAnimation(
-                    _weapon, node.attackType, node.clip, airIdle, end, true, node.applyRootMotion);
+                    _weapon,
+                    node.attackType,            // 空中攻命中
+                    node.clip,                  // 030 空中攻
+                    airHold,                    // 060 / jumpIdle
+                    node.landingAttackClip,     // 070 触地攻（命中）
+                    node.landingAttackType,
+                    node.landingRecoveryClip,   // 071 落地恢复
+                    jumpEnd,                    // 未配 070 时的回退落地
+                    true,
+                    node.applyRootMotion,
+                    node.landingLookahead,
+                    canRotate: false,
+                    canMove: false,
+                    canRoll: false,
+                    airDamageWindowStart: node.damageWindowStart,        // 030 空中攻命中窗
+                    airDamageWindowEnd: node.damageWindowEnd,
+                    landingDamageWindowStart: node.landingDamageWindowStart, // 070 触地攻命中窗
+                    landingDamageWindowEnd: node.landingDamageWindowEnd,
+                    landingRecoveryLongClip: node.landingRecoveryLongClip,         // 072 落得高恢复
+                    landingRecoveryFastClip: node.landingRecoveryFastClip,         // 081 落得低·快速
+                    landingRecoveryFastLongClip: node.landingRecoveryFastLongClip, // 082 落得高·快速
+                    landingLongFallThreshold: node.landingLongFallThreshold,       // 下落高度阈值
+                    landingFastProgressThreshold: node.landingFastProgressThreshold); // 前序快慢阈值
                 return;
             }
 
-            // 可蓄力节点：走蓄力链 Attack→Hold→Release/FullRelease（缺 hold clip 则回退普通攻击）。
-            if (node.canCharge && node.chargeHold != null)
+            // 可蓄力重击（ER 接法）：起手即播蓄满 clip(0500，前期长蓄力)；
+            // 起手 minHold 内不判松手，之后松手→切短按直接出手(0505)，按到 commit→蓄满 0500 播完。
+            if (node.canCharge)
             {
-                player.playerAnimatorManager.PlayHeavyAttackChainAnimation(
+                player.playerAnimatorManager.PlayChargeAttackAnimation(
                     _weapon,
-                    node.attackType,
-                    node.chargedAttackType,
-                    node.clip,
-                    node.chargeHold,
-                    node.chargeRelease != null ? node.chargeRelease : node.clip,
-                    node.chargeFullRelease != null ? node.chargeFullRelease : node.clip,
+                    node.attackType,            // 短按/未蓄满
+                    node.chargedAttackType,     // 蓄满
+                    node.clip,                  // 0500 蓄满 clip
+                    node.quickAttackClip,       // 0505 短按 clip
+                    node.chargeMinHoldTime,
+                    node.chargeCommitTime,
                     true,
                     node.applyRootMotion);
                 return;
             }
 
             player.playerAnimatorManager.PlayTargetAttackActionAnimation(
-                _weapon, node.attackType, node.clip, true, node.applyRootMotion);
+                _weapon, node.attackType, node.clip, true, node.applyRootMotion,
+                damageWindowStart: node.damageWindowStart, damageWindowEnd: node.damageWindowEnd);
         }
 
         private static HandState GetHandState(PlayerManager player)

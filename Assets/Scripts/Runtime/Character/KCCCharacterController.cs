@@ -62,8 +62,27 @@ namespace LZ
         /// <summary>是否稳定站在地面上。</summary>
         public bool IsGrounded => motor != null && motor.GroundingStatus.IsStableOnGround;
 
+        /// <summary>
+        /// 快触地预测：已稳定贴地，或脚下 <paramref name="lookahead"/> 米内有可站立地面（向下射线，命中 StableGroundLayers）。
+        /// 用于跳跃攻击落地融合：在真正触地前一点切到触地攻，让冲击对齐。lookahead&lt;=0 时等价 <see cref="IsGrounded"/>。
+        /// </summary>
+        public bool IsNearGround(float lookahead)
+        {
+            if (motor == null) return false;
+            if (motor.GroundingStatus.IsStableOnGround) return true;
+            if (lookahead <= 0f) return false;
+
+            // 从脚底略上方向下打，角色胶囊在脚底之上，不会打到自身。
+            Vector3 origin = motor.TransientPosition + motor.CharacterUp * 0.1f;
+            return Physics.Raycast(origin, -motor.CharacterUp, lookahead + 0.1f,
+                motor.StableGroundLayers, QueryTriggerInteraction.Ignore);
+        }
+
         /// <summary>KCC Capsule 的半径。</summary>
         public float CapsuleRadius => motor != null ? motor.Capsule.radius : 0.5f;
+
+        /// <summary>当前世界坐标 Y（米）。用于跳跃攻击落地时统计下落高度（峰值Y − 落地Y）。</summary>
+        public float CurrentY => motor != null ? motor.TransientPosition.y : transform.position.y;
 
         /// <summary>
         /// 设置本帧的目标旋转（平滑旋转场景，每帧调用一次）。

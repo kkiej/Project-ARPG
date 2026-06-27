@@ -14,7 +14,8 @@ namespace LZ
         Dodge,         // 翻滚/后撤步
         Jump,
         Sprint,
-        Interact
+        Interact,
+        Crouch         // 下蹲（切换式：地面按一下蹲下，下蹲中再按一下站起）
     }
 
     /// <summary>

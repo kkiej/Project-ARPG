@@ -25,10 +25,16 @@ namespace LZ
         //  FULL CHARGE VERSION OF FX (TO DO)
 
         [Header("Animations")]
-        [SerializeField] protected AnimationClip mainHandSpellClip;
-        [SerializeField] protected AnimationClip offHandSpellClip;
+        public AnimationClip mainHandSpellClip;
+        public AnimationClip offHandSpellClip;
         [SerializeField] protected string mainHandSpellAnimation;
         [SerializeField] protected string offHandSpellAnimation;
+
+        [Header("ER TAE 释放时点（由 TAETimingBackfiller 从权威 SO 的 type64 CastHighlightedMagic 回填）")]
+        [Tooltip("施法 clip 的 ER animId（如 a000_xxxxxx→xxxxxx、aXXX_YYYYYY→XXX*1_000_000+YYYYYY）。0=未填，无法回填释放时点。")]
+        public int erCastAnimId = 0;
+        [Tooltip("法术释放(投射物生成)时点，单位秒，按 clip 绝对播放时间。-1=未填：回退到 clip 自带的 Unity 动画事件路径（旧 clip）。")]
+        public float castReleaseSeconds = -1f;
 
         [Header("Sound FX")]
         public AudioClip warmUpSoundFX;

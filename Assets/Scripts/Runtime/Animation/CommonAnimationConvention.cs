@@ -56,8 +56,18 @@ namespace LZ
         public int jogStopBase = 22100;
         [Tooltip("奔跑刹停基址，如 a0XX_022200 → 22200。+组*10。")]
         public int runStopBase = 22200;
-        [Tooltip("蹲走基址，如 a000_021000 → 21000。+方向(0-3)。")]
+        [Tooltip("（旧）慢走基址 a000_021000 → 21000，+方向(0-3)。注：这其实是慢走，非下蹲，名称保留以兼容。")]
         public int crouchWalkBase = 21000;
+
+        [Header("下蹲（固定 a000 前缀，类似翻滚不随姿态变）")]
+        [Tooltip("下蹲 idle 基址：a000_300000 → 300000。")]
+        public int crouchIdleBase = 300000;
+        [Tooltip("下蹲移动基址：a000_320000 → 320000。+方向(0-3)：前/后/左/右。")]
+        public int crouchMoveBase = 320000;
+        [Tooltip("进入下蹲基址：a000_390000 → 390000。")]
+        public int crouchEnterId = 390000;
+        [Tooltip("下蹲站起基址：a000_390001 → 390001。")]
+        public int crouchStandupId = 390001;
 
         [Header("Dodge 动作基址")]
         [Tooltip("后撤步基址，如 a0XX_027000 → 27000。随姿态前缀，+组*10，无方向。")]

@@ -20,14 +20,20 @@ namespace LZ
             if (player.playerNetworkManager.isUsingRightHand.Value)
             {
                 if (mainHandSpellClip != null)
+                {
                     player.playerAnimatorManager.PlayTargetActionAnimation(mainHandSpellClip, true);
+                    player.playerAnimatorManager.TryScheduleSpellRelease(this);
+                }
                 else
                     Debug.LogWarning($"{player.name}: mainHandSpellClip 未配置", player);
             }
             else
             {
                 if (offHandSpellClip != null)
+                {
                     player.playerAnimatorManager.PlayTargetActionAnimation(offHandSpellClip, true);
+                    player.playerAnimatorManager.TryScheduleSpellRelease(this);
+                }
                 else
                     Debug.LogWarning($"{player.name}: offHandSpellClip 未配置", player);
             }
