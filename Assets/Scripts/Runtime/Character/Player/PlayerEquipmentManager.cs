@@ -14,9 +14,43 @@ namespace LZ
         [HideInInspector] public WeaponModelInstantiationSlot leftHandShieldSlot;
         [HideInInspector] public WeaponModelInstantiationSlot backSlot;
 
+        //  ER 数据驱动挂载：refID → 骨架里对应 'c0000 Dummy<n> [refID]' 挂点。
+        //  由 InitializeWeaponSlots 扫描骨架构建，供按 WepAbsorpPosParam 选挂点用。
+        private readonly Dictionary<int, Transform> erDummyByRefId = new Dictionary<int, Transform>();
+        private static readonly System.Text.RegularExpressions.Regex DummyRefIdRegex =
+            new System.Text.RegularExpressions.Regex(@"\[(\d+)\]\s*$");
+
+        //  ER 双骨挂载所需的【绑定姿势】常量（Awake/BuildErDummyCache 时抓，动画未生效前才准确）。
+        //  Dw0：dummy 绑定姿势世界矩阵；attachBone：dummy 的跟随骨(Unity 里即其父骨)及其绑定世界矩阵。
+        private readonly Dictionary<int, Matrix4x4> erDummyBindWorld = new Dictionary<int, Matrix4x4>();
+        private readonly Dictionary<int, Transform> erDummyAttachBone = new Dictionary<int, Transform>();
+        private readonly Dictionary<int, Matrix4x4> erAttachBindWorld = new Dictionary<int, Matrix4x4>();
+
+        //  空间骨（ER 的 ParentBoneIndex，武器 dummy 统一用 Model_Dmy_AttachWeapon）及其绑定世界矩阵。
+        [Header("ER 挂载空间骨")]
+        [Tooltip("ER 武器 dummy 的空间骨名（ParentBoneIndex）。卡利亚直剑 dummy[20] 实测为 Model_Dmy_AttachWeapon。")]
+        public string erWeaponSpaceBoneName = "Model_Dmy_AttachWeapon";
+        private Transform erWeaponSpaceBone;
+        private Matrix4x4 erWeaponSpaceBoneBind = Matrix4x4.identity;
+        private bool erWeaponSpaceBoneBindCaptured;
+
+        //  ==== ER 忠实复刻挂载（DSAS dummy 公式 + 骨架自标定）====
+        [Header("ER 忠实挂载 (DSAS 复刻)")]
+        [Tooltip("ER 挂载数据(dummy 帧 + 标定骨)。为空则自动 Resources.Load(\"ERMountData\")。\n" +
+                 "由 Tools/ER/导入挂载数据 从 c0000.flver 生成。")]
+        public ERMountData erMountData;
+        [Tooltip("DSAS 对 ER 武器的固定翻转(RotX180)在 Unity 轴系下的等价常量，剑刃与鞘共用。\n" +
+                 "朝向不对时校准此值（可能是 (180,0,0)/(0,180,0)/(0,0,180) 之一）。")]
+        public Vector3 erWeaponFlip = new Vector3(180f, 0f, 0f);
+        private readonly ERWeaponMounter erMounter = new ERWeaponMounter();
+
         [Header("Weapon Models")]
         [HideInInspector] public GameObject rightHandWeaponModel;
         [HideInInspector] public GameObject leftHandWeaponModel;
+
+        //  ER 剑鞘的独立实例（挂在腰间的鞘，与手持武器分开管理/销毁）。
+        [HideInInspector] public GameObject rightHandSheathModel;
+        [HideInInspector] public GameObject leftHandSheathModel;
 
         [Header("Weapon Managers")]
         public WeaponManager rightWeaponManager;
@@ -1047,36 +1081,42 @@ namespace LZ
         //  WEAPONS
         private void InitializeWeaponSlots()
         {
-            WeaponModelInstantiationSlot[] weaponSlots = GetComponentsInChildren<WeaponModelInstantiationSlot>(true);
+            //  ER 数据驱动挂载：先扫描骨架里的 dummy 挂点，供按 WepAbsorpPosParam 的 refID 查表挂载。
+            BuildErDummyCache();
 
+            //  ER 忠实复刻：从 c0000.flver 的 dummy 数据 + 骨架自标定求解 FLVER→Unity 基变换。
+            //  此刻(Awake)动画未生效 = 绑定姿势，标定准确。
+            if (erMountData == null)
+                erMountData = Resources.Load<ERMountData>("ERMountData");
+            erMounter.Calibrate(transform, erMountData);
+
+            //  权威：优先绑定 c0000 共享骨架的 ER 挂点骨(R_Weapon/L_Weapon/L_Shield)。
+            //  必须先于组件扫描，否则会命中旧骨架下残留的 "* Weapon Slot" 物体，把武器挂到旧骨骼上。
+            //  握持对齐由 WeaponModelInstantiationSlot 的“蒙皮骨对齐”负责（让武器根骨与挂点重合）。
+            rightHandWeaponSlot = EnsureWeaponSlotOnBone("R_Weapon", WeaponModelSlot.RightHand);
+            leftHandWeaponSlot = EnsureWeaponSlotOnBone("L_Weapon", WeaponModelSlot.LeftHandWeaponSlot);
+            leftHandShieldSlot = EnsureWeaponSlotOnBone("L_Shield", WeaponModelSlot.LeftHandShieldSlot);
+
+            //  回退：ER 骨名缺失（旧骨架/其它角色）或 BackSlot 无对应 dummy 时，用已存在组件补齐仍为空的槽。
+            WeaponModelInstantiationSlot[] weaponSlots = GetComponentsInChildren<WeaponModelInstantiationSlot>(true);
             foreach (var weaponSlot in weaponSlots)
             {
-                if (weaponSlot.weaponSlot == WeaponModelSlot.RightHand)
+                switch (weaponSlot.weaponSlot)
                 {
-                    rightHandWeaponSlot = weaponSlot;
-                }
-                else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHandWeaponSlot)
-                {
-                    leftHandWeaponSlot = weaponSlot;
-                }
-                else if (weaponSlot.weaponSlot == WeaponModelSlot.LeftHandShieldSlot)
-                {
-                    leftHandShieldSlot = weaponSlot;
-                }
-                else if (weaponSlot.weaponSlot == WeaponModelSlot.BackSlot)
-                {
-                    backSlot = weaponSlot;
+                    case WeaponModelSlot.RightHand:
+                        if (rightHandWeaponSlot == null) rightHandWeaponSlot = weaponSlot;
+                        break;
+                    case WeaponModelSlot.LeftHandWeaponSlot:
+                        if (leftHandWeaponSlot == null) leftHandWeaponSlot = weaponSlot;
+                        break;
+                    case WeaponModelSlot.LeftHandShieldSlot:
+                        if (leftHandShieldSlot == null) leftHandShieldSlot = weaponSlot;
+                        break;
+                    case WeaponModelSlot.BackSlot:
+                        if (backSlot == null) backSlot = weaponSlot;
+                        break;
                 }
             }
-
-            //  兜底：c0000 共享骨架自带挂点骨(R_Weapon/L_Weapon/L_Shield)但没挂组件时，按骨名自动补上。
-            //  避免在深层骨架里手动逐个加组件，且能扛骨架替换。
-            if (rightHandWeaponSlot == null)
-                rightHandWeaponSlot = EnsureWeaponSlotOnBone("R_Weapon", WeaponModelSlot.RightHand);
-            if (leftHandWeaponSlot == null)
-                leftHandWeaponSlot = EnsureWeaponSlotOnBone("L_Weapon", WeaponModelSlot.LeftHandWeaponSlot);
-            if (leftHandShieldSlot == null)
-                leftHandShieldSlot = EnsureWeaponSlotOnBone("L_Shield", WeaponModelSlot.LeftHandShieldSlot);
         }
 
         /// <summary>
@@ -1109,6 +1149,108 @@ namespace LZ
                 if (child.name == exactName) return child;
                 Transform found = FindDescendantByExactName(child, exactName);
                 if (found != null) return found;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 扫描骨架层级，把所有 'c0000 Dummy&lt;n&gt; [refID]' 挂点按 refID 建索引。
+        /// 这些 dummy 在 Blender 里已骨父子到对应骨，会跟动画走，是 ER/DSAS 挂武器的正确挂点。
+        /// </summary>
+        private void BuildErDummyCache()
+        {
+            erDummyByRefId.Clear();
+            erDummyBindWorld.Clear();
+            erDummyAttachBone.Clear();
+            erAttachBindWorld.Clear();
+
+            foreach (Transform t in GetComponentsInChildren<Transform>(true))
+            {
+                var m = DummyRefIdRegex.Match(t.name);
+                if (!m.Success) continue;
+                if (t.name.IndexOf("Dummy", System.StringComparison.OrdinalIgnoreCase) < 0) continue;
+                int refId = int.Parse(m.Groups[1].Value);
+                //  同一 refID 可能有多个（少数身体 dummy）；武器握持点唯一，取首个即可。
+                if (erDummyByRefId.ContainsKey(refId)) continue;
+
+                erDummyByRefId[refId] = t;
+
+                //  绑定姿势世界矩阵：BuildErDummyCache 在 Awake 调用，此刻动画未生效 → 即 bind。
+                erDummyBindWorld[refId] = t.localToWorldMatrix;
+
+                //  跟随骨 = dummy 在 Unity 层级里的父骨（FBX 骨父 = FLVER AttachBoneIndex）。
+                Transform attach = t.parent;
+                if (attach != null)
+                {
+                    erDummyAttachBone[refId] = attach;
+                    erAttachBindWorld[refId] = attach.localToWorldMatrix;
+                }
+            }
+
+            //  空间骨（Model_Dmy_AttachWeapon）及其绑定世界矩阵。
+            erWeaponSpaceBone = FindDescendantByExactName(transform, erWeaponSpaceBoneName);
+            if (erWeaponSpaceBone != null)
+            {
+                erWeaponSpaceBoneBind = erWeaponSpaceBone.localToWorldMatrix;
+                erWeaponSpaceBoneBindCaptured = true;
+            }
+            else
+            {
+                erWeaponSpaceBoneBindCaptured = false;
+                Debug.LogWarning(
+                    $"[PlayerEquipmentManager] 骨架下找不到 ER 武器空间骨 '{erWeaponSpaceBoneName}'。" +
+                    "dummy 双骨挂载将回退为跟随骨刚性挂载（不含空间骨动画修正）。", this);
+            }
+        }
+
+        /// <summary>按 refID 取骨架里的 dummy 挂点；找不到或 refID&lt;0 返回 null。</summary>
+        private Transform ResolveErDummy(int refId)
+        {
+            if (refId < 0) return null;
+            if (erDummyByRefId.Count == 0) BuildErDummyCache();
+            return erDummyByRefId.TryGetValue(refId, out var t) ? t : null;
+        }
+
+        /// <summary>
+        /// 按 ER/DSAS 方式挂载"持握中"的武器：依当前姿态(单/双手)从 WeaponItem 取 dummy refID，
+        /// 在骨架里解析到对应挂点后挂上并叠加 180° 翻转（<see cref="WeaponModelInstantiationSlot.PlaceWeaponModelOnMount"/>）。
+        /// refID 为 -1 或骨架里查不到该 dummy 时，回退到旧的挂点骨挂载（<see cref="WeaponModelInstantiationSlot.PlaceWeaponModelIntoSlot"/>）。
+        /// </summary>
+        private void MountHeldWeapon(WeaponModelInstantiationSlot slot, GameObject model, WeaponItem weapon, bool isLeftHand, bool? twoHandingOverride = null)
+        {
+            if (slot == null || model == null || weapon == null) return;
+
+            //  【剑刃】刚性挂到 R_Weapon/L_Weapon 挂点骨（已验证能正确握手）。
+            //  注：ER 的剑刃 dummy(ref20) 在 FLVER 参考姿势里离 R_Weapon 约 1.4m，靠“动画把 R_Weapon 从
+            //  参考姿势移开”才带回手里；该机制要求 Unity 绑定姿势==FLVER 参考姿势且动画增量一致，Unity 里不成立，
+            //  故剑刃不走 dummy-跟随-增量 路径（会悬浮），仍用刚性挂载 + baseRotationCorrection。
+            slot.PlaceWeaponModelIntoSlot(
+                model,
+                weapon.weaponModelPositionOffset,
+                weapon.weaponModelRotationOffset,
+                weapon.weaponModelScale);
+        }
+
+        /// <summary>
+        /// ER 剑鞘挂载 —— 与剑刃【完全同一套 DSAS 机制】(见 <see cref="WeaponModelInstantiationSlot.PlaceModelOnAttachBone"/>)：
+        /// 剑鞘在 ER 里是武器 model index 1，由 WepAbsorpPosParam 定位。长剑(wepAbsorpPosId=23) model1 = dummy 2030，
+        /// 因 2030/1000=2 在 ER 落到 body 回退 → 角色 dummy 30；c0000.flver 实测 dummy30 的 attach_bone = <c>Pelvis</c>、
+        /// 世界 Z=-0.12(左侧) → 直剑鞘收于左腰。故剑鞘= 挂到 dummy30 的 attach 骨 Pelvis + 常量翻转，与剑刃(挂 R_Weapon)一致。
+        ///
+        /// 实现细节(Unity 特有)：鞘(WP_A_0200_1)是蒙皮网格且与剑刃同处一个 FBX，无法只 reparent 网格，
+        /// 故：①手持模型隐藏鞘 renderer；②另实例化一份只显示鞘、剥掉伤害/碰撞的副本，用同一挂载核心挂到 Pelvis。
+        /// 这对应 DSAS 把 model0/model1 作为两个独立模型分别放到各自 dummy 的做法。返回鞘实例(无鞘/失败返回 null)。
+        /// </summary>
+        private GameObject MountSheath(WeaponItem weapon, GameObject handModel)
+        {
+            if (weapon == null || handModel == null) return null;
+            if (string.IsNullOrEmpty(weapon.sheathRendererName)) return null;
+
+            //  仅隐藏手持模型上的鞘 renderer（不再复制一份挂到 Pelvis）。
+            foreach (var r in handModel.GetComponentsInChildren<Renderer>(true))
+            {
+                if (r.name.IndexOf(weapon.sheathRendererName, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    r.enabled = false;
             }
             return null;
         }
@@ -1220,12 +1362,21 @@ namespace LZ
             {
                 // 移除旧武器
                 rightHandWeaponSlot.UnloadWeapon();
+                if (rightHandSheathModel != null) { Destroy(rightHandSheathModel); rightHandSheathModel = null; }
                 
                 // 加载新武器
-                rightHandWeaponModel = Instantiate(player.playerInventoryManager.currentRightHandWeapon.weaponModel);
-                rightHandWeaponSlot.PlaceWeaponModelIntoSlot(rightHandWeaponModel);
+                WeaponItem rightWeapon = player.playerInventoryManager.currentRightHandWeapon;
+                rightHandWeaponModel = Instantiate(rightWeapon.weaponModel);
+                MountHeldWeapon(rightHandWeaponSlot, rightHandWeaponModel, rightWeapon, isLeftHand: false);
+                rightHandSheathModel = MountSheath(rightWeapon, rightHandWeaponModel);
                 rightWeaponManager = rightHandWeaponModel.GetComponent<WeaponManager>();
-                rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
+                //  ER WP 模型若忘挂 WeaponManager，这里兜底避免空引用（伤害碰撞体仍需在预制体上配好）。
+                if (rightWeaponManager == null)
+                {
+                    Debug.LogWarning($"[PlayerEquipmentManager] 右手武器 '{rightWeapon.name}' 的模型缺少 WeaponManager 组件，已临时补上。请在武器预制体上配好 WeaponManager + MeleeWeaponDamageCollider。", rightHandWeaponModel);
+                    rightWeaponManager = rightHandWeaponModel.AddComponent<WeaponManager>();
+                }
+                rightWeaponManager.SetWeaponDamage(player, rightWeapon);
                 player.playerAnimatorManager.SetActiveWeaponAnimationSet(player.playerInventoryManager.currentRightHandWeapon.weaponAnimationSet);
                 // 按角色作用域注册当前武器 moveset 的攻击 clip（owner + 远端都会执行到此，
                 // 由复制的 currentRightHandWeaponID 驱动）→ FSM 选片与远端 RPC 解析都能命中，不依赖全局表。
@@ -1341,22 +1492,29 @@ namespace LZ
                     leftHandShieldSlot.UnloadWeapon();
 
                 // 加载新武器
-                leftHandWeaponModel = Instantiate(player.playerInventoryManager.currentLeftHandWeapon.weaponModel);
+                WeaponItem leftWeapon = player.playerInventoryManager.currentLeftHandWeapon;
+                leftHandWeaponModel = Instantiate(leftWeapon.weaponModel);
 
-                switch (player.playerInventoryManager.currentLeftHandWeapon.weaponModelType)
+                switch (leftWeapon.weaponModelType)
                 {
                     case WeaponModelType.Weapon:
-                        leftHandWeaponSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+                        MountHeldWeapon(leftHandWeaponSlot, leftHandWeaponModel, leftWeapon, isLeftHand: true);
                         break;
                     case WeaponModelType.Shield:
-                        leftHandShieldSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+                        MountHeldWeapon(leftHandShieldSlot, leftHandWeaponModel, leftWeapon, isLeftHand: true);
                         break;
                     default:
                         break;
                 }
 
                 leftWeaponManager = leftHandWeaponModel.GetComponent<WeaponManager>();
-                leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
+                //  ER WP 模型若忘挂 WeaponManager，这里兜底避免空引用（伤害碰撞体仍需在预制体上配好）。
+                if (leftWeaponManager == null)
+                {
+                    Debug.LogWarning($"[PlayerEquipmentManager] 左手武器 '{leftWeapon.name}' 的模型缺少 WeaponManager 组件，已临时补上。请在武器预制体上配好 WeaponManager + MeleeWeaponDamageCollider。", leftHandWeaponModel);
+                    leftWeaponManager = leftHandWeaponModel.AddComponent<WeaponManager>();
+                }
+                leftWeaponManager.SetWeaponDamage(player, leftWeapon);
             }
         }
 
@@ -1369,18 +1527,18 @@ namespace LZ
 
             //  UN-TWO HAND THE MODEL AND MOVE THE MODEL THAT ISNT BEING TWO HANDED BACK TO ITS HAND (IF THERE IS ANY)
 
-            //  LEFT HAND
+            //  LEFT HAND（回到左手，单手姿态）
             if (player.playerInventoryManager.currentLeftHandWeapon.weaponModelType == WeaponModelType.Weapon)
             {
-                leftHandWeaponSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+                MountHeldWeapon(leftHandWeaponSlot, leftHandWeaponModel, player.playerInventoryManager.currentLeftHandWeapon, isLeftHand: true, twoHandingOverride: false);
             }
             else if (player.playerInventoryManager.currentLeftHandWeapon.weaponModelType == WeaponModelType.Shield)
             {
-                leftHandShieldSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+                MountHeldWeapon(leftHandShieldSlot, leftHandWeaponModel, player.playerInventoryManager.currentLeftHandWeapon, isLeftHand: true, twoHandingOverride: false);
             }
 
-            //  RIGHT HAND
-            rightHandWeaponSlot.PlaceWeaponModelIntoSlot(rightHandWeaponModel);
+            //  RIGHT HAND（回到右手，单手姿态）
+            MountHeldWeapon(rightHandWeaponSlot, rightHandWeaponModel, player.playerInventoryManager.currentRightHandWeapon, isLeftHand: false, twoHandingOverride: false);
 
             //  REFRESH THE DAMAGE COLLIDER CALCULATIONS (STRENGTH SCALING WOULD BE EFFECTED SINCE THE STRENGTH BONUS WAS REMOVED)
             rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
@@ -1409,8 +1567,8 @@ namespace LZ
 
             // ADD TWO HAND STRENGTH BONUS
 
-            // PLACE THE TWO HANDED WEAPON MODEL IN THE MAIN (RIGHT HAND)
-            rightHandWeaponSlot.PlaceWeaponModelIntoSlot(rightHandWeaponModel);
+            // PLACE THE TWO HANDED WEAPON MODEL IN THE MAIN (RIGHT HAND)，双手姿态 → both_0 dummy
+            MountHeldWeapon(rightHandWeaponSlot, rightHandWeaponModel, player.playerInventoryManager.currentRightHandWeapon, isLeftHand: false, twoHandingOverride: true);
 
             rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
             leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);
@@ -1438,8 +1596,8 @@ namespace LZ
 
             // ADD TWO HAND STRENGTH BONUS
 
-            // PLACE THE TWO HANDED WEAPON MODEL IN THE MAIN (RIGHT HAND)
-            rightHandWeaponSlot.PlaceWeaponModelIntoSlot(leftHandWeaponModel);
+            // PLACE THE TWO HANDED WEAPON MODEL IN THE MAIN (RIGHT HAND)，双手姿态 → both_0 dummy
+            MountHeldWeapon(rightHandWeaponSlot, leftHandWeaponModel, player.playerInventoryManager.currentLeftHandWeapon, isLeftHand: false, twoHandingOverride: true);
 
             rightWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentRightHandWeapon);
             leftWeaponManager.SetWeaponDamage(player, player.playerInventoryManager.currentLeftHandWeapon);

@@ -1,0 +1,1033 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e63f6f199b90dd0438634b3ea6706621, type: 3}
+  m_Name: WeaponHitbox_200
+  m_EditorClassIdentifier: Assembly-CSharp::LZ.WeaponHitboxData
+  weaponModelId: 200
+  behaviorVariationId: 200
+  unionSegments:
+  - dmyA: 100
+    dmyB: 110
+    radius: 0.5
+  - dmyA: 120
+    dmyB: -1
+    radius: 0.2
+  - dmyA: 120
+    dmyB: 122
+    radius: 0.2
+  - dmyA: 120
+    dmyB: 130
+    radius: 0.1
+  - dmyA: 120
+    dmyB: 110
+    radius: 0.05
+  - dmyA: 110
+    dmyB: 120
+    radius: 0.1
+  - dmyA: 122
+    dmyB: -1
+    radius: 0.1
+  - dmyA: 94
+    dmyB: 95
+    radius: 0.7
+  - dmyA: 131
+    dmyB: -1
+    radius: 0.55
+  - dmyA: 110
+    dmyB: -1
+    radius: 0.2
+  - dmyA: 151
+    dmyB: -1
+    radius: 0.85
+  - dmyA: 100
+    dmyB: -1
+    radius: 0.4
+  - dmyA: 100
+    dmyB: 120
+    radius: 0.4
+  perAttack:
+  - atkParamId: 200000
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200010
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200020
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.2
+  - atkParamId: 200030
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200040
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200100
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 200105
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 200110
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200115
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200120
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 110
+      radius: 0.05
+  - atkParamId: 200125
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 110
+      radius: 0.05
+  - atkParamId: 200130
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200140
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200150
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200155
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200160
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200165
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200180
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200200
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200210
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 110
+      dmyB: 120
+      radius: 0.1
+  - atkParamId: 200220
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200230
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 110
+      dmyB: 120
+      radius: 0.1
+  - atkParamId: 200240
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200300
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.15
+  - atkParamId: 200305
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.15
+  - atkParamId: 200310
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 110
+      dmyB: 120
+      radius: 0.05
+  - atkParamId: 200315
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 110
+      dmyB: 120
+      radius: 0.05
+  - atkParamId: 200320
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200325
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200330
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200340
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200350
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.15
+  - atkParamId: 200355
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.15
+  - atkParamId: 200360
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200365
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 122
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200380
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 122
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200400
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.2
+  - atkParamId: 200410
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.2
+  - atkParamId: 200420
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.2
+  - atkParamId: 200430
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.2
+  - atkParamId: 200440
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200500
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200505
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200509
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200510
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200515
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200516
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200520
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200530
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200540
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200550
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200560
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200561
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+  - atkParamId: 200590
+    segments:
+    - dmyA: 94
+      dmyB: 95
+      radius: 0.7
+  - atkParamId: 200591
+    segments:
+    - dmyA: 131
+      dmyB: -1
+      radius: 0.55
+  - atkParamId: 200600
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200605
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.1
+  - atkParamId: 200610
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200630
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+  - atkParamId: 200632
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200635
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.1
+  - atkParamId: 200640
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+  - atkParamId: 200642
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200645
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200650
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200660
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200665
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200700
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200705
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200710
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: 122
+      radius: 0.1
+  - atkParamId: 200730
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+  - atkParamId: 200732
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200735
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200740
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+  - atkParamId: 200742
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200745
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200750
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200760
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200765
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.5
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200800
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200805
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.1
+  - atkParamId: 200810
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 110
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200815
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 110
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200820
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200825
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200830
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200835
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200860
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 110
+      radius: 0.05
+  - atkParamId: 200865
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: 110
+      radius: 0.05
+  - atkParamId: 200870
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200875
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200880
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200885
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.35
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200890
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 200895
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200950
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200951
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200952
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200953
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200954
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200955
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200956
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200957
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200958
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200959
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200960
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200961
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200962
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200963
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200964
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200965
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200966
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200967
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200968
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200969
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4
+    - dmyA: 120
+      dmyB: -1
+      radius: 0.2
+  - atkParamId: 300200980
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 300200981
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 300200982
+    segments:
+    - dmyA: 151
+      dmyB: -1
+      radius: 0.85
+  - atkParamId: 300200983
+    segments:
+    - dmyA: 151
+      dmyB: -1
+      radius: 0.85
+  - atkParamId: 300200984
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 300200985
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 300200986
+    segments:
+    - dmyA: 151
+      dmyB: -1
+      radius: 0.85
+  - atkParamId: 300200987
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 300200988
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 300200989
+    segments:
+    - dmyA: 151
+      dmyB: -1
+      radius: 0.85
+  - atkParamId: 300200990
+    segments:
+    - dmyA: 151
+      dmyB: -1
+      radius: 0.85
+  - atkParamId: 300200991
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 300200992
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.3
+    - dmyA: 120
+      dmyB: 130
+      radius: 0.1
+  - atkParamId: 300200993
+    segments:
+    - dmyA: 151
+      dmyB: -1
+      radius: 0.85
+  - atkParamId: 600200100
+    segments:
+    - dmyA: 100
+      dmyB: -1
+      radius: 0.4
+    - dmyA: 100
+      dmyB: 120
+      radius: 0.4
+    - dmyA: 110
+      dmyB: 120
+      radius: 0.08
+  - atkParamId: 600000152
+    segments:
+    - dmyA: 100
+      dmyB: 110
+      radius: 0.4

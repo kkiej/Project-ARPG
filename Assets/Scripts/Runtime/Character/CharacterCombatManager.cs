@@ -22,6 +22,11 @@ namespace LZ
         [Header("Attack Type")]
         public AttackType currentAttackType;
 
+        [Header("Attack Motion (ER animId)")]
+        [Tooltip("当前攻击的 ER 动画槽号（= 类别*1_000_000 + 槽号，如 23030000）。" +
+                 "供 MeleeWeaponDamageCollider 按 AtkParam 逐攻击取命中段。0=未设置（回退整刀刃）。")]
+        public int currentAttackMotionId;
+
         [Header("Lock On Transform")]
         public Transform lockOnTransform;
         

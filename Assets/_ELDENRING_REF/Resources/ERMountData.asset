@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce4d3f86c5fae44499df756352dfe89c, type: 3}
+  m_Name: ERMountData
+  m_EditorClassIdentifier: 
+  dummies:
+  - referenceId: 30
+    spaceBone: Model_Dmy_Storage(Pelvis)
+    attachBone: Pelvis
+    followsAttach: 1
+    pos: {x: 0.2112733, y: 1.0231923, z: -0.1245005}
+    right: {x: -0.280563, y: 0.81847, z: 0.5013894}
+    up: {x: -0.043752, y: 0.5109218, z: -0.8585131}
+    fwd: {x: -0.9588379, y: -0.2628038, z: -0.107536}
+  - referenceId: 31
+    spaceBone: Model_Dmy_Storage(Pelvis)
+    attachBone: Pelvis
+    followsAttach: 1
+    pos: {x: -0.1865802, y: 1.024157, z: -0.1609077}
+    right: {x: 0.3035075, y: 0.7842003, z: 0.5412144}
+    up: {x: 0.2446727, y: 0.4848183, z: -0.8396943}
+    fwd: {x: -0.9208792, y: 0.3872739, z: -0.0447264}
+  - referenceId: 20
+    spaceBone: Model_Dmy_AttachWeapon
+    attachBone: R_Weapon
+    followsAttach: 1
+    pos: {x: -0.5882676, y: 0.956339, z: 0.0228263}
+    right: {x: 0.7072616, y: 0.7069197, z: 0.0067502}
+    up: {x: 0.006746, y: -0.0162966, z: 0.9998444}
+    fwd: {x: 0.7069197, y: -0.7071061, z: -0.0162949}
+  - referenceId: 21
+    spaceBone: Model_Dmy_AttachWeapon
+    attachBone: L_Weapon
+    followsAttach: 1
+    pos: {x: 0.5882669, y: 0.9563395, z: 0.0263489}
+    right: {x: -0.7072621, y: 0.7069192, z: 0.0067502}
+    up: {x: -0.0067484, y: -0.016299, z: 0.9998444}
+    fwd: {x: 0.7069192, y: 0.7071065, z: 0.0162983}
+  - referenceId: 24
+    spaceBone: Model_Dmy_AttachWeapon
+    attachBone: R_Weapon
+    followsAttach: 1
+    pos: {x: -0.5929229, y: 0.9610279, z: 0.02308}
+    right: {x: 0.707262, y: 0.7069193, z: 0.0067511}
+    up: {x: 0.0067453, y: -0.016297, z: 0.9998444}
+    fwd: {x: 0.7069194, y: -0.7071064, z: -0.0162947}
+  calibrationBones:
+  - name: Pelvis
+    flverPos: {x: 0, y: 0.97, z: 0}
+  - name: Spine
+    flverPos: {x: 0, y: 1.062979, z: -0.0000148}
+  - name: Spine1
+    flverPos: {x: 0.088243, y: 1.062979, z: -0.0000146}
+  - name: Spine2
+    flverPos: {x: 0.1764886, y: 1.0630856, z: -0.0000145}
+  - name: Neck
+    flverPos: {x: 0.389821, y: 1.0880977, z: -0.0000142}
+  - name: Head
+    flverPos: {x: 0.4935346, y: 1.0696363, z: 0.0000071}
+  - name: R_Hand
+    flverPos: {x: 0.689748, y: 1.0628288, z: 0.4903498}
+  - name: L_Hand
+    flverPos: {x: 0.6897489, y: 1.062834, z: -0.4903776}
+  - name: R_Forearm
+    flverPos: {x: 0.5277032, y: 1.0926161, z: 0.327409}
+  - name: L_Forearm
+    flverPos: {x: 0.5277037, y: 1.0926197, z: -0.3274367}
+  - name: R_UpperArm
+    flverPos: {x: 0.328241, y: 1.0969607, z: 0.1280027}
+  - name: L_UpperArm
+    flverPos: {x: 0.3282411, y: 1.0969622, z: -0.1280309}
+  - name: R_Foot
+    flverPos: {x: 0.1033497, y: 1.8272984, z: 0.0969652}
+  - name: L_Foot
+    flverPos: {x: -0.1033483, y: 1.8272986, z: 0.0969633}
+  - name: R_Calf
+    flverPos: {x: 0.103349, y: 1.413276, z: 0.0088366}
+  - name: L_Calf
+    flverPos: {x: -0.1033489, y: 1.413276, z: 0.008836}
+  - name: R_Thigh
+    flverPos: {x: 0.1033489, y: 0.9700003, z: 0.0000003}
+  - name: L_Thigh
+    flverPos: {x: -0.1033491, y: 0.9700001, z: -0.0000004}
+  - name: R_Weapon
+    flverPos: {x: 0.7665064, y: 1.0525568, z: 0.5379391}
+  - name: L_Weapon
+    flverPos: {x: 0.7665074, y: 1.0525622, z: -0.537967}
+  - name: R_Shoulder
+    flverPos: {x: 0.3236242, y: 1.096749, z: 0.1299138}
+  - name: L_Shoulder
+    flverPos: {x: 0.3236218, y: 1.0970455, z: -0.1299454}

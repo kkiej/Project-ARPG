@@ -29,5 +29,10 @@ namespace LZ
                  "运行时会按 槽位前缀(HD/BD/AM/LG) + 性别(M/F) + 此编号 拼出部件名（如 BD_M_1350）去 EquipmentPartCatalog 查 prefab。\n" +
                  "留空 = 该装备不走模块化（沿用旧的预置模型方案）。")]
         public string modularPartCode;
+
+        [Header("ER 溯源")]
+        [Tooltip("此装备在 EquipParamProtector 里的行 ID（如卡利亚骑士头盔=980000）。\n" +
+                 "仅作数据溯源/查表用，与运行时 itemID(按列表顺序分配) 无关。0 表示非 ER 来源。")]
+        public int erRowId;
     }
 }

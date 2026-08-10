@@ -7,6 +7,15 @@ namespace LZ
         [Header("Attacking Character")]
         public CharacterManager characterCausingDamage; // （在计算伤害时，这用于检查攻击者的伤害修正、效果等）
 
+        [Header("ER 多段命中框（AtkParam 精确方案，可选）")]
+        [Tooltip("该武器的命中框数据（由 WeaponHitboxDataBuilder 生成）。配了才走「逐攻击多段胶囊」；" +
+                 "留空则回退旧的单碰撞体（damageCollider）开关。")]
+        public WeaponHitboxData hitboxData;
+        [Tooltip("并集命中段对应的子胶囊（由 WeaponColliderAutoFitter 生成回填）。")]
+        public WeaponHitboxSegmentCollider[] segmentColliders;
+
+        private bool UsesSegments => segmentColliders != null && segmentColliders.Length > 0;
+
         [Header("Weapon Attack Modifiers")]
         public float light_Attack_01_Modifier;
         public float light_Attack_02_Modifier;
@@ -35,34 +44,115 @@ namespace LZ
                 damageCollider = GetComponent<Collider>();
             }
 
-            damageCollider.enabled = false; // 近战武器的碰撞体应该在开始时是关闭的，只有当动作允许时才打开
+            // 多段模式（命中框在子物体上）本物体可能没有 Collider —— 此时 damageCollider 为 null，跳过。
+            // 各子段的关闭由 WeaponHitboxSegmentCollider 自身 Awake 处理。
+            if (damageCollider != null)
+                damageCollider.enabled = false; // 近战武器的碰撞体应该在开始时是关闭的，只有当动作允许时才打开
         }
 
         protected override void OnTriggerEnter(Collider other)
         {
+            // 单碰撞体（旧）模式：命中框就在本物体上，直接结算。
+            // 多段模式下命中来自子物体的 WeaponHitboxSegmentCollider，经 HandleContact 转交进来。
+            HandleContact(other, transform.position);
+        }
+
+        /// <summary>
+        /// 命中结算入口。单碰撞体模式由本类 OnTriggerEnter 调用；
+        /// 多段模式由各 <see cref="WeaponHitboxSegmentCollider"/> 子物体的触发转交（<paramref name="fromPos"/> 为该段位置，用于取接触点）。
+        /// 共用同一份 <c>charactersDamaged</c>，因此一次挥砍多段命中同一目标只结算一次。
+        /// </summary>
+        public void HandleContact(Collider other, Vector3 fromPos)
+        {
             CharacterManager damageTarget = other.GetComponentInParent<CharacterManager>();
+            if (damageTarget == null)
+                return;
 
-            if (damageTarget != null)
+            contactPoint = other.ClosestPointOnBounds(fromPos);
+
+            //  WE DO NOT WANT TO DAMAGE OURSELVES
+            if (damageTarget == characterCausingDamage)
+                return;
+
+            //  CHECK IF WE CAN DAMAGE THIS TARGET BASED ON FRIENDLY FIRE
+            if (!WorldUtilityManager.Instance.CanIDamageThisTarget(characterCausingDamage.characterGroup, damageTarget.characterGroup))
+                return;
+
+            //  CHECK IF TARGET IS PARRYING
+            CheckForParry(damageTarget);
+
+            //  CHECK IF TARGET IS BLOCKING
+            CheckForBlock(damageTarget);
+
+            if (!damageTarget.characterNetworkManager.isInvulnerable.Value)
+                DamageTarget(damageTarget);
+        }
+
+        //  ER 多段命中框：按当前攻击（动画槽号 → AtkParam ID）取命中段，只激活这些段的胶囊并按其半径开启。
+        //  解析不到具体攻击（或该武器无 hitboxData）时，回退到并集：按各段 defaultRadius 全部启用。
+        public override void EnableDamageCollider()
+        {
+            if (!UsesSegments)
             {
-                contactPoint = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-
-                //  WE DO NOT WANT TO DAMAGE OURSELVES
-                if (damageTarget == characterCausingDamage)
-                    return;
-
-                //  CHECK IF WE CAN DAMAGE THIS TARGET BASED ON FRIENDLY FIRE
-                if (!WorldUtilityManager.Instance.CanIDamageThisTarget(characterCausingDamage.characterGroup, damageTarget.characterGroup))
-                    return;
-
-                //  CHECK IF TARGET IS PARRYING
-                CheckForParry(damageTarget);
-
-                //  CHECK IF TARGET IS BLOCKING
-                CheckForBlock(damageTarget);
-
-                if (!damageTarget.characterNetworkManager.isInvulnerable.Value)
-                    DamageTarget(damageTarget);
+                base.EnableDamageCollider();
+                charactersDamaged.Clear(); // 每次开框重置本次挥砍已伤害列表
+                return;
             }
+
+            charactersDamaged.Clear();
+
+            WeaponHitSegment[] segs = null;
+            if (hitboxData != null && characterCausingDamage != null)
+            {
+                int atkId = hitboxData.ResolveAtkParamId(characterCausingDamage.characterCombatManager.currentAttackMotionId);
+                segs = hitboxData.GetSegments(atkId);
+            }
+
+            foreach (var sc in segmentColliders)
+            {
+                if (sc == null)
+                    continue;
+
+                if (segs == null)
+                {
+                    // 回退：整刀刃全部启用（按并集里该段的最大半径）
+                    sc.Activate(sc.defaultRadius);
+                    continue;
+                }
+
+                if (TryGetSegmentRadius(segs, sc.dmyA, sc.dmyB, out float radius))
+                    sc.Activate(radius);
+                else
+                    sc.Deactivate();
+            }
+        }
+
+        public override void DisableDamageCollider()
+        {
+            if (UsesSegments)
+            {
+                foreach (var sc in segmentColliders)
+                    if (sc != null)
+                        sc.Deactivate();
+                charactersDamaged.Clear();
+                return;
+            }
+
+            base.DisableDamageCollider();
+        }
+
+        private static bool TryGetSegmentRadius(WeaponHitSegment[] segs, int dmyA, int dmyB, out float radius)
+        {
+            for (int i = 0; i < segs.Length; i++)
+            {
+                if (segs[i].dmyA == dmyA && segs[i].dmyB == dmyB)
+                {
+                    radius = segs[i].radius;
+                    return true;
+                }
+            }
+            radius = 0f;
+            return false;
         }
 
         protected override void CheckForParry(CharacterManager damageTarget)

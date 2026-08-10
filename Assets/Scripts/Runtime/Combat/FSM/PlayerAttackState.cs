@@ -28,6 +28,10 @@ namespace LZ
         private readonly bool _isJumpAttack;
         private int _comboIndex;
 
+        // 临时调试开关：定位连招断在第 3 段的问题。排查完可删。
+        private static readonly bool DebugCombo = true;
+        private float _lastBufferLogTime;
+
         private PlayerAttackState(WeaponItem weapon, HandMoveset moveset, int nodeIndex, bool isJumpAttack = false)
         {
             _weapon = weapon;
@@ -151,6 +155,25 @@ namespace LZ
             // 连招推进：当前 clip 播放时间落在 TAE 开窗内 + 缓冲到轻 / 重输入 → 跳到下一节点。
             // 开窗来自 ER TAE（Input-Common 窗），不再依赖旧的 EnableCanDoCombo 动画事件。
             // 可蓄力节点在蓄力链期间不推进连招（让整链 Attack→Hold→Release 播完）；跳攻为一次性序列，不连招。
+            // 调试：只要有轻/重击缓冲输入，就打印当前段、播放进度、开窗、是否在窗内（每 0.1s 限流一次）。
+            if (DebugCombo && _moveset.TryGetNode(_comboIndex, out AttackNode dbgNode))
+            {
+                InputCommand dbgCmd = machine.PeekBuffered();
+                if ((dbgCmd == InputCommand.LightAttack || dbgCmd == InputCommand.HeavyAttack)
+                    && UnityEngine.Time.time - _lastBufferLogTime > 0.1f)
+                {
+                    _lastBufferLogTime = UnityEngine.Time.time;
+                    float t = player.playerAnimatorManager.CurrentActionTime;
+                    float len = player.playerAnimatorManager.CurrentActionLength;
+                    bool inWin = IsInComboWindow(player, dbgNode);
+                    UnityEngine.Debug.Log(
+                        $"[COMBO] buffered={dbgCmd} node={_comboIndex}('{dbgNode.label}') " +
+                        $"t={t:0.000}/{len:0.000} win=[{dbgNode.comboWindowStart:0.000},{dbgNode.comboWindowEnd:0.000}] " +
+                        $"inWindow={inWin} nextOnLight={dbgNode.nextOnLight} canCharge={dbgNode.canCharge} " +
+                        $"isPerformingAction={player.isPerformingAction}");
+                }
+            }
+
             if (!_isJumpAttack && _moveset.TryGetNode(_comboIndex, out AttackNode node) && !node.canCharge && IsInComboWindow(player, node))
             {
                 InputCommand cmd = machine.PeekBuffered();
@@ -178,16 +201,26 @@ namespace LZ
 
                 if (_moveset.HasNode(next))
                 {
+                    if (DebugCombo)
+                        UnityEngine.Debug.Log($"[COMBO] ADVANCE {_comboIndex}->{next} at t={player.playerAnimatorManager.CurrentActionTime:0.000}/{player.playerAnimatorManager.CurrentActionLength:0.000}");
                     machine.ClearBuffer();
                     _comboIndex = next;
                     PlayNode(player, next);
                     return null;
                 }
+                else if (DebugCombo && (cmd == InputCommand.LightAttack || cmd == InputCommand.HeavyAttack))
+                {
+                    UnityEngine.Debug.Log($"[COMBO] in-window press but NO next node: node={_comboIndex} cmd={cmd} next={next}");
+                }
             }
 
             // 动作播放结束：执行层 OnEnd → ReturnToController 已把 isPerformingAction 复位。回到移动状态。
             if (!player.isPerformingAction)
+            {
+                if (DebugCombo)
+                    UnityEngine.Debug.Log($"[COMBO] END -> Locomotion, stuck at node={_comboIndex} t={player.playerAnimatorManager.CurrentActionTime:0.000}/{player.playerAnimatorManager.CurrentActionLength:0.000}");
                 return new LocomotionState();
+            }
 
             return null;
         }
@@ -221,6 +254,14 @@ namespace LZ
         {
             if (!_moveset.TryGetNode(index, out AttackNode node) || node.clip == null)
                 return;
+
+            if (DebugCombo)
+                UnityEngine.Debug.Log(
+                    $"[COMBO] PLAY node={index}('{node.label}') clip='{node.clip.name}' clipLen={node.clip.length:0.000} " +
+                    $"win=[{node.comboWindowStart:0.000},{node.comboWindowEnd:0.000}] nextOnLight={node.nextOnLight} canCharge={node.canCharge}");
+
+            // 记录当前攻击动画槽号：供 MeleeWeaponDamageCollider 按 AtkParam 逐攻击取命中段（多段精确命中框）。
+            player.characterCombatManager.currentAttackMotionId = node.animId;
 
             // 跳跃攻击（ER 落地融合）：空中攻 03x030 →[060/jumpIdle 维持]→ 触地攻 03x070 →[落地恢复 071/072/081/082 四选一]，落地检测驱动。
             // 落地恢复按「落地距离长短 × 前序进度快慢」选 clip（执行层 SelectJumpLandingRecovery）；clip 来自节点配置（MovesetData），缺省时回退通用跳跃 idle/end。

@@ -25,6 +25,13 @@ namespace LZ
         private readonly Dictionary<string, Transform> normalizedLookup = new();
         private bool isBuilt;
 
+        //  基础骨快照：首次构建（尚无任何部件嫁接骨时）记录 c0000 通用骨架的全部骨。
+        //  之后 Build() 只从这份快照重建查找表，**绝不收录部件嫁接进来的附加骨**。
+        //  否则：A 部件嫁接的附加骨会被重扫进查找表 → B 部件按名字误绑到 A 的骨上 →
+        //  卸下 A 时销毁其嫁接骨 → B 的 bones[] 出现 null → 顶点塌世界原点。
+        private readonly HashSet<Transform> baseBones = new();
+        private bool baseCaptured;
+
         public Transform RootBone => rootBone;
 
         private static string Normalize(string n) => string.IsNullOrEmpty(n) ? n : n.Trim().ToLowerInvariant();
@@ -37,15 +44,42 @@ namespace LZ
         /// <summary>
         /// 重新扫描骨骼层级并构建查找表。骨骼结构变化后（如换骨架）需手动再调一次。
         /// </summary>
-        public void Build()
+        public void Build() => Build(false);
+
+        /// <summary>
+        /// 重建查找表。
+        /// <paramref name="recaptureBase"/>=true 时重新快照基础骨（仅在真正更换角色骨架时用；
+        /// 此时必须确保层级下没有部件嫁接骨，否则会把附加骨误当基础骨）。
+        /// </summary>
+        public void Build(bool recaptureBase)
         {
+            if (recaptureBase)
+            {
+                baseBones.Clear();
+                baseCaptured = false;
+            }
+
+            //  首次构建：此刻尚无任何部件被装配（EquipPart 会先 Build 再嫁接），
+            //  故当前层级下的全部骨即纯净的 c0000 基础骨，快照下来作为唯一权威来源。
+            if (!baseCaptured)
+            {
+                baseBones.Clear();
+                foreach (Transform bone in GetComponentsInChildren<Transform>(true))
+                {
+                    if (bone == transform) continue; // 跳过挂载本组件的节点自身
+                    baseBones.Add(bone);
+                }
+                baseCaptured = true;
+            }
+
             boneLookup.Clear();
             normalizedLookup.Clear();
 
-            // 扫描整个层级（含本物体子树），确保 Master 及其全部子骨都被收录
-            foreach (Transform bone in GetComponentsInChildren<Transform>(true))
+            //  只从基础骨快照重建：任何后来嫁接进来的附加骨都不在快照里，天然被排除，
+            //  保证 GetBone/HasBone 永远只解析到永久基础骨 → 各部件只绑到自己的附加骨。
+            foreach (Transform bone in baseBones)
             {
-                if (bone == transform) continue; // 跳过挂载本组件的节点自身
+                if (bone == null) continue; // 防御：基础骨被意外销毁
 
                 // 同名骨骼以第一个为准（ER 骨骼名通常唯一；若有重名会在 Console 提示）
                 if (!boneLookup.TryAdd(bone.name, bone))

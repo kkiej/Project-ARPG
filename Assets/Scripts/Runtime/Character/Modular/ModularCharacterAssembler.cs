@@ -23,6 +23,10 @@ namespace LZ
         [Tooltip("提取出的部件网格(SMR)挂到这里。留空默认挂到 c0000（骨架的父级）下。")]
         [SerializeField] private Transform meshAttachRoot;
 
+        [Tooltip("装配后审计每个 SMR 的 bones[]：统计 null 骨、不在骨架根下的骨，并打印骨名。\n" +
+                 "用于排查'顶点固定在世界原点/不随骨架移动'的问题。定位后可关闭。")]
+        [SerializeField] private bool debugAuditBones = false;
+
         // 每个槽位已装配的内容：提取到 c0000 下的 SMR 对象 + 嫁接到通用骨架下的附加骨
         private class EquippedPart
         {
@@ -84,6 +88,10 @@ namespace LZ
                 return null;
             }
 
+            //  [审计] 实例化后、嫁接前：部件源头的 bones[] 是否已有 null（=导入阶段就丢骨 → 顶点会塌到原点）
+            if (debugAuditBones)
+                AuditSourceBones(partPrefab.name, renderers);
+
             var record = new EquippedPart();
 
             // 1) 嫁接附加骨到 c0000（保证所有被 SMR 引用的附加骨都移出 temp，使 temp 可安全销毁）
@@ -119,8 +127,166 @@ namespace LZ
             // 4) 销毁临时实例（此时只剩外层包装 + 部件自带骨架，已无被引用对象）
             DestroyObj(temp);
 
+            //  [审计] 装配完成后：最终 bones[] 里的 null 骨 / 不在骨架根下的骨（=不随动画移动 → 视觉上固定在原点）
+            if (debugAuditBones)
+                AuditAssembledBones(partPrefab.name, record);
+
             equipped[slot] = record;
             return record.rendererObjects.Count > 0 ? record.rendererObjects[0] : null;
+        }
+
+        // ───────────────────────────────────────── 骨骼审计（调试） ─────────────────────────────────────────
+
+        /// <summary>实例化后、嫁接前审计：统计并打印部件源头 SMR 的 null 骨（导入阶段丢骨的铁证）。</summary>
+        private void AuditSourceBones(string partName, SkinnedMeshRenderer[] renderers)
+        {
+            for (int r = 0; r < renderers.Length; r++)
+            {
+                SkinnedMeshRenderer smr = renderers[r];
+                Transform[] bones = smr.bones;
+                int nullCount = 0;
+                var nullIndices = new List<int>();
+                for (int i = 0; i < bones.Length; i++)
+                    if (bones[i] == null) { nullCount++; if (nullIndices.Count < 30) nullIndices.Add(i); }
+
+                Mesh mesh = smr.sharedMesh;
+                int bindposes = mesh != null ? mesh.bindposes.Length : -1;
+                string msg = $"[Audit-源] 部件 '{partName}' SMR#{r} '{smr.name}'：bones={bones.Length}，bindposes={bindposes}，" +
+                             $"rootBone={(smr.rootBone ? smr.rootBone.name : "<null>")}，源头 null 骨={nullCount}";
+                if (nullCount > 0)
+                {
+                    msg += $"\n  → null 骨索引: {string.Join(",", nullIndices)}（这些槽有权重的顶点会塌到网格原点=世界原点）。" +
+                           "\n  这属于【导入阶段丢骨】，与嫁接无关。多半是 FBX 导入的 optimizeBones/名字冲突所致。";
+                    Debug.LogError(msg, smr);
+                }
+                else
+                {
+                    Debug.Log(msg + "（源头无 null，问题不在导入丢骨）", smr);
+                }
+            }
+        }
+
+        /// <summary>装配后审计：最终 bones[] 里 null 骨 + 不在骨架根下的骨 + 停在世界原点附近却有权重的骨（=原点尖刺元凶）。</summary>
+        private void AuditAssembledBones(string partName, EquippedPart record)
+        {
+            Transform skelRoot = skeleton != null ? skeleton.transform : null;
+            foreach (GameObject go in record.rendererObjects)
+            {
+                var smr = go.GetComponent<SkinnedMeshRenderer>();
+                if (smr == null) continue;
+                AuditRenderer(partName, smr, skelRoot);
+            }
+        }
+
+        /// <summary>
+        /// 单个 SMR 的深度审计：null 骨 / 骨架外骨 / 停在世界原点附近的【带权重】骨。
+        /// 世界原点附近且有权重的骨会把它影响的顶点拉向 (0,0,0)，形成"固定在原点"的尖刺。
+        /// </summary>
+        private void AuditRenderer(string partName, SkinnedMeshRenderer smr, Transform skelRoot)
+        {
+            Transform[] bones = smr.bones;
+            Mesh mesh = smr.sharedMesh;
+
+            //  统计每根骨的总权重，判断"有效骨"（有权重才会影响顶点/造成尖刺）。
+            //  注意：mesh 若 isReadable=0，boneWeights 可能为空 → 退化为"不按权重过滤"，标出所有近原点骨。
+            var boneWeightSum = new float[bones.Length];
+            bool haveWeights = false;
+            if (mesh != null)
+            {
+                var bw = mesh.boneWeights;
+                haveWeights = bw != null && bw.Length > 0;
+                foreach (var w in bw)
+                {
+                    if (w.boneIndex0 >= 0 && w.boneIndex0 < bones.Length) boneWeightSum[w.boneIndex0] += w.weight0;
+                    if (w.boneIndex1 >= 0 && w.boneIndex1 < bones.Length) boneWeightSum[w.boneIndex1] += w.weight1;
+                    if (w.boneIndex2 >= 0 && w.boneIndex2 < bones.Length) boneWeightSum[w.boneIndex2] += w.weight2;
+                    if (w.boneIndex3 >= 0 && w.boneIndex3 < bones.Length) boneWeightSum[w.boneIndex3] += w.weight3;
+                }
+            }
+
+            int nullCount = 0, outsideCount = 0, atOriginWeighted = 0;
+            var outsideNames = new List<string>();
+            var originNames = new List<string>();
+            for (int i = 0; i < bones.Length; i++)
+            {
+                Transform b = bones[i];
+                if (b == null) { nullCount++; continue; }
+                if (skelRoot != null && !b.IsChildOf(skelRoot) && b != skelRoot)
+                {
+                    outsideCount++;
+                    if (outsideNames.Count < 40 && !outsideNames.Contains(b.name)) outsideNames.Add(b.name);
+                }
+                //  停在世界原点附近（<5cm），且有权重（或权重不可读时一律标出）→ 会把顶点拉向原点
+                if (b.position.sqrMagnitude < 0.0025f && (!haveWeights || boneWeightSum[i] > 0.0001f))
+                {
+                    atOriginWeighted++;
+                    if (originNames.Count < 40)
+                    {
+                        string wtxt = haveWeights ? $"w={boneWeightSum[i]:0.###}" : "w=?";
+                        originNames.Add($"{b.name}({wtxt}, parent={(b.parent ? b.parent.name : "?")})");
+                    }
+                }
+            }
+
+            //  【硬证据】烘焙当前形变后的顶点，逐顶点找真正落在世界原点的（不受 isReadable 限制）。
+            int stuckVerts = 0, totalVerts = 0;
+            Vector3 sampleWorld = Vector3.zero;
+            try
+            {
+                var baked = new Mesh();
+                smr.BakeMesh(baked);
+                Vector3[] bv = baked.vertices;
+                totalVerts = bv.Length;
+                Matrix4x4 l2w = smr.transform.localToWorldMatrix;
+                for (int i = 0; i < bv.Length; i++)
+                {
+                    Vector3 world = l2w.MultiplyPoint3x4(bv[i]);
+                    if (world.sqrMagnitude < 0.0025f) //  距世界原点 <5cm
+                    {
+                        stuckVerts++;
+                        if (stuckVerts == 1) sampleWorld = world;
+                    }
+                }
+                Destroy(baked);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[Audit] BakeMesh 失败：{e.Message}", smr);
+            }
+
+            string wnote = haveWeights ? "" : "（权重不可读:isReadable=0，原点骨未按权重过滤）";
+            string msg = $"[Audit-终] 部件 '{partName}' SMR '{smr.name}'：bones={bones.Length}，" +
+                         $"null={nullCount}，骨架外={outsideCount}，原点附近骨={atOriginWeighted}{wnote}，" +
+                         $"【烘焙落在原点的顶点】={stuckVerts}/{totalVerts}";
+            bool bad = nullCount > 0 || outsideCount > 0 || atOriginWeighted > 0 || stuckVerts > 0;
+            if (outsideNames.Count > 0)
+                msg += $"\n  → 骨架外的骨: {string.Join(", ", outsideNames)}";
+            if (originNames.Count > 0)
+                msg += $"\n  → 停在世界原点附近的带权重骨: {string.Join("; ", originNames)}";
+            if (stuckVerts > 0)
+                msg += $"\n  → 有 {stuckVerts} 个顶点被解算到世界原点(样例 {sampleWorld})。骨结构正常但顶点仍塌原点 → 属【绑定姿势/静止姿势不一致】：" +
+                       "部件蒙皮所依据的骨骼静止姿势与运行时 c0000 骨架当前姿势不符（bindpose 与 bone 当前世界矩阵对不上）。";
+
+            if (bad) Debug.LogError(msg, smr);
+            else Debug.Log(msg + "（结构/位置/烘焙均正常）", smr);
+        }
+
+        /// <summary>
+        /// 扫描整个角色（本组件所在层级下）的【所有】SkinnedMeshRenderer 并逐个审计。
+        /// 用于确认"固定在原点的顶点"到底出自哪个网格——含基础身体/头发等非模块化网格。
+        /// 运行时右键组件菜单调用，或代码里调。
+        /// </summary>
+        [ContextMenu("Audit All Renderers On Character")]
+        public void AuditWholeCharacter()
+        {
+            if (skeleton != null) skeleton.Build();
+            Transform skelRoot = skeleton != null ? skeleton.transform : null;
+
+            Transform charRoot = transform.root;
+            var all = charRoot.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            Debug.Log($"[Audit-全角色] 共 {all.Length} 个 SkinnedMeshRenderer，逐个审计：", this);
+            foreach (var smr in all)
+                AuditRenderer("(角色)", smr, skelRoot);
         }
 
         /// <summary>卸下并销毁某槽位的部件（提取到 c0000 下的网格 + 嫁接的附加骨）。</summary>
