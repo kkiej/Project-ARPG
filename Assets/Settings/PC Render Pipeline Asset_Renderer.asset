@@ -31,6 +31,45 @@ MonoBehaviour:
     filterShader: {fileID: 4800000, guid: 11b88289fe75b3d44b5a64b3346d1f2d, type: 3}
     composeShader: {fileID: 4800000, guid: 3aa49f3cd10b3cd4488860a863a9c278, type: 3}
     copyDepthShader: {fileID: 4800000, guid: 6d247ded287dbe745b13a5913606dc83, type: 3}
+--- !u!114 &-3327247642244710282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 114a0725797d6914bb2a15dd70cb3ff2, type: 3}
+  m_Name: VistaAtmosphereFeature
+  m_EditorClassIdentifier: Vista.Runtime::Vista.VistaAtmosphereFeature
+  m_Active: 1
+  m_Parameters:
+    bottomRadius: 6360
+    atmosphereThickness: 100
+    rayleighScattering: {x: 0.005802, y: 0.013558, z: 0.0331}
+    rayleighScaleHeight: 8
+    mieScattering: {x: 0.003996, y: 0.003996, z: 0.003996}
+    mieExtinction: {x: 0.0044, y: 0.0044, z: 0.0044}
+    mieScaleHeight: 1.2
+    miePhaseG: 0.8
+    ozoneAbsorption: {x: 0.00065, y: 0.001881, z: 0.000085}
+    ozoneTentCenter: 25
+    ozoneTentHalfWidth: 15
+    groundAlbedo: 0.3
+    sunIlluminanceLux: 120000
+    sunAngularDiameterDegrees: 0.545
+  m_GroundLevelWorldY: 0
+  m_EV100: 15
+  m_SkyViewResolution: {x: 192, y: 108}
+  m_AerialPerspective:
+    resolution: {x: 32, y: 32, z: 32}
+    maxDistanceKm: 32
+    nearDistanceKm: 0.02
+    distribution: 1
+    powerExponent: 2
+    coloredTransmittance: 1
+  m_SkyReflection: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +98,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: 1990818708164889212}
-  m_RendererFeatureMap: 7cca5e3811cfa01b
+  - {fileID: -3327247642244710282}
+  m_RendererFeatureMap: 7cca5e3811cfa01b76803fdce53dd3d1
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -87,7 +127,7 @@ MonoBehaviour:
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
-  m_IntermediateTextureMode: 1
+  m_IntermediateTextureMode: 0
 --- !u!114 &1990818708164889212
 MonoBehaviour:
   m_ObjectHideFlags: 0
