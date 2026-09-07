@@ -69,7 +69,29 @@ MonoBehaviour:
     distribution: 1
     powerExponent: 2
     coloredTransmittance: 1
+    compositeMode: 1
+  m_Fog:
+    mode: 1
+    densityInput: 0
+    meanFreePathMeters: 400
+    visibilityMeters: 1500
+    densityTint: {r: 1, g: 1, b: 1, a: 1}
+    bottomWorldY: 0
+    scaleHeightMeters: 50
+    albedo: {r: 0.98, g: 0.98, b: 0.98, a: 1}
+    anisotropy: 0.8
+    skyAmbientIntensity: 1
+    enableSunSelfShadow: 0
+    grazingAmplifyMax: 8
   m_SkyReflection: 1
+  m_VolumetricFog:
+    screenDivisor: 8
+    sliceCount: 64
+    farDistanceMeters: 64
+    enableInjection: 1
+    debugView: 0
+    debugSlice: 32
+    debugGain: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,7 +143,7 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
-  m_RenderingMode: 0
+  m_RenderingMode: 2
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
