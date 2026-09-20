@@ -79,7 +79,7 @@ MonoBehaviour:
     bottomWorldY: 0
     scaleHeightMeters: 50
     albedo: {r: 0.98, g: 0.98, b: 0.98, a: 1}
-    anisotropy: 0.8
+    anisotropy: 0.3
     skyAmbientIntensity: 1
     enableSunSelfShadow: 0
     grazingAmplifyMax: 8
@@ -89,6 +89,19 @@ MonoBehaviour:
     sliceCount: 64
     farDistanceMeters: 150
     enableInjection: 1
+    jitterMode: 1
+    lateralJitterAmount: 1
+    lateralJitterShape: 0
+    depthJitterAmount: 1
+    historyTimeConstant: 0.33
+    luminanceRejectStart: 0.55
+    luminanceRejectFull: 0.9
+    localLightMode: 1
+    localLightShadows: 1
+    localLightIntensityScale: 1
+    localLightLayerMask:
+      serializedVersion: 0
+      m_Bits: 0
     debugView: 0
     debugSlice: 32
     debugGain: 1
