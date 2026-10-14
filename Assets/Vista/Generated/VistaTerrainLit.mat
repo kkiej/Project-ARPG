@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: VistaTerrainLit
+  m_Shader: {fileID: 4800000, guid: ae8383d98e7a46d4b9d5664f45515f5e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _NORMALMAP
+  - _TERRAIN_INSTANCED_PERPIXEL_NORMAL
+  - _VISTA_DETAIL_NORMAL
+  - _VISTA_HEIGHT_BLEND
+  - _VISTA_LAYER_TONE
+  - _VISTA_MACRO_VARIATION
+  - _VISTA_RELIEF
+  - _VISTA_TRIPLANAR
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Control:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TerrainHolesTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VistaDetailNormal:
+        m_Texture: {fileID: 2800000, guid: ac59b9ac88ec2bd4db30e5d51d26f960, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Cutoff: 0.5
+    - _EnableInstancedPerPixelNormal: 1
+    - _HeightTransition: 0
+    - _Metallic0: 0
+    - _Metallic1: 0
+    - _Metallic2: 0
+    - _Metallic3: 0
+    - _NumLayersCount: 1
+    - _Smoothness0: 0.5
+    - _Smoothness1: 0.5
+    - _Smoothness2: 0.5
+    - _Smoothness3: 0.5
+    - _VistaDebugView: 0
+    - _VistaEnableDetailNormal: 1
+    - _VistaEnableHeightBlend: 1
+    - _VistaEnableLayerTone: 1
+    - _VistaEnableMacro: 1
+    - _VistaEnableRelief: 1
+    - _VistaEnableTriplanar: 1
+    - _VistaLayerHasMaskMap: 0
+    - _VistaLayerHasNormalMap: 1
+    - _VistaLayerNormalWeight: 1
+    - _VistaMobileTier: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _VistaDetailOctave2: {r: 6, g: 0.35, b: 40, a: 150}
+    - _VistaDetailParams: {r: 1.5, g: 0.6, b: 15, a: 45}
+    - _VistaHeightBlendParams: {r: 0.3, g: 0, b: 0, a: 0}
+    - _VistaLayerContrast: {r: 5.12, g: 5.071238, b: 2.1427765, a: 2.7098217}
+    - _VistaLayerParams0: {r: 10, g: 10, b: 0.27770996, a: 19.692308}
+    - _VistaLayerParams1: {r: 11, g: 11, b: 0.3746338, a: 19.504763}
+    - _VistaLayerParams2: {r: 10, g: 10, b: 0.30932617, a: 8.241448}
+    - _VistaLayerParams3: {r: 10, g: 10, b: 0.41088867, a: 10.422392}
+    - _VistaLayerSaturate: {r: 1, g: 1, b: 1, a: 1}
+    - _VistaMacroParams: {r: 60, g: 17, b: 0.18, a: 0.12}
+    - _VistaReliefOctave3: {r: 2, g: 0.22, b: 400, a: 700}
+    - _VistaReliefParams: {r: 40, g: 0.5, b: 9, a: 0.25}
+    - _VistaTriplanarParams: {r: 0.85, g: 0.5, b: 4, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
