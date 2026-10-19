@@ -1,5 +1,66 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7566323622559335186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c11d897b2c31af419bc3560390b12a5, type: 3}
+  m_Name: VistaVegetationFeature
+  m_EditorClassIdentifier: Vista.Runtime::Vista.VistaVegetationFeature
+  m_Active: 1
+  m_Settings:
+    enabled: 1
+    prototypes:
+    - name: Test Grass
+      enabled: 1
+      lodMeshes:
+      - {fileID: 4300000, guid: aec29851b84f247428f051759479683d, type: 2}
+      - {fileID: 4300000, guid: 722efd1faa9f99f4aa3e4655c634e31a, type: 2}
+      - {fileID: 4300000, guid: 5ac3d64b824d7bf4292ccc554453dbd2, type: 2}
+      lodMaterials:
+      - {fileID: 2100000, guid: 4dcb822aa7aac9d449a8131aae0789e7, type: 2}
+      - {fileID: 2100000, guid: 4dcb822aa7aac9d449a8131aae0789e7, type: 2}
+      - {fileID: 2100000, guid: 4dcb822aa7aac9d449a8131aae0789e7, type: 2}
+      atlasChannel: 0
+      density: 45
+      densityPower: 1.5
+      scaleRange: {x: 0.75, y: 1.35}
+      maxSlopeDegrees: 42
+      lod1Distance: 18
+      lod2Distance: 45
+      cullDistance: 110
+      boundsRadius: 0.6825
+      tintMin: 0.78
+      alignToNormal: 0.6
+    metersPerTexel: 2
+    maxAtlasEdge: 4096
+    bakedLayers: 00000000010000000200000003000000
+    baseCellSize: 0.125
+    cellsPerRing: 512
+    ringCount: 3
+    densityScale: 1
+    seed: 1337
+    capacityPerRegion: 131072
+    occlusionCulling: 1
+    hizMinSize: 8
+    statsEveryNFrames: 0
+  m_Wind:
+    direction: {x: 1, y: 0.35}
+    baseStrength: 0.25
+    gustStrength: 0.4
+    baseWavelength: 28
+    gustWavelength: 90
+    baseFrequency: 0.35
+    gustFrequency: 0.11
+    turbulence: 0.35
+    flutterAmplitude: 0.04
+    flutterFrequency: 5.5
+    timeScale: 1
 --- !u!114 &-4848316987560608821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,7 +195,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 1990818708164889212}
   - {fileID: -3327247642244710282}
-  m_RendererFeatureMap: 7cca5e3811cfa01b76803fdce53dd3d1
+  - {fileID: -7566323622559335186}
+  m_RendererFeatureMap: 7cca5e3811cfa01b76803fdce53dd3d1ee3cb4ddc004ff96
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
